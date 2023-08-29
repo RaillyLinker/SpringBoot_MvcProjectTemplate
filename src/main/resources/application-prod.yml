@@ -8,4 +8,4 @@ spring:
 
 springdoc:
   swagger-ui:
-    enabled: false # Swagger 문서 공개 여부
+    enabled: false # Swagger 문서 공개 여부 (배포 환경은 무조건 false)
