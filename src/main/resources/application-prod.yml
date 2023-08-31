@@ -5,7 +5,3 @@ spring:
   config:
     activate: # 프로필명 설정
       on-profile: prod
-
-springdoc:
-  swagger-ui:
-    enabled: false # Swagger 문서 공개 여부 (배포 환경은 false 추천)
