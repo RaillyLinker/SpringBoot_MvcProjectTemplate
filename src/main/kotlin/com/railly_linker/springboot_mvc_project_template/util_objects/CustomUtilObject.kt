@@ -36,6 +36,23 @@ object CustomUtilObject {
         return ip
     }
 
+    // (랜덤 영문 대소문자 + 숫자 문자열 생성)
+    fun getRandomString(length: Int): String {
+        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return (1..length)
+            .map { charset.random() }
+            .joinToString("")
+    }
+
+    // (이메일 적합성 검증)
+    fun isValidEmail(email: String): Boolean {
+        var err = false
+        if (Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$").matcher(email).matches()) {
+            err = true
+        }
+        return err
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
