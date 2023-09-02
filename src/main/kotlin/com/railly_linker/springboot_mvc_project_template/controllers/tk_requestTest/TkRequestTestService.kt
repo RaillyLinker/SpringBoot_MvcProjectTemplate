@@ -28,7 +28,6 @@ class TkRequestTestService(
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): String? {
-        loggerMbr.info("test")
         httpServletResponse.setHeader("api-result-code", "ok")
         return activeProfileMbr
     }

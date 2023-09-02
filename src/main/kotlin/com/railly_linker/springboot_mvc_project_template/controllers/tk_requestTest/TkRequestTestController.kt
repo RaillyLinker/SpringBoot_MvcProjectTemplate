@@ -783,7 +783,7 @@ class TkRequestTestController(
 
     data class Api10OutputVo(
         @Schema(description = "입력한 String Form 파라미터", required = true, example = "testString")
-        @JsonProperty("responseBodyString")
+        @JsonProperty("requestFormString")
         val requestFormString: String,
         @Schema(description = "입력한 String Nullable Form 파라미터", required = false, example = "testString")
         @JsonProperty("requestFormStringNullable")
