@@ -27,23 +27,29 @@ class TkRequestTestService(
 
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
-    fun api1(): String? {
+    fun api1(httpServletResponse: HttpServletResponse): String? {
+        loggerMbr.info("test")
+        httpServletResponse.setHeader("api-result-code", "ok")
         return activeProfileMbr
     }
 
 
     ////
-    fun api2(): ModelAndView? {
+    fun api2(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
         mv.viewName = "redirect:/tk/request-test"
+
+        httpServletResponse.setHeader("api-result-code", "ok")
         return mv
     }
 
 
     ////
-    fun api3(): ModelAndView? {
+    fun api3(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
         mv.viewName = "forward:/tk/request-test"
+
+        httpServletResponse.setHeader("api-result-code", "ok")
         return mv
     }
 
@@ -62,6 +68,7 @@ class TkRequestTestService(
         queryParamStringList: List<String>,
         queryParamStringListNullable: List<String>?
     ): TkRequestTestController.Api4OutputVo? {
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api4OutputVo(
             queryParamString,
             queryParamStringNullable,
@@ -79,6 +86,7 @@ class TkRequestTestService(
 
     ////
     fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): TkRequestTestController.Api5OutputVo? {
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api5OutputVo(pathParamInt)
     }
 
@@ -88,6 +96,7 @@ class TkRequestTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: TkRequestTestController.Api6InputVo
     ): TkRequestTestController.Api6OutputVo? {
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api6OutputVo(
             inputVo.requestBodyString,
             inputVo.requestBodyStringNullable,
@@ -108,6 +117,7 @@ class TkRequestTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: TkRequestTestController.Api7InputVo
     ): TkRequestTestController.Api7OutputVo? {
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api7OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
@@ -211,6 +221,7 @@ class TkRequestTestService(
             )
         }
 
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api8OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
@@ -318,6 +329,7 @@ class TkRequestTestService(
             }
         }
 
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api9OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
@@ -427,6 +439,7 @@ class TkRequestTestService(
             )
         }
 
+        httpServletResponse.setHeader("api-result-code", "ok")
         return TkRequestTestController.Api10OutputVo(
             inputJsonObject.requestFormString,
             inputJsonObject.requestFormStringNullable,
@@ -445,5 +458,27 @@ class TkRequestTestService(
     ////
     fun api11(httpServletResponse: HttpServletResponse) {
         throw RuntimeException("Test Error")
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+    ////
+    fun api12(httpServletResponse: HttpServletResponse, errorType: TkRequestTestController.Api12ErrorTypeEnum?) {
+        if (errorType == null) {
+            httpServletResponse.setHeader("api-result-code", "ok")
+        } else {
+            when (errorType) {
+                TkRequestTestController.Api12ErrorTypeEnum.A -> {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                }
+
+                TkRequestTestController.Api12ErrorTypeEnum.B -> {
+                    httpServletResponse.setHeader("api-result-code", "2")
+                }
+
+                TkRequestTestController.Api12ErrorTypeEnum.C -> {
+                    httpServletResponse.setHeader("api-result-code", "3")
+                }
+            }
+        }
     }
 }

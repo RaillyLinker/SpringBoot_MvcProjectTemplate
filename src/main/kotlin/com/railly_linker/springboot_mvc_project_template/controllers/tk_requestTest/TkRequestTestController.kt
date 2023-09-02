@@ -25,7 +25,9 @@ class TkRequestTestController(
     // <매핑 함수 공간>
     @Operation(
         summary = "기본 요청 테스트 API",
-        description = "이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.\n\n",
+        description = "이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -34,14 +36,19 @@ class TkRequestTestController(
         ]
     )
     @GetMapping("", "/")
-    fun api1(): String? {
-        return serviceMbr.api1()
+    fun api1(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): String? {
+        return serviceMbr.api1(httpServletResponse)
     }
 
     ////
     @Operation(
         summary = "요청 Redirect 테스트 API",
-        description = "이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.\n\n",
+        description = "이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -50,14 +57,19 @@ class TkRequestTestController(
         ]
     )
     @GetMapping("/redirect-to-blank")
-    fun api2(): ModelAndView? {
-        return serviceMbr.api2()
+    fun api2(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): ModelAndView? {
+        return serviceMbr.api2(httpServletResponse)
     }
 
     ////
     @Operation(
         summary = "요청 Forward 테스트 API",
-        description = "이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.\n\n",
+        description = "이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -66,14 +78,19 @@ class TkRequestTestController(
         ]
     )
     @GetMapping("/forward-to-blank")
-    fun api3(): ModelAndView? {
-        return serviceMbr.api3()
+    fun api3(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): ModelAndView? {
+        return serviceMbr.api3(httpServletResponse)
     }
 
     ////
     @Operation(
         summary = "Get 요청 테스트 (Query Parameter)",
-        description = "Query Parameter 를 받는 Get 메소드 요청 테스트\n\n",
+        description = "Query Parameter 를 받는 Get 메소드 요청 테스트\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -186,7 +203,9 @@ class TkRequestTestController(
     ////
     @Operation(
         summary = "Get 요청 테스트 (Path Parameter)",
-        description = "Path Parameter 를 받는 Get 메소드 요청 테스트\n\n",
+        description = "Path Parameter 를 받는 Get 메소드 요청 테스트\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -218,7 +237,9 @@ class TkRequestTestController(
     ////
     @Operation(
         summary = "Post 요청 테스트 (application-json)",
-        description = "application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n",
+        description = "application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -321,7 +342,9 @@ class TkRequestTestController(
     ////
     @Operation(
         summary = "Post 요청 테스트 (x-www-form-urlencoded)",
-        description = "x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n",
+        description = "x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -418,7 +441,9 @@ class TkRequestTestController(
     @Operation(
         summary = "Post 요청 테스트 (multipart/form-data)",
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
-                "MultipartFile 파라미터가 null 이 아니라면 저장\n\n",
+                "MultipartFile 파라미터가 null 이 아니라면 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -521,7 +546,9 @@ class TkRequestTestController(
     @Operation(
         summary = "Post 요청 테스트2 (multipart/form-data)",
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)\n\n" +
-                "파일 리스트가 null 이 아니라면 저장\n\n",
+                "파일 리스트가 null 이 아니라면 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -626,7 +653,9 @@ class TkRequestTestController(
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "Form Data 의 Input Body 에는 Object 리스트 타입은 사용 불가능입니다.\n\n" +
                 "Object 리스트 타입을 사용한다면, Json String 타입으로 객체를 받아서 파싱하여 사용하는 방식을 사용합니다.\n\n" +
-                "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요.\n\n",
+                "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -797,7 +826,9 @@ class TkRequestTestController(
     ////
     @Operation(
         summary = "인위적 에러 발생 테스트",
-        description = "요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)\n\n",
+        description = "요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -811,5 +842,39 @@ class TkRequestTestController(
         httpServletResponse: HttpServletResponse
     ) {
         serviceMbr.api11(httpServletResponse)
+    }
+
+
+    ////
+    @Operation(
+        summary = "결과 코드 발생 테스트",
+        description = "Response Header 에 api-result-code 를 반환하는 테스트 API\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : errorType 을 A 로 보냈습니다.\n\n" +
+                "2 : errorType 을 B 로 보냈습니다.\n\n" +
+                "3 : errorType 을 C 로 보냈습니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/api-result-code-test")
+    fun api12(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "errorType", description = "정상적이지 않은 상황을 만들도록 가정된 변수입니다.", example = "A")
+        @RequestParam("errorType")
+        errorType: Api12ErrorTypeEnum?
+    ) {
+        serviceMbr.api12(httpServletResponse, errorType)
+    }
+
+    enum class Api12ErrorTypeEnum {
+        A,
+        B,
+        C
     }
 }

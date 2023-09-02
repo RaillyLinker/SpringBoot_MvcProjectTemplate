@@ -120,12 +120,6 @@ class SwaggerConfig {
           위와 같은 json 형식의 string 으로 입력하면 됩니다.
       
           클라이언트에서 사용하는 각 프로그래밍 언어별 지원해주는 JsonString <-> Object 라이브러리를 사용하면 편하게 입력 처리가 가능합니다.
-      
-      **(대표 Http Status Error 코드)**
-        - 400 : 요청 입력값이 잘못됨
-        - 401 : 로그인 되지 않음
-        - 403 : 권한이 없음
-        - 500 : 서버 내 Exception 발생 (API 단위의 api-error-codes 발생, 알고리즘 결함, 미처 분기하지 못한 에러 상황 발생, 하드웨어적 트러블 발생 등 복합적 원인)
     """.trimIndent()
 
 

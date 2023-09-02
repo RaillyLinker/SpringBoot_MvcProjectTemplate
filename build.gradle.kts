@@ -39,6 +39,14 @@ dependencies {
 	// (GSON)
 	// : Json - Object 라이브러리
 	implementation("com.google.code.gson:gson:2.10.1")
+
+	// (Jackson)
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.1")
+
+	// (retrofit2 네트워크 요청)
+	implementation("com.squareup.retrofit2:retrofit:2.9.0")
+	implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+	implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 }
 
 tasks.withType<KotlinCompile> {
