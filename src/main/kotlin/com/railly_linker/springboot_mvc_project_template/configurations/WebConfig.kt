@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 // (CORS 설정)
@@ -56,5 +57,14 @@ class WebConfig(
                 HttpMethod.OPTIONS.name()
             ) // 클라이언트에서 발신 가능한 메소드 (ex : "GET", "POST")
             .allowedHeaders("*") // 클라이언트에서 발신 가능한 헤더 (ex : "name", "addr")
+    }
+
+    // Spring static Resource 경로 설정
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        // 실제 경로 addResourceLocations 를 addResourceHandler 로 처리하여,
+        // static Resource 에 접근하려면, http://127.0.0.1:8080/images/1.png, http://127.0.0.1:8080/favicon.ico 와 같이 접근 가능
+        registry
+            .addResourceHandler("/**")
+            .addResourceLocations("classpath:/static/")
     }
 }

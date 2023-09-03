@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml"
+>
+<head>
+    <meta charset="UTF-8">
+    <link href="/global/font.css" rel="stylesheet"/>
+    <link href="/sc_api1/home_page.css" rel="stylesheet"/>
+    <title>Home</title>
+</head>
+<body>
+
+<div>
+    <img id = "title_icon" src="/sc_api1/title_icon.png" >
+    <span id = "title_txt" >Home</span>
+</div>
+
+<hr/>
+
+<h3>시스템 정보</h3>
+<span>구동 환경 프로필 : [[${mvVo.env}]]</span>
+<br/>
+
+<h3 th:if="${mvVo.env != 'prod80'}">Swagger 문서</h3>
+<form th:if="${mvVo.env != 'prod80'}" th:action="@{/swagger-ui/index.html}" method="get">
+    <input class="main_btn" type="submit" value="Swagger"/>
+</form>
+
+</body>
+</html>

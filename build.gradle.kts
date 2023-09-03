@@ -49,6 +49,12 @@ dependencies {
 	implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 	implementation("com.squareup.okhttp3:okhttp:4.11.0")
 	implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+	// (ThymeLeaf)
+	// : 웹 뷰 라이브러리
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
+	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 }
 
 tasks.withType<KotlinCompile> {
