@@ -50,8 +50,7 @@ class TkTestService(
             ),
             null,
             hashMapOf(
-                "html_to_pdf_sample_image" to ClassPathResource("static/tk_test_api2/html_to_pdf_sample.jpg"),
-                "html_email_sample_css" to  ClassPathResource("static/tk_test_api2/html_email_sample.css")
+                "html_to_pdf_sample_image" to ClassPathResource("static/tk_test_api2/html_to_pdf_sample.jpg")
             ),
             null,
             inputVo.multipartFileList

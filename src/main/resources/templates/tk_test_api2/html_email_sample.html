@@ -2,18 +2,36 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link href="/global/font.css" rel="stylesheet"/>
-    <link href="cid:html_email_sample_css" rel="stylesheet"/>
     <title>HTML Email</title>
+    <style>
+        body {
+            padding: 10px 20px;
+            box-sizing: border-box;
+            height: 100%;
+            min-height: 100vh;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.5;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sample_img{
+            width: 50%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 <div>
-    <h1 style="font-family: NanumGothic;">HTML Email</h1>
+    <h1>HTML Email</h1>
     <img id="sample_img" src="cid:html_to_pdf_sample_image" alt=""/>
 
     <div>
-        <h2 style="font-family: NanumMyeongjo;">이메일 내용</h2>
-        <p style="font-family: NanumMyeongjo;">[[${message}]]</p>
+        <h2>이메일 내용</h2>
+        <p>[[${message}]]</p>
     </div>
 </div>
 
