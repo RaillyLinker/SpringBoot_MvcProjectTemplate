@@ -1,7 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.util_dis
 
 import com.railly_linker.springboot_mvc_project_template.configurations.MailConfig
-import com.railly_linker.springboot_mvc_project_template.util_objects.ThymeleafParserUtilObject
+import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
 import jakarta.mail.internet.InternetAddress
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mail.javamail.JavaMailSender
@@ -81,7 +81,7 @@ class EmailSenderUtilDi(
 
         // 타임리프 HTML 랜더링
         val htmlString: String =
-            ThymeleafParserUtilObject.parseHtmlFileToHtmlString(
+            CustomUtilObject.parseHtmlFileToHtmlString(
                 thymeLeafTemplateName,
                 thymeLeafDataVariables ?: mapOf()
             )
