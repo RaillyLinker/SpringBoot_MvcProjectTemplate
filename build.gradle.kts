@@ -55,6 +55,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+
+	// (Spring email)
+	// : 스프링 이메일 발송
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+
 }
 
 tasks.withType<KotlinCompile> {
