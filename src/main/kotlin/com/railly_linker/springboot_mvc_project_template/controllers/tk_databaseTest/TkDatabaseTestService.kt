@@ -1,6 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.tk_databaseTest
 
-import com.railly_linker.springboot_mvc_project_template.annotations.ProwdTransactional
+import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
 import com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities.Database1_Template_Test
 import com.railly_linker.springboot_mvc_project_template.data_sources.database1.repositories.Database1_NativeRepository
@@ -39,7 +39,7 @@ class TkDatabaseTestService(
 
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
-    @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api1(
         httpServletResponse: HttpServletResponse,
         inputVo: TkDatabaseTestController.Api1InputVo
@@ -61,7 +61,7 @@ class TkDatabaseTestService(
 
 
     ////
-    @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api2(httpServletResponse: HttpServletResponse) {
         database1TemplateTestRepository.deleteAll()
 
@@ -70,7 +70,7 @@ class TkDatabaseTestService(
 
 
     ////
-    @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api3(httpServletResponse: HttpServletResponse, index: Long) {
         database1TemplateTestRepository.deleteById(index)
 
@@ -230,7 +230,7 @@ class TkDatabaseTestService(
 
 
     ////
-    @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api9(
         httpServletResponse: HttpServletResponse,
         testTableUid: Long,
@@ -263,7 +263,7 @@ class TkDatabaseTestService(
 
 
     ////
-    @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api10(
         httpServletResponse: HttpServletResponse,
         testTableUid: Long,
@@ -321,7 +321,7 @@ class TkDatabaseTestService(
 
 
     ////
-    @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api14(
         httpServletResponse: HttpServletResponse
     ) {

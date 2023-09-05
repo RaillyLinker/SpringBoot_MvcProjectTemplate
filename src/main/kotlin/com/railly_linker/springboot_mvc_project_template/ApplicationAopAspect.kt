@@ -1,6 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template
 
-import com.railly_linker.springboot_mvc_project_template.annotations.ProwdTransactional
+import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -20,7 +20,7 @@ class ApplicationAopAspect(
     companion object {
         // !!!DB 트랜젝션용 어노테이션인 ProwdTransactional 파일의 프로젝트 경로 설정하기!!
         const val TRANSACTION_ANNOTATION_PATH =
-            "@annotation(${ApplicationConstants.PACKAGE_NAME}.annotations.ProwdTransactional)"
+            "@annotation(${ApplicationConstants.PACKAGE_NAME}.annotations.CustomTransactional)"
 
     }
 
@@ -40,7 +40,7 @@ class ApplicationAopAspect(
         try {
             // annotation 에 설정된 transaction 순차 실행 및 저장
             for (transactionManagerBeanName in ((joinPoint.signature as MethodSignature).method).getAnnotation(
-                ProwdTransactional::class.java
+                CustomTransactional::class.java
             ).transactionManagerBeanNameList) {
                 // annotation 에 저장된 transactionManager Bean 이름으로 Bean 객체 가져오기
                 val platformTransactionManager =
