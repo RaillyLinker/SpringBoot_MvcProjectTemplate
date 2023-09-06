@@ -9,18 +9,14 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.ApplicationContext
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.time.format.DateTimeFormatter
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 @Service
 class TkDatabaseTestService(
     // (Database1 Repository)
-    private var applicationContextMbr: ApplicationContext,
     private val database1NativeRepository: Database1_NativeRepository,
     private val database1TemplateTestRepository: Database1_Template_TestRepository
 ) {
@@ -32,9 +28,6 @@ class TkDatabaseTestService(
     // }
     @Value("\${spring.profiles.active:Unknown}")
     private lateinit var activeProfileMbr: String
-
-    // (스레드 풀)
-    private val executorServiceMbr: ExecutorService = Executors.newCachedThreadPool()
 
 
     // ---------------------------------------------------------------------------------------------
