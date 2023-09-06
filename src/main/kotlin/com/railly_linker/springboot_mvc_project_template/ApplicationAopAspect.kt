@@ -30,7 +30,7 @@ class ApplicationAopAspect(
     // (@ProwdTransactional 를 입력한 함수 실행 전후에 JPA 트랜젝션 적용)
     // !!!Annotation 경로 확인!!
     @Around(TRANSACTION_ANNOTATION_PATH)
-    fun logExecutionTime(joinPoint: ProceedingJoinPoint): Any? {
+    fun aroundTransactionAnnotationFunction(joinPoint: ProceedingJoinPoint): Any? {
         val proceed: Any?
 
         // transactionManager and transactionStatus 리스트
