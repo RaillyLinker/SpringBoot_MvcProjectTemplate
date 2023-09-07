@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface Database1_Template_TestRepository : JpaRepository<Database1_Template_Test, Long> {
-    fun findAllByOrderByRowCreateDate(pageable: Pageable): Page<Database1_Template_Test>
+    fun findAllByRowActivateOrderByRowCreateDate(
+        rowActivate: Boolean,
+        pageable: Pageable
+    ): Page<Database1_Template_Test>
+
+    fun countByRowActivate(rowActivate: Boolean): Long
 
 }

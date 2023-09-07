@@ -25,6 +25,7 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "test.random_num as randomNum, " +
                 "ABS(test.random_num-:num) as distance " +
                 "from template.test " +
+                "where row_activate = b'1'" +
                 "order by " +
                 "distance"
     )
@@ -51,6 +52,7 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "test.row_update_date as rowUpdateDate, " +
                 "ABS(TIMESTAMPDIFF(SECOND, test.row_create_date, :date)) as timeDiffSec " +
                 "from template.test " +
+                "where row_activate = b'1'" +
                 "order by " +
                 "timeDiffSec"
     )
@@ -78,10 +80,12 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "ABS(test.random_num-:num) as distance " +
                 "from " +
                 "template.test " +
+                "where row_activate = b'1'" +
                 "order by distance",
         countQuery = "select " +
                 "count(*) " +
-                "from test"
+                "from test " +
+                "where row_activate = b'1'"
     )
     fun selectListForTkDatabaseTestApi8(
         @Param(value = "num") num: Int,
@@ -122,12 +126,14 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "test.random_num as randomNum " +
                 "from template.test " +
                 "where " +
-                "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '')",
+                "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
+                "and row_activate = b'1'",
         countQuery = "select " +
                 "count(*) " +
                 "from template.test " +
                 "where " +
-                "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '')"
+                "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
+                "and row_activate = b'1'"
     )
     fun selectListForTkDatabaseTestApi13(
         @Param(value = "searchKeyword") searchKeyword: String,
@@ -142,53 +148,62 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
         var randomNum: Int
     }
 
-
-    // ---------------------------------------------------------------------------------------------
-    // <C10>
     @Query(
         nativeQuery = true,
         value = "SELECT " +
-                "*, " +
-                "(6371*acos(cos(radians(latitude))*cos(radians(:latitude))*cos(radians(:longitude)-radians(longitude))+sin(radians(latitude))*sin(radians(:latitude)))) as distanceKiloMeter " +
-                "FROM template.test_map " +
-                "HAVING " +
-                "distanceKiloMeter <= :radiusKiloMeter " +
-                "order by " +
-                "distanceKiloMeter"
+                "uid as uid, " +
+                "row_create_date as rowCreateDate, " +
+                "row_update_date as rowUpdateDate, " +
+                "content as content, random_num as randomNum, " +
+                "distance as distance " +
+                "FROM (" +
+                "    SELECT " +
+                "    *, " +
+                "    ABS(test.random_num-:num) as distance," +
+                "    @rownum \\:= @rownum + 1 AS row_num " +
+                "    FROM " +
+                "    template.test, " +
+                "    (SELECT @rownum \\:= 0) r " +
+                "    ORDER BY distance ASC" +
+                ") AS ordered_table " +
+                "WHERE " +
+                "row_activate = b'1' and " +
+                "row_num > (" +
+                "    select if (" +
+                "        :lastItemUid > 0, " +
+                "        (SELECT " +
+                "            row_num " +
+                "            FROM (" +
+                "                SELECT " +
+                "                *, " +
+                "                ABS(test.random_num-:num) as distance, " +
+                "                @rownum2 \\:= @rownum2 + 1 AS row_num " +
+                "                FROM " +
+                "                template.test, " +
+                "                (SELECT @rownum2 \\:= 0) r " +
+                "                ORDER BY distance ASC" +
+                "            ) AS o2 " +
+                "            WHERE " +
+                "            uid = :lastItemUid" +
+                "        ), " +
+                "        0" +
+                "    )" +
+                ")" +
+                "LIMIT :pageElementsCount"
     )
-    fun selectListForApiC7N5(
-        @Param(value = "latitude") latitude: Double,
-        @Param(value = "longitude") longitude: Double,
-        @Param(value = "radiusKiloMeter") radiusKiloMeter: Double
-    ): List<SelectListForApiC7N5OutputVo>
+    fun selectListForTkDatabaseTestApi16(
+        @Param(value = "lastItemUid") lastItemUid: Long,
+        @Param(value = "pageElementsCount") pageElementsCount: Int,
+        @Param(value = "num") num: Int
+    ): List<SelectListForTkDatabaseTestApi16OutputVo>
 
-    interface SelectListForApiC7N5OutputVo {
+    interface SelectListForTkDatabaseTestApi16OutputVo {
         var uid: Long
-        var latitude: Double
-        var longitude: Double
-        var distanceKiloMeter: Double
-    }
-
-    @Query(
-        nativeQuery = true,
-        value = "SELECT " +
-                "* " +
-                "FROM template.test_map " +
-                "where " +
-                "(CASE WHEN :southLatitude < :northLatitude THEN latitude BETWEEN :southLatitude AND :northLatitude ELSE latitude BETWEEN :northLatitude AND :southLatitude END) AND " +
-                "(CASE WHEN :westLongitude < :eastLongitude THEN longitude BETWEEN :westLongitude AND :eastLongitude ELSE longitude BETWEEN :eastLongitude AND :westLongitude END)"
-    )
-    fun selectListForApiC7N6(
-        @Param(value = "northLatitude") northLatitude: Double,
-        @Param(value = "eastLongitude") eastLongitude: Double,
-        @Param(value = "southLatitude") southLatitude: Double,
-        @Param(value = "westLongitude") westLongitude: Double
-    ): List<SelectListForApiC7N6OutputVo>
-
-    interface SelectListForApiC7N6OutputVo {
-        var uid: Long
-        var latitude: Double
-        var longitude: Double
+        var rowCreateDate: LocalDateTime
+        var rowUpdateDate: LocalDateTime
+        var content: String
+        var randomNum: Int
+        var distance: Int
     }
 
 }

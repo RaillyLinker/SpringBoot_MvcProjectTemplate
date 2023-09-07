@@ -162,7 +162,8 @@ class TkDatabaseTestService(
         pageElementsCount: Int
     ): TkDatabaseTestController.Api7OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val entityList = database1TemplateTestRepository.findAllByOrderByRowCreateDate(
+        val entityList = database1TemplateTestRepository.findAllByRowActivateOrderByRowCreateDate(
+            true,
             pageable
         )
 
@@ -231,7 +232,7 @@ class TkDatabaseTestService(
     ): TkDatabaseTestController.Api9OutputVo? {
         val oldEntity = database1TemplateTestRepository.findById(testTableUid)
 
-        if (oldEntity.isEmpty) {
+        if (oldEntity.isEmpty || !oldEntity.get().rowActivate) {
             httpServletResponse.status = 500
             httpServletResponse.addHeader("api-error-codes", "1")
             return null
@@ -265,9 +266,9 @@ class TkDatabaseTestService(
         // !! 아래는 네이티브 쿼리로 수정하는 예시를 보인 것으로,
         // 이 경우에는 @UpdateTimestamp, @Version 기능이 자동 적용 되지 않습니다.
         // 고로 수정문은 jpa 를 사용하길 권장합니다. !!
-        val testEntityExists = database1TemplateTestRepository.existsById(testTableUid)
+        val testEntity = database1TemplateTestRepository.findById(testTableUid)
 
-        if (!testEntityExists) {
+        if (testEntity.isEmpty || !testEntity.get().rowActivate) {
             httpServletResponse.status = 500
             httpServletResponse.addHeader("api-error-codes", "1")
             // 트랜젝션 커밋
@@ -339,5 +340,40 @@ class TkDatabaseTestService(
 
         throw Exception("No Transaction Exception Test!")
         httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
+    ////
+    fun api16(
+        httpServletResponse: HttpServletResponse,
+        lastItemUid: Long?,
+        pageElementsCount: Int,
+        num: Int
+    ): TkDatabaseTestController.Api16OutputVo? {
+        val voList = database1NativeRepository.selectListForTkDatabaseTestApi16(
+            lastItemUid ?: -1,
+            pageElementsCount,
+            num
+        )
+
+        val count = database1TemplateTestRepository.countByRowActivate(true)
+
+        val testEntityVoList = ArrayList<TkDatabaseTestController.Api16OutputVo.TestEntityVo>()
+        for (vo in voList) {
+            testEntityVoList.add(
+                TkDatabaseTestController.Api16OutputVo.TestEntityVo(
+                    vo.uid,
+                    vo.content,
+                    vo.randomNum,
+                    vo.rowCreateDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")),
+                    vo.rowUpdateDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")),
+                    vo.distance
+                )
+            )
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+
+        return TkDatabaseTestController.Api16OutputVo(count, testEntityVoList)
     }
 }

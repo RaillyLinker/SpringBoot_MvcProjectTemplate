@@ -576,4 +576,67 @@ class TkDatabaseTestController(
 
 
     ////
+    @Operation(
+        summary = "DB Rows 조회 테스트 (중복 없는 네이티브 쿼리 페이징)",
+        description = "테스트 테이블의 Rows 를 네이티브 쿼리로 중복없이 페이징하여 반환합니다.\n\n" +
+                "num 을 기준으로 근사치 정렬도 수행합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/rows/native-paging-no-duplication")
+    fun api16(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "lastItemUid", description = "이전 페이지에서 받은 마지막 아이템의 Uid (첫 요청이면 null)", example = "1")
+        @RequestParam("lastItemUid")
+        lastItemUid: Long?,
+        @Parameter(name = "pageElementsCount", description = "페이지 아이템 개수", example = "10")
+        @RequestParam("pageElementsCount")
+        pageElementsCount: Int,
+        @Parameter(name = "num", description = "근사값의 기준", example = "1")
+        @RequestParam("num")
+        num: Int
+    ): Api16OutputVo? {
+        return service.api16(httpServletResponse, lastItemUid, pageElementsCount, num)
+    }
+
+    data class Api16OutputVo(
+        @Schema(description = "아이템 전체 개수", required = true, example = "100")
+        @JsonProperty("totalElements")
+        val totalElements: Long,
+        @Schema(description = "아이템 리스트", required = true)
+        @JsonProperty("testEntityVoList")
+        val testEntityVoList: List<TestEntityVo>
+    ) {
+        @Schema(description = "아이템")
+        data class TestEntityVo(
+            @Schema(description = "글 고유번호", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
+            @JsonProperty("content")
+            val content: String,
+            @Schema(description = "자동 생성 숫자", required = true, example = "21345")
+            @JsonProperty("randomNum")
+            val randomNum: Int,
+            @Schema(description = "글 작성일", required = true, example = "2022-10-11T02:21:36.779")
+            @JsonProperty("createDate")
+            val createDate: String,
+            @Schema(description = "글 수정일", required = true, example = "2022-10-11T02:21:36.779")
+            @JsonProperty("updateDate")
+            val updateDate: String,
+            @Schema(description = "기준과의 절대거리", required = true, example = "34")
+            @JsonProperty("distance")
+            val distance: Int
+        )
+    }
+
+
+    ////
 }
