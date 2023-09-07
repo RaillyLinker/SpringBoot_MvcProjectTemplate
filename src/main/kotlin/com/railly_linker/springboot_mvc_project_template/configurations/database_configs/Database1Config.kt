@@ -26,7 +26,7 @@ import javax.sql.DataSource
     transactionManagerRef = Database1Config.TRANSACTION_NAME // 아래 bean 이름과 동일
 )
 class Database1Config(
-    private val env: Environment
+    private val envMbr: Environment
 ) {
     companion object {
         // !!!application.yml 에 정의된 datasource 내의 DB명 작성!!
@@ -55,8 +55,8 @@ class Database1Config(
         val vendorAdapter = HibernateJpaVendorAdapter()
         em.jpaVendorAdapter = vendorAdapter
         val properties = HashMap<String, Any?>()
-        properties["hibernate.hbm2ddl.auto"] = env.getProperty("spring.jpa.hibernate.ddl-auto")
-        properties["hibernate.dialect"] = env.getProperty("spring.jpa.database-platform")
+        properties["hibernate.hbm2ddl.auto"] = envMbr.getProperty("spring.jpa.hibernate.ddl-auto")
+        properties["hibernate.dialect"] = envMbr.getProperty("spring.jpa.database-platform")
         em.setJpaPropertyMap(properties)
         return em
     }

@@ -14,7 +14,7 @@ class TkTestService(
     @Value("\${spring.profiles.active:default}") private var activeProfileMbr: String,
 
     // 이메일 발송 유틸
-    private val emailSenderUtilDi: EmailSenderUtilDi
+    private val emailSenderUtilDiMbr: EmailSenderUtilDi
 ) {
     // <멤버 변수 공간>
     private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
@@ -23,7 +23,7 @@ class TkTestService(
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse, inputVo: TkTestController.Api1InputVo) {
-        emailSenderUtilDi.sendMessageMail(
+        emailSenderUtilDiMbr.sendMessageMail(
             inputVo.senderName,
             inputVo.receiverEmailAddressList.toTypedArray(),
             inputVo.carbonCopyEmailAddressList?.toTypedArray(),
@@ -39,7 +39,7 @@ class TkTestService(
 
     ////
     fun api2(httpServletResponse: HttpServletResponse, inputVo: TkTestController.Api2InputVo) {
-        emailSenderUtilDi.sendThymeLeafHtmlMail(
+        emailSenderUtilDiMbr.sendThymeLeafHtmlMail(
             inputVo.senderName,
             inputVo.receiverEmailAddressList.toTypedArray(),
             inputVo.carbonCopyEmailAddressList?.toTypedArray(),

@@ -17,8 +17,8 @@ import java.time.format.DateTimeFormatter
 @Service
 class TkDatabaseTestService(
     // (Database1 Repository)
-    private val database1NativeRepository: Database1_NativeRepository,
-    private val database1TemplateTestRepository: Database1_Template_TestRepository
+    private val database1NativeRepositoryMbr: Database1_NativeRepository,
+    private val database1TemplateTestRepositoryMbr: Database1_Template_TestRepository
 ) {
     // <멤버 변수 공간>
     private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
@@ -37,7 +37,7 @@ class TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: TkDatabaseTestController.Api1InputVo
     ): TkDatabaseTestController.Api1OutputVo? {
-        val result = database1TemplateTestRepository.save(
+        val result = database1TemplateTestRepositoryMbr.save(
             Database1_Template_Test(inputVo.content, (0..99999999).random(), true)
         )
 
@@ -56,7 +56,7 @@ class TkDatabaseTestService(
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api2(httpServletResponse: HttpServletResponse) {
-        database1TemplateTestRepository.deleteAll()
+        database1TemplateTestRepositoryMbr.deleteAll()
 
         httpServletResponse.setHeader("api-result-code", "ok")
     }
@@ -65,7 +65,7 @@ class TkDatabaseTestService(
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api3(httpServletResponse: HttpServletResponse, index: Long) {
-        database1TemplateTestRepository.deleteById(index)
+        database1TemplateTestRepositoryMbr.deleteById(index)
 
         httpServletResponse.setHeader("api-result-code", "ok")
     }
@@ -73,7 +73,7 @@ class TkDatabaseTestService(
 
     ////
     fun api4(httpServletResponse: HttpServletResponse): TkDatabaseTestController.Api4OutputVo? {
-        val resultEntityList = database1TemplateTestRepository.findAll()
+        val resultEntityList = database1TemplateTestRepositoryMbr.findAll()
 
         val testEntityVoList = ArrayList<TkDatabaseTestController.Api4OutputVo.TestEntityVo>()
         for (resultEntity in resultEntityList) {
@@ -100,7 +100,7 @@ class TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         num: Int
     ): TkDatabaseTestController.Api5OutputVo? {
-        val foundEntityList = database1NativeRepository.selectListForTkDatabaseTestApi5(num)
+        val foundEntityList = database1NativeRepositoryMbr.selectListForTkDatabaseTestApi5(num)
 
         val testEntityVoList =
             ArrayList<TkDatabaseTestController.Api5OutputVo.TestEntityVo>()
@@ -130,7 +130,7 @@ class TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         dateString: String
     ): TkDatabaseTestController.Api6OutputVo? {
-        val foundEntityList = database1NativeRepository.selectListForTkDatabaseTestApi6(dateString)
+        val foundEntityList = database1NativeRepositoryMbr.selectListForTkDatabaseTestApi6(dateString)
 
         val testEntityVoList =
             ArrayList<TkDatabaseTestController.Api6OutputVo.TestEntityVo>()
@@ -162,7 +162,7 @@ class TkDatabaseTestService(
         pageElementsCount: Int
     ): TkDatabaseTestController.Api7OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val entityList = database1TemplateTestRepository.findAllByRowActivateOrderByRowCreateDate(
+        val entityList = database1TemplateTestRepositoryMbr.findAllByRowActivateOrderByRowCreateDate(
             true,
             pageable
         )
@@ -196,7 +196,7 @@ class TkDatabaseTestService(
         num: Int
     ): TkDatabaseTestController.Api8OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val voList = database1NativeRepository.selectListForTkDatabaseTestApi8(
+        val voList = database1NativeRepositoryMbr.selectListForTkDatabaseTestApi8(
             num,
             pageable
         )
@@ -230,7 +230,7 @@ class TkDatabaseTestService(
         testTableUid: Long,
         inputVo: TkDatabaseTestController.Api9InputVo
     ): TkDatabaseTestController.Api9OutputVo? {
-        val oldEntity = database1TemplateTestRepository.findById(testTableUid)
+        val oldEntity = database1TemplateTestRepositoryMbr.findById(testTableUid)
 
         if (oldEntity.isEmpty || !oldEntity.get().rowActivate) {
             httpServletResponse.status = 500
@@ -241,7 +241,7 @@ class TkDatabaseTestService(
         val testObject = oldEntity.get()
         testObject.content = inputVo.content
 
-        val result = database1TemplateTestRepository.save(
+        val result = database1TemplateTestRepositoryMbr.save(
             testObject
         )
 
@@ -266,7 +266,7 @@ class TkDatabaseTestService(
         // !! 아래는 네이티브 쿼리로 수정하는 예시를 보인 것으로,
         // 이 경우에는 @UpdateTimestamp, @Version 기능이 자동 적용 되지 않습니다.
         // 고로 수정문은 jpa 를 사용하길 권장합니다. !!
-        val testEntity = database1TemplateTestRepository.findById(testTableUid)
+        val testEntity = database1TemplateTestRepositoryMbr.findById(testTableUid)
 
         if (testEntity.isEmpty || !testEntity.get().rowActivate) {
             httpServletResponse.status = 500
@@ -275,7 +275,7 @@ class TkDatabaseTestService(
             return
         }
 
-        database1NativeRepository.updateForTkDatabaseTestApi10(testTableUid, inputVo.content)
+        database1NativeRepositoryMbr.updateForTkDatabaseTestApi10(testTableUid, inputVo.content)
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 
@@ -288,7 +288,7 @@ class TkDatabaseTestService(
         searchKeyword: String
     ): TkDatabaseTestController.Api13OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val voList = database1NativeRepository.selectListForTkDatabaseTestApi13(
+        val voList = database1NativeRepositoryMbr.selectListForTkDatabaseTestApi13(
             searchKeyword,
             pageable
         )
@@ -319,7 +319,7 @@ class TkDatabaseTestService(
     fun api14(
         httpServletResponse: HttpServletResponse
     ) {
-        val result = database1TemplateTestRepository.save(
+        val result = database1TemplateTestRepositoryMbr.save(
             Database1_Template_Test("error test", (0..99999999).random(), true)
         )
 
@@ -332,7 +332,7 @@ class TkDatabaseTestService(
 
     ////
     fun api15(httpServletResponse: HttpServletResponse) {
-        val result = database1TemplateTestRepository.save(
+        val result = database1TemplateTestRepositoryMbr.save(
             Database1_Template_Test("error test", (0..99999999).random(), true)
         )
 
@@ -350,13 +350,13 @@ class TkDatabaseTestService(
         pageElementsCount: Int,
         num: Int
     ): TkDatabaseTestController.Api16OutputVo? {
-        val voList = database1NativeRepository.selectListForTkDatabaseTestApi16(
+        val voList = database1NativeRepositoryMbr.selectListForTkDatabaseTestApi16(
             lastItemUid ?: -1,
             pageElementsCount,
             num
         )
 
-        val count = database1TemplateTestRepository.countByRowActivate(true)
+        val count = database1TemplateTestRepositoryMbr.countByRowActivate(true)
 
         val testEntityVoList = ArrayList<TkDatabaseTestController.Api16OutputVo.TestEntityVo>()
         for (vo in voList) {

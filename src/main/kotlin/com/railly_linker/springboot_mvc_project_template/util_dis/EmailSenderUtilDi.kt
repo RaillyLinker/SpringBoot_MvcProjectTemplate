@@ -13,7 +13,7 @@ import java.io.File
 // [Spring Email 유틸]
 @Component
 class EmailSenderUtilDi(
-    private val javaMailSender: JavaMailSender
+    private val javaMailSenderMbr: JavaMailSender
 ) {
     fun sendMessageMail(
         senderName: String, // 이메일에 표시될 발송자 이름 (발송 이메일 주소는 application.yml 에 저장)
@@ -24,7 +24,7 @@ class EmailSenderUtilDi(
         sendFileList: List<File>?, // 첨부파일 리스트
         sendMultipartFileList: List<MultipartFile>? // 첨부파일 리스트 (멀티파트)
     ) {
-        val mimeMessage = javaMailSender.createMimeMessage()
+        val mimeMessage = javaMailSenderMbr.createMimeMessage()
         val isMultipart = !sendFileList.isNullOrEmpty() || !sendMultipartFileList.isNullOrEmpty() // multipart 전송 여부
         val mimeMessageHelper = MimeMessageHelper(mimeMessage, isMultipart, "UTF-8")
 
@@ -48,7 +48,7 @@ class EmailSenderUtilDi(
             }
         }
 
-        javaMailSender.send(mimeMessage)
+        javaMailSenderMbr.send(mimeMessage)
     }
 
     // (ThymeLeaf 로 랜더링 한 HTML 이메일 발송)
@@ -69,7 +69,7 @@ class EmailSenderUtilDi(
         sendFileList: List<File>?, // 첨부파일 리스트
         sendMultipartFileList: List<MultipartFile>? // 첨부파일 리스트 (멀티파트)
     ) {
-        val mimeMessage = javaMailSender.createMimeMessage()
+        val mimeMessage = javaMailSenderMbr.createMimeMessage()
         val mimeMessageHelper = MimeMessageHelper(mimeMessage, true, "UTF-8")
 
         mimeMessageHelper.setFrom(InternetAddress(MailConfig.MAIL_SENDER_NAME, senderName)) // 수신자명 설정
@@ -111,7 +111,7 @@ class EmailSenderUtilDi(
             }
         }
 
-        javaMailSender.send(mimeMessage)
+        javaMailSenderMbr.send(mimeMessage)
     }
 
 }

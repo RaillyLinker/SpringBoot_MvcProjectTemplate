@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/tk/database-test")
 class TkDatabaseTestController(
-    private val service: TkDatabaseTestService
+    private val serviceMbr: TkDatabaseTestService
 ) {
     // <멤버 변수 공간>
 
@@ -39,7 +39,7 @@ class TkDatabaseTestController(
         @RequestBody
         inputVo: Api1InputVo
     ): Api1OutputVo? {
-        return service.api1(httpServletResponse, inputVo)
+        return serviceMbr.api1(httpServletResponse, inputVo)
     }
 
     data class Api1InputVo(
@@ -85,7 +85,7 @@ class TkDatabaseTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        service.api2(httpServletResponse)
+        serviceMbr.api2(httpServletResponse)
     }
 
 
@@ -110,7 +110,7 @@ class TkDatabaseTestController(
         @PathVariable("index")
         index: Long
     ) {
-        service.api3(httpServletResponse, index)
+        serviceMbr.api3(httpServletResponse, index)
     }
 
 
@@ -132,7 +132,7 @@ class TkDatabaseTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api4OutputVo? {
-        return service.api4(httpServletResponse)
+        return serviceMbr.api4(httpServletResponse)
     }
 
     data class Api4OutputVo(
@@ -182,7 +182,7 @@ class TkDatabaseTestController(
         @RequestParam("num")
         num: Int
     ): Api5OutputVo? {
-        return service.api5(httpServletResponse, num)
+        return serviceMbr.api5(httpServletResponse, num)
     }
 
     data class Api5OutputVo(
@@ -235,7 +235,7 @@ class TkDatabaseTestController(
         @RequestParam("dateString")
         dateString: String
     ): Api6OutputVo? {
-        return service.api6(httpServletResponse, dateString)
+        return serviceMbr.api6(httpServletResponse, dateString)
     }
 
     data class Api6OutputVo(
@@ -291,7 +291,7 @@ class TkDatabaseTestController(
         @RequestParam("pageElementsCount")
         pageElementsCount: Int
     ): Api7OutputVo? {
-        return service.api7(httpServletResponse, page, pageElementsCount)
+        return serviceMbr.api7(httpServletResponse, page, pageElementsCount)
     }
 
     data class Api7OutputVo(
@@ -351,7 +351,7 @@ class TkDatabaseTestController(
         @RequestParam("num")
         num: Int
     ): Api8OutputVo? {
-        return service.api8(httpServletResponse, page, pageElementsCount, num)
+        return serviceMbr.api8(httpServletResponse, page, pageElementsCount, num)
     }
 
     data class Api8OutputVo(
@@ -410,7 +410,7 @@ class TkDatabaseTestController(
         @RequestBody
         inputVo: Api9InputVo
     ): Api9OutputVo? {
-        return service.api9(httpServletResponse, testTableUid, inputVo)
+        return serviceMbr.api9(httpServletResponse, testTableUid, inputVo)
     }
 
     data class Api9InputVo(
@@ -462,7 +462,7 @@ class TkDatabaseTestController(
         @RequestBody
         inputVo: Api10InputVo
     ) {
-        return service.api10(httpServletResponse, testTableUid, inputVo)
+        return serviceMbr.api10(httpServletResponse, testTableUid, inputVo)
     }
 
     data class Api10InputVo(
@@ -499,7 +499,7 @@ class TkDatabaseTestController(
         @RequestParam("searchKeyword")
         searchKeyword: String
     ): Api13OutputVo? {
-        return service.api13(httpServletResponse, page, pageElementsCount, searchKeyword)
+        return serviceMbr.api13(httpServletResponse, page, pageElementsCount, searchKeyword)
     }
 
     data class Api13OutputVo(
@@ -549,7 +549,7 @@ class TkDatabaseTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        service.api14(httpServletResponse)
+        serviceMbr.api14(httpServletResponse)
     }
 
 
@@ -571,7 +571,7 @@ class TkDatabaseTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        service.api15(httpServletResponse)
+        serviceMbr.api15(httpServletResponse)
     }
 
 
@@ -603,7 +603,7 @@ class TkDatabaseTestController(
         @RequestParam("num")
         num: Int
     ): Api16OutputVo? {
-        return service.api16(httpServletResponse, lastItemUid, pageElementsCount, num)
+        return serviceMbr.api16(httpServletResponse, lastItemUid, pageElementsCount, num)
     }
 
     data class Api16OutputVo(
