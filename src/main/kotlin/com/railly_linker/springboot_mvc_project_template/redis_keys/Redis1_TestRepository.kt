@@ -12,6 +12,8 @@ class Redis1_TestRepository(
     @Qualifier("redis1RedisTemplate") private val redisTemplateMbr: RedisTemplate<String, Any>
 ) {
     // <멤버 변수 공간>
+    // 본 클래스명이 통째로 key
+    // (ex : com.railly_linker.springboot_mvc_project_template.redis_keys.Redis1_TestRepository)
     val keyName: String = this::class.java.name
 
 
@@ -71,6 +73,7 @@ class Redis1_TestRepository(
         val expireTimeMs: Long // 남은 만료 시간 밀리초
     )
 
+    // !!!원하는 Value 저장 타입을 설정!!
     data class RedisValueVo(
         var content: String,
         var innerVo: InnerVo,
