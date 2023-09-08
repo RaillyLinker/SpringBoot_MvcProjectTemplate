@@ -8,16 +8,16 @@ plugins {
 
     // 추가
     kotlin("kapt") version "1.9.10" // kotlin 어노테이션
-    kotlin("plugin.allopen") version "1.8.0" // allOpen 에 지정한 어노테이션으로 만든 클래스에 open 키워드를 적용
-    kotlin("plugin.noarg") version "1.8.0" // noArg 에 지정한 어노테이션으로 만든 클래스에 자동으로 no-arg 생성자를 생성
-    kotlin("plugin.jpa") version "1.8.0" // JPA 사용을 위한 플러그인 추가 옵션
+    kotlin("plugin.allopen") version "1.9.10" // allOpen 에 지정한 어노테이션으로 만든 클래스에 open 키워드를 적용
+    kotlin("plugin.noarg") version "1.9.10" // noArg 에 지정한 어노테이션으로 만든 클래스에 자동으로 no-arg 생성자를 생성
+    kotlin("plugin.jpa") version "1.9.10" // JPA 사용을 위한 플러그인 추가 옵션
 }
 
 group = "com.railly_linker"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_20
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -85,7 +85,7 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "20"
+        jvmTarget = "17"
     }
 }
 
