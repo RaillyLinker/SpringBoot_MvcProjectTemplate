@@ -3,7 +3,6 @@ package com.railly_linker.springboot_mvc_project_template
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
-import com.railly_linker.springboot_mvc_project_template.util_objects.RedisUtilObject
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.support.DefaultTransactionDefinition
+import java.util.concurrent.TimeUnit
 
 // [AOP]
 @Component
@@ -90,9 +90,8 @@ class ApplicationAopAspect(
     fun aroundRedisTransactionAnnotationFunction(joinPoint: ProceedingJoinPoint): Any? {
         val proceed: Any?
 
-        // 백업 데이터 (redisTemplate 객체, Key, Value)
-        val backUpDataList: ArrayList<Triple<RedisTemplate<String, Any>, String, RedisUtilObject.RedisData?>> =
-            arrayListOf()
+        // 백업 데이터
+        val backUpDataList: ArrayList<RedisData> = arrayListOf()
 
         try {
             val redisTemplateBeanNameAndKeyList =
@@ -108,9 +107,24 @@ class ApplicationAopAspect(
                 val redisKey = redisTemplateBeanNameAndKeySplit[1].trim()
 
                 // 각 키로 저장된 데이터 가져와 저장하기
-                val savedValue = RedisUtilObject.getValue(redisTemplate, redisKey)
+                val redisValueVo: RedisData.RedisValueVo?
+                val value = redisTemplate.opsForValue()[redisKey]
+                if (value == null) {
+                    redisValueVo = null
+                } else {
+                    redisValueVo = RedisData.RedisValueVo(
+                        value as String,
+                        redisTemplate.getExpire(redisKey, TimeUnit.MILLISECONDS)
+                    )
+                }
 
-                backUpDataList.add(Triple(redisTemplate, redisKey, savedValue))
+                backUpDataList.add(
+                    RedisData(
+                        redisTemplate,
+                        redisKey,
+                        redisValueVo
+                    )
+                )
             }
 
             //// 함수 실행 전
@@ -123,14 +137,17 @@ class ApplicationAopAspect(
 
             for (backUpData in backUpDataList) {
                 // 현재까지 저장된 정보 제거
-                RedisUtilObject.deleteValue(backUpData.first, backUpData.second)
+                backUpData.redisTemplate.delete(backUpData.key)
 
-                if (backUpData.third != null) {
-                    RedisUtilObject.putValue(
-                        backUpData.first,
-                        backUpData.second,
-                        backUpData.third!!.valueString,
-                        backUpData.third!!.expireTimeMs
+                if (backUpData.redisValueVo != null) {
+                    // Redis Value 저장
+                    backUpData.redisTemplate.opsForValue()[backUpData.key] = backUpData.redisValueVo.value
+
+                    // 이번에 넣은 Redis Key 에 대한 만료시간 설정
+                    backUpData.redisTemplate.expire(
+                        backUpData.key,
+                        backUpData.redisValueVo.expireTimeMs,
+                        TimeUnit.MILLISECONDS
                     )
                 }
             }
@@ -150,4 +167,14 @@ class ApplicationAopAspect(
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
+    data class RedisData(
+        val redisTemplate: RedisTemplate<String, Any>,
+        val key: String,
+        val redisValueVo: RedisValueVo?
+    ) {
+        data class RedisValueVo(
+            val value: String,
+            val expireTimeMs: Long
+        )
+    }
 }

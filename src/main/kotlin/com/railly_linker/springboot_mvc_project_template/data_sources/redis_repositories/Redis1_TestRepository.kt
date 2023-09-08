@@ -1,11 +1,11 @@
-package com.railly_linker.springboot_mvc_project_template.redis_repositories
+package com.railly_linker.springboot_mvc_project_template.data_sources.redis_repositories
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.railly_linker.springboot_mvc_project_template.util_objects.RedisUtilObject
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
+import java.util.concurrent.TimeUnit
 
 @Component
 class Redis1_TestRepository(
@@ -23,38 +23,32 @@ class Redis1_TestRepository(
     ) {
         val valueJsonString = Gson().toJson(value)
 
-        RedisUtilObject.putValue(
-            redisTemplateMbr,
-            keyName,
-            valueJsonString,
-            expireTimeMs
-        )
+        // Redis Value 저장
+        redisTemplateMbr.opsForValue()[keyName] = valueJsonString
+
+        // 이번에 넣은 Redis Key 에 대한 만료시간 설정
+        redisTemplateMbr.expire(keyName, expireTimeMs, TimeUnit.MILLISECONDS)
     }
 
     fun deleteValue() {
-        RedisUtilObject.deleteValue(
-            redisTemplateMbr,
-            keyName
-        )
+        redisTemplateMbr.delete(keyName)
     }
 
     fun getValue(): RedisDataVo? {
-        val result = RedisUtilObject.getValue(
-            redisTemplateMbr,
-            keyName
-        )
+        val value = redisTemplateMbr.opsForValue()[keyName]
+        val expireTimeMs = redisTemplateMbr.getExpire(keyName, TimeUnit.MILLISECONDS)
 
-        return if (result == null) {
+        return if (value == null) {
             null
         } else {
             val valueObject = Gson().fromJson<RedisValueVo>(
-                result.valueString, // 해석하려는 json 형식의 String
+                value as String, // 해석하려는 json 형식의 String
                 object : TypeToken<RedisValueVo>() {}.type // 파싱할 데이터 스키마 객체 타입
             )
 
             RedisDataVo(
                 valueObject,
-                result.expireTimeMs
+                expireTimeMs
             )
         }
     }
