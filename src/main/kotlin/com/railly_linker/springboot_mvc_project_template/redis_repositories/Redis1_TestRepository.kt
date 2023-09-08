@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.redis_keys
+package com.railly_linker.springboot_mvc_project_template.redis_repositories
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -12,9 +12,7 @@ class Redis1_TestRepository(
     @Qualifier("redis1RedisTemplate") private val redisTemplateMbr: RedisTemplate<String, Any>
 ) {
     // <멤버 변수 공간>
-    // 본 클래스명이 통째로 key
-    // (ex : com.railly_linker.springboot_mvc_project_template.redis_keys.Redis1_TestRepository)
-    val keyName: String = this::class.java.name
+    val keyName: String = this::class.simpleName!!
 
 
     // ---------------------------------------------------------------------------------------------

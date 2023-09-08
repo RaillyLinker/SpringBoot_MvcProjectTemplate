@@ -1,7 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.tk_redisTest
 
-import com.railly_linker.springboot_mvc_project_template.redis_keys.Redis1_TestRepository
-import com.railly_linker.springboot_mvc_project_template.util_objects.RedisUtilObject
+import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
+import com.railly_linker.springboot_mvc_project_template.redis_repositories.Redis1_TestRepository
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -78,46 +78,46 @@ class TkRedisTestService(
 
 
     ////
-//    fun api5(httpServletResponse: HttpServletResponse, inputVo: TkRedisTestController.Api5InputVo) {
-//        // 현재로썬 테스트 수행시 수동으로 롤백 기능을 구현합니다.
-//
-//        // 작업 전 Redis 데이터 백업
-//        val beforeValue = RedisUtilObject.getValue<Redis1_TestRepository>(redis1RedisTemplateMbr, inputVo.key)
-//
-//        try {
-//            // 입력 테스트
-//            RedisUtilObject.putValue<Redis1_TestRepository>(
-//                redis1RedisTemplateMbr,
-//                inputVo.key,
-//                Redis1_TestRepository(
-//                    inputVo.content,
-//                    Redis1_TestRepository.InnerVo("testObject", true),
-//                    arrayListOf(
-//                        Redis1_TestRepository.InnerVo("testObject1", false),
-//                        Redis1_TestRepository.InnerVo("testObject2", true)
-//                    )
-//                ),
-//                inputVo.expirationMs
-//            )
-//
-//            // 테스트 예외 발생
-//            throw Exception("test exception")
-//
-//            httpServletResponse.setHeader("api-result-code", "ok")
-//        } catch (e: Exception) {
-//            loggerMbr.error(e.toString())
-//
-//            // 예외가 발생하면 Redis 를 기존 정보로 변경
-//            if (beforeValue == null) {
-//                RedisUtilObject.deleteValue<Redis1_TestRepository>(redis1RedisTemplateMbr, inputVo.key)
-//            } else {
-//                RedisUtilObject.putValue<Redis1_TestRepository>(
-//                    redis1RedisTemplateMbr,
-//                    inputVo.key,
-//                    beforeValue.valueString,
-//                    beforeValue.expireTimeMs
-//                )
-//            }
-//        }
-//    }
+    @CustomRedisTransactional(["redis1RedisTemplate:Redis1_TestRepository"])
+    fun api4(httpServletResponse: HttpServletResponse, inputVo: TkRedisTestController.Api4InputVo) {
+        // 입력 테스트
+        testRedis1_TestRepository.putValue(
+            Redis1_TestRepository.RedisValueVo(
+                inputVo.content,
+                Redis1_TestRepository.RedisValueVo.InnerVo("testObject", true),
+                arrayListOf(
+                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject1", false),
+                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject2", true)
+                )
+            ),
+            inputVo.expirationMs
+        )
+
+        // 테스트 예외 발생
+        throw Exception("test exception")
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
+    ////
+    fun api5(httpServletResponse: HttpServletResponse, inputVo: TkRedisTestController.Api5InputVo) {
+        // 입력 테스트
+        testRedis1_TestRepository.putValue(
+            Redis1_TestRepository.RedisValueVo(
+                inputVo.content,
+                Redis1_TestRepository.RedisValueVo.InnerVo("testObject", true),
+                arrayListOf(
+                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject1", false),
+                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject2", true)
+                )
+            ),
+            inputVo.expirationMs
+        )
+
+        // 테스트 예외 발생
+        throw Exception("test exception")
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
 }
