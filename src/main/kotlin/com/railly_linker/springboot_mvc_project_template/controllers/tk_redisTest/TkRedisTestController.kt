@@ -42,9 +42,6 @@ class TkRedisTestController(
     }
 
     data class Api1InputVo(
-        @Schema(description = "redis 키", required = true, example = "test_key")
-        @JsonProperty("key")
-        val key: String,
         @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
         @JsonProperty("content")
         val content: String,
@@ -54,12 +51,6 @@ class TkRedisTestController(
     )
 
     data class Api1OutputVo(
-        @Schema(description = "group 명", required = true, example = "test")
-        @JsonProperty("groupName")
-        val groupName: String,
-        @Schema(description = "redis 키", required = true, example = "test_key")
-        @JsonProperty("key")
-        val key: String,
         @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
         @JsonProperty("content")
         val content: String,
@@ -74,7 +65,8 @@ class TkRedisTestController(
         summary = "Redis 정보 조회 테스트",
         description = "Redis 정보 조회 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "ok : 정상 동작\n\n" +
+                "1 : 정보가 없습니다.",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -93,23 +85,13 @@ class TkRedisTestController(
     }
 
     data class Api2OutputVo(
-        @Schema(description = "결과 리스트", required = true)
-        @JsonProperty("testEntityVoList")
-        val testEntityVoList: List<TestEntityVo>,
-    ) {
-        @Schema(description = "결과 객체")
-        data class TestEntityVo(
-            @Schema(description = "redis 키", required = true, example = "testing")
-            @JsonProperty("key")
-            val key: String,
-            @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
-            @JsonProperty("content")
-            val content: String,
-            @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
-            @JsonProperty("expirationMs")
-            val expirationMs: Long
-        )
-    }
+        @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
+        @JsonProperty("content")
+        val content: String,
+        @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
+        @JsonProperty("expirationMs")
+        val expirationMs: Long
+    )
 
 
     ////
@@ -128,70 +110,42 @@ class TkRedisTestController(
     @DeleteMapping("/redis1-test")
     fun api3(
         @Parameter(hidden = true)
-        httpServletResponse: HttpServletResponse,
-        @Parameter(name = "key", description = "redis 키", example = "test_key")
-        @RequestParam("key")
-        key: String
-    ) {
-        return serviceMbr.api3(httpServletResponse, key)
-    }
-
-
-    ////
-    @Operation(
-        summary = "Redis 모두 삭제 테스트",
-        description = "Redis 정보 모두 삭제 테스트용 API\n\n" +
-                "(api-result-code)\n\n" +
-                "ok : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
-    )
-    @DeleteMapping("/redis1-tests")
-    fun api4(
-        @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        return serviceMbr.api4(httpServletResponse)
+        return serviceMbr.api3(httpServletResponse)
     }
 
 
     ////
-    @Operation(
-        summary = "Redis 트랜젝션 테스트",
-        description = "Redis 트랜젝션 테스트용 API\n\n" +
-                "Redis 에 데이터를 저장한 직후 바로 Exception 을 발생시킵니다.\n\n" +
-                "이 API 를 사용하고 바로 데이터 조회를 했을 때, 데이터가 없다고 나오면 Rollback 이 동작한 것입니다.\n\n" +
-                "(api-result-code)\n\n" +
-                "ok : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
-    )
-    @PostMapping("/redis1-test-transaction")
-    fun api5(
-        @Parameter(hidden = true)
-        httpServletResponse: HttpServletResponse,
-        @RequestBody inputVo: Api5InputVo
-    ) {
-        return serviceMbr.api5(httpServletResponse, inputVo)
-    }
-
-    data class Api5InputVo(
-        @Schema(description = "redis 키", required = true, example = "test_key")
-        @JsonProperty("key")
-        val key: String,
-        @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
-        @JsonProperty("content")
-        val content: String,
-        @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
-        @JsonProperty("expirationMs")
-        val expirationMs: Long
-    )
+//    @Operation(
+//        summary = "Redis 트랜젝션 테스트",
+//        description = "Redis 트랜젝션 테스트용 API\n\n" +
+//                "Redis 에 데이터를 저장한 직후 바로 Exception 을 발생시킵니다.\n\n" +
+//                "이 API 를 사용하고 바로 데이터 조회를 했을 때, 데이터가 없다고 나오면 Rollback 이 동작한 것입니다.\n\n" +
+//                "(api-result-code)\n\n" +
+//                "ok : 정상 동작",
+//        responses = [
+//            ApiResponse(
+//                responseCode = "200",
+//                description = "OK"
+//            )
+//        ]
+//    )
+//    @PostMapping("/redis1-test-transaction")
+//    fun api5(
+//        @Parameter(hidden = true)
+//        httpServletResponse: HttpServletResponse,
+//        @RequestBody inputVo: Api5InputVo
+//    ) {
+//        return serviceMbr.api5(httpServletResponse, inputVo)
+//    }
+//
+//    data class Api5InputVo(
+//        @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
+//        @JsonProperty("content")
+//        val content: String,
+//        @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
+//        @JsonProperty("expirationMs")
+//        val expirationMs: Long
+//    )
 }
