@@ -2,9 +2,9 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c6_tk_data
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
-import com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities.Database1_Template_Test
+import com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities.Database1_Template_TestData
 import com.railly_linker.springboot_mvc_project_template.data_sources.database1.repositories.Database1_NativeRepository
-import com.railly_linker.springboot_mvc_project_template.data_sources.database1.repositories.Database1_Template_TestRepository
+import com.railly_linker.springboot_mvc_project_template.data_sources.database1.repositories.Database1_Template_TestsRepository
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 class C6TkDatabaseTestService(
     // (Database1 Repository)
     private val database1NativeRepositoryMbr: Database1_NativeRepository,
-    private val database1TemplateTestRepositoryMbr: Database1_Template_TestRepository
+    private val database1TemplateTestRepositoryMbr: Database1_Template_TestsRepository
 ) {
     // <멤버 변수 공간>
     private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
@@ -38,7 +38,7 @@ class C6TkDatabaseTestService(
         inputVo: C6TkDatabaseTestController.Api1InputVo
     ): C6TkDatabaseTestController.Api1OutputVo? {
         val result = database1TemplateTestRepositoryMbr.save(
-            Database1_Template_Test(inputVo.content, (0..99999999).random(), true)
+            Database1_Template_TestData(inputVo.content, (0..99999999).random(), true)
         )
 
         httpServletResponse.setHeader("api-result-code", "ok")
@@ -320,7 +320,7 @@ class C6TkDatabaseTestService(
         httpServletResponse: HttpServletResponse
     ) {
         val result = database1TemplateTestRepositoryMbr.save(
-            Database1_Template_Test("error test", (0..99999999).random(), true)
+            Database1_Template_TestData("error test", (0..99999999).random(), true)
         )
 
         loggerMbr.info("Add Item : $result")
@@ -333,7 +333,7 @@ class C6TkDatabaseTestService(
     ////
     fun api13(httpServletResponse: HttpServletResponse) {
         val result = database1TemplateTestRepositoryMbr.save(
-            Database1_Template_Test("error test", (0..99999999).random(), true)
+            Database1_Template_TestData("error test", (0..99999999).random(), true)
         )
 
         loggerMbr.info("Add Item : $result")

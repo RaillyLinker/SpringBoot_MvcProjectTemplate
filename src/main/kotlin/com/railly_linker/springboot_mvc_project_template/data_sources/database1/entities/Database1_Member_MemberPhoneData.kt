@@ -6,18 +6,17 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
-// 주의 : 낙관적 Lock (@Version) 사용시 Transaction 기능과 충돌이 있음
 @Entity
-@Table(name = "test", catalog = "template")
-@Comment("테스트용 테이블")
-class Database1_Template_Test(
-    @Column(name = "content", nullable = false, columnDefinition = "VARCHAR(255)")
-    @Comment("테스트 본문")
-    var content: String,
+@Table(name = "member_phone_data", catalog = "member")
+@Comment("회원 전화 정보 테이블")
+class Database1_Member_MemberPhoneData(
+    @Column(name = "member_uid", nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("멤버 고유값 (member.members.uid)")
+    var memberUid: Long,
 
-    @Column(name = "random_num", nullable = false, columnDefinition = "INT")
-    @Comment("테스트 랜덤 번호")
-    var randomNum: Int,
+    @Column(name = "phone_number", nullable = false, columnDefinition = "VARCHAR(45)")
+    @Comment("전화번호(국가번호 + 전화번호, 중복 비허용)")
+    var phoneNumber: String,
 
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")
@@ -42,6 +41,4 @@ class Database1_Template_Test(
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
-
-
 }

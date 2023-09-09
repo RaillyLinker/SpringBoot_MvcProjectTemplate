@@ -1,6 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template.data_sources.database1.repositories
 
-import com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities.Database1_Template_Test
+import com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities.Database1_Template_TestData
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -13,18 +13,18 @@ import java.time.LocalDateTime
 // 주의 : NativeRepository 의 반환값으로 기본 Entity 객체는 매핑되지 않으므로 OutputVo Interface 를 작성하여 사용할것.
 // sql 문은 한줄로 표기 할 것을 권장. (간편하게 복사해서 사용하며 디버그하기 위하여)
 @Repository
-interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Long> {
+interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData, Long> {
     // <C6>
     @Query(
         nativeQuery = true,
         value = "select " +
-                "test.uid as uid, " +
-                "test.row_create_date as rowCreateDate, " +
-                "test.row_update_date as rowUpdateDate, " +
-                "test.content as content, " +
-                "test.random_num as randomNum, " +
-                "ABS(test.random_num-:num) as distance " +
-                "from template.test " +
+                "test_data.uid as uid, " +
+                "test_data.row_create_date as rowCreateDate, " +
+                "test_data.row_update_date as rowUpdateDate, " +
+                "test_data.content as content, " +
+                "test_data.random_num as randomNum, " +
+                "ABS(test_data.random_num-:num) as distance " +
+                "from template.test_data " +
                 "where row_activate = b'1'" +
                 "order by " +
                 "distance"
@@ -45,13 +45,13 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
     @Query(
         nativeQuery = true,
         value = "select " +
-                "test.uid as uid, " +
-                "test.content as content, " +
-                "test.random_num as randomNum, " +
-                "test.row_create_date as rowCreateDate, " +
-                "test.row_update_date as rowUpdateDate, " +
-                "ABS(TIMESTAMPDIFF(SECOND, test.row_create_date, :date)) as timeDiffSec " +
-                "from template.test " +
+                "test_data.uid as uid, " +
+                "test_data.content as content, " +
+                "test_data.random_num as randomNum, " +
+                "test_data.row_create_date as rowCreateDate, " +
+                "test_data.row_update_date as rowUpdateDate, " +
+                "ABS(TIMESTAMPDIFF(SECOND, test_data.row_create_date, :date)) as timeDiffSec " +
+                "from template.test_data " +
                 "where row_activate = b'1'" +
                 "order by " +
                 "timeDiffSec"
@@ -72,14 +72,14 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
     @Query(
         nativeQuery = true,
         value = "select " +
-                "test.uid as uid, " +
-                "test.row_create_date as rowCreateDate, " +
-                "test.row_update_date as rowUpdateDate, " +
-                "test.content as content, " +
-                "test.random_num as randomNum, " +
-                "ABS(test.random_num-:num) as distance " +
+                "test_data.uid as uid, " +
+                "test_data.row_create_date as rowCreateDate, " +
+                "test_data.row_update_date as rowUpdateDate, " +
+                "test_data.content as content, " +
+                "test_data.random_num as randomNum, " +
+                "ABS(test_data.random_num-:num) as distance " +
                 "from " +
-                "template.test " +
+                "template.test_data " +
                 "where row_activate = b'1'" +
                 "order by distance",
         countQuery = "select " +
@@ -104,7 +104,7 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
     @Modifying // Native Query 에서 Delete, Update 문은 이것을 붙여야함
     @Query(
         nativeQuery = true,
-        value = "UPDATE template.test " +
+        value = "UPDATE template.test_data " +
                 "SET " +
                 "content = :content " +
                 "WHERE " +
@@ -119,18 +119,18 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
     @Query(
         nativeQuery = true,
         value = "select " +
-                "test.uid as uid, " +
-                "test.row_create_date as rowCreateDate, " +
-                "test.row_update_date as rowUpdateDate, " +
-                "test.content as content, " +
-                "test.random_num as randomNum " +
-                "from template.test " +
+                "test_data.uid as uid, " +
+                "test_data.row_create_date as rowCreateDate, " +
+                "test_data.row_update_date as rowUpdateDate, " +
+                "test_data.content as content, " +
+                "test_data.random_num as randomNum " +
+                "from template.test_data " +
                 "where " +
                 "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
                 "and row_activate = b'1'",
         countQuery = "select " +
                 "count(*) " +
-                "from template.test " +
+                "from template.test_data " +
                 "where " +
                 "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
                 "and row_activate = b'1'"
@@ -159,10 +159,10 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "FROM (" +
                 "    SELECT " +
                 "    *, " +
-                "    ABS(test.random_num-:num) as distance," +
+                "    ABS(test_data.random_num-:num) as distance," +
                 "    @rownum \\:= @rownum + 1 AS row_num " +
                 "    FROM " +
-                "    template.test, " +
+                "    template.test_data, " +
                 "    (SELECT @rownum \\:= 0) r " +
                 "    ORDER BY distance ASC" +
                 ") AS ordered_table " +
@@ -176,10 +176,10 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "            FROM (" +
                 "                SELECT " +
                 "                *, " +
-                "                ABS(test.random_num-:num) as distance, " +
+                "                ABS(test_data.random_num-:num) as distance, " +
                 "                @rownum2 \\:= @rownum2 + 1 AS row_num " +
                 "                FROM " +
-                "                template.test, " +
+                "                template.test_data, " +
                 "                (SELECT @rownum2 \\:= 0) r " +
                 "                ORDER BY distance ASC" +
                 "            ) AS o2 " +
