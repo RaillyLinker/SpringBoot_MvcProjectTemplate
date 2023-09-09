@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_test
+package com.railly_linker.springboot_mvc_project_template.controllers.c1_tk_test
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -10,11 +10,11 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/tk/test APIs", description = "테스트 API 컨트롤러")
+@Tag(name = "/tk/test APIs", description = "C1. 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/test")
-class TkTestController(
-    private val serviceMbr: TkTestService
+class C1TkTestController(
+    private val serviceMbr: C1TkTestService
 ) {
     // <멤버 변수 공간>
 
@@ -22,7 +22,7 @@ class TkTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "이메일 발송 테스트",
+        summary = "N1. 이메일 발송 테스트",
         description = "이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -67,7 +67,7 @@ class TkTestController(
 
     ////
     @Operation(
-        summary = "HTML 이메일 발송 테스트",
+        summary = "N2. HTML 이메일 발송 테스트",
         description = "HTML 로 이루어진 이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",

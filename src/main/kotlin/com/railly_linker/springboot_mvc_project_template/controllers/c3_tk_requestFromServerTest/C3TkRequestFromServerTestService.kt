@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_requestFromServerTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c3_tk_requestFromServerTest
 
 import com.google.gson.Gson
 import com.railly_linker.springboot_mvc_project_template.retrofit2.RepositoryNetworkRetrofit2
@@ -16,7 +16,7 @@ import java.lang.RuntimeException
 import java.nio.file.Paths
 
 @Service
-class TkRequestFromServerTestService(
+class C3TkRequestFromServerTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfileMbr: String
 ) {
@@ -101,7 +101,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api4(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api4OutputVo? {
+    fun api4(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api4OutputVo? {
         val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestGetRequest(
             "paramFromServer",
             null,
@@ -123,7 +123,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api4OutputVo(
+                    C3TkRequestFromServerTestController.Api4OutputVo(
                         responseBody.queryParamString,
                         responseBody.queryParamStringNullable,
                         responseBody.queryParamInt,
@@ -148,7 +148,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api5(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api5OutputVo? {
+    fun api5(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api5OutputVo? {
         val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestGetRequestPathParamInt(
             1234
         ).execute()
@@ -161,7 +161,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api5OutputVo(
+                    C3TkRequestFromServerTestController.Api5OutputVo(
                         responseBody.pathParamInt
                     )
                 }
@@ -177,7 +177,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api6(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api6OutputVo? {
+    fun api6(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api6OutputVo? {
         val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestApplicationJson(
             LocalHostRequestApi.TkRequestTestPostRequestApplicationJsonInputVO(
                 "paramFromServer",
@@ -201,7 +201,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api6OutputVo(
+                    C3TkRequestFromServerTestController.Api6OutputVo(
                         responseBody.requestBodyString,
                         responseBody.requestBodyStringNullable,
                         responseBody.requestBodyInt,
@@ -226,7 +226,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api7(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api7OutputVo? {
+    fun api7(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api7OutputVo? {
         val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestXWwwFormUrlencoded(
             "paramFromServer",
             null,
@@ -248,7 +248,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api7OutputVo(
+                    C3TkRequestFromServerTestController.Api7OutputVo(
                         responseBody.requestFormString,
                         responseBody.requestFormStringNullable,
                         responseBody.requestFormInt,
@@ -273,7 +273,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api8(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api8OutputVo? {
+    fun api8(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api8OutputVo? {
         val requestFormString = MultipartBody.Part.createFormData("requestFormString", "paramFromServer")
         val requestFormInt = MultipartBody.Part.createFormData("requestFormInt", 1.toString())
         val requestFormDouble =
@@ -290,7 +290,7 @@ class TkRequestFromServerTestService(
 
         // 전송 하려는 File
         val serverFile =
-            Paths.get("${File("").absolutePath}/src/main/resources/static/tk_requestFromServerTest_api8/test.txt")
+            Paths.get("${File("").absolutePath}/src/main/resources/static/resource_c3_n8/test.txt")
                 .toFile()
         val multipartFileFormData = MultipartBody.Part.createFormData(
             "multipartFile",
@@ -321,7 +321,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api8OutputVo(
+                    C3TkRequestFromServerTestController.Api8OutputVo(
                         responseBody.requestFormString,
                         responseBody.requestFormStringNullable,
                         responseBody.requestFormInt,
@@ -346,7 +346,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api9(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api9OutputVo? {
+    fun api9(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api9OutputVo? {
         val requestFormString = MultipartBody.Part.createFormData("requestFormString", "paramFromServer")
         val requestFormInt = MultipartBody.Part.createFormData("requestFormInt", 1.toString())
         val requestFormDouble =
@@ -363,10 +363,10 @@ class TkRequestFromServerTestService(
 
         // 전송 하려는 File
         val serverFile1 =
-            Paths.get("${File("").absolutePath}/src/main/resources/static/tk_requestFromServerTest_api9/test1.txt")
+            Paths.get("${File("").absolutePath}/src/main/resources/static/resource_c3_n9/test1.txt")
                 .toFile()
         val serverFile2 =
-            Paths.get("${File("").absolutePath}/src/main/resources/static/tk_requestFromServerTest_api9/test2.txt")
+            Paths.get("${File("").absolutePath}/src/main/resources/static/resource_c3_n9/test2.txt")
                 .toFile()
 
         val multipartFileListFormData = listOf(
@@ -405,7 +405,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api9OutputVo(
+                    C3TkRequestFromServerTestController.Api9OutputVo(
                         responseBody.requestFormString,
                         responseBody.requestFormStringNullable,
                         responseBody.requestFormInt,
@@ -430,7 +430,7 @@ class TkRequestFromServerTestService(
 
 
     ////
-    fun api10(httpServletResponse: HttpServletResponse): TkRequestFromServerTestController.Api10OutputVo? {
+    fun api10(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api10OutputVo? {
         val jsonStringFormData = MultipartBody.Part.createFormData(
             "jsonString", Gson().toJson(
                 LocalHostRequestApi.TkRequestTestPostRequestMultipartFormDataJsonJsonStringVo(
@@ -450,7 +450,7 @@ class TkRequestFromServerTestService(
 
         // 전송 하려는 File
         val serverFile =
-            Paths.get("${File("").absolutePath}/src/main/resources/static/tk_requestFromServerTest_api10/test.txt")
+            Paths.get("${File("").absolutePath}/src/main/resources/static/resource_c3_n10/test.txt")
                 .toFile()
         val multipartFileFormData = MultipartBody.Part.createFormData(
             "multipartFile",
@@ -472,7 +472,7 @@ class TkRequestFromServerTestService(
                 "ok" -> {
                     httpServletResponse.setHeader("api-result-code", "ok")
                     val responseBody = responseObj.body()!!
-                    TkRequestFromServerTestController.Api10OutputVo(
+                    C3TkRequestFromServerTestController.Api10OutputVo(
                         responseBody.requestFormString,
                         responseBody.requestFormStringNullable,
                         responseBody.requestFormInt,

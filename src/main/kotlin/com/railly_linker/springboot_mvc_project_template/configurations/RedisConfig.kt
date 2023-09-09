@@ -23,9 +23,14 @@ class RedisConfig {
     // <멤버 변수 공간>
     private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
 
+    companion object {
+        // !!!RedisTemplate Bean 이름 작성 및 적용하기!!
+        const val TN_REDIS1 = "redis1RedisTemplate"
+    }
+
     val redisTemplatesMap: Map<String, RedisTemplate<String, Any>> by lazy {
         mapOf(
-            "redis1RedisTemplate" to redis1RedisTemplate()
+            TN_REDIS1 to redis1RedisTemplate()
         )
     }
 
@@ -37,14 +42,12 @@ class RedisConfig {
     @Value("\${datasource-redis.redis1.port}")
     private var redis1PortMbr: Int? = null
 
-    @Bean
-    @Primary
+    @Bean(TN_REDIS1 + "_ConnectionFactory")
     fun redis1ConnectionFactory(): RedisConnectionFactory {
         return LettuceConnectionFactory(redis1HostMbr, redis1PortMbr!!)
     }
 
-    @Bean
-    @Primary
+    @Bean(TN_REDIS1)
     fun redis1RedisTemplate(): RedisTemplate<String, Any> {
         val redisTemplate = RedisTemplate<String, Any>()
         redisTemplate.connectionFactory = redis1ConnectionFactory()
@@ -60,12 +63,12 @@ class RedisConfig {
 //    @Value("\${datasource-redis.redis2.port}")
 //    private var redis2PortMbr: Int? = null
 //
-//    @Bean
+//    @Bean(TN_REDIS2+"_ConnectionFactory")
 //    fun redis2ConnectionFactory(): RedisConnectionFactory {
 //        return LettuceConnectionFactory(redis2HostMbr, redis2PortMbr!!)
 //    }
 //
-//    @Bean
+//    @Bean(TN_REDIS1)
 //    fun redis2RedisTemplate(): RedisTemplate<String, Any> {
 //        val redisTemplate = RedisTemplate<String, Any>()
 //        redisTemplate.connectionFactory = redis2ConnectionFactory()

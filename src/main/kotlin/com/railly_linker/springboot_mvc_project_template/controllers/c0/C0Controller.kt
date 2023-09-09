@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.sc
+package com.railly_linker.springboot_mvc_project_template.controllers.c0
 
 import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
@@ -8,15 +8,13 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
 @Hidden
-@Tag(name = "/sc APIs", description = "/sc 경로에 대한 웹페이지 컨트롤러")
+@Tag(name = "root APIs", description = "C0. Root 경로에 대한 API 컨트롤러")
 @Controller
-@RequestMapping("/sc")
-class ScController(
-    private val serviceMbr: ScService
+class C0Controller(
+    private val serviceMbr: C0Service
 ) {
     // <멤버 변수 공간>
 
@@ -24,8 +22,8 @@ class ScController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "홈페이지",
-        description = "홈페이지를 반환합니다.",
+        summary = "N1. 서버 Root 경로의 URL 로 포워딩",
+        description = "서버 Root 경로의 URL 로 포워딩 합니다.",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -33,7 +31,7 @@ class ScController(
             )
         ]
     )
-    @GetMapping("/home-page")
+    @GetMapping("", "/")
     fun api1(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse

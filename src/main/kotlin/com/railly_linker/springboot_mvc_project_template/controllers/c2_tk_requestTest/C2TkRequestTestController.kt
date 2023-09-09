@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_requestTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_requestTest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -12,11 +12,11 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 
 
-@Tag(name = "/tk/request-test APIs", description = "요청 / 응답에 대한 테스트 API 컨트롤러")
+@Tag(name = "/tk/request-test APIs", description = "C2. 요청 / 응답에 대한 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/request-test")
-class TkRequestTestController(
-    private val serviceMbr: TkRequestTestService
+class C2TkRequestTestController(
+    private val serviceMbr: C2TkRequestTestService
 ) {
     // <멤버 변수 공간>
 
@@ -24,7 +24,7 @@ class TkRequestTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "기본 요청 테스트 API",
+        summary = "N1. 기본 요청 테스트 API",
         description = "이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -45,7 +45,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "요청 Redirect 테스트 API",
+        summary = "N2. 요청 Redirect 테스트 API",
         description = "이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -66,7 +66,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "요청 Forward 테스트 API",
+        summary = "N3. 요청 Forward 테스트 API",
         description = "이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -87,7 +87,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Get 요청 테스트 (Query Parameter)",
+        summary = "N4. Get 요청 테스트 (Query Parameter)",
         description = "Query Parameter 를 받는 Get 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -202,7 +202,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Get 요청 테스트 (Path Parameter)",
+        summary = "N5. Get 요청 테스트 (Path Parameter)",
         description = "Path Parameter 를 받는 Get 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -236,7 +236,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Post 요청 테스트 (application-json)",
+        summary = "N6. Post 요청 테스트 (application-json)",
         description = "application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -341,7 +341,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Post 요청 테스트 (x-www-form-urlencoded)",
+        summary = "N7. Post 요청 테스트 (x-www-form-urlencoded)",
         description = "x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -439,7 +439,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Post 요청 테스트 (multipart/form-data)",
+        summary = "N8. Post 요청 테스트 (multipart/form-data)",
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "MultipartFile 파라미터가 null 이 아니라면 저장\n\n" +
                 "(api-result-code)\n\n" +
@@ -544,7 +544,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Post 요청 테스트2 (multipart/form-data)",
+        summary = "N9. Post 요청 테스트2 (multipart/form-data)",
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)\n\n" +
                 "파일 리스트가 null 이 아니라면 저장\n\n" +
                 "(api-result-code)\n\n" +
@@ -649,7 +649,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "Post 요청 테스트 (multipart/form-data - JsonString)",
+        summary = "N10. Post 요청 테스트 (multipart/form-data - JsonString)",
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "Form Data 의 Input Body 에는 Object 리스트 타입은 사용 불가능입니다.\n\n" +
                 "Object 리스트 타입을 사용한다면, Json String 타입으로 객체를 받아서 파싱하여 사용하는 방식을 사용합니다.\n\n" +
@@ -825,7 +825,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "인위적 에러 발생 테스트",
+        summary = "N11. 인위적 에러 발생 테스트",
         description = "요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -847,7 +847,7 @@ class TkRequestTestController(
 
     ////
     @Operation(
-        summary = "결과 코드 발생 테스트",
+        summary = "N12. 결과 코드 발생 테스트",
         description = "Response Header 에 api-result-code 를 반환하는 테스트 API\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +

@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 // sql 문은 한줄로 표기 할 것을 권장. (간편하게 복사해서 사용하며 디버그하기 위하여)
 @Repository
 interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Long> {
-    // <TkDatabaseTest>
+    // <C6>
     @Query(
         nativeQuery = true,
         value = "select " +
@@ -29,11 +29,11 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "order by " +
                 "distance"
     )
-    fun selectListForTkDatabaseTestApi5(
+    fun selectListForC6N5(
         @Param(value = "num") num: Int
-    ): List<SelectListForTkDatabaseTestApi5OutputVo>
+    ): List<SelectListForC6N5OutputVo>
 
-    interface SelectListForTkDatabaseTestApi5OutputVo {
+    interface SelectListForC6N5OutputVo {
         var uid: Long
         var rowCreateDate: LocalDateTime
         var rowUpdateDate: LocalDateTime
@@ -56,11 +56,11 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "order by " +
                 "timeDiffSec"
     )
-    fun selectListForTkDatabaseTestApi6(
+    fun selectListForC6N6(
         @Param(value = "date") date: String
-    ): List<SelectListForTkDatabaseTestApi6OutputVo>
+    ): List<SelectListForC6N6OutputVo>
 
-    interface SelectListForTkDatabaseTestApi6OutputVo {
+    interface SelectListForC6N6OutputVo {
         var uid: Long
         var rowCreateDate: LocalDateTime
         var rowUpdateDate: LocalDateTime
@@ -87,12 +87,12 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "from test " +
                 "where row_activate = b'1'"
     )
-    fun selectListForTkDatabaseTestApi8(
+    fun selectListForC6N8(
         @Param(value = "num") num: Int,
         pageable: Pageable
-    ): Page<SelectListForTkDatabaseTestApi8OutputVo>
+    ): Page<SelectListForC6N8OutputVo>
 
-    interface SelectListForTkDatabaseTestApi8OutputVo {
+    interface SelectListForC6N8OutputVo {
         var uid: Long
         var rowCreateDate: LocalDateTime
         var rowUpdateDate: LocalDateTime
@@ -110,7 +110,7 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "WHERE " +
                 "uid = :uid"
     )
-    fun updateForTkDatabaseTestApi10(
+    fun updateForC6N10(
         @Param(value = "uid") uid: Long,
         @Param(value = "content") content: String
     )
@@ -135,12 +135,12 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
                 "and row_activate = b'1'"
     )
-    fun selectListForTkDatabaseTestApi13(
+    fun selectListForC6N11(
         @Param(value = "searchKeyword") searchKeyword: String,
         pageable: Pageable
-    ): Page<SelectPageForApiC4N13OutputVo>
+    ): Page<SelectPageForC6N11OutputVo>
 
-    interface SelectPageForApiC4N13OutputVo {
+    interface SelectPageForC6N11OutputVo {
         var uid: Long
         var rowCreateDate: LocalDateTime
         var rowUpdateDate: LocalDateTime
@@ -191,13 +191,13 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_Test, Lo
                 ")" +
                 "LIMIT :pageElementsCount"
     )
-    fun selectListForTkDatabaseTestApi16(
+    fun selectListForC6N14(
         @Param(value = "lastItemUid") lastItemUid: Long,
         @Param(value = "pageElementsCount") pageElementsCount: Int,
         @Param(value = "num") num: Int
-    ): List<SelectListForTkDatabaseTestApi16OutputVo>
+    ): List<SelectListForC6N14OutputVo>
 
-    interface SelectListForTkDatabaseTestApi16OutputVo {
+    interface SelectListForC6N14OutputVo {
         var uid: Long
         var rowCreateDate: LocalDateTime
         var rowUpdateDate: LocalDateTime

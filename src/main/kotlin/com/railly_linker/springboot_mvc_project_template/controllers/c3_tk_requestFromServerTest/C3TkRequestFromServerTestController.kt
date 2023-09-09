@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_requestFromServerTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c3_tk_requestFromServerTest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -9,11 +9,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "/tk/request-from-server-test APIs", description = "서버에서 요청을 보내는 테스트 API 컨트롤러")
+@Tag(name = "/tk/request-from-server-test APIs", description = "C3. 서버에서 요청을 보내는 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/request-from-server-test")
-class TkRequestFromServerTestController(
-    private val serviceMbr: TkRequestFromServerTestService
+class C3TkRequestFromServerTestController(
+    private val serviceMbr: C3TkRequestFromServerTestService
 ) {
     // <멤버 변수 공간>
 
@@ -21,7 +21,7 @@ class TkRequestFromServerTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "/tk/request-test 요청 테스트 API",
+        summary = "N1. /tk/request-test 요청 테스트 API",
         description = "/tk/request-test 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -42,7 +42,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/redirect-to-blank 요청 테스트 API",
+        summary = "N2. /tk/request-test/redirect-to-blank 요청 테스트 API",
         description = "/tk/request-test/redirect-to-blank 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -63,7 +63,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/forward-to-blank 요청 테스트 API",
+        summary = "N3. /tk/request-test/forward-to-blank 요청 테스트 API",
         description = "/tk/request-test/forward-to-blank 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -84,7 +84,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/get-request 요청 테스트 API",
+        summary = "N4. /tk/request-test/get-request 요청 테스트 API",
         description = "/tk/request-test/get-request 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -146,7 +146,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/get-request/{pathParamInt} 요청 테스트 API",
+        summary = "N5. /tk/request-test/get-request/{pathParamInt} 요청 테스트 API",
         description = "/tk/request-test/get-request/{pathParamInt} 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -173,7 +173,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/post-request-application-json 요청 테스트 API",
+        summary = "N6. /tk/request-test/post-request-application-json 요청 테스트 API",
         description = "/tk/request-test/post-request-application-json 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -235,7 +235,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/post-request-x-www-form-urlencoded 요청 테스트 API",
+        summary = "N7. /tk/request-test/post-request-x-www-form-urlencoded 요청 테스트 API",
         description = "/tk/request-test/post-request-x-www-form-urlencoded 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -297,7 +297,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/post-request-multipart-form-data 요청 테스트 API",
+        summary = "N8. /tk/request-test/post-request-multipart-form-data 요청 테스트 API",
         description = "/tk/request-test/post-request-multipart-form-data 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -359,7 +359,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/post-request-multipart-form-data2 요청 테스트 API",
+        summary = "N9. /tk/request-test/post-request-multipart-form-data2 요청 테스트 API",
         description = "/tk/request-test/post-request-multipart-form-data2 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -421,7 +421,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/post-request-multipart-form-data-json 요청 테스트 API",
+        summary = "N10. /tk/request-test/post-request-multipart-form-data-json 요청 테스트 API",
         description = "/tk/request-test/post-request-multipart-form-data-json 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -483,7 +483,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/generate-error 요청 테스트 API",
+        summary = "N11. /tk/request-test/generate-error 요청 테스트 API",
         description = "/tk/request-test/generate-error 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
@@ -505,7 +505,7 @@ class TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "/tk/request-test/api-result-code-test 요청 테스트 API",
+        summary = "N12. /tk/request-test/api-result-code-test 요청 테스트 API",
         description = "/tk/request-test/api-result-code-test 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +

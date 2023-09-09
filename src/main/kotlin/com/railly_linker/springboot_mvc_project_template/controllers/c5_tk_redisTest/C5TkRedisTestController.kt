@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_redisTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c5_tk_redisTest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -9,11 +9,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "/tk/redis-test APIs", description = "Redis 에 대한 테스트 API 컨트롤러")
+@Tag(name = "/tk/redis-test APIs", description = "C5. Redis 에 대한 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/redis-test")
-class TkRedisTestController(
-    private val serviceMbr: TkRedisTestService
+class C5TkRedisTestController(
+    private val serviceMbr: C5TkRedisTestService
 ) {
     // <멤버 변수 공간>
 
@@ -21,7 +21,7 @@ class TkRedisTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "Redis 입력 테스트",
+        summary = "N1. Redis 입력 테스트",
         description = "Redis 정보 입력 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -62,7 +62,7 @@ class TkRedisTestController(
 
     ////
     @Operation(
-        summary = "Redis 정보 조회 테스트",
+        summary = "N2. Redis 정보 조회 테스트",
         description = "Redis 정보 조회 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
@@ -96,7 +96,7 @@ class TkRedisTestController(
 
     ////
     @Operation(
-        summary = "Redis 삭제 테스트",
+        summary = "N3. Redis 삭제 테스트",
         description = "Redis 정보 삭제 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -118,7 +118,7 @@ class TkRedisTestController(
 
     ////
     @Operation(
-        summary = "Redis 트랜젝션 테스트",
+        summary = "N4. Redis 트랜젝션 테스트",
         description = "Redis 트랜젝션 테스트용 API\n\n" +
                 "Redis 에 데이터를 저장한 직후 바로 Exception 을 발생시킵니다.\n\n" +
                 "이 API 를 사용하고 바로 데이터 조회를 했을 때, 데이터가 없다고 나오면 Rollback 이 동작한 것입니다.\n\n" +
@@ -152,7 +152,7 @@ class TkRedisTestController(
 
     ////
     @Operation(
-        summary = "Redis 트랜젝션 미적용 테스트",
+        summary = "N5. Redis 트랜젝션 미적용 테스트",
         description = "Redis 트랜젝션 미적용 테스트용 API\n\n" +
                 "Redis 에 데이터를 저장한 직후 바로 Exception 을 발생시킵니다.\n\n" +
                 "트랜젝션을 설정하지 않았으니, 에러가 나도 데이터가 저장되어 있습니다.\n\n" +

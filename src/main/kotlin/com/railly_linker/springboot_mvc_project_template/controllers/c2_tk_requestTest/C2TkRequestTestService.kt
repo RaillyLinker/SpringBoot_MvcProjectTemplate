@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_requestTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_requestTest
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class TkRequestTestService(
+class C2TkRequestTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfileMbr: String
 ) {
@@ -66,9 +66,9 @@ class TkRequestTestService(
         queryParamBooleanNullable: Boolean?,
         queryParamStringList: List<String>,
         queryParamStringListNullable: List<String>?
-    ): TkRequestTestController.Api4OutputVo? {
+    ): C2TkRequestTestController.Api4OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api4OutputVo(
+        return C2TkRequestTestController.Api4OutputVo(
             queryParamString,
             queryParamStringNullable,
             queryParamInt,
@@ -84,19 +84,19 @@ class TkRequestTestService(
 
 
     ////
-    fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): TkRequestTestController.Api5OutputVo? {
+    fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): C2TkRequestTestController.Api5OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api5OutputVo(pathParamInt)
+        return C2TkRequestTestController.Api5OutputVo(pathParamInt)
     }
 
 
     ////
     fun api6(
         httpServletResponse: HttpServletResponse,
-        inputVo: TkRequestTestController.Api6InputVo
-    ): TkRequestTestController.Api6OutputVo? {
+        inputVo: C2TkRequestTestController.Api6InputVo
+    ): C2TkRequestTestController.Api6OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api6OutputVo(
+        return C2TkRequestTestController.Api6OutputVo(
             inputVo.requestBodyString,
             inputVo.requestBodyStringNullable,
             inputVo.requestBodyInt,
@@ -114,10 +114,10 @@ class TkRequestTestService(
     ////
     fun api7(
         httpServletResponse: HttpServletResponse,
-        inputVo: TkRequestTestController.Api7InputVo
-    ): TkRequestTestController.Api7OutputVo? {
+        inputVo: C2TkRequestTestController.Api7InputVo
+    ): C2TkRequestTestController.Api7OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api7OutputVo(
+        return C2TkRequestTestController.Api7OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
             inputVo.requestFormInt,
@@ -135,8 +135,8 @@ class TkRequestTestService(
     ////
     fun api8(
         httpServletResponse: HttpServletResponse,
-        inputVo: TkRequestTestController.Api8InputVo
-    ): TkRequestTestController.Api8OutputVo? {
+        inputVo: C2TkRequestTestController.Api8InputVo
+    ): C2TkRequestTestController.Api8OutputVo? {
         // 파일 저장 기본 디렉토리 경로
         val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
 
@@ -221,7 +221,7 @@ class TkRequestTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api8OutputVo(
+        return C2TkRequestTestController.Api8OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
             inputVo.requestFormInt,
@@ -239,8 +239,8 @@ class TkRequestTestService(
     ////
     fun api9(
         httpServletResponse: HttpServletResponse,
-        inputVo: TkRequestTestController.Api9InputVo
-    ): TkRequestTestController.Api9OutputVo? {
+        inputVo: C2TkRequestTestController.Api9InputVo
+    ): C2TkRequestTestController.Api9OutputVo? {
         // 파일 저장 기본 디렉토리 경로
         val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
 
@@ -329,7 +329,7 @@ class TkRequestTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api9OutputVo(
+        return C2TkRequestTestController.Api9OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
             inputVo.requestFormInt,
@@ -347,12 +347,12 @@ class TkRequestTestService(
     ////
     fun api10(
         httpServletResponse: HttpServletResponse,
-        inputVo: TkRequestTestController.Api10InputVo
-    ): TkRequestTestController.Api10OutputVo? {
+        inputVo: C2TkRequestTestController.Api10InputVo
+    ): C2TkRequestTestController.Api10OutputVo? {
         // input Json String to Object
-        val inputJsonObject = Gson().fromJson<TkRequestTestController.Api10InputVo.InputJsonObject>(
+        val inputJsonObject = Gson().fromJson<C2TkRequestTestController.Api10InputVo.InputJsonObject>(
             inputVo.jsonString, // 해석하려는 json 형식의 String
-            object : TypeToken<TkRequestTestController.Api10InputVo.InputJsonObject>() {}.type // 파싱할 데이터 스키마 객체 타입
+            object : TypeToken<C2TkRequestTestController.Api10InputVo.InputJsonObject>() {}.type // 파싱할 데이터 스키마 객체 타입
         )
 
         // 파일 저장 기본 디렉토리 경로
@@ -439,7 +439,7 @@ class TkRequestTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRequestTestController.Api10OutputVo(
+        return C2TkRequestTestController.Api10OutputVo(
             inputJsonObject.requestFormString,
             inputJsonObject.requestFormStringNullable,
             inputJsonObject.requestFormInt,
@@ -461,20 +461,20 @@ class TkRequestTestService(
     }
 
     ////
-    fun api12(httpServletResponse: HttpServletResponse, errorType: TkRequestTestController.Api12ErrorTypeEnum?) {
+    fun api12(httpServletResponse: HttpServletResponse, errorType: C2TkRequestTestController.Api12ErrorTypeEnum?) {
         if (errorType == null) {
             httpServletResponse.setHeader("api-result-code", "ok")
         } else {
             when (errorType) {
-                TkRequestTestController.Api12ErrorTypeEnum.A -> {
+                C2TkRequestTestController.Api12ErrorTypeEnum.A -> {
                     httpServletResponse.setHeader("api-result-code", "1")
                 }
 
-                TkRequestTestController.Api12ErrorTypeEnum.B -> {
+                C2TkRequestTestController.Api12ErrorTypeEnum.B -> {
                     httpServletResponse.setHeader("api-result-code", "2")
                 }
 
-                TkRequestTestController.Api12ErrorTypeEnum.C -> {
+                C2TkRequestTestController.Api12ErrorTypeEnum.C -> {
                     httpServletResponse.setHeader("api-result-code", "3")
                 }
             }

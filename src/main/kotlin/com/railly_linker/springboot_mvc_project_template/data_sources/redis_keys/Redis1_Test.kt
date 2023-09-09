@@ -1,18 +1,21 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.redis_repositories
+package com.railly_linker.springboot_mvc_project_template.data_sources.redis_keys
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
 @Component
-class Redis1_TestRepository(
-    @Qualifier("redis1RedisTemplate") private val redisTemplateMbr: RedisTemplate<String, Any>
+class Redis1_Test(
+    @Qualifier(RedisConfig.TN_REDIS1) private val redisTemplateMbr: RedisTemplate<String, Any>
 ) {
     // <멤버 변수 공간>
-    val keyName: String = this::class.simpleName!!
+    companion object {
+        const val KEY_NAME: String = "Redis1_Test"
+    }
 
 
     // ---------------------------------------------------------------------------------------------
@@ -24,19 +27,19 @@ class Redis1_TestRepository(
         val valueJsonString = Gson().toJson(value)
 
         // Redis Value 저장
-        redisTemplateMbr.opsForValue()[keyName] = valueJsonString
+        redisTemplateMbr.opsForValue()[KEY_NAME] = valueJsonString
 
         // 이번에 넣은 Redis Key 에 대한 만료시간 설정
-        redisTemplateMbr.expire(keyName, expireTimeMs, TimeUnit.MILLISECONDS)
+        redisTemplateMbr.expire(KEY_NAME, expireTimeMs, TimeUnit.MILLISECONDS)
     }
 
     fun deleteValue() {
-        redisTemplateMbr.delete(keyName)
+        redisTemplateMbr.delete(KEY_NAME)
     }
 
     fun getValue(): RedisDataVo? {
-        val value = redisTemplateMbr.opsForValue()[keyName]
-        val expireTimeMs = redisTemplateMbr.getExpire(keyName, TimeUnit.MILLISECONDS)
+        val value = redisTemplateMbr.opsForValue()[KEY_NAME]
+        val expireTimeMs = redisTemplateMbr.getExpire(KEY_NAME, TimeUnit.MILLISECONDS)
 
         return if (value == null) {
             null

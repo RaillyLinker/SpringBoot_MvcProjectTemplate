@@ -1,7 +1,8 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.tk_redisTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c5_tk_redisTest
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_repositories.Redis1_TestRepository
+import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_keys.Redis1_Test
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -9,8 +10,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class TkRedisTestService(
-    private val testRedis1_TestRepository: Redis1_TestRepository
+class C5TkRedisTestService(
+    private val testRedis1_Test: Redis1_Test
 ) {
     // <멤버 변수 공간>
     private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
@@ -26,26 +27,26 @@ class TkRedisTestService(
     // <공개 메소드 공간>
     fun api1(
         httpServletResponse: HttpServletResponse,
-        inputVo: TkRedisTestController.Api1InputVo
-    ): TkRedisTestController.Api1OutputVo {
+        inputVo: C5TkRedisTestController.Api1InputVo
+    ): C5TkRedisTestController.Api1OutputVo {
         // 입력 테스트
-        testRedis1_TestRepository.putValue(
-            Redis1_TestRepository.RedisValueVo(
+        testRedis1_Test.putValue(
+            Redis1_Test.RedisValueVo(
                 inputVo.content,
-                Redis1_TestRepository.RedisValueVo.InnerVo("testObject", true),
+                Redis1_Test.RedisValueVo.InnerVo("testObject", true),
                 arrayListOf(
-                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject1", false),
-                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject2", true)
+                    Redis1_Test.RedisValueVo.InnerVo("testObject1", false),
+                    Redis1_Test.RedisValueVo.InnerVo("testObject2", true)
                 )
             ),
             inputVo.expirationMs
         )
 
         // 키 조회 테스트
-        val searchOneResult = testRedis1_TestRepository.getValue()!!
+        val searchOneResult = testRedis1_Test.getValue()!!
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return TkRedisTestController.Api1OutputVo(
+        return C5TkRedisTestController.Api1OutputVo(
             searchOneResult.value.content,
             searchOneResult.expireTimeMs
         )
@@ -53,16 +54,16 @@ class TkRedisTestService(
 
 
     ////
-    fun api2(httpServletResponse: HttpServletResponse): TkRedisTestController.Api2OutputVo? {
+    fun api2(httpServletResponse: HttpServletResponse): C5TkRedisTestController.Api2OutputVo? {
         // 전체 조회 테스트
-        val result = testRedis1_TestRepository.getValue()
+        val result = testRedis1_Test.getValue()
 
         return if (result == null) {
             httpServletResponse.setHeader("api-result-code", "1")
             null
         } else {
             httpServletResponse.setHeader("api-result-code", "ok")
-            TkRedisTestController.Api2OutputVo(
+            C5TkRedisTestController.Api2OutputVo(
                 result.value.content,
                 result.expireTimeMs
             )
@@ -72,22 +73,22 @@ class TkRedisTestService(
 
     ////
     fun api3(httpServletResponse: HttpServletResponse) {
-        testRedis1_TestRepository.deleteValue()
+        testRedis1_Test.deleteValue()
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 
 
     ////
-    @CustomRedisTransactional(["redis1RedisTemplate:Redis1_TestRepository"])
-    fun api4(httpServletResponse: HttpServletResponse, inputVo: TkRedisTestController.Api4InputVo) {
+    @CustomRedisTransactional(["${RedisConfig.TN_REDIS1}:${Redis1_Test.KEY_NAME}"])
+    fun api4(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api4InputVo) {
         // 입력 테스트
-        testRedis1_TestRepository.putValue(
-            Redis1_TestRepository.RedisValueVo(
+        testRedis1_Test.putValue(
+            Redis1_Test.RedisValueVo(
                 inputVo.content,
-                Redis1_TestRepository.RedisValueVo.InnerVo("testObject", true),
+                Redis1_Test.RedisValueVo.InnerVo("testObject", true),
                 arrayListOf(
-                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject1", false),
-                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject2", true)
+                    Redis1_Test.RedisValueVo.InnerVo("testObject1", false),
+                    Redis1_Test.RedisValueVo.InnerVo("testObject2", true)
                 )
             ),
             inputVo.expirationMs
@@ -101,15 +102,15 @@ class TkRedisTestService(
 
 
     ////
-    fun api5(httpServletResponse: HttpServletResponse, inputVo: TkRedisTestController.Api5InputVo) {
+    fun api5(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api5InputVo) {
         // 입력 테스트
-        testRedis1_TestRepository.putValue(
-            Redis1_TestRepository.RedisValueVo(
+        testRedis1_Test.putValue(
+            Redis1_Test.RedisValueVo(
                 inputVo.content,
-                Redis1_TestRepository.RedisValueVo.InnerVo("testObject", true),
+                Redis1_Test.RedisValueVo.InnerVo("testObject", true),
                 arrayListOf(
-                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject1", false),
-                    Redis1_TestRepository.RedisValueVo.InnerVo("testObject2", true)
+                    Redis1_Test.RedisValueVo.InnerVo("testObject1", false),
+                    Redis1_Test.RedisValueVo.InnerVo("testObject2", true)
                 )
             ),
             inputVo.expirationMs
