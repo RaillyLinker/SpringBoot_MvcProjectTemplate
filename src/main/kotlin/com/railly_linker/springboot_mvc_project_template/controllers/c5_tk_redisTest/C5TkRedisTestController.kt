@@ -190,38 +190,75 @@ class C5TkRedisTestController(
 
 
     ////
-//    @Operation(
-//        summary = "N9 : Redis 트랜젝션 테스트",
-//        description = "Redis 트랜젝션 테스트용 API\n\n" +
-//                "C5-N1 과 동일하게 Redis 에 데이터를 저장하지만, 저장 직후 바로 Exception 을 발생시킵니다.\n\n" +
-//                "이 API 를 사용하고 바로 데이터 조회를 했을 때, 데이터가 없다고 나오면 Rollback 이 동작한 것입니다.\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/test-transaction")
-//    fun api9(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody inputVo: Api9InputVo
-//    ) {
-//        return service.api9(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api9InputVo(
-//        @Schema(description = "redis 키", required = true, example = "test_key")
-//        @JsonProperty("key")
-//        val key: String,
-//        @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
-//        @JsonProperty("content")
-//        val content: String,
-//        @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
-//        @JsonProperty("expirationMs")
-//        val expirationMs: Long
-//    )
+    @Operation(
+        summary = "N6 : Redis 트랜젝션 적용 테스트",
+        description = "Redis 트랜젝션 테스트용 API\n\n" +
+                "Redis 에 데이터 저장 직후 바로 Exception 을 발생시킵니다.\n\n" +
+                "이 API 를 사용하고 바로 데이터 조회를 했을 때, 데이터가 없다고 나오면 Rollback 이 동작한 것입니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/test-transaction")
+    fun api6(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody inputVo: Api6InputVo
+    ) {
+        return service.api6(httpServletResponse, inputVo)
+    }
+
+    data class Api6InputVo(
+        @Schema(description = "redis 키", required = true, example = "test_key")
+        @JsonProperty("key")
+        val key: String,
+        @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
+        @JsonProperty("content")
+        val content: String,
+        @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
+        @JsonProperty("expirationMs")
+        val expirationMs: Long
+    )
+
+
+    ////
+    @Operation(
+        summary = "N7 : Redis 트랜젝션 미적용 테스트",
+        description = "Redis 트랜젝션 미적용 테스트용 API\n\n" +
+                "Redis 에 데이터 저장 직후 바로 Exception 을 발생시킵니다.\n\n" +
+                "트랜젝션을 적용하지 않았으니 데이터는 저장될 것입니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/test-no-transaction")
+    fun api7(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody inputVo: Api7InputVo
+    ) {
+        return service.api7(httpServletResponse, inputVo)
+    }
+
+    data class Api7InputVo(
+        @Schema(description = "redis 키", required = true, example = "test_key")
+        @JsonProperty("key")
+        val key: String,
+        @Schema(description = "글 본문", required = true, example = "테스트 텍스트입니다.")
+        @JsonProperty("content")
+        val content: String,
+        @Schema(description = "데이터 만료시간(밀리 초)", required = true, example = "12000")
+        @JsonProperty("expirationMs")
+        val expirationMs: Long
+    )
 }

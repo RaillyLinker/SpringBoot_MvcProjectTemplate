@@ -1,5 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c5_tk_redisTest
 
+import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
+import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_TestRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_Test
 import jakarta.servlet.http.HttpServletResponse
@@ -98,6 +100,47 @@ class C5TkRedisTestService(
     ////
     fun api5(httpServletResponse: HttpServletResponse) {
         redis1TestRepository.deleteAllKeyValues()
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
+    ////
+    @CustomRedisTransactional(
+        ["${RedisConfig.TN_REDIS1}:${Redis1_TestRepository.TABLE_NAME}"]
+    )
+    fun api6(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api6InputVo) {
+        redis1TestRepository.saveKeyValue(
+            inputVo.key,
+            Redis1_Test(
+                inputVo.content,
+                Redis1_Test.InnerVo("testObject", true),
+                arrayListOf(
+                    Redis1_Test.InnerVo("testObject1", false),
+                    Redis1_Test.InnerVo("testObject2", true)
+                )
+            ),
+            inputVo.expirationMs
+        )
+        throw RuntimeException("Test Exception for Redis Transaction Test")
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
+    ////
+    fun api7(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api7InputVo) {
+        redis1TestRepository.saveKeyValue(
+            inputVo.key,
+            Redis1_Test(
+                inputVo.content,
+                Redis1_Test.InnerVo("testObject", true),
+                arrayListOf(
+                    Redis1_Test.InnerVo("testObject1", false),
+                    Redis1_Test.InnerVo("testObject2", true)
+                )
+            ),
+            inputVo.expirationMs
+        )
+        throw RuntimeException("Test Exception for Redis Non Transaction Test")
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 }

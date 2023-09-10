@@ -84,7 +84,6 @@ class ApplicationAopAspect(
     }
 
 
-    // todo
     ////
     // (@CustomRedisTransactional 를 입력한 함수 실행 전후에 JPA 트랜젝션 적용)
     @Around(REDIS_TRANSACTION_ANNOTATION_PATH)
@@ -92,38 +91,44 @@ class ApplicationAopAspect(
         val proceed: Any?
 
         // 백업 데이터
-        val backUpDataList: ArrayList<RedisData> = arrayListOf()
+        val backUpTableVoList: ArrayList<RedisTableVo> = arrayListOf()
 
         try {
-            val redisTemplateBeanNameAndKeyList =
+            // 어노테이션 파라미터 가져오기
+            val redisTemplateBeanNameAndTableNameList =
                 ((joinPoint.signature as MethodSignature).method).getAnnotation(
                     CustomRedisTransactional::class.java
-                ).redisTemplateBeanNameAndKeyList
+                ).redisTemplateBeanNameAndTableNameList
 
-            // annotation 에 설정된 transaction 순차 실행 및 저장
-            for (redisTemplateBeanNameAndKey in redisTemplateBeanNameAndKeyList) {
-                // annotation 에 저장된 transactionManager Bean 이름으로 Bean 객체 가져오기
-                val redisTemplateBeanNameAndKeySplit = redisTemplateBeanNameAndKey.split(":")
-                val redisTemplate = redisConfig.redisTemplatesMap[redisTemplateBeanNameAndKeySplit[0].trim()]!!
-                val redisKey = redisTemplateBeanNameAndKeySplit[1].trim()
+            // annotation 에 설정된 table 내의 모든 정보 백업 작업
+            for (redisTemplateBeanNameAndTableName in redisTemplateBeanNameAndTableNameList) {
+                // redisTemplate 객체와 redis table 이름을 분리
+                val redisTemplateBeanNameAndTableNameSplit = redisTemplateBeanNameAndTableName.split(":")
+                // redisTemplate 객체
+                val redisTemplate = redisConfig.redisTemplatesMap[redisTemplateBeanNameAndTableNameSplit[0].trim()]!!
+                // redis table 이름
+                val redisTableName = redisTemplateBeanNameAndTableNameSplit[1].trim()
 
-                // 각 키로 저장된 데이터 가져와 저장하기
-                val redisValueVo: RedisData.RedisValueVo?
-                val value = redisTemplate.opsForValue()[redisKey]
-                redisValueVo = if (value == null) {
-                    null
-                } else {
-                    RedisData.RedisValueVo(
-                        value as String,
-                        redisTemplate.getExpire(redisKey, TimeUnit.MILLISECONDS)
+                // redis Table 이름으로 시작되는 Key 를 모두 찾아서 백업
+                val resultList = ArrayList<RedisTableVo.RedisKeyVo>()
+                val keySet: Set<String> = redisTemplate.keys("${redisTableName}:*")
+                for (innerKey in keySet) {
+                    val redisValue = redisTemplate.opsForValue()[innerKey] ?: continue
+
+                    resultList.add(
+                        RedisTableVo.RedisKeyVo(
+                            innerKey,
+                            redisValue,
+                            redisTemplate.getExpire(innerKey, TimeUnit.MILLISECONDS) // 남은 만료시간
+                        )
                     )
                 }
 
-                backUpDataList.add(
-                    RedisData(
+                backUpTableVoList.add(
+                    RedisTableVo(
                         redisTemplate,
-                        redisKey,
-                        redisValueVo
+                        redisTableName,
+                        resultList
                     )
                 )
             }
@@ -133,21 +138,23 @@ class ApplicationAopAspect(
             //// 함수 실행 후
 
         } catch (e: Exception) {
-            // 각 키로 저장되어있던 데이터 복원하기
-            // annotation 에 설정된 transaction rollback 역순 실행 및 저장
+            // Redis Table 데이터 복원하기
+            for (backUpTableVo in backUpTableVoList) {
+                // backup redis Table 이름으로 시작되는 Key 를 모두 찾아서 삭제
+                val keySet: Set<String> = backUpTableVo.redisTemplate.keys("${backUpTableVo.tableName}:*")
+                for (innerKey in keySet) {
+                    // Key 삭제
+                    backUpTableVo.redisTemplate.delete(innerKey)
+                }
 
-            for (backUpData in backUpDataList) {
-                // 현재까지 저장된 정보 제거
-                backUpData.redisTemplate.delete(backUpData.key)
-
-                if (backUpData.redisValueVo != null) {
+                // backup redis Table 정보 복원
+                for (backUpTableRedisKey in backUpTableVo.redisKeyVoList) {
                     // Redis Value 저장
-                    backUpData.redisTemplate.opsForValue()[backUpData.key] = backUpData.redisValueVo.value
-
-                    // 이번에 넣은 Redis Key 에 대한 만료시간 설정
-                    backUpData.redisTemplate.expire(
-                        backUpData.key,
-                        backUpData.redisValueVo.expireTimeMs,
+                    backUpTableVo.redisTemplate.opsForValue()[backUpTableRedisKey.innerKey] = backUpTableRedisKey.value
+                    // Redis Key 에 대한 만료시간 설정
+                    backUpTableVo.redisTemplate.expire(
+                        backUpTableRedisKey.innerKey,
+                        backUpTableRedisKey.expireTimeMs,
                         TimeUnit.MILLISECONDS
                     )
                 }
@@ -168,13 +175,14 @@ class ApplicationAopAspect(
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
-    data class RedisData(
+    data class RedisTableVo(
         val redisTemplate: RedisTemplate<String, Any>,
-        val key: String,
-        val redisValueVo: RedisValueVo?
+        val tableName: String,
+        val redisKeyVoList: ArrayList<RedisKeyVo>
     ) {
-        data class RedisValueVo(
-            val value: String,
+        data class RedisKeyVo(
+            val innerKey: String,
+            val value: Any,
             val expireTimeMs: Long
         )
     }

@@ -4,7 +4,7 @@ package com.railly_linker.springboot_mvc_project_template.annotations
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CustomRedisTransactional(
-    // RedisTemplate 객체의 Bean 이름과 Key 리스트
-    // ex : ["TestBean1:TestKey1", "TestBean1:TestKey2", "TestBean2:TestKey1"]
-    val redisTemplateBeanNameAndKeyList: Array<String>
+    // RedisConfig 에 설정된 RedisTemplate 객체의 Bean 이름과 Redis Table 이름을 : 로 결합한 String 리스트
+    // ex : ["RedisTemplate1:Table1", "RedisTemplate1:Table2", "RedisTemplate2:Table1", ...]
+    val redisTemplateBeanNameAndTableNameList: Array<String>
 )

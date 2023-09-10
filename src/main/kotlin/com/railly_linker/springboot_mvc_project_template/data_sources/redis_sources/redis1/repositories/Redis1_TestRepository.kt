@@ -15,6 +15,7 @@ class Redis1_TestRepository(
 ) {
     // <멤버 변수 공간>
     companion object {
+        // !!!이 Repository 와 연결되는 Redis Table 클래스명을 TABLE_NAME 으로 설정하기!!
         const val TABLE_NAME = "Redis1_Test"
     }
 
