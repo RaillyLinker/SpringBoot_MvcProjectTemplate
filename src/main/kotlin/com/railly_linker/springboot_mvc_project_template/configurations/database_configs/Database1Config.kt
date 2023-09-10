@@ -36,9 +36,9 @@ class Database1Config(
         const val REPOSITORY_PATH: String =
             "${ApplicationConstants.PACKAGE_NAME}.data_sources.database_sources.database1.repositories"
 
-        // !!!Database Entity 객체가 저장된 위치 작성!!
-        private const val ENTITY_PATH: String =
-            "${ApplicationConstants.PACKAGE_NAME}.data_sources.database_sources.database1.entities"
+        // !!!Database Table 객체가 저장된 위치 작성!!
+        private const val TABLE_PATH: String =
+            "${ApplicationConstants.PACKAGE_NAME}.data_sources.database_sources.database1.tables"
 
         // 위 설정을 조합한 변수
         const val LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN_NAME: String =
@@ -51,7 +51,7 @@ class Database1Config(
     fun customEntityManagerFactory(): LocalContainerEntityManagerFactoryBean {
         val em = LocalContainerEntityManagerFactoryBean()
         em.dataSource = customDataSource()
-        em.setPackagesToScan(ENTITY_PATH)
+        em.setPackagesToScan(TABLE_PATH)
         val vendorAdapter = HibernateJpaVendorAdapter()
         em.jpaVendorAdapter = vendorAdapter
         val properties = HashMap<String, Any?>()

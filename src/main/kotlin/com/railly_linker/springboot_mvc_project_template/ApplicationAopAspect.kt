@@ -84,6 +84,7 @@ class ApplicationAopAspect(
     }
 
 
+    // todo
     ////
     // (@CustomRedisTransactional 를 입력한 함수 실행 전후에 JPA 트랜젝션 적용)
     @Around(REDIS_TRANSACTION_ANNOTATION_PATH)

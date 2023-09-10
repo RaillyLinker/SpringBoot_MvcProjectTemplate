@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.entities
+package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
@@ -6,18 +6,17 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
-// 주의 : 낙관적 Lock (@Version) 사용시 Transaction 기능과 충돌이 있음
 @Entity
-@Table(name = "test_data", catalog = "template")
-@Comment("테스트 정보 테이블")
-class Database1_Template_TestData(
-    @Column(name = "content", nullable = false, columnDefinition = "VARCHAR(255)")
-    @Comment("테스트 본문")
-    var content: String,
+@Table(name = "member_email_data", catalog = "member")
+@Comment("회원 이메일 정보 테이블")
+class Database1_Member_MemberEmailData(
+    @Column(name = "member_uid", nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("멤버 고유값 (member.members.uid)")
+    var memberUid: Long,
 
-    @Column(name = "random_num", nullable = false, columnDefinition = "INT")
-    @Comment("테스트 랜덤 번호")
-    var randomNum: Int,
+    @Column(name = "email_address", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Comment("이메일 주소 (중복 비허용)")
+    var emailAddress: String,
 
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")
@@ -42,6 +41,4 @@ class Database1_Template_TestData(
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
-
-
 }

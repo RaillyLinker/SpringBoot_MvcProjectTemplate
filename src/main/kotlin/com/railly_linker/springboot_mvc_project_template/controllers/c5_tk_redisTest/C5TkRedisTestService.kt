@@ -1,8 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c5_tk_redisTest
 
-import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
-import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.redis_keys.Redis1_Test
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_TestRepository
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_Test
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class C5TkRedisTestService(
-    private val redis1Test: Redis1_Test
+    private val redis1TestRepository: Redis1_TestRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -28,97 +27,77 @@ class C5TkRedisTestService(
     fun api1(
         httpServletResponse: HttpServletResponse,
         inputVo: C5TkRedisTestController.Api1InputVo
-    ): C5TkRedisTestController.Api1OutputVo {
-        // 입력 테스트
-        redis1Test.putValue(
-            Redis1_Test.RedisValueVo(
+    ) {
+        redis1TestRepository.saveKeyValue(
+            inputVo.key,
+            Redis1_Test(
                 inputVo.content,
-                Redis1_Test.RedisValueVo.InnerVo("testObject", true),
+                Redis1_Test.InnerVo("testObject", true),
                 arrayListOf(
-                    Redis1_Test.RedisValueVo.InnerVo("testObject1", false),
-                    Redis1_Test.RedisValueVo.InnerVo("testObject2", true)
+                    Redis1_Test.InnerVo("testObject1", false),
+                    Redis1_Test.InnerVo("testObject2", true)
                 )
             ),
             inputVo.expirationMs
         )
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
 
-        // 키 조회 테스트
-        val searchOneResult = redis1Test.getValue()!!
+
+    ////
+    fun api2(httpServletResponse: HttpServletResponse, key: String): C5TkRedisTestController.Api2OutputVo? {
+        // 전체 조회 테스트
+        val keyValue = redis1TestRepository.findKeyValue(key)
+
+        if (keyValue == null) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkRedisTestController.Api1OutputVo(
-            searchOneResult.value.content,
-            searchOneResult.expireTimeMs
+        return C5TkRedisTestController.Api2OutputVo(
+            Redis1_TestRepository.TABLE_NAME,
+            keyValue.key,
+            keyValue.value.content,
+            keyValue.expireTimeMs
         )
     }
 
 
     ////
-    fun api2(httpServletResponse: HttpServletResponse): C5TkRedisTestController.Api2OutputVo? {
+    fun api3(httpServletResponse: HttpServletResponse): C5TkRedisTestController.Api3OutputVo? {
         // 전체 조회 테스트
-        val result = redis1Test.getValue()
+        val keyValueList = redis1TestRepository.findAllKeyValues()
 
-        return if (result == null) {
-            httpServletResponse.setHeader("api-result-code", "1")
-            null
-        } else {
-            httpServletResponse.setHeader("api-result-code", "ok")
-            C5TkRedisTestController.Api2OutputVo(
-                result.value.content,
-                result.expireTimeMs
+        val testEntityListVoList = ArrayList<C5TkRedisTestController.Api3OutputVo.KeyValueVo>()
+        for (keyValue in keyValueList) {
+            testEntityListVoList.add(
+                C5TkRedisTestController.Api3OutputVo.KeyValueVo(
+                    keyValue.key,
+                    keyValue.value.content,
+                    keyValue.expireTimeMs
+                )
             )
         }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C5TkRedisTestController.Api3OutputVo(
+            Redis1_TestRepository.TABLE_NAME,
+            testEntityListVoList
+        )
     }
 
 
     ////
-    fun api3(httpServletResponse: HttpServletResponse) {
-        redis1Test.deleteValue()
+    fun api4(httpServletResponse: HttpServletResponse, key: String) {
+        redis1TestRepository.deleteKeyValue(key)
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 
 
     ////
-    @CustomRedisTransactional(["${RedisConfig.TN_REDIS1}:${Redis1_Test.KEY_NAME}"])
-    fun api4(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api4InputVo) {
-        // 입력 테스트
-        redis1Test.putValue(
-            Redis1_Test.RedisValueVo(
-                inputVo.content,
-                Redis1_Test.RedisValueVo.InnerVo("testObject", true),
-                arrayListOf(
-                    Redis1_Test.RedisValueVo.InnerVo("testObject1", false),
-                    Redis1_Test.RedisValueVo.InnerVo("testObject2", true)
-                )
-            ),
-            inputVo.expirationMs
-        )
-
-        // 테스트 예외 발생
-        throw Exception("test exception")
-
-        httpServletResponse.setHeader("api-result-code", "ok")
-    }
-
-
-    ////
-    fun api5(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api5InputVo) {
-        // 입력 테스트
-        redis1Test.putValue(
-            Redis1_Test.RedisValueVo(
-                inputVo.content,
-                Redis1_Test.RedisValueVo.InnerVo("testObject", true),
-                arrayListOf(
-                    Redis1_Test.RedisValueVo.InnerVo("testObject1", false),
-                    Redis1_Test.RedisValueVo.InnerVo("testObject2", true)
-                )
-            ),
-            inputVo.expirationMs
-        )
-
-        // 테스트 예외 발생
-        throw Exception("test exception")
-
+    fun api5(httpServletResponse: HttpServletResponse) {
+        redis1TestRepository.deleteAllKeyValues()
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 }

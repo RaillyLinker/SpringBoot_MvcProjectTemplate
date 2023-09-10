@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.entities
+package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
@@ -7,16 +7,16 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "member_email_data", catalog = "member")
-@Comment("회원 이메일 정보 테이블")
-class Database1_Member_MemberEmailData(
-    @Column(name = "member_uid", nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    @Comment("멤버 고유값 (member.members.uid)")
-    var memberUid: Long,
+@Table(name = "member_data", catalog = "member")
+@Comment("회원 정보 테이블")
+class Database1_Member_MemberData(
+    @Column(name = "nick_name", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Comment("닉네임 (중복 비허용 = uid 에 대한 별칭의 역할)")
+    var nickName: String,
 
-    @Column(name = "email_address", nullable = false, columnDefinition = "VARCHAR(100)")
-    @Comment("이메일 주소 (중복 비허용)")
-    var emailAddress: String,
+    @Column(name = "account_password", nullable = true, columnDefinition = "VARCHAR(100)")
+    @Comment("계정 로그인시 사용하는 비밀번호 (닉네임, 이메일, 전화번호 로그인에 모두 사용됨. OAuth2 만 등록했다면 null)")
+    var accountPassword: String?,
 
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")
