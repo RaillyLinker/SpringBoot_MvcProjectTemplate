@@ -12,25 +12,24 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.File
-import java.lang.RuntimeException
 import java.nio.file.Paths
 
 @Service
 class C3TkRequestFromServerTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
-    @Value("\${spring.profiles.active:default}") private var activeProfileMbr: String
+    @Value("\${spring.profiles.active:default}") private var activeProfile: String
 ) {
     // <멤버 변수 공간>
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // Retrofit2 요청 객체
-    val networkRetrofit2Mbr: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
+    val networkRetrofit2: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
 
 
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): String? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTest().execute()
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTest().execute()
         val responseHeaders = responseObj.headers()
 
         return if (responseHeaders.names().contains("api-result-code")) {
@@ -54,7 +53,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api2(httpServletResponse: HttpServletResponse): String? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestRedirectToBlank().execute()
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestRedirectToBlank().execute()
         val responseHeaders = responseObj.headers()
 
         return if (responseHeaders.names().contains("api-result-code")) {
@@ -78,7 +77,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api3(httpServletResponse: HttpServletResponse): String? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestForwardToBlank().execute()
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestForwardToBlank().execute()
         val responseHeaders = responseObj.headers()
 
         return if (responseHeaders.names().contains("api-result-code")) {
@@ -102,7 +101,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api4(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api4OutputVo? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestGetRequest(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestGetRequest(
             "paramFromServer",
             null,
             1,
@@ -149,7 +148,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api5(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api5OutputVo? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestGetRequestPathParamInt(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestGetRequestPathParamInt(
             1234
         ).execute()
         val responseHeaders = responseObj.headers()
@@ -178,7 +177,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api6(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api6OutputVo? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestApplicationJson(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestPostRequestApplicationJson(
             LocalHostRequestApi.TkRequestTestPostRequestApplicationJsonInputVO(
                 "paramFromServer",
                 null,
@@ -227,7 +226,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api7(httpServletResponse: HttpServletResponse): C3TkRequestFromServerTestController.Api7OutputVo? {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestXWwwFormUrlencoded(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestPostRequestXWwwFormUrlencoded(
             "paramFromServer",
             null,
             1,
@@ -298,7 +297,7 @@ class C3TkRequestFromServerTestService(
             serverFile.asRequestBody(serverFile.toURI().toURL().openConnection().contentType.toMediaTypeOrNull())
         )
 
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestMultipartFormData(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestPostRequestMultipartFormData(
             requestFormString,
             null,
             requestFormInt,
@@ -382,7 +381,7 @@ class C3TkRequestFromServerTestService(
             )
         )
 
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestMultipartFormData2(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestPostRequestMultipartFormData2(
             requestFormString,
             null,
             requestFormInt,
@@ -458,7 +457,7 @@ class C3TkRequestFromServerTestService(
             serverFile.asRequestBody(serverFile.toURI().toURL().openConnection().contentType.toMediaTypeOrNull())
         )
 
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestPostRequestMultipartFormDataJson(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestPostRequestMultipartFormDataJson(
             jsonStringFormData,
             multipartFileFormData,
             null
@@ -498,7 +497,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api11(httpServletResponse: HttpServletResponse) {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestGenerateError().execute()
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestGenerateError().execute()
         val responseHeaders = responseObj.headers()
 
         if (responseHeaders.names().contains("api-result-code")) {
@@ -521,7 +520,7 @@ class C3TkRequestFromServerTestService(
 
     ////
     fun api12(httpServletResponse: HttpServletResponse) {
-        val responseObj = networkRetrofit2Mbr.localHostRequestApiMbr.tkRequestTestApiResultCodeTest(
+        val responseObj = networkRetrofit2.localHostRequestApi.tkRequestTestApiResultCodeTest(
             LocalHostRequestApi.TkRequestTestApiResultCodeTestErrorTypeEnum.A
         ).execute()
         val responseHeaders = responseObj.headers()

@@ -10,16 +10,16 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class SwaggerConfig {
     // <멤버 변수 공간>
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // (버전 정보)
-    private val versionMbr: String = "1.0.0"
+    private val documentVersion: String = "1.0.0"
 
     // (문서 제목)
-    private val documentTitleMbr: String = "SpringBoot Mvc Project Template APIs"
+    private val documentTitle: String = "SpringBoot Mvc Project Template APIs"
 
     // (문서 설명)
-    private val documentDescriptionMbr: String = """
+    private val documentDescription: String = """
       **[읽어주세요]**
       
       **(공지)**
@@ -176,9 +176,9 @@ class SwaggerConfig {
     fun openAPI(): OpenAPI {
         return OpenAPI()
             .info(Info().apply {
-                this.title(documentTitleMbr)
-                this.version(versionMbr)
-                this.description(documentDescriptionMbr)
+                this.title(documentTitle)
+                this.version(documentVersion)
+                this.description(documentDescription)
             })
     }
 }

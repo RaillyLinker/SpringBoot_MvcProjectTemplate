@@ -7,13 +7,15 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "/tk/request-from-server-test APIs", description = "C3. 서버에서 요청을 보내는 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/request-from-server-test")
 class C3TkRequestFromServerTestController(
-    private val serviceMbr: C3TkRequestFromServerTestService
+    private val service: C3TkRequestFromServerTestService
 ) {
     // <멤버 변수 공간>
 
@@ -37,7 +39,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): String? {
-        return serviceMbr.api1(httpServletResponse)
+        return service.api1(httpServletResponse)
     }
 
     ////
@@ -58,7 +60,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): String? {
-        return serviceMbr.api2(httpServletResponse)
+        return service.api2(httpServletResponse)
     }
 
     ////
@@ -79,7 +81,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): String? {
-        return serviceMbr.api3(httpServletResponse)
+        return service.api3(httpServletResponse)
     }
 
     ////
@@ -100,7 +102,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api4OutputVo? {
-        return serviceMbr.api4(httpServletResponse)
+        return service.api4(httpServletResponse)
     }
 
     data class Api4OutputVo(
@@ -162,7 +164,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api5OutputVo? {
-        return serviceMbr.api5(httpServletResponse)
+        return service.api5(httpServletResponse)
     }
 
     data class Api5OutputVo(
@@ -189,7 +191,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api6OutputVo? {
-        return serviceMbr.api6(httpServletResponse)
+        return service.api6(httpServletResponse)
     }
 
     data class Api6OutputVo(
@@ -251,7 +253,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api7OutputVo? {
-        return serviceMbr.api7(httpServletResponse)
+        return service.api7(httpServletResponse)
     }
 
     data class Api7OutputVo(
@@ -313,7 +315,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api8OutputVo? {
-        return serviceMbr.api8(httpServletResponse)
+        return service.api8(httpServletResponse)
     }
 
     data class Api8OutputVo(
@@ -375,7 +377,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api9OutputVo? {
-        return serviceMbr.api9(httpServletResponse)
+        return service.api9(httpServletResponse)
     }
 
     data class Api9OutputVo(
@@ -437,7 +439,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api10OutputVo? {
-        return serviceMbr.api10(httpServletResponse)
+        return service.api10(httpServletResponse)
     }
 
     data class Api10OutputVo(
@@ -500,7 +502,7 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        serviceMbr.api11(httpServletResponse)
+        service.api11(httpServletResponse)
     }
 
     ////
@@ -524,6 +526,6 @@ class C3TkRequestFromServerTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        serviceMbr.api12(httpServletResponse)
+        service.api12(httpServletResponse)
     }
 }

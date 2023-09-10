@@ -11,19 +11,19 @@ import org.springframework.stereotype.Service
 @Service
 class C1TkTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
-    @Value("\${spring.profiles.active:default}") private var activeProfileMbr: String,
+    @Value("\${spring.profiles.active:default}") private var activeProfile: String,
 
     // 이메일 발송 유틸
-    private val emailSenderUtilDiMbr: EmailSenderUtilDi
+    private val emailSenderUtilDi: EmailSenderUtilDi
 ) {
     // <멤버 변수 공간>
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
 
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse, inputVo: C1TkTestController.Api1InputVo) {
-        emailSenderUtilDiMbr.sendMessageMail(
+        emailSenderUtilDi.sendMessageMail(
             inputVo.senderName,
             inputVo.receiverEmailAddressList.toTypedArray(),
             inputVo.carbonCopyEmailAddressList?.toTypedArray(),
@@ -39,7 +39,7 @@ class C1TkTestService(
 
     ////
     fun api2(httpServletResponse: HttpServletResponse, inputVo: C1TkTestController.Api2InputVo) {
-        emailSenderUtilDiMbr.sendThymeLeafHtmlMail(
+        emailSenderUtilDi.sendThymeLeafHtmlMail(
             inputVo.senderName,
             inputVo.receiverEmailAddressList.toTypedArray(),
             inputVo.carbonCopyEmailAddressList?.toTypedArray(),

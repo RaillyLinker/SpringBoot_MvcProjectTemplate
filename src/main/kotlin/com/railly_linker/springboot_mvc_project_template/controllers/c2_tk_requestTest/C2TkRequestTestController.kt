@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView
 @RestController
 @RequestMapping("/tk/request-test")
 class C2TkRequestTestController(
-    private val serviceMbr: C2TkRequestTestService
+    private val service: C2TkRequestTestService
 ) {
     // <멤버 변수 공간>
 
@@ -40,7 +40,7 @@ class C2TkRequestTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): String? {
-        return serviceMbr.api1(httpServletResponse)
+        return service.api1(httpServletResponse)
     }
 
     ////
@@ -61,7 +61,7 @@ class C2TkRequestTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): ModelAndView? {
-        return serviceMbr.api2(httpServletResponse)
+        return service.api2(httpServletResponse)
     }
 
     ////
@@ -82,7 +82,7 @@ class C2TkRequestTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): ModelAndView? {
-        return serviceMbr.api3(httpServletResponse)
+        return service.api3(httpServletResponse)
     }
 
     ////
@@ -144,7 +144,7 @@ class C2TkRequestTestController(
         @RequestParam("queryParamStringListNullable")
         queryParamStringListNullable: List<String>?
     ): Api4OutputVo? {
-        return serviceMbr.api4(
+        return service.api4(
             httpServletResponse,
             queryParamString,
             queryParamStringNullable,
@@ -221,7 +221,7 @@ class C2TkRequestTestController(
         @PathVariable("pathParamInt")
         pathParamInt: Int
     ): Api5OutputVo? {
-        return serviceMbr.api5(
+        return service.api5(
             httpServletResponse,
             pathParamInt
         )
@@ -254,7 +254,7 @@ class C2TkRequestTestController(
         @RequestBody
         inputVo: Api6InputVo
     ): Api6OutputVo? {
-        return serviceMbr.api6(
+        return service.api6(
             httpServletResponse,
             inputVo
         )
@@ -359,7 +359,7 @@ class C2TkRequestTestController(
         @ModelAttribute
         inputVo: Api7InputVo
     ): Api7OutputVo? {
-        return serviceMbr.api7(httpServletResponse, inputVo)
+        return service.api7(httpServletResponse, inputVo)
     }
 
     data class Api7InputVo(
@@ -458,7 +458,7 @@ class C2TkRequestTestController(
         @ModelAttribute
         inputVo: Api8InputVo
     ): Api8OutputVo? {
-        return serviceMbr.api8(httpServletResponse, inputVo)
+        return service.api8(httpServletResponse, inputVo)
     }
 
     data class Api8InputVo(
@@ -563,7 +563,7 @@ class C2TkRequestTestController(
         @ModelAttribute
         inputVo: Api9InputVo
     ): Api9OutputVo? {
-        return serviceMbr.api9(httpServletResponse, inputVo)
+        return service.api9(httpServletResponse, inputVo)
     }
 
     data class Api9InputVo(
@@ -670,7 +670,7 @@ class C2TkRequestTestController(
         @ModelAttribute
         inputVo: Api10InputVo
     ): Api10OutputVo? {
-        return serviceMbr.api10(httpServletResponse, inputVo)
+        return service.api10(httpServletResponse, inputVo)
     }
 
     data class Api10InputVo(
@@ -841,7 +841,7 @@ class C2TkRequestTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        serviceMbr.api11(httpServletResponse)
+        service.api11(httpServletResponse)
     }
 
 
@@ -869,7 +869,7 @@ class C2TkRequestTestController(
         @RequestParam("errorType")
         errorType: Api12ErrorTypeEnum?
     ) {
-        serviceMbr.api12(httpServletResponse, errorType)
+        service.api12(httpServletResponse, errorType)
     }
 
     enum class Api12ErrorTypeEnum {

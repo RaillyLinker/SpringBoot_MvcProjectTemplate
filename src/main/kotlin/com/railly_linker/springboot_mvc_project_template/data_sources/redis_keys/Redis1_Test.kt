@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class Redis1_Test(
-    @Qualifier(RedisConfig.TN_REDIS1) private val redisTemplateMbr: RedisTemplate<String, Any>
+    @Qualifier(RedisConfig.TN_REDIS1) private val redisTemplate: RedisTemplate<String, Any>
 ) {
     // <멤버 변수 공간>
     companion object {
@@ -27,19 +27,19 @@ class Redis1_Test(
         val valueJsonString = Gson().toJson(value)
 
         // Redis Value 저장
-        redisTemplateMbr.opsForValue()[KEY_NAME] = valueJsonString
+        redisTemplate.opsForValue()[KEY_NAME] = valueJsonString
 
         // 이번에 넣은 Redis Key 에 대한 만료시간 설정
-        redisTemplateMbr.expire(KEY_NAME, expireTimeMs, TimeUnit.MILLISECONDS)
+        redisTemplate.expire(KEY_NAME, expireTimeMs, TimeUnit.MILLISECONDS)
     }
 
     fun deleteValue() {
-        redisTemplateMbr.delete(KEY_NAME)
+        redisTemplate.delete(KEY_NAME)
     }
 
     fun getValue(): RedisDataVo? {
-        val value = redisTemplateMbr.opsForValue()[KEY_NAME]
-        val expireTimeMs = redisTemplateMbr.getExpire(KEY_NAME, TimeUnit.MILLISECONDS)
+        val value = redisTemplate.opsForValue()[KEY_NAME]
+        val expireTimeMs = redisTemplate.getExpire(KEY_NAME, TimeUnit.MILLISECONDS)
 
         return if (value == null) {
             null

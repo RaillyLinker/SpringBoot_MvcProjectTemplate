@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration
 // : 이 설정이 없다면, hibernateLazyInitializer 라는 하이버네이트 프록시 객체의 프로퍼티를 직렬화 하려다가 에러 발생
 @Configuration
 class JacksonConfig {
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     @Bean
     fun hibernate5Module(): Hibernate5Module {

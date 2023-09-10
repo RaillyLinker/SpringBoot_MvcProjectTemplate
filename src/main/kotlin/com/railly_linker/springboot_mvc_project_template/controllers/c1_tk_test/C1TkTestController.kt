@@ -7,14 +7,17 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "/tk/test APIs", description = "C1. 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/test")
 class C1TkTestController(
-    private val serviceMbr: C1TkTestService
+    private val service: C1TkTestService
 ) {
     // <멤버 변수 공간>
 
@@ -40,7 +43,7 @@ class C1TkTestController(
         @ModelAttribute
         inputVo: Api1InputVo
     ) {
-        serviceMbr.api1(httpServletResponse, inputVo)
+        service.api1(httpServletResponse, inputVo)
     }
 
     data class Api1InputVo(
@@ -85,7 +88,7 @@ class C1TkTestController(
         @ModelAttribute
         inputVo: Api2InputVo
     ) {
-        serviceMbr.api2(httpServletResponse, inputVo)
+        service.api2(httpServletResponse, inputVo)
     }
 
     data class Api2InputVo(

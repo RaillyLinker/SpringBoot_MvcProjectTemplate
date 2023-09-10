@@ -10,10 +10,10 @@ import org.springframework.web.servlet.ModelAndView
 @Service
 class C4ScService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
-    @Value("\${spring.profiles.active:default}") private var activeProfileMbr: String
+    @Value("\${spring.profiles.active:default}") private var activeProfile: String
 ) {
     // <멤버 변수 공간>
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
 
     // ---------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ class C4ScService(
         mv.addObject(
             "mvVo",
             Api1MvVo(
-                activeProfileMbr
+                activeProfile
             )
         )
 

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 @Component
 @Aspect
 class ApplicationAopAspect(
-    private val applicationContextMbr: ApplicationContext,
+    private val applicationContext: ApplicationContext,
     private val redisConfig: RedisConfig
 ) {
     companion object {
@@ -51,7 +51,7 @@ class ApplicationAopAspect(
             ).transactionManagerBeanNameList) {
                 // annotation 에 저장된 transactionManager Bean 이름으로 Bean 객체 가져오기
                 val platformTransactionManager =
-                    applicationContextMbr.getBean(transactionManagerBeanName) as PlatformTransactionManager
+                    applicationContext.getBean(transactionManagerBeanName) as PlatformTransactionManager
 
                 // transaction 시작 및 정보 저장
                 transactionManagerAndTransactionStatusList.add(
@@ -109,10 +109,10 @@ class ApplicationAopAspect(
                 // 각 키로 저장된 데이터 가져와 저장하기
                 val redisValueVo: RedisData.RedisValueVo?
                 val value = redisTemplate.opsForValue()[redisKey]
-                if (value == null) {
-                    redisValueVo = null
+                redisValueVo = if (value == null) {
+                    null
                 } else {
-                    redisValueVo = RedisData.RedisValueVo(
+                    RedisData.RedisValueVo(
                         value as String,
                         redisTemplate.getExpire(redisKey, TimeUnit.MILLISECONDS)
                     )

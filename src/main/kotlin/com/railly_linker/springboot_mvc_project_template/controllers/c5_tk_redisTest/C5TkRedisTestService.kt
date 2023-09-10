@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service
 
 @Service
 class C5TkRedisTestService(
-    private val testRedis1_Test: Redis1_Test
+    private val redis1Test: Redis1_Test
 ) {
     // <멤버 변수 공간>
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 Unknown 반환))
     // if (activeProfile == "prod80"){ // 배포 서버
     // }
     @Value("\${spring.profiles.active:Unknown}")
-    private lateinit var activeProfileMbr: String
+    private lateinit var activeProfile: String
 
 
     // ---------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ class C5TkRedisTestService(
         inputVo: C5TkRedisTestController.Api1InputVo
     ): C5TkRedisTestController.Api1OutputVo {
         // 입력 테스트
-        testRedis1_Test.putValue(
+        redis1Test.putValue(
             Redis1_Test.RedisValueVo(
                 inputVo.content,
                 Redis1_Test.RedisValueVo.InnerVo("testObject", true),
@@ -43,7 +43,7 @@ class C5TkRedisTestService(
         )
 
         // 키 조회 테스트
-        val searchOneResult = testRedis1_Test.getValue()!!
+        val searchOneResult = redis1Test.getValue()!!
 
         httpServletResponse.setHeader("api-result-code", "ok")
         return C5TkRedisTestController.Api1OutputVo(
@@ -56,7 +56,7 @@ class C5TkRedisTestService(
     ////
     fun api2(httpServletResponse: HttpServletResponse): C5TkRedisTestController.Api2OutputVo? {
         // 전체 조회 테스트
-        val result = testRedis1_Test.getValue()
+        val result = redis1Test.getValue()
 
         return if (result == null) {
             httpServletResponse.setHeader("api-result-code", "1")
@@ -73,7 +73,7 @@ class C5TkRedisTestService(
 
     ////
     fun api3(httpServletResponse: HttpServletResponse) {
-        testRedis1_Test.deleteValue()
+        redis1Test.deleteValue()
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 
@@ -82,7 +82,7 @@ class C5TkRedisTestService(
     @CustomRedisTransactional(["${RedisConfig.TN_REDIS1}:${Redis1_Test.KEY_NAME}"])
     fun api4(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api4InputVo) {
         // 입력 테스트
-        testRedis1_Test.putValue(
+        redis1Test.putValue(
             Redis1_Test.RedisValueVo(
                 inputVo.content,
                 Redis1_Test.RedisValueVo.InnerVo("testObject", true),
@@ -104,7 +104,7 @@ class C5TkRedisTestService(
     ////
     fun api5(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api5InputVo) {
         // 입력 테스트
-        testRedis1_Test.putValue(
+        redis1Test.putValue(
             Redis1_Test.RedisValueVo(
                 inputVo.content,
                 Redis1_Test.RedisValueVo.InnerVo("testObject", true),

@@ -17,17 +17,17 @@ import java.time.format.DateTimeFormatter
 @Service
 class C6TkDatabaseTestService(
     // (Database1 Repository)
-    private val database1NativeRepositoryMbr: Database1_NativeRepository,
-    private val database1TemplateTestRepositoryMbr: Database1_Template_TestsRepository
+    private val database1NativeRepository: Database1_NativeRepository,
+    private val database1TemplateTestRepository: Database1_Template_TestsRepository
 ) {
     // <멤버 변수 공간>
-    private val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 Unknown 반환))
     // if (activeProfile == "prod80"){ // 배포 서버
     // }
     @Value("\${spring.profiles.active:Unknown}")
-    private lateinit var activeProfileMbr: String
+    private lateinit var activeProfile: String
 
 
     // ---------------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ class C6TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: C6TkDatabaseTestController.Api1InputVo
     ): C6TkDatabaseTestController.Api1OutputVo? {
-        val result = database1TemplateTestRepositoryMbr.save(
+        val result = database1TemplateTestRepository.save(
             Database1_Template_TestData(inputVo.content, (0..99999999).random(), true)
         )
 
@@ -56,7 +56,7 @@ class C6TkDatabaseTestService(
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api2(httpServletResponse: HttpServletResponse) {
-        database1TemplateTestRepositoryMbr.deleteAll()
+        database1TemplateTestRepository.deleteAll()
 
         httpServletResponse.setHeader("api-result-code", "ok")
     }
@@ -65,7 +65,7 @@ class C6TkDatabaseTestService(
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api3(httpServletResponse: HttpServletResponse, index: Long) {
-        database1TemplateTestRepositoryMbr.deleteById(index)
+        database1TemplateTestRepository.deleteById(index)
 
         httpServletResponse.setHeader("api-result-code", "ok")
     }
@@ -73,7 +73,7 @@ class C6TkDatabaseTestService(
 
     ////
     fun api4(httpServletResponse: HttpServletResponse): C6TkDatabaseTestController.Api4OutputVo? {
-        val resultEntityList = database1TemplateTestRepositoryMbr.findAll()
+        val resultEntityList = database1TemplateTestRepository.findAll()
 
         val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api4OutputVo.TestEntityVo>()
         for (resultEntity in resultEntityList) {
@@ -100,7 +100,7 @@ class C6TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         num: Int
     ): C6TkDatabaseTestController.Api5OutputVo? {
-        val foundEntityList = database1NativeRepositoryMbr.selectListForC6N5(num)
+        val foundEntityList = database1NativeRepository.selectListForC6N5(num)
 
         val testEntityVoList =
             ArrayList<C6TkDatabaseTestController.Api5OutputVo.TestEntityVo>()
@@ -130,7 +130,7 @@ class C6TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         dateString: String
     ): C6TkDatabaseTestController.Api6OutputVo? {
-        val foundEntityList = database1NativeRepositoryMbr.selectListForC6N6(dateString)
+        val foundEntityList = database1NativeRepository.selectListForC6N6(dateString)
 
         val testEntityVoList =
             ArrayList<C6TkDatabaseTestController.Api6OutputVo.TestEntityVo>()
@@ -162,7 +162,7 @@ class C6TkDatabaseTestService(
         pageElementsCount: Int
     ): C6TkDatabaseTestController.Api7OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val entityList = database1TemplateTestRepositoryMbr.findAllByRowActivateOrderByRowCreateDate(
+        val entityList = database1TemplateTestRepository.findAllByRowActivateOrderByRowCreateDate(
             true,
             pageable
         )
@@ -196,7 +196,7 @@ class C6TkDatabaseTestService(
         num: Int
     ): C6TkDatabaseTestController.Api8OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val voList = database1NativeRepositoryMbr.selectListForC6N8(
+        val voList = database1NativeRepository.selectListForC6N8(
             num,
             pageable
         )
@@ -230,7 +230,7 @@ class C6TkDatabaseTestService(
         testTableUid: Long,
         inputVo: C6TkDatabaseTestController.Api9InputVo
     ): C6TkDatabaseTestController.Api9OutputVo? {
-        val oldEntity = database1TemplateTestRepositoryMbr.findById(testTableUid)
+        val oldEntity = database1TemplateTestRepository.findById(testTableUid)
 
         if (oldEntity.isEmpty || !oldEntity.get().rowActivate) {
             httpServletResponse.status = 500
@@ -241,7 +241,7 @@ class C6TkDatabaseTestService(
         val testObject = oldEntity.get()
         testObject.content = inputVo.content
 
-        val result = database1TemplateTestRepositoryMbr.save(
+        val result = database1TemplateTestRepository.save(
             testObject
         )
 
@@ -266,7 +266,7 @@ class C6TkDatabaseTestService(
         // !! 아래는 네이티브 쿼리로 수정하는 예시를 보인 것으로,
         // 이 경우에는 @UpdateTimestamp, @Version 기능이 자동 적용 되지 않습니다.
         // 고로 수정문은 jpa 를 사용하길 권장합니다. !!
-        val testEntity = database1TemplateTestRepositoryMbr.findById(testTableUid)
+        val testEntity = database1TemplateTestRepository.findById(testTableUid)
 
         if (testEntity.isEmpty || !testEntity.get().rowActivate) {
             httpServletResponse.status = 500
@@ -275,7 +275,7 @@ class C6TkDatabaseTestService(
             return
         }
 
-        database1NativeRepositoryMbr.updateForC6N10(testTableUid, inputVo.content)
+        database1NativeRepository.updateForC6N10(testTableUid, inputVo.content)
         httpServletResponse.setHeader("api-result-code", "ok")
     }
 
@@ -288,7 +288,7 @@ class C6TkDatabaseTestService(
         searchKeyword: String
     ): C6TkDatabaseTestController.Api11OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
-        val voList = database1NativeRepositoryMbr.selectListForC6N11(
+        val voList = database1NativeRepository.selectListForC6N11(
             searchKeyword,
             pageable
         )
@@ -319,11 +319,9 @@ class C6TkDatabaseTestService(
     fun api12(
         httpServletResponse: HttpServletResponse
     ) {
-        val result = database1TemplateTestRepositoryMbr.save(
+        val result = database1TemplateTestRepository.save(
             Database1_Template_TestData("error test", (0..99999999).random(), true)
         )
-
-        loggerMbr.info("Add Item : $result")
 
         throw Exception("Transaction Rollback Test!")
         httpServletResponse.setHeader("api-result-code", "ok")
@@ -332,11 +330,9 @@ class C6TkDatabaseTestService(
 
     ////
     fun api13(httpServletResponse: HttpServletResponse) {
-        val result = database1TemplateTestRepositoryMbr.save(
+        val result = database1TemplateTestRepository.save(
             Database1_Template_TestData("error test", (0..99999999).random(), true)
         )
-
-        loggerMbr.info("Add Item : $result")
 
         throw Exception("No Transaction Exception Test!")
         httpServletResponse.setHeader("api-result-code", "ok")
@@ -350,13 +346,13 @@ class C6TkDatabaseTestService(
         pageElementsCount: Int,
         num: Int
     ): C6TkDatabaseTestController.Api14OutputVo? {
-        val voList = database1NativeRepositoryMbr.selectListForC6N14(
+        val voList = database1NativeRepository.selectListForC6N14(
             lastItemUid ?: -1,
             pageElementsCount,
             num
         )
 
-        val count = database1TemplateTestRepositoryMbr.countByRowActivate(true)
+        val count = database1TemplateTestRepository.countByRowActivate(true)
 
         val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api14OutputVo.TestEntityVo>()
         for (vo in voList) {

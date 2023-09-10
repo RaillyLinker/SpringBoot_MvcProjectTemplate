@@ -24,7 +24,7 @@ class RepositoryNetworkRetrofit2 private constructor() {
     // !!!요청을 보낼 서버 위치 경로별 RequestApi 객체를 생성하기!!
 
     // 로컬 테스트용
-    val localHostRequestApiMbr: LocalHostRequestApi =
+    val localHostRequestApi: LocalHostRequestApi =
         (getRetrofitClient(
             "http://localhost:8080",
             7000L,

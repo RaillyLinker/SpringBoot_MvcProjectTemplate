@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/tk/redis-test")
 class C5TkRedisTestController(
-    private val serviceMbr: C5TkRedisTestService
+    private val service: C5TkRedisTestService
 ) {
     // <멤버 변수 공간>
 
@@ -38,7 +38,7 @@ class C5TkRedisTestController(
         httpServletResponse: HttpServletResponse,
         @RequestBody inputVo: Api1InputVo
     ): Api1OutputVo {
-        return serviceMbr.api1(httpServletResponse, inputVo)
+        return service.api1(httpServletResponse, inputVo)
     }
 
     data class Api1InputVo(
@@ -79,7 +79,7 @@ class C5TkRedisTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Api2OutputVo? {
-        return serviceMbr.api2(
+        return service.api2(
             httpServletResponse
         )
     }
@@ -112,7 +112,7 @@ class C5TkRedisTestController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-        return serviceMbr.api3(httpServletResponse)
+        return service.api3(httpServletResponse)
     }
 
 
@@ -137,7 +137,7 @@ class C5TkRedisTestController(
         httpServletResponse: HttpServletResponse,
         @RequestBody inputVo: Api4InputVo
     ) {
-        return serviceMbr.api4(httpServletResponse, inputVo)
+        return service.api4(httpServletResponse, inputVo)
     }
 
     data class Api4InputVo(
@@ -171,7 +171,7 @@ class C5TkRedisTestController(
         httpServletResponse: HttpServletResponse,
         @RequestBody inputVo: Api5InputVo
     ) {
-        return serviceMbr.api5(httpServletResponse, inputVo)
+        return service.api5(httpServletResponse, inputVo)
     }
 
     data class Api5InputVo(

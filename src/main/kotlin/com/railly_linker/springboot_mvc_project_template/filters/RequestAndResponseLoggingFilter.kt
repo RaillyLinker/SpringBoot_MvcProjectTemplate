@@ -3,7 +3,10 @@ package com.railly_linker.springboot_mvc_project_template.filters
 import com.fasterxml.jackson.core.JacksonException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
-import jakarta.servlet.*
+import jakarta.servlet.AsyncEvent
+import jakarta.servlet.AsyncListener
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
@@ -20,11 +23,11 @@ import java.time.LocalDateTime
 @Component
 class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
     // <멤버 변수 공간>
-    private val loggerMbr = LoggerFactory.getLogger(this::class.java)
+    private val classLogger = LoggerFactory.getLogger(this::class.java)
 
     // 로깅 body 에 표시할 데이터 타입
     // 여기에 포함된 데이터 타입만 로그에 표시됩니다.
-    private val visibleTypeListMbr = listOf(
+    private val visibleTypeList = listOf(
         MediaType.valueOf("text/*"),
         MediaType.APPLICATION_JSON,
         MediaType.APPLICATION_XML,
@@ -32,7 +35,7 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
         MediaType.valueOf("application/*+xml")
     )
 
-    private val mapperMbr = jacksonObjectMapper()
+    private val jacksonObjectMapper = jacksonObjectMapper()
 
 
     // ---------------------------------------------------------------------------------------------
@@ -93,14 +96,14 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
                     val body: Any?
                 )
 
-                val requestJsonString = mapperMbr.writeValueAsString(
+                val requestJsonString = jacksonObjectMapper.writeValueAsString(
                     RequestDataVo(
                         endpoint,
                         clientIp,
                         requestHeaders,
                         if (requestBody.isNotBlank() && httpServletRequest.contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
                             try {
-                                mapperMbr.readTree(requestBody)
+                                jacksonObjectMapper.readTree(requestBody)
                             } catch (e: Exception) {
                                 requestBody
                             }
@@ -126,13 +129,13 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
                 } else ""
 
                 if (isError) {
-                    val responseJsonArray = mapperMbr.writeValueAsString(
+                    val responseJsonArray = jacksonObjectMapper.writeValueAsString(
                         ResponseDataVo(
                             "500 $responseStatusPhrase",
                             responseHeaders,
                             if (responseBody.isNotBlank() && httpServletResponse.contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
                                 try {
-                                    mapperMbr.readTree(responseBody)
+                                    jacksonObjectMapper.readTree(responseBody)
                                 } catch (e: JacksonException) {
                                     responseBody
                                 }
@@ -142,15 +145,15 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
                         )
                     )
 
-                    loggerMbr.error("requestTime : $requestTime\n    $requestJsonString\n    $responseJsonArray\n")
+                    classLogger.error("requestTime : $requestTime\n    $requestJsonString\n    $responseJsonArray\n")
                 } else {
-                    val responseJsonArray = mapperMbr.writeValueAsString(
+                    val responseJsonArray = jacksonObjectMapper.writeValueAsString(
                         ResponseDataVo(
                             "$responseStatus $responseStatusPhrase",
                             responseHeaders,
                             if (responseBody.isNotBlank() && httpServletResponse.contentType.contains(MediaType.APPLICATION_JSON_VALUE)) {
                                 try {
-                                    mapperMbr.readTree(responseBody)
+                                    jacksonObjectMapper.readTree(responseBody)
                                 } catch (e: JacksonException) {
                                     responseBody
                                 }
@@ -160,7 +163,7 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
                         )
                     )
 
-                    loggerMbr.info("requestTime : $requestTime\n    $requestJsonString\n    $responseJsonArray\n")
+                    classLogger.info("requestTime : $requestTime\n    $requestJsonString\n    $responseJsonArray\n")
                 }
 
                 // response 복사
@@ -195,7 +198,7 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
     // <비공개 메소드 공간>
     private fun getContentByte(content: ByteArray, contentType: String): String {
         val mediaType = MediaType.valueOf(contentType)
-        val visible = visibleTypeListMbr.stream().anyMatch { visibleType -> visibleType.includes(mediaType) }
+        val visible = visibleTypeList.stream().anyMatch { visibleType -> visibleType.includes(mediaType) }
 
         return if (visible) {
             var contentStr = ""

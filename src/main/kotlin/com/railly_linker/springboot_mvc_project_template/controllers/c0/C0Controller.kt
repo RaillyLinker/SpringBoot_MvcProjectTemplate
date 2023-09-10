@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView
 @Tag(name = "root APIs", description = "C0. Root 경로에 대한 API 컨트롤러")
 @Controller
 class C0Controller(
-    private val serviceMbr: C0Service
+    private val service: C0Service
 ) {
     // <멤버 변수 공간>
 
@@ -36,6 +36,6 @@ class C0Controller(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): ModelAndView? {
-        return serviceMbr.api1(httpServletResponse)
+        return service.api1(httpServletResponse)
     }
 }

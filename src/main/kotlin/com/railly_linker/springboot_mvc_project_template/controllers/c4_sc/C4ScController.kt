@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 @RequestMapping("/sc")
 class C4ScController(
-    private val serviceMbr: C4ScService
+    private val service: C4ScService
 ) {
     // <멤버 변수 공간>
 
@@ -38,6 +38,6 @@ class C4ScController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): ModelAndView? {
-        return serviceMbr.api1(httpServletResponse)
+        return service.api1(httpServletResponse)
     }
 }
