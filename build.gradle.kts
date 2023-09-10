@@ -76,10 +76,6 @@ dependencies {
     // (SpringBoot AOP)
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
-    // (Redis)
-    // : 메모리 키 값 데이터 구조 스토어
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
-
 }
 
 tasks.withType<KotlinCompile> {
