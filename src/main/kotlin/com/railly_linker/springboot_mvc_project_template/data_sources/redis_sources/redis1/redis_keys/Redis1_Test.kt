@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.redis_keys
+package com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.redis_keys
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

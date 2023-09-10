@@ -1,6 +1,6 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.database1.repositories
+package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories
 
-import com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities.Database1_Member_MemberProfileData
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.entities.Database1_Member_MemberProfileData
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

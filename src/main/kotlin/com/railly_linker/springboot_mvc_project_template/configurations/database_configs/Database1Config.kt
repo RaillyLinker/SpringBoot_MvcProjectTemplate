@@ -34,11 +34,11 @@ class Database1Config(
 
         // !!!Database Repository 객체가 저장된 위치 작성!!
         const val REPOSITORY_PATH: String =
-            "${ApplicationConstants.PACKAGE_NAME}.data_sources.database1.repositories"
+            "${ApplicationConstants.PACKAGE_NAME}.data_sources.database_sources.database1.repositories"
 
         // !!!Database Entity 객체가 저장된 위치 작성!!
         private const val ENTITY_PATH: String =
-            "${ApplicationConstants.PACKAGE_NAME}.data_sources.database1.entities"
+            "${ApplicationConstants.PACKAGE_NAME}.data_sources.database_sources.database1.entities"
 
         // 위 설정을 조합한 변수
         const val LOCAL_CONTAINER_ENTITY_MANAGER_FACTORY_BEAN_NAME: String =

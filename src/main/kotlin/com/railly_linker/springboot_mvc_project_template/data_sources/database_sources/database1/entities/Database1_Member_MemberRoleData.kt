@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities
+package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.entities
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
@@ -7,20 +7,16 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "member_profile_data", catalog = "member")
-@Comment("회원 프로필 정보 테이블")
-class Database1_Member_MemberProfileData(
+@Table(name = "member_role_data", catalog = "member")
+@Comment("회원 권한 정보 테이블")
+class Database1_Member_MemberRoleData(
     @Column(name = "member_uid", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     @Comment("멤버 고유값 (member.members.uid)")
     var memberUid: Long,
 
-    @Column(name = "image_full_url", nullable = false, columnDefinition = "VARCHAR(200)")
-    @Comment("프로필 이미지 Full URL")
-    var imageFullUrl: String,
-
-    @Column(name = "is_selected", nullable = false, columnDefinition = "BIT(1)")
-    @Comment("프로필 선택 여부")
-    var isSelected: Boolean,
+    @Column(name = "role_code", nullable = false, columnDefinition = "TINYINT UNSIGNED")
+    @Comment("권한 코드 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))")
+    var roleCode: Byte,
 
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")

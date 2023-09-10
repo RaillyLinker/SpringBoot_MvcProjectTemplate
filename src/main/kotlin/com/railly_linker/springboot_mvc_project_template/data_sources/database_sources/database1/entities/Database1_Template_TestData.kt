@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.data_sources.database1.entities
+package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.entities
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment

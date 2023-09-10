@@ -1,8 +1,8 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c3_tk_requestFromServerTest
 
 import com.google.gson.Gson
-import com.railly_linker.springboot_mvc_project_template.retrofit2.RepositoryNetworkRetrofit2
-import com.railly_linker.springboot_mvc_project_template.retrofit2.request_apis.LocalHostRequestApi
+import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
+import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.LocalHostRequestApi
 import jakarta.servlet.http.HttpServletResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

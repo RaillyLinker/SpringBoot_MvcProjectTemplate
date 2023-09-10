@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.retrofit2.request_apis
+package com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.Expose

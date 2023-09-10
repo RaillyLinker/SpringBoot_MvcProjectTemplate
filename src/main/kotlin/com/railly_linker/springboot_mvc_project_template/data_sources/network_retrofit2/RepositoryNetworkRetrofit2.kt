@@ -1,7 +1,7 @@
-package com.railly_linker.springboot_mvc_project_template.retrofit2
+package com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2
 
 import com.google.gson.GsonBuilder
-import com.railly_linker.springboot_mvc_project_template.retrofit2.request_apis.LocalHostRequestApi
+import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.LocalHostRequestApi
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
