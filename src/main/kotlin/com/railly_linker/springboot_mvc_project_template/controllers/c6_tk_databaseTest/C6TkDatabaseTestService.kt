@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c5_tk_databaseTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c6_tk_databaseTest
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.time.format.DateTimeFormatter
 
 @Service
-class C5TkDatabaseTestService(
+class C6TkDatabaseTestService(
     // (Database1 Repository)
     private val database1NativeRepositoryMbr: Database1_NativeRepository,
     private val database1TemplateTestRepositoryMbr: Database1_Template_TestsRepository
@@ -35,15 +35,15 @@ class C5TkDatabaseTestService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api1(
         httpServletResponse: HttpServletResponse,
-        inputVo: C5TkDatabaseTestController.Api1InputVo
-    ): C5TkDatabaseTestController.Api1OutputVo? {
+        inputVo: C6TkDatabaseTestController.Api1InputVo
+    ): C6TkDatabaseTestController.Api1OutputVo? {
         val result = database1TemplateTestRepositoryMbr.save(
             Database1_Template_TestData(inputVo.content, (0..99999999).random(), true)
         )
 
         httpServletResponse.setHeader("api-result-code", "ok")
 
-        return C5TkDatabaseTestController.Api1OutputVo(
+        return C6TkDatabaseTestController.Api1OutputVo(
             result.uid!!,
             result.content,
             result.randomNum,
@@ -72,13 +72,13 @@ class C5TkDatabaseTestService(
 
 
     ////
-    fun api4(httpServletResponse: HttpServletResponse): C5TkDatabaseTestController.Api4OutputVo? {
+    fun api4(httpServletResponse: HttpServletResponse): C6TkDatabaseTestController.Api4OutputVo? {
         val resultEntityList = database1TemplateTestRepositoryMbr.findAll()
 
-        val testEntityVoList = ArrayList<C5TkDatabaseTestController.Api4OutputVo.TestEntityVo>()
+        val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api4OutputVo.TestEntityVo>()
         for (resultEntity in resultEntityList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api4OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api4OutputVo.TestEntityVo(
                     resultEntity.uid!!,
                     resultEntity.content,
                     resultEntity.randomNum,
@@ -89,7 +89,7 @@ class C5TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api4OutputVo(
+        return C6TkDatabaseTestController.Api4OutputVo(
             testEntityVoList
         )
     }
@@ -99,15 +99,15 @@ class C5TkDatabaseTestService(
     fun api5(
         httpServletResponse: HttpServletResponse,
         num: Int
-    ): C5TkDatabaseTestController.Api5OutputVo? {
+    ): C6TkDatabaseTestController.Api5OutputVo? {
         val foundEntityList = database1NativeRepositoryMbr.selectListForC6N5(num)
 
         val testEntityVoList =
-            ArrayList<C5TkDatabaseTestController.Api5OutputVo.TestEntityVo>()
+            ArrayList<C6TkDatabaseTestController.Api5OutputVo.TestEntityVo>()
 
         for (entity in foundEntityList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api5OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api5OutputVo.TestEntityVo(
                     entity.uid,
                     entity.content,
                     entity.randomNum,
@@ -119,7 +119,7 @@ class C5TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api5OutputVo(
+        return C6TkDatabaseTestController.Api5OutputVo(
             testEntityVoList
         )
     }
@@ -129,15 +129,15 @@ class C5TkDatabaseTestService(
     fun api6(
         httpServletResponse: HttpServletResponse,
         dateString: String
-    ): C5TkDatabaseTestController.Api6OutputVo? {
+    ): C6TkDatabaseTestController.Api6OutputVo? {
         val foundEntityList = database1NativeRepositoryMbr.selectListForC6N6(dateString)
 
         val testEntityVoList =
-            ArrayList<C5TkDatabaseTestController.Api6OutputVo.TestEntityVo>()
+            ArrayList<C6TkDatabaseTestController.Api6OutputVo.TestEntityVo>()
 
         for (entity in foundEntityList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api6OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api6OutputVo.TestEntityVo(
                     entity.uid,
                     entity.content,
                     entity.randomNum,
@@ -149,7 +149,7 @@ class C5TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api6OutputVo(
+        return C6TkDatabaseTestController.Api6OutputVo(
             testEntityVoList
         )
     }
@@ -160,17 +160,17 @@ class C5TkDatabaseTestService(
         httpServletResponse: HttpServletResponse,
         page: Int,
         pageElementsCount: Int
-    ): C5TkDatabaseTestController.Api7OutputVo? {
+    ): C6TkDatabaseTestController.Api7OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
         val entityList = database1TemplateTestRepositoryMbr.findAllByRowActivateOrderByRowCreateDate(
             true,
             pageable
         )
 
-        val testEntityVoList = ArrayList<C5TkDatabaseTestController.Api7OutputVo.TestEntityVo>()
+        val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api7OutputVo.TestEntityVo>()
         for (entity in entityList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api7OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api7OutputVo.TestEntityVo(
                     entity.uid!!,
                     entity.content,
                     entity.randomNum,
@@ -181,7 +181,7 @@ class C5TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api7OutputVo(
+        return C6TkDatabaseTestController.Api7OutputVo(
             entityList.totalElements,
             testEntityVoList
         )
@@ -194,17 +194,17 @@ class C5TkDatabaseTestService(
         page: Int,
         pageElementsCount: Int,
         num: Int
-    ): C5TkDatabaseTestController.Api8OutputVo? {
+    ): C6TkDatabaseTestController.Api8OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
         val voList = database1NativeRepositoryMbr.selectListForC6N8(
             num,
             pageable
         )
 
-        val testEntityVoList = ArrayList<C5TkDatabaseTestController.Api8OutputVo.TestEntityVo>()
+        val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api8OutputVo.TestEntityVo>()
         for (vo in voList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api8OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api8OutputVo.TestEntityVo(
                     vo.uid,
                     vo.content,
                     vo.randomNum,
@@ -216,7 +216,7 @@ class C5TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api8OutputVo(
+        return C6TkDatabaseTestController.Api8OutputVo(
             voList.totalElements,
             testEntityVoList
         )
@@ -228,8 +228,8 @@ class C5TkDatabaseTestService(
     fun api9(
         httpServletResponse: HttpServletResponse,
         testTableUid: Long,
-        inputVo: C5TkDatabaseTestController.Api9InputVo
-    ): C5TkDatabaseTestController.Api9OutputVo? {
+        inputVo: C6TkDatabaseTestController.Api9InputVo
+    ): C6TkDatabaseTestController.Api9OutputVo? {
         val oldEntity = database1TemplateTestRepositoryMbr.findById(testTableUid)
 
         if (oldEntity.isEmpty || !oldEntity.get().rowActivate) {
@@ -246,7 +246,7 @@ class C5TkDatabaseTestService(
         )
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api9OutputVo(
+        return C6TkDatabaseTestController.Api9OutputVo(
             result.uid!!,
             result.content,
             result.randomNum,
@@ -261,7 +261,7 @@ class C5TkDatabaseTestService(
     fun api10(
         httpServletResponse: HttpServletResponse,
         testTableUid: Long,
-        inputVo: C5TkDatabaseTestController.Api10InputVo
+        inputVo: C6TkDatabaseTestController.Api10InputVo
     ) {
         // !! 아래는 네이티브 쿼리로 수정하는 예시를 보인 것으로,
         // 이 경우에는 @UpdateTimestamp, @Version 기능이 자동 적용 되지 않습니다.
@@ -286,17 +286,17 @@ class C5TkDatabaseTestService(
         page: Int,
         pageElementsCount: Int,
         searchKeyword: String
-    ): C5TkDatabaseTestController.Api11OutputVo? {
+    ): C6TkDatabaseTestController.Api11OutputVo? {
         val pageable: Pageable = PageRequest.of(page - 1, pageElementsCount)
         val voList = database1NativeRepositoryMbr.selectListForC6N11(
             searchKeyword,
             pageable
         )
 
-        val testEntityVoList = ArrayList<C5TkDatabaseTestController.Api11OutputVo.TestEntityVo>()
+        val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api11OutputVo.TestEntityVo>()
         for (vo in voList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api11OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api11OutputVo.TestEntityVo(
                     vo.uid,
                     vo.content,
                     vo.randomNum,
@@ -307,7 +307,7 @@ class C5TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C5TkDatabaseTestController.Api11OutputVo(
+        return C6TkDatabaseTestController.Api11OutputVo(
             voList.totalElements,
             testEntityVoList
         )
@@ -349,7 +349,7 @@ class C5TkDatabaseTestService(
         lastItemUid: Long?,
         pageElementsCount: Int,
         num: Int
-    ): C5TkDatabaseTestController.Api14OutputVo? {
+    ): C6TkDatabaseTestController.Api14OutputVo? {
         val voList = database1NativeRepositoryMbr.selectListForC6N14(
             lastItemUid ?: -1,
             pageElementsCount,
@@ -358,10 +358,10 @@ class C5TkDatabaseTestService(
 
         val count = database1TemplateTestRepositoryMbr.countByRowActivate(true)
 
-        val testEntityVoList = ArrayList<C5TkDatabaseTestController.Api14OutputVo.TestEntityVo>()
+        val testEntityVoList = ArrayList<C6TkDatabaseTestController.Api14OutputVo.TestEntityVo>()
         for (vo in voList) {
             testEntityVoList.add(
-                C5TkDatabaseTestController.Api14OutputVo.TestEntityVo(
+                C6TkDatabaseTestController.Api14OutputVo.TestEntityVo(
                     vo.uid,
                     vo.content,
                     vo.randomNum,
@@ -374,6 +374,6 @@ class C5TkDatabaseTestService(
 
         httpServletResponse.setHeader("api-result-code", "ok")
 
-        return C5TkDatabaseTestController.Api14OutputVo(count, testEntityVoList)
+        return C6TkDatabaseTestController.Api14OutputVo(count, testEntityVoList)
     }
 }

@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c5_tk_databaseTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c6_tk_databaseTest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -9,11 +9,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "/tk/database-test APIs", description = "C5. Database 에 대한 테스트 API 컨트롤러")
+@Tag(name = "/tk/database-test APIs", description = "C6. Database 에 대한 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/database-test")
-class C5TkDatabaseTestController(
-    private val serviceMbr: C5TkDatabaseTestService
+class C6TkDatabaseTestController(
+    private val serviceMbr: C6TkDatabaseTestService
 ) {
     // <멤버 변수 공간>
 
