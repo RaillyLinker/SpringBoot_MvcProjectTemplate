@@ -80,6 +80,18 @@ dependencies {
     // : 메모리 키 값 데이터 구조 스토어
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
+    // (JWT)
+    // : JWT 인증 토큰 라이브러리
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // (Spring Security)
+    // : 스프링 부트 보안
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.security:spring-security-test")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
 }
 
 tasks.withType<KotlinCompile> {

@@ -1,11 +1,15 @@
 package com.railly_linker.springboot_mvc_project_template.configurations
 
+import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.security.SecurityRequirement
+import io.swagger.v3.oas.models.security.SecurityScheme
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpHeaders
 
 @Configuration
 class SwaggerConfig {
@@ -175,6 +179,22 @@ class SwaggerConfig {
     @Bean
     fun openAPI(): OpenAPI {
         return OpenAPI()
+            .components(
+                Components().addSecuritySchemes(
+                    "JWT",
+                    SecurityScheme().apply {
+                        this.type = SecurityScheme.Type.HTTP
+                        this.scheme = "bearer"
+                        this.bearerFormat = "JWT"
+                        this.`in` = SecurityScheme.In.HEADER
+                        this.name = HttpHeaders.AUTHORIZATION
+                    })
+            )
+            .addSecurityItem(
+                SecurityRequirement().apply {
+                    this.addList("JWT")
+                }
+            )
             .info(Info().apply {
                 this.title(documentTitle)
                 this.version(documentVersion)
