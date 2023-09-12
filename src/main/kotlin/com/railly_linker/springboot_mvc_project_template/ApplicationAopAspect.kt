@@ -7,6 +7,8 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
@@ -31,6 +33,8 @@ class ApplicationAopAspect(
         const val REDIS_TRANSACTION_ANNOTATION_PATH =
             "@annotation(${ApplicationConstants.PACKAGE_NAME}.annotations.CustomRedisTransactional)"
     }
+
+    private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
 
     // ---------------------------------------------------------------------------------------------
@@ -109,10 +113,13 @@ class ApplicationAopAspect(
                 // redis table 이름
                 val redisTableName = redisTemplateBeanNameAndTableNameSplit[1].trim()
 
+                classLogger.debug("Redis 트랜젝션 시작 : ($redisTemplateBeanNameAndTableName)")
+
                 // redis Table 이름으로 시작되는 Key 를 모두 찾아서 백업
                 val resultList = ArrayList<RedisTableVo.RedisKeyVo>()
                 val keySet: Set<String> = redisTemplate.keys("${redisTableName}:*")
                 for (innerKey in keySet) {
+                    classLogger.debug("Redis 키 백업 : ($innerKey)")
                     val redisValue = redisTemplate.opsForValue()[innerKey] ?: continue
 
                     resultList.add(
@@ -137,7 +144,10 @@ class ApplicationAopAspect(
             proceed = joinPoint.proceed() // 함수 실행
             //// 함수 실행 후
 
+            classLogger.debug("Redis 정상 동작")
         } catch (e: Exception) {
+            classLogger.debug("Redis 에러 발생")
+
             // Redis Table 데이터 복원하기
             for (backUpTableVo in backUpTableVoList) {
                 // backup redis Table 이름으로 시작되는 Key 를 모두 찾아서 삭제
@@ -159,6 +169,8 @@ class ApplicationAopAspect(
                     )
                 }
             }
+
+            classLogger.debug("Redis 데이터 복원 완료")
             throw e
         }
 

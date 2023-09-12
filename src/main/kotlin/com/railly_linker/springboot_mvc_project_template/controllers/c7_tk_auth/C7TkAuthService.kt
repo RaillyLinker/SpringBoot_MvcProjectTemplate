@@ -1,5 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c7_tk_auth
 
+import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
+import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
 import com.railly_linker.springboot_mvc_project_template.configurations.SecurityConfig
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
@@ -138,6 +140,12 @@ class C7TkAuthService(
     }
 
     ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
+            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+        ]
+    )
     fun api5(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api5InputVo
@@ -480,6 +488,12 @@ class C7TkAuthService(
 
     ////
     // todo
+//    @CustomRedisTransactional(
+//        [
+//            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
+//            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+//        ]
+//    )
 //    fun api7(
 //        httpServletResponse: HttpServletResponse,
 //        inputVo: C7TkAuthController.Api7InputVo
@@ -806,6 +820,12 @@ class C7TkAuthService(
 
     ////
     // 주의점 : 클라이언트 입장에선 강제종료 등의 이유로 항상 로그인과 로그아웃이 쌍을 이루는 것은 아니기에 이점을 유의
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
+            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+        ]
+    )
     fun api8(authorization: String, httpServletResponse: HttpServletResponse) {
         // 해당 멤버의 리프레시 토큰 정보 삭제
         redis1RefreshTokenInfoRepository.deleteKeyValue(authorization)
@@ -818,6 +838,12 @@ class C7TkAuthService(
 
 
     ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
+            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+        ]
+    )
     fun api9(
         authorization: String,
         inputVo: C7TkAuthController.Api9InputVo,
@@ -1009,6 +1035,12 @@ class C7TkAuthService(
 
 
     ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
+            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+        ]
+    )
     fun api10(authorization: String, httpServletResponse: HttpServletResponse) {
         val memberUid = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
