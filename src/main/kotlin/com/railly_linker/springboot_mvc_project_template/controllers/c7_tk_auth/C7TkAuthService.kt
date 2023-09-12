@@ -1025,17 +1025,20 @@ class C7TkAuthService(
                 redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
             }
         }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
     }
 
 
-//    ////
-//    fun api7(httpServletResponse: HttpServletResponse, nickName: String): C7TkAuthController.Api7OutputVo? {
-//        return C7TkAuthController.Api7OutputVo(
-//            database1MemberMemberDataRepository.existsByNickNameAndRowActivate(nickName.trim(), true)
-//        )
-//    }
-//
-//
+    ////
+    fun api11(httpServletResponse: HttpServletResponse, nickName: String): C7TkAuthController.Api11OutputVo? {
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api11OutputVo(
+            database1MemberMemberDataRepository.existsByNickNameAndRowActivate(nickName.trim(), true)
+        )
+    }
+
+
 //    ////
 //    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
 //    fun api8(httpServletResponse: HttpServletResponse, authorization: String, nickName: String) {

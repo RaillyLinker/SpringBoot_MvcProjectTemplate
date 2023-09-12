@@ -564,40 +564,40 @@ class C7TkAuthController(
     }
 
 
-//    ////
-//    @Operation(
-//        summary = "N7 : 닉네임 중복 검사",
-//        description = "닉네임 중복 여부 반환\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/nickname-duplicate-check")
-//    fun api7(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(name = "nickName", description = "중복 검사 닉네임", example = "홍길동")
-//        @RequestParam("nickName")
-//        nickName: String
-//    ): Api7OutputVo? {
-//        return service.api7(
-//            httpServletResponse,
-//            nickName
-//        )
-//    }
-//
-//    data class Api7OutputVo(
-//        @Schema(description = "중복여부", required = true, example = "false")
-//        @JsonProperty("duplicated")
-//        val duplicated: Boolean
-//    )
-//
-//
+    ////
+    @Operation(
+        summary = "N11. 닉네임 중복 검사",
+        description = "닉네임 중복 여부 반환\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/nickname-duplicate-check")
+    fun api11(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "nickName", description = "중복 검사 닉네임", example = "홍길동")
+        @RequestParam("nickName")
+        nickName: String
+    ): Api11OutputVo? {
+        return service.api11(
+            httpServletResponse,
+            nickName
+        )
+    }
+
+    data class Api11OutputVo(
+        @Schema(description = "중복여부", required = true, example = "false")
+        @JsonProperty("duplicated")
+        val duplicated: Boolean
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N8 : 닉네임 수정하기 <>",
