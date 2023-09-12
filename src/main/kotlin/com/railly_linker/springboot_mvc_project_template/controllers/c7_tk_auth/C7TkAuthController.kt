@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.access.prepost.PreAuthorize
-
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "/tk/auth APIs", description = "C7. 인증/인가 API 컨트롤러")
@@ -246,8 +245,9 @@ class C7TkAuthController(
     }
 
     ////
+    // todo
 //    @Operation(
-//        summary = "N2 : OAuth2 Code 로 OAuth2 AccessToken 발급",
+//        summary = "N6. OAuth2 Code 로 OAuth2 AccessToken 발급",
 //        description = "OAuth2 Code 를 사용하여 얻은 OAuth2 AccessToken 발급\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -260,7 +260,7 @@ class C7TkAuthController(
 //        ]
 //    )
 //    @GetMapping("/oauth2-access-token")
-//    fun api2(
+//    fun api6(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(name = "oauth2TypeCode", description = "OAuth2 종류 코드 (1 : NAVER)", example = "1")
@@ -269,11 +269,11 @@ class C7TkAuthController(
 //        @Parameter(name = "oauth2Code", description = "OAuth2 인증으로 받은 OAuth2 Code", example = "asdfeqwer1234")
 //        @RequestParam("oauth2Code")
 //        oauth2Code: String
-//    ): Api2OutputVo? {
-//        return service.api2(httpServletResponse, oauth2TypeCode, oauth2Code)
+//    ): Api6OutputVo? {
+//        return service.api6(httpServletResponse, oauth2TypeCode, oauth2Code)
 //    }
 //
-//    data class Api2OutputVo(
+//    data class Api6OutputVo(
 //        @Schema(
 //            description = "Code 로 발급받은 SNS AccessToken",
 //            required = true,
@@ -282,10 +282,11 @@ class C7TkAuthController(
 //        @JsonProperty("snsAccessToken")
 //        val snsAccessToken: String
 //    )
-//
-//    ////
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N3 : OAuth2 로그인 (Token)",
+//        summary = "N7. OAuth2 로그인 (Token)",
 //        description = "OAuth2 토큰으로 로그인 요청\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -300,16 +301,16 @@ class C7TkAuthController(
 //        ]
 //    )
 //    @PostMapping("/sign-in-with-oauth2-token")
-//    fun api3(
+//    fun api7(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @RequestBody
-//        inputVo: Api3InputVo
-//    ): Api3OutputVo? {
-//        return service.api3(httpServletResponse, inputVo)
+//        inputVo: Api7InputVo
+//    ): Api7OutputVo? {
+//        return service.api7(httpServletResponse, inputVo)
 //    }
 //
-//    data class Api3InputVo(
+//    data class Api7InputVo(
 //        @Schema(
 //            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : APPLE, 3 : NAVER, 4 : KAKAO)",
 //            required = true,
@@ -329,7 +330,7 @@ class C7TkAuthController(
 //        val oauth2Secret: String
 //    )
 //
-//    data class Api3OutputVo(
+//    data class Api7OutputVo(
 //        @Schema(description = "멤버 고유값", required = true, example = "1")
 //        @JsonProperty("memberUid")
 //        val memberUid: String,
@@ -400,169 +401,169 @@ class C7TkAuthController(
 //            val oauth2Id: String
 //        )
 //    }
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N4 : 로그아웃 처리 <>",
-//        description = "로그아웃 처리\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/sign-out")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api4(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization") authorization: String?
-//    ) {
-//        service.api4(authorization!!, httpServletResponse)
-//    }
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N5 : 토큰 재발급 <>",
-//        description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 유효하지 않은 리프레시 토큰\n\n" +
-//                "2 : 리프레시 토큰 만료\n\n" +
-//                "3 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음\n\n" +
-//                "4 : 가입되지 않은 회원",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/reissue")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api5(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api5InputVo
-//    ): Api5OutputVo? {
-//        return service.api5(authorization!!, inputVo, httpServletResponse)
-//    }
-//
-//    data class Api5InputVo(
-//        @Schema(description = "리프레시 토큰 (토큰 타입을 앞에 붙이기)", required = true, example = "Bearer 1sdfsadfsdafsdafsdafd")
-//        @JsonProperty("refreshToken")
-//        val refreshToken: String
-//    )
-//
-//    data class Api5OutputVo(
-//        @Schema(description = "멤버 고유값", required = true, example = "1")
-//        @JsonProperty("memberUid")
-//        val memberUid: String,
-//
-//        @Schema(description = "닉네임", required = true, example = "홍길동")
-//        @JsonProperty("nickName")
-//        val nickName: String,
-//
-//        @Schema(
-//            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
-//            required = true,
-//            example = "[1, 2]"
-//        )
-//        @JsonProperty("roleCodeList")
-//        val roleCodeList: List<Int>,
-//
-//        @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
-//        @JsonProperty("tokenType")
-//        val tokenType: String,
-//
-//        @Schema(description = "엑세스 토큰", required = true, example = "kljlkjkfsdlwejoe")
-//        @JsonProperty("accessToken")
-//        val accessToken: String,
-//
-//        @Schema(description = "리프레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
-//        @JsonProperty("refreshToken")
-//        val refreshToken: String,
-//
-//        @Schema(
-//            description = "엑세스 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("accessTokenExpireWhen")
-//        val accessTokenExpireWhen: String,
-//
-//        @Schema(
-//            description = "리프레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("refreshTokenExpireWhen")
-//        val refreshTokenExpireWhen: String,
-//
-//        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-//        @JsonProperty("myEmailList")
-//        val myEmailList: List<String>,
-//
-//        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-//        @JsonProperty("myPhoneNumberList")
-//        val myPhoneNumberList: List<String>,
-//
-//        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
-//        @JsonProperty("myOAuth2List")
-//        val myOAuth2List: List<OAuth2Info>
-//    ) {
-//        @Schema(description = "OAuth2 정보")
-//        data class OAuth2Info(
-//            @Schema(
-//                description = "OAuth2 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
-//                required = true,
-//                example = "1"
-//            )
-//            @JsonProperty("oauth2TypeCode")
-//            val oauth2TypeCode: Int,
-//            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
-//            @JsonProperty("oauth2Id")
-//            val oauth2Id: String
-//        )
-//    }
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N6 : 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
-//        description = "멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @DeleteMapping("/all-authorization-token")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api6(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?
-//    ) {
-//        service.api6(authorization!!, httpServletResponse)
-//    }
-//
-//
+
+
+    ////
+    @Operation(
+        summary = "N8. 로그아웃 처리 <>",
+        description = "로그아웃 처리\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/sign-out")
+    @PreAuthorize("isAuthenticated()")
+    fun api8(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization") authorization: String?
+    ) {
+        service.api8(authorization!!, httpServletResponse)
+    }
+
+
+    ////
+    @Operation(
+        summary = "N9. 토큰 재발급 <>",
+        description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 유효하지 않은 리프레시 토큰\n\n" +
+                "2 : 리프레시 토큰 만료\n\n" +
+                "3 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음\n\n" +
+                "4 : 가입되지 않은 회원",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/reissue")
+    @PreAuthorize("isAuthenticated()")
+    fun api9(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api9InputVo
+    ): Api9OutputVo? {
+        return service.api9(authorization!!, inputVo, httpServletResponse)
+    }
+
+    data class Api9InputVo(
+        @Schema(description = "리프레시 토큰 (토큰 타입을 앞에 붙이기)", required = true, example = "Bearer 1sdfsadfsdafsdafsdafd")
+        @JsonProperty("refreshToken")
+        val refreshToken: String
+    )
+
+    data class Api9OutputVo(
+        @Schema(description = "멤버 고유값", required = true, example = "1")
+        @JsonProperty("memberUid")
+        val memberUid: String,
+
+        @Schema(description = "닉네임", required = true, example = "홍길동")
+        @JsonProperty("nickName")
+        val nickName: String,
+
+        @Schema(
+            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
+            required = true,
+            example = "[1, 2]"
+        )
+        @JsonProperty("roleCodeList")
+        val roleCodeList: List<Int>,
+
+        @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
+        @JsonProperty("tokenType")
+        val tokenType: String,
+
+        @Schema(description = "엑세스 토큰", required = true, example = "kljlkjkfsdlwejoe")
+        @JsonProperty("accessToken")
+        val accessToken: String,
+
+        @Schema(description = "리프레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
+        @JsonProperty("refreshToken")
+        val refreshToken: String,
+
+        @Schema(
+            description = "엑세스 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("accessTokenExpireWhen")
+        val accessTokenExpireWhen: String,
+
+        @Schema(
+            description = "리프레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("refreshTokenExpireWhen")
+        val refreshTokenExpireWhen: String,
+
+        @Schema(description = "내가 등록한 이메일 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<String>,
+
+        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<String>,
+
+        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
+        @JsonProperty("myOAuth2List")
+        val myOAuth2List: List<OAuth2Info>
+    ) {
+        @Schema(description = "OAuth2 정보")
+        data class OAuth2Info(
+            @Schema(
+                description = "OAuth2 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
+                required = true,
+                example = "1"
+            )
+            @JsonProperty("oauth2TypeCode")
+            val oauth2TypeCode: Int,
+            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
+            @JsonProperty("oauth2Id")
+            val oauth2Id: String
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N10. 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
+        description = "멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @DeleteMapping("/all-authorization-token")
+    @PreAuthorize("isAuthenticated()")
+    fun api10(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ) {
+        service.api10(authorization!!, httpServletResponse)
+    }
+
+
 //    ////
 //    @Operation(
 //        summary = "N7 : 닉네임 중복 검사",
