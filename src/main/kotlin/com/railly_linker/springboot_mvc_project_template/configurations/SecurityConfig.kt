@@ -60,26 +60,6 @@ class SecurityConfig(
         return BCryptPasswordEncoder()
     }
 
-    // (cors 설정)
-    // todo
-//    @Bean
-//    fun corsConfigurationSource(): CorsConfigurationSource {
-//        // !!!cors 설정 하기!!
-//        return UrlBasedCorsConfigurationSource().apply {
-//            this.registerCorsConfiguration(
-//                "/**", // 아래 설정을 적용할 컨트롤러 패턴
-//                CorsConfiguration().apply {
-//                    allowedOriginPatterns = listOf("*") // 허가 클라이언트 주소
-//                    allowedMethods = listOf("*") // 허가할 클라이언트 리퀘스트 http method
-//                    allowedHeaders = listOf("*") // 허가할 클라이언트 발신 header
-//                    exposedHeaders = listOf("*", "Authorization", "api-error-codes") // 허가할 클라이언트 수신 header
-//                    maxAge = 3600L
-//                    allowCredentials = true
-//                }
-//            )
-//        }
-//    }
-
     // [/tk 로 시작되는 리퀘스트의 시큐리티 설정 = Token 인증 사용]
     @Bean
     @Order(1)
@@ -96,10 +76,6 @@ class SecurityConfig(
             .httpBasic { httpBasicCustomizer ->
                 httpBasicCustomizer.disable()
             }
-
-        // todo
-//        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
-//            .cors() // cors 설정 : authorizeRequests, corsConfigurationSource Bean과 연관
 
         // Token 인증을 위한 세션 비활성화
         http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
