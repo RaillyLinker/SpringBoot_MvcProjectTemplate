@@ -58,7 +58,7 @@ class C5TkRedisTestService(
 
         httpServletResponse.setHeader("api-result-code", "ok")
         return C5TkRedisTestController.Api2OutputVo(
-            Redis1_TestRepository.TABLE_NAME,
+            Redis1_Test.TABLE_NAME,
             keyValue.key,
             keyValue.value.content,
             keyValue.expireTimeMs
@@ -84,7 +84,7 @@ class C5TkRedisTestService(
 
         httpServletResponse.setHeader("api-result-code", "ok")
         return C5TkRedisTestController.Api3OutputVo(
-            Redis1_TestRepository.TABLE_NAME,
+            Redis1_Test.TABLE_NAME,
             testEntityListVoList
         )
     }
@@ -106,7 +106,7 @@ class C5TkRedisTestService(
 
     ////
     @CustomRedisTransactional(
-        ["${RedisConfig.TN_REDIS1}:${Redis1_TestRepository.TABLE_NAME}"]
+        ["${RedisConfig.TN_REDIS1}:${Redis1_Test.TABLE_NAME}"]
     )
     fun api6(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api6InputVo) {
         redis1TestRepository.saveKeyValue(

@@ -14,10 +14,6 @@ class Redis1_TestRepository(
     @Qualifier(RedisConfig.TN_REDIS1) private val redisTemplate: RedisTemplate<String, Any>
 ) {
     // <멤버 변수 공간>
-    companion object {
-        // !!!이 Repository 와 연결되는 Redis Table 클래스명을 TABLE_NAME 으로 설정하기!!
-        const val TABLE_NAME = "Redis1_Test"
-    }
 
 
     // ---------------------------------------------------------------------------------------------
@@ -36,7 +32,7 @@ class Redis1_TestRepository(
         }
 
         // Redis Storage 에 실제로 저장 되는 키 (테이블 이름과 키를 합친 String)
-        val innerKey = "${TABLE_NAME}:${key}" // 실제 저장되는 키 = 그룹명:키
+        val innerKey = "${Redis1_Test.TABLE_NAME}:${key}" // 실제 저장되는 키 = 그룹명:키
 
         // Redis Storage 에 실제로 저장 되는 Value (Json String 형식)
         val innerValue = Gson().toJson(value)
@@ -50,13 +46,13 @@ class Redis1_TestRepository(
     fun findAllKeyValues(): List<KeyValueData> {
         val resultList = ArrayList<KeyValueData>()
 
-        val keySet: Set<String> = redisTemplate.keys("${TABLE_NAME}:*")
+        val keySet: Set<String> = redisTemplate.keys("${Redis1_Test.TABLE_NAME}:*")
 
         for (innerKey in keySet) {
             // innerKey = Redis Storage 에 실제로 저장 되는 키 (테이블 이름과 키를 합친 String)
 
             // 외부적으로 사용되는 Key (innerKey 에서 table 이름을 제거한 String)
-            val key = innerKey.substring("${TABLE_NAME}:".length) // 키
+            val key = innerKey.substring("${Redis1_Test.TABLE_NAME}:".length) // 키
 
             // Redis Storage 에 실제로 저장 되는 Value (Json String 형식)
             val innerValue = redisTemplate.opsForValue()[innerKey] ?: continue // 값
@@ -91,7 +87,7 @@ class Redis1_TestRepository(
         }
 
         // Redis Storage 에 실제로 저장 되는 키 (테이블 이름과 키를 합친 String)
-        val innerKey = "${TABLE_NAME}:$key"
+        val innerKey = "${Redis1_Test.TABLE_NAME}:$key"
 
         // Redis Storage 에 실제로 저장 되는 Value (Json String 형식)
         val innerValue = redisTemplate.opsForValue()[innerKey] // 값
@@ -114,7 +110,7 @@ class Redis1_TestRepository(
 
     // (Redis Table 의 모든 Key-Value 리스트 삭제)
     fun deleteAllKeyValues() {
-        val keySet: Set<String> = redisTemplate.keys("${TABLE_NAME}:*")
+        val keySet: Set<String> = redisTemplate.keys("${Redis1_Test.TABLE_NAME}:*")
 
         for (innerKey in keySet) {
             // innerKey = Redis Storage 에 실제로 저장 되는 키 (테이블 이름과 키를 합친 String)
@@ -135,7 +131,7 @@ class Redis1_TestRepository(
         }
 
         // Redis Storage 에 실제로 저장 되는 키 (테이블 이름과 키를 합친 String)
-        val innerKey = "${TABLE_NAME}:$key"
+        val innerKey = "${Redis1_Test.TABLE_NAME}:$key"
 
         redisTemplate.delete(innerKey)
     }

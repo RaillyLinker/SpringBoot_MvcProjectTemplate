@@ -23,8 +23,8 @@ class C7TkAuthController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N1 : 서버 접속 테스트",
-        description = "서버 접속 테스트용 API\n\n" +
+        summary = "N1. 비 로그인 접속 테스트",
+        description = "비 로그인 접속 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
         responses = [
@@ -198,7 +198,7 @@ class C7TkAuthController(
         @JsonProperty("accessToken")
         val accessToken: String,
 
-        @Schema(description = "리플레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
+        @Schema(description = "리프레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
         @JsonProperty("refreshToken")
         val refreshToken: String,
 
@@ -211,7 +211,7 @@ class C7TkAuthController(
         val accessTokenExpireWhen: String,
 
         @Schema(
-            description = "리플레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            description = "리프레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
@@ -354,7 +354,7 @@ class C7TkAuthController(
 //        @JsonProperty("accessToken")
 //        val accessToken: String,
 //
-//        @Schema(description = "리플레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
+//        @Schema(description = "리프레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
 //        @JsonProperty("refreshToken")
 //        val refreshToken: String,
 //
@@ -367,7 +367,7 @@ class C7TkAuthController(
 //        val accessTokenExpireWhen: String,
 //
 //        @Schema(
-//            description = "리플레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+//            description = "리프레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
 //            required = true,
 //            example = "2023-01-02 11:11:11.111"
 //        )
@@ -430,12 +430,12 @@ class C7TkAuthController(
 //    ////
 //    @Operation(
 //        summary = "N5 : 토큰 재발급 <>",
-//        description = "엑세스 토큰 및 리플레시 토큰 재발행\n\n" +
+//        description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
-//                "1 : 유효하지 않은 리플래시 토큰\n\n" +
-//                "2 : 리플래시 토큰 만료\n\n" +
-//                "3 : 리플래시 토큰이 액세스 토큰과 매칭되지 않음\n\n" +
+//                "1 : 유효하지 않은 리프레시 토큰\n\n" +
+//                "2 : 리프레시 토큰 만료\n\n" +
+//                "3 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음\n\n" +
 //                "4 : 가입되지 않은 회원",
 //        responses = [
 //            ApiResponse(
@@ -459,7 +459,7 @@ class C7TkAuthController(
 //    }
 //
 //    data class Api5InputVo(
-//        @Schema(description = "리플래시 토큰 (토큰 타입을 앞에 붙이기)", required = true, example = "Bearer 1sdfsadfsdafsdafsdafd")
+//        @Schema(description = "리프레시 토큰 (토큰 타입을 앞에 붙이기)", required = true, example = "Bearer 1sdfsadfsdafsdafsdafd")
 //        @JsonProperty("refreshToken")
 //        val refreshToken: String
 //    )
@@ -489,7 +489,7 @@ class C7TkAuthController(
 //        @JsonProperty("accessToken")
 //        val accessToken: String,
 //
-//        @Schema(description = "리플레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
+//        @Schema(description = "리프레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
 //        @JsonProperty("refreshToken")
 //        val refreshToken: String,
 //
@@ -502,7 +502,7 @@ class C7TkAuthController(
 //        val accessTokenExpireWhen: String,
 //
 //        @Schema(
-//            description = "리플레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+//            description = "리프레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
 //            required = true,
 //            example = "2023-01-02 11:11:11.111"
 //        )
@@ -539,8 +539,8 @@ class C7TkAuthController(
 //
 //    ////
 //    @Operation(
-//        summary = "N6 : 멤버의 현재 발행된 모든 액세스 토큰, 리플레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
-//        description = "멤버의 현재 발행된 모든 액세스 토큰, 리플레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
+//        summary = "N6 : 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
+//        description = "멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작",
 //        responses = [

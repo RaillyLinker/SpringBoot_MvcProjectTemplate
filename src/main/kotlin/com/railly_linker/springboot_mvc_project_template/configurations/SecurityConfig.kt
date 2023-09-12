@@ -133,6 +133,7 @@ class SecurityConfig(
                 }
                 // 비인가(멤버 권한이 충족되지 않음) 처리
                 exceptionHandlingCustomizer.accessDeniedHandler { _, response, _ -> // Http Status 403
+                    response.setHeader("api-error-codes", "d")
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Error: Forbidden")
                 }
             }
@@ -220,16 +221,27 @@ class SecurityConfig(
                                         ) { // 로그아웃 여부 검증 통과
                                             jwtAllGreen(jwtAccessToken, request, response)
                                         } else { // 로그아웃 처리된 액세스 토큰 = 만료와 동일시
-                                            response.addHeader("api-error-codes", "a")
+                                            response.setHeader("api-error-codes", "a")
                                         }
                                     } else { // 액세스 토큰 만료
-                                        response.addHeader("api-error-codes", "a")
+                                        response.setHeader("api-error-codes", "a")
                                     }
 
                                 }
+                            } else {
+                                response.setHeader("api-error-codes", "c")
+                                throw RuntimeException("Invalid AccessToken")
                             }
                         }
+
+                        else -> {
+                            response.setHeader("api-error-codes", "c")
+                            throw RuntimeException("Unknown accessTokenType")
+                        }
                     }
+                } else {
+                    response.setHeader("api-error-codes", "c")
+                    throw RuntimeException("AccessToken Type not include")
                 }
             }
 
@@ -293,7 +305,7 @@ class SecurityConfig(
                             WebAuthenticationDetailsSource().buildDetails(request)
                     }
             } else { // 회원 정보가 없음
-                response.addHeader("api-error-codes", "b")
+                response.setHeader("api-error-codes", "b")
             }
         }
 

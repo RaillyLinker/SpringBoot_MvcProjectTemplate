@@ -5,6 +5,11 @@ data class Redis1_Test(
     var innerVo: InnerVo,
     var innerVoList: List<InnerVo>
 ) {
+    companion object {
+        // !!!Redis Table 클래스명을 TABLE_NAME 으로 설정하기!!
+        const val TABLE_NAME = "Redis1_Test"
+    }
+
     data class InnerVo(
         var testString: String,
         var testBoolean: Boolean

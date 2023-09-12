@@ -24,7 +24,7 @@ object JwtTokenUtilObject {
     // !!!유효시간 변경!!
     const val ACCESS_TOKEN_EXPIRATION_TIME_MS = 1000L * 60L * 30L // 30분
 
-    // (리플레시 토큰 유효시간)
+    // (리프레시 토큰 유효시간)
     // !!!유효시간 변경!!
     const val REFRESH_TOKEN_EXPIRATION_TIME_MS = 1000L * 60L * 60L * 24L * 7L // 7일
 
@@ -44,7 +44,7 @@ object JwtTokenUtilObject {
         return doGenerateToken(username, "access", ACCESS_TOKEN_EXPIRATION_TIME_MS)
     }
 
-    // (리플레시 토큰 발행)
+    // (리프레시 토큰 발행)
     fun generateRefreshToken(username: String): String {
         return doGenerateToken(username, "refresh", REFRESH_TOKEN_EXPIRATION_TIME_MS)
     }

@@ -96,14 +96,20 @@ class C7TkAuthService(
     fun api1(httpServletResponse: HttpServletResponse): Map<String, Any>? {
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "connectTest OK!"
+
+        httpServletResponse.setHeader("api-result-code", "ok")
         return result
     }
 
+
+    ////
     fun api2(httpServletResponse: HttpServletResponse, authorization: String): Map<String, Any>? {
         val memberUid = AuthorizationTokenUtilObject.getTokenMemberUid(authorization).toLong()
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
+
+        httpServletResponse.setHeader("api-result-code", "ok")
         return result
 
     }
@@ -141,7 +147,7 @@ class C7TkAuthService(
 
                 if (member == null) { // 가입된 회원이 없음
                     httpServletResponse.status = 500
-                    httpServletResponse.addHeader("api-result-code", "1")
+                    httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
                 memberUid = member.uid!!
@@ -156,7 +162,7 @@ class C7TkAuthService(
 
                 if (memberEmail == null) { // 가입된 회원이 없음
                     httpServletResponse.status = 500
-                    httpServletResponse.addHeader("api-result-code", "1")
+                    httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
                 memberUid = memberEmail.memberUid
@@ -171,7 +177,7 @@ class C7TkAuthService(
 
                 if (memberPhone == null) { // 가입된 회원이 없음
                     httpServletResponse.status = 500
-                    httpServletResponse.addHeader("api-result-code", "1")
+                    httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
                 memberUid = memberPhone.memberUid
@@ -189,7 +195,7 @@ class C7TkAuthService(
 
         if (member == null) { // 가입된 회원이 없음
             httpServletResponse.status = 500
-            httpServletResponse.addHeader("api-result-code", "1")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -198,7 +204,7 @@ class C7TkAuthService(
         ) {
             // 두 상황 모두 비밀번호 찾기를 하면 해결이 됨
             httpServletResponse.status = 500
-            httpServletResponse.addHeader("api-result-code", "2")
+            httpServletResponse.setHeader("api-result-code", "2")
             return null
         }
 
@@ -295,7 +301,7 @@ class C7TkAuthService(
                         )
                     }
                     httpServletResponse.status = 500
-                    httpServletResponse.addHeader("api-result-code", "3")
+                    httpServletResponse.setHeader("api-result-code", "3")
                     return null
                 } else { // 기존 로그인 제거 설정
                     // list to mutableList
@@ -341,7 +347,7 @@ class C7TkAuthService(
             }
         }
 
-        // 액세스 토큰의 리플래시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리플레시 토큰은 1개 혹은 0개
+        // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
 
         redis1RefreshTokenInfoRepository.saveKeyValue(
@@ -445,7 +451,7 @@ class C7TkAuthService(
 //                    atResponse.body()!!.accessToken == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "1")
+//                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
 //
@@ -483,7 +489,7 @@ class C7TkAuthService(
 //                    response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -503,7 +509,7 @@ class C7TkAuthService(
 //                    loginId = appleInfo.snsId
 //                } else {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
 //
@@ -523,7 +529,7 @@ class C7TkAuthService(
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
 //
@@ -545,7 +551,7 @@ class C7TkAuthService(
 //                    response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
 //
@@ -563,7 +569,7 @@ class C7TkAuthService(
 //
 //        if (snsOauth2 == null) { // 가입된 회원이 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -574,7 +580,7 @@ class C7TkAuthService(
 //
 //        if (member == null) { // 가입된 회원이 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -676,7 +682,7 @@ class C7TkAuthService(
 //                        )
 //                    }
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "3")
+//                    httpServletResponse.setHeader("api-result-code", "3")
 //                    return null
 //                } else { // 기존 로그인 제거 설정
 //                    // list to mutableList
@@ -721,7 +727,7 @@ class C7TkAuthService(
 //            }
 //        }
 //
-//        // 액세스 토큰의 리플래시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리플레시 토큰은 1개 혹은 0개
+//        // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
 //        val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
 //
 //        RedisUtilObject.putValue<RefreshTokenInfo>(
@@ -797,7 +803,7 @@ class C7TkAuthService(
 //
 //    ////
 //    fun api4(authorization: String, httpServletResponse: HttpServletResponse) {
-//        // 해당 멤버의 리플래시 토큰 정보 삭제
+//        // 해당 멤버의 리프레시 토큰 정보 삭제
 //        RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, authorization)
 //
 //        // 로그인 가능 액세스 토큰 정보 삭제
@@ -820,7 +826,7 @@ class C7TkAuthService(
 //        if (memberInfo == null) {
 //            // 가입되지 않은 회원
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "4")
+//            httpServletResponse.setHeader("api-result-code", "4")
 //            return null
 //        }
 //
@@ -841,42 +847,42 @@ class C7TkAuthService(
 //                        null
 //                    }
 //
-//                    // 리플래시 토큰 검증
-//                    if (refreshTokenType == null || // 해석 불가능한 리플레시 토큰
+//                    // 리프레시 토큰 검증
+//                    if (refreshTokenType == null || // 해석 불가능한 리프레시 토큰
 //                        !JwtTokenUtilObject.validateSignature(jwtRefreshToken) || // 시크릿 검증이 유효하지 않을 때 = 시크릿 검증시 정보가 틀림 = 위변조된 토큰
 //                        JwtTokenUtilObject.getTokenUsage(jwtRefreshToken)
 //                            .lowercase() != "refresh" || // 토큰 타입이 Refresh 토큰이 아닐 때
 //                        JwtTokenUtilObject.getIssuer(jwtRefreshToken) != JwtTokenUtilObject.issuerMbr || // 발행인이 다를 때
 //                        refreshTokenType.lowercase() != "jwt" || // 토큰 타입이 JWT 가 아닐 때
 //                        JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) * 1000 > JwtTokenUtilObject.refreshTokenExpirationTimeMsMbr || // 최대 만료시간을 초과
-//                        JwtTokenUtilObject.getMemberUid(jwtRefreshToken) != accessTokenMemberUid // 리플레시 토큰의 멤버 고유번호와 액세스 토큰 멤버 고유번호가 다를시
+//                        JwtTokenUtilObject.getMemberUid(jwtRefreshToken) != accessTokenMemberUid // 리프레시 토큰의 멤버 고유번호와 액세스 토큰 멤버 고유번호가 다를시
 //                    ) {
 //                        httpServletResponse.status = 500
-//                        httpServletResponse.addHeader("api-result-code", "1")
+//                        httpServletResponse.setHeader("api-result-code", "1")
 //                        return null
 //                    }
 //
-//                    // 저장된 현재 인증된 멤버의 리플래시 토큰 가져오기
+//                    // 저장된 현재 인증된 멤버의 리프레시 토큰 가져오기
 //                    val refreshTokenInfoOptional =
 //                        RedisUtilObject.getValue<RefreshTokenInfo>(redis1RedisTemplate, authorization)
 //
 //                    if (JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) == 0L || // 만료시간 지남
-//                        refreshTokenInfoOptional == null // jwtAccessToken 의 리플레시 토큰이 저장소에 없음
+//                        refreshTokenInfoOptional == null // jwtAccessToken 의 리프레시 토큰이 저장소에 없음
 //                    ) {
 //                        httpServletResponse.status = 500
-//                        httpServletResponse.addHeader("api-result-code", "2")
+//                        httpServletResponse.setHeader("api-result-code", "2")
 //                        return null
 //                    }
 //
 //                    if (jwtRefreshToken != (refreshTokenInfoOptional.value as RefreshTokenInfo).refreshToken) {
 //                        // 건내받은 토큰이 해당 액세스 토큰의 가용 토큰과 맞지 않음
 //                        httpServletResponse.status = 500
-//                        httpServletResponse.addHeader("api-result-code", "3")
+//                        httpServletResponse.setHeader("api-result-code", "3")
 //                        return null
 //                    }
 //
 //                    // 먼저 로그아웃 처리
-//                    // DB 내 해당 멤버의 리플래시 토큰 정보 삭제
+//                    // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
 //                    RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, authorization)
 //
 //                    // 로그인 가능 액세스 토큰 정보 삭제
@@ -986,14 +992,14 @@ class C7TkAuthService(
 //                else -> {
 //                    // 처리 가능한 토큰 타입이 아닐 때
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "1")
+//                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
 //            }
 //        } else {
 //            // 타입을 전달 하지 않았을 때
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //    }
@@ -1011,7 +1017,7 @@ class C7TkAuthService(
 //        // 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
 //        for (loginAccessToken in loginAccessTokenIterable) {
 //            if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == memberUid) {
-//                // DB 내 해당 멤버의 리플래시 토큰 정보 삭제
+//                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
 //                RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
 //
 //                // 로그인 가능 액세스 토큰 정보 삭제
@@ -1038,7 +1044,7 @@ class C7TkAuthService(
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(trimmedNickname, true)) {
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
@@ -1062,7 +1068,7 @@ class C7TkAuthService(
 //            )
 //        if (isDatabase1MemberUserExists) { // 기존 회원 존재
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -1116,7 +1122,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -1165,7 +1171,7 @@ class C7TkAuthService(
 //            )
 //        if (isUserExists) { // 기존 회원이 있을 때
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
@@ -1175,7 +1181,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 이메일 검증 요청을 하지 않거나 만료됨
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "2")
+//            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        }
 //
@@ -1185,7 +1191,7 @@ class C7TkAuthService(
 //
 //        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "4")
+//            httpServletResponse.setHeader("api-result-code", "4")
 //            return
 //        }
 //
@@ -1193,7 +1199,7 @@ class C7TkAuthService(
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "3")
+//            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
 //
@@ -1245,7 +1251,7 @@ class C7TkAuthService(
 //            )
 //        if (isDatabase1MemberUserExists) { // 기존 회원 존재
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -1300,7 +1306,7 @@ class C7TkAuthService(
 //
 //        if (smsVerification == null) { // 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -1349,7 +1355,7 @@ class C7TkAuthService(
 //            )
 //        if (isUserExists) { // 기존 회원이 있을 때
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
@@ -1359,7 +1365,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 검증 요청을 하지 않거나 만료됨
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "2")
+//            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        }
 //
@@ -1369,7 +1375,7 @@ class C7TkAuthService(
 //
 //        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "4")
+//            httpServletResponse.setHeader("api-result-code", "4")
 //            return
 //        }
 //
@@ -1377,7 +1383,7 @@ class C7TkAuthService(
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "3")
+//            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
 //
@@ -1435,7 +1441,7 @@ class C7TkAuthService(
 //                    response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -1449,7 +1455,7 @@ class C7TkAuthService(
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "1")
+//                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
 //
@@ -1486,7 +1492,7 @@ class C7TkAuthService(
 //                    loginId = appleInfo.snsId
 //                } else {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
 //
@@ -1498,7 +1504,7 @@ class C7TkAuthService(
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "1")
+//                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
 //
@@ -1536,7 +1542,7 @@ class C7TkAuthService(
 //                if (response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
 //
@@ -1548,7 +1554,7 @@ class C7TkAuthService(
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "1")
+//                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
 //
@@ -1587,7 +1593,7 @@ class C7TkAuthService(
 //                    response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
 //
@@ -1599,7 +1605,7 @@ class C7TkAuthService(
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "1")
+//                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
 //
@@ -1646,7 +1652,7 @@ class C7TkAuthService(
 //            )
 //        if (isUserExists) { // 기존 회원이 있을 때
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
@@ -1662,7 +1668,7 @@ class C7TkAuthService(
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -1678,7 +1684,7 @@ class C7TkAuthService(
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -1694,7 +1700,7 @@ class C7TkAuthService(
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -1710,7 +1716,7 @@ class C7TkAuthService(
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -1728,13 +1734,13 @@ class C7TkAuthService(
 //
 //        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "4")
+//            httpServletResponse.setHeader("api-result-code", "4")
 //            return
 //        }
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "3")
+//            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
 //
@@ -1818,14 +1824,14 @@ class C7TkAuthService(
 //
 //        if (member == null) { // 멤버 정보가 없을 때
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
 //        if (member.accountPassword == null) { // 기존 비번이 존재하지 않음
 //            if (inputVo.oldPassword != null) { // 비밀번호 불일치
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "2")
+//                httpServletResponse.setHeader("api-result-code", "2")
 //                return
 //            }
 //        } else { // 기존 비번 존재
@@ -1835,7 +1841,7 @@ class C7TkAuthService(
 //                )
 //            ) { // 비밀번호 불일치
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "2")
+//                httpServletResponse.setHeader("api-result-code", "2")
 //                return
 //            }
 //        }
@@ -1847,7 +1853,7 @@ class C7TkAuthService(
 //            if (oAuth2EntityList.isEmpty()) {
 //                // null 로 만들려고 할 때 account 외의 OAuth2 인증이 없다면 제거 불가
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "3")
+//                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
 //
@@ -1865,7 +1871,7 @@ class C7TkAuthService(
 //        // 비밀번호가 바뀌었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
 //        for (loginAccessToken in loginAccessTokenIterable) {
 //            if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == memberUid) {
-//                // DB 내 해당 멤버의 리플래시 토큰 정보 삭제
+//                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
 //                RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
 //
 //                // 로그인 가능 액세스 토큰 정보 삭제
@@ -1888,7 +1894,7 @@ class C7TkAuthService(
 //            )
 //        if (!isDatabase1MemberUserExists) { // 회원 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -1939,7 +1945,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -1982,7 +1988,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "2")
+//            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
 //            val newVerificationInfo = emailVerification.value as FindPwEmailVerification
@@ -1992,7 +1998,7 @@ class C7TkAuthService(
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "3")
+//                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
 //
@@ -2005,7 +2011,7 @@ class C7TkAuthService(
 //
 //            if (memberEmail == null) {
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "1")
+//                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
 //
@@ -2016,7 +2022,7 @@ class C7TkAuthService(
 //
 //            if (member == null) {
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "1")
+//                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
 //
@@ -2049,7 +2055,7 @@ class C7TkAuthService(
 //            // 비밀번호가 변경되었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
 //            for (loginAccessToken in loginAccessTokenIterable) {
 //                if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == member.uid.toString()) {
-//                    // DB 내 해당 멤버의 리플래시 토큰 정보 삭제
+//                    // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
 //                    RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
 //
 //                    // 로그인 가능 액세스 토큰 정보 삭제
@@ -2077,7 +2083,7 @@ class C7TkAuthService(
 //            )
 //        if (!isDatabase1MemberUserExists) { // 회원 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -2129,7 +2135,7 @@ class C7TkAuthService(
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -2173,7 +2179,7 @@ class C7TkAuthService(
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "2")
+//            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
 //            val newVerificationInfo = smsVerification.value as FindPwPhoneNumberVerification
@@ -2183,7 +2189,7 @@ class C7TkAuthService(
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 검증 요청을 하지 않거나 만료됨
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "3")
+//                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
 //
@@ -2196,7 +2202,7 @@ class C7TkAuthService(
 //
 //            if (memberPhone == null) {
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "1")
+//                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
 //
@@ -2207,7 +2213,7 @@ class C7TkAuthService(
 //
 //            if (member == null) {
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "1")
+//                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
 //
@@ -2240,7 +2246,7 @@ class C7TkAuthService(
 //            // 비밀번호가 변경되었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
 //            for (loginAccessToken in loginAccessTokenIterable) {
 //                if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == member.uid.toString()) {
-//                    // DB 내 해당 멤버의 리플래시 토큰 정보 삭제
+//                    // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
 //                    RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
 //
 //                    // 로그인 가능 액세스 토큰 정보 삭제
@@ -2329,7 +2335,7 @@ class C7TkAuthService(
 //            )
 //        if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -2383,7 +2389,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -2433,7 +2439,7 @@ class C7TkAuthService(
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "2")
+//            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
 //            val newVerificationInfo = emailVerification.value as AddEmailVerification
@@ -2445,7 +2451,7 @@ class C7TkAuthService(
 //
 //            if (member == null) {
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "1")
+//                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
 //
@@ -2457,7 +2463,7 @@ class C7TkAuthService(
 //
 //            if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "3")
+//                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
 //
@@ -2466,7 +2472,7 @@ class C7TkAuthService(
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "4")
+//                httpServletResponse.setHeader("api-result-code", "4")
 //                return
 //            }
 //
@@ -2548,7 +2554,7 @@ class C7TkAuthService(
 //
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
 //        httpServletResponse.status = 500
-//        httpServletResponse.addHeader("api-result-code", "1")
+//        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
 //
@@ -2587,7 +2593,7 @@ class C7TkAuthService(
 //            )
 //        if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -2642,7 +2648,7 @@ class C7TkAuthService(
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
 //
@@ -2695,7 +2701,7 @@ class C7TkAuthService(
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "2")
+//            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
 //            val newVerificationInfo = smsVerification.value as AddPhoneNumberVerification
@@ -2707,7 +2713,7 @@ class C7TkAuthService(
 //
 //            if (member == null) {
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "1")
+//                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
 //
@@ -2719,7 +2725,7 @@ class C7TkAuthService(
 //
 //            if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "3")
+//                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
 //
@@ -2728,7 +2734,7 @@ class C7TkAuthService(
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
 //                httpServletResponse.status = 500
-//                httpServletResponse.addHeader("api-result-code", "4")
+//                httpServletResponse.setHeader("api-result-code", "4")
 //                return
 //            }
 //
@@ -2812,7 +2818,7 @@ class C7TkAuthService(
 //
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
 //        httpServletResponse.status = 500
-//        httpServletResponse.addHeader("api-result-code", "1")
+//        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
 //
@@ -2863,7 +2869,7 @@ class C7TkAuthService(
 //                    response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-result-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -2880,7 +2886,7 @@ class C7TkAuthService(
 //                    loginId = appleInfo.snsId
 //                } else {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return
 //                }
 //
@@ -2898,7 +2904,7 @@ class C7TkAuthService(
 //                if (response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return
 //                }
 //
@@ -2917,7 +2923,7 @@ class C7TkAuthService(
 //                    response.body() == null
 //                ) {
 //                    httpServletResponse.status = 500
-//                    httpServletResponse.addHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return
 //                }
 //
@@ -2938,7 +2944,7 @@ class C7TkAuthService(
 //
 //        if (member == null) {
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "1")
+//            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
@@ -2952,7 +2958,7 @@ class C7TkAuthService(
 //
 //        if (isDatabase1MemberUserExists) { // 이미 사용중인 SNS 인증
 //            httpServletResponse.status = 500
-//            httpServletResponse.addHeader("api-result-code", "3")
+//            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
 //
@@ -3030,7 +3036,7 @@ class C7TkAuthService(
 //
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
 //        httpServletResponse.status = 500
-//        httpServletResponse.addHeader("api-result-code", "1")
+//        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
 //
@@ -3092,7 +3098,7 @@ class C7TkAuthService(
 //        // 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
 //        for (loginAccessToken in loginAccessTokenIterable) {
 //            if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == memberUid) {
-//                // DB 내 해당 멤버의 리플래시 토큰 정보 삭제
+//                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
 //                RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
 //
 //                // 로그인 가능 액세스 토큰 정보 삭제
