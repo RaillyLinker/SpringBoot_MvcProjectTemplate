@@ -45,7 +45,7 @@ class C7TkAuthController(
 
     ////
     @Operation(
-        summary = "N2 : 로그인 진입 테스트 <>",
+        summary = "N2. 로그인 진입 테스트 <>",
         description = "로그인 되어 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -71,7 +71,7 @@ class C7TkAuthController(
 
     ////
     @Operation(
-        summary = "N3 : ADMIN 권한 진입 테스트 <'ADMIN'>",
+        summary = "N3. ADMIN 권한 진입 테스트 <'ADMIN'>",
         description = "ADMIN 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -97,7 +97,7 @@ class C7TkAuthController(
 
     ////
     @Operation(
-        summary = "N4 : Developer 권한 진입 테스트 <'ADMIN' or 'Developer'>",
+        summary = "N4. Developer 권한 진입 테스트 <'ADMIN' or 'Developer'>",
         description = "Developer 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -123,7 +123,7 @@ class C7TkAuthController(
 
     ////
     @Operation(
-        summary = "N5 : 계정 비밀번호 로그인",
+        summary = "N5. 계정 비밀번호 로그인",
         description = "계정 아이디 + 비밀번호를 사용하는 로그인 요청\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +

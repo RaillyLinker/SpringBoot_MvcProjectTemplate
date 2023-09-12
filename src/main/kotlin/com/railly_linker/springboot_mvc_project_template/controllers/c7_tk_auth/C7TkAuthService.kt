@@ -138,7 +138,7 @@ class C7TkAuthService(
     ): C7TkAuthController.Api5OutputVo? {
         val memberUid: Long
         when (inputVo.signInTypeCode) {
-            0 -> {
+            0 -> { // 닉네임
                 // (정보 검증 로직 수행)
                 val member = database1MemberMemberDataRepository.findByNickNameAndRowActivate(
                     inputVo.id,
