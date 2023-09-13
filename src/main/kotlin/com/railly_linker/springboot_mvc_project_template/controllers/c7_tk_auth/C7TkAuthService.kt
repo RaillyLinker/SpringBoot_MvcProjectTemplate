@@ -26,6 +26,9 @@ import java.util.*
 
 @Service
 class C7TkAuthService(
+    // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
+    @Value("\${spring.profiles.active:default}") private var activeProfile: String,
+
     private val passwordEncoder: PasswordEncoder,
     private val emailSenderUtilDi: EmailSenderUtilDi,
 
@@ -36,18 +39,12 @@ class C7TkAuthService(
     private val database1MemberMemberPhoneDataRepository: Database1_Member_MemberPhoneDataRepository,
     private val database1MemberMemberOauth2LoginDataRepository: Database1_Member_MemberOauth2LoginDataRepository,
 
-    // (Redis Repository)
+    // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
     private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
-
-    // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 Unknown 반환))
-    // if (activeProfile == "prod80"){ // 배포 서버
-    // }
-    @Value("\${spring.profiles.active:Unknown}")
-    private lateinit var activeProfile: String
 
     // Retrofit2 요청 객체
     val networkRetrofit2Mbr: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
