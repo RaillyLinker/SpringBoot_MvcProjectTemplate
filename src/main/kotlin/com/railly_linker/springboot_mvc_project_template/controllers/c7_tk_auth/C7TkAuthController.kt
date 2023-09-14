@@ -714,67 +714,67 @@ class C7TkAuthController(
     )
 
 
-//    ////
-//    @Operation(
-//        summary = "N11 : 이메일 회원가입",
-//        description = "이메일 회원가입 처리\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 기존 회원 존재\n\n" +
-//                "2 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 닉네임 중복\n\n" +
-//                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/register-with-email")
-//    fun api11(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api11InputVo
-//    ) {
-//        service.api11(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api11InputVo(
-//        @Schema(
-//            description = "아이디 - 이메일",
-//            required = true,
-//            example = "test@gmail.com"
-//        )
-//        @JsonProperty("email")
-//        val email: String,
-//
-//        @Schema(
-//            description = "사용할 비밀번호",
-//            required = true,
-//            example = "kkdli!!"
-//        )
-//        @JsonProperty("password")
-//        val password: String,
-//
-//        @Schema(
-//            description = "닉네임",
-//            required = true,
-//            example = "홍길동"
-//        )
-//        @JsonProperty("nickName")
-//        val nickName: String,
-//
-//        @Schema(
-//            description = "이메일 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
-//
+    ////
+    @Operation(
+        summary = "N15 : 이메일 회원가입",
+        description = "이메일 회원가입 처리\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 기존 회원 존재\n\n" +
+                "2 : 닉네임 중복\n\n" +
+                "3 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-email")
+    fun api15(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api15InputVo
+    ) {
+        service.api15(httpServletResponse, inputVo)
+    }
+
+    data class Api15InputVo(
+        @Schema(
+            description = "아이디 - 이메일",
+            required = true,
+            example = "test@gmail.com"
+        )
+        @JsonProperty("email")
+        val email: String,
+
+        @Schema(
+            description = "사용할 비밀번호",
+            required = true,
+            example = "kkdli!!"
+        )
+        @JsonProperty("password")
+        val password: String,
+
+        @Schema(
+            description = "닉네임",
+            required = true,
+            example = "홍길동"
+        )
+        @JsonProperty("nickName")
+        val nickName: String,
+
+        @Schema(
+            description = "이메일 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
+
 //    ////
 //    @Operation(
 //        summary = "N12 : 전화번호 회원가입 본인 인증 문자 발송",

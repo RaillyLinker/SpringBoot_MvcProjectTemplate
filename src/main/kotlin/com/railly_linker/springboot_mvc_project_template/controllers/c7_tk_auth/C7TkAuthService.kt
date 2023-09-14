@@ -6,6 +6,9 @@ import com.railly_linker.springboot_mvc_project_template.configurations.RedisCon
 import com.railly_linker.springboot_mvc_project_template.configurations.SecurityConfig
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberData
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberEmailData
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberRoleData
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RefreshTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RegisterMembershipEmailVerificationRepository
@@ -1178,81 +1181,85 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api11(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api11InputVo) {
-//        val loginId: String = inputVo.email // 검증 로직에서 정해지면 충족시키기
-//        // 기존 회원 확인
-//        val isUserExists =
-//            database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
-//                loginId,
-//                true
-//            )
-//        if (isUserExists) { // 기존 회원이 있을 때
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return
-//        }
-//
-//        // 본인 이메일 검증 여부 확인
-//        val emailVerification =
-//            RedisUtilObject.getValue<RegisterMembershipEmailVerification>(redis1RedisTemplate, loginId)
-//
-//        if (emailVerification == null) { // 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.setHeader("api-result-code", "2")
-//            return
-//        }
-//
-//        // 입력 코드와 발급된 코드와의 매칭
-//        val newVerificationInfo = (emailVerification.value as RegisterMembershipEmailVerification)
-//        val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
-//
-//        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.setHeader("api-result-code", "4")
-//            return
-//        }
-//
-//        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
-//
-//        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-//            httpServletResponse.setHeader("api-result-code", "3")
-//            return
-//        }
-//
-//        // 회원가입
-//        val database1MemberUser: Database1_Member_Member = database1MemberMemberDataRepository.save(
-//            Database1_Member_Member(
-//                inputVo.nickName,
-//                password,
-//                true
-//            )
-//        )
-//
-//        // 이메일 저장
-//        database1MemberMemberEmailDataRepository.save(
-//            Database1_Member_MemberEmail(
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipEmailVerification.TABLE_NAME}"
+        ]
+    )
+    fun api15(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api15InputVo) {
+        val loginId: String = inputVo.email // 검증 로직에서 정해지면 충족시키기
+        // 기존 회원 확인
+        val isUserExists =
+            database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
+                loginId,
+                true
+            )
+        if (isUserExists) { // 기존 회원이 있을 때
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
+        // 본인 이메일 검증 여부 확인
+        val emailVerification = redis1RegisterMembershipEmailVerificationRepository.findKeyValue(loginId)
+
+        if (emailVerification == null) { // 이메일 검증 요청을 하지 않거나 만료됨
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.value.secret == inputVo.verificationCode
+
+        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
+            httpServletResponse.setHeader("api-result-code", "4")
+            return
+        }
+
+        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
+
+        // 회원가입
+        val database1MemberUser = database1MemberMemberDataRepository.save(
+            Database1_Member_MemberData(
+                inputVo.nickName,
+                password,
+                true
+            )
+        )
+
+        // 이메일 저장
+        database1MemberMemberEmailDataRepository.save(
+            Database1_Member_MemberEmailData(
+                database1MemberUser.uid!!,
+                loginId,
+                true
+            )
+        )
+
+        // 역할 저장
+        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
+        // 기본 권한 추가
+//        database1MemberUserRoleList.add(
+//            Database1_Member_MemberRole(
 //                database1MemberUser.uid!!,
-//                loginId,
+//                2,
 //                true
 //            )
 //        )
-//
-//        // 역할 저장
-//        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRole>()
-//        // 기본 권한 추가
-////        database1MemberUserRoleList.add(
-////            Database1_Member_MemberRole(
-////                database1MemberUser.uid!!,
-////                2,
-////                true
-////            )
-////        )
-//        database1MemberMemberRoleRepository.saveAll(database1MemberUserRoleList)
-//
-//        // 확인 완료된 검증 요청 정보 삭제
-//        RedisUtilObject.deleteValue<RegisterMembershipEmailVerification>(redis1RedisTemplate, loginId)
-//    }
-//
-//
+        database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
+
+        // 확인 완료된 검증 요청 정보 삭제
+        redis1RegisterMembershipEmailVerificationRepository.deleteKeyValue(loginId)
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
 //    ////
 //    fun api12(
 //        httpServletResponse: HttpServletResponse,
