@@ -600,7 +600,7 @@ class C7TkAuthController(
 
     ////
     @Operation(
-        summary = "N12 : 닉네임 수정하기 <>",
+        summary = "N12. 닉네임 수정하기 <>",
         description = "닉네임 수정하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
@@ -631,91 +631,89 @@ class C7TkAuthController(
         )
     }
 
-//    ////
-//    @Operation(
-//        summary = "N9 : 이메일 회원가입 본인 인증 이메일 발송",
-//        description = "이메일 회원가입시 본인 이메일 확인 메일 발송\n\n" +
-//                "발송 후 10분 후 만료됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 기존 회원 존재",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/register-with-email-verification")
-//    fun api9(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api9InputVo
-//    ): Api9OutputVo? {
-//        return service.api9(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api9InputVo(
-//        @Schema(description = "수신 이메일", required = true, example = "test@gmail.com")
-//        @JsonProperty("email")
-//        val email: String
-//    )
-//
-//    data class Api9OutputVo(
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N10 : 이메일 회원가입 본인 확인 이메일에서 받은 코드 검증하기",
-//        description = "이메일 회원가입시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
-//                "첫 인증 완료시 이메일 회원가입까지의 만료시간은 10분\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/register-with-email-verification-check")
-//    fun api10(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
-//        @RequestParam("email")
-//        email: String,
-//        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
-//        @RequestParam("verificationCode")
-//        verificationCode: String
-//    ): Api10OutputVo? {
-//        return service.api10(httpServletResponse, email, verificationCode)
-//    }
-//
-//    data class Api10OutputVo(
-//        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
-//        @JsonProperty("isVerified")
-//        val isVerified: Boolean,
-//        @Schema(
-//            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = false,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String?
-//    )
-//
-//
+    ////
+    @Operation(
+        summary = "N13. 이메일 회원가입 본인 인증 이메일 발송",
+        description = "이메일 회원가입시 본인 이메일 확인 메일 발송\n\n" +
+                "발송 후 10분 후 만료됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 기존 회원 존재",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-email-verification")
+    fun api13(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api13InputVo
+    ): Api13OutputVo? {
+        return service.api13(httpServletResponse, inputVo)
+    }
+
+    data class Api13InputVo(
+        @Schema(description = "수신 이메일", required = true, example = "test@gmail.com")
+        @JsonProperty("email")
+        val email: String
+    )
+
+    data class Api13OutputVo(
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N14. 이메일 회원가입 본인 확인 이메일에서 받은 코드 검증하기",
+        description = "이메일 회원가입시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
+                "첫 인증 완료시 이메일 회원가입까지의 만료시간은 10분\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : verificationCode 가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/register-with-email-verification-check")
+    fun api14(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
+        @RequestParam("email")
+        email: String,
+        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
+        @RequestParam("verificationCode")
+        verificationCode: String
+    ): Api14OutputVo? {
+        return service.api14(httpServletResponse, email, verificationCode)
+    }
+
+    data class Api14OutputVo(
+        @Schema(
+            description = "인증 완료시 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N11 : 이메일 회원가입",

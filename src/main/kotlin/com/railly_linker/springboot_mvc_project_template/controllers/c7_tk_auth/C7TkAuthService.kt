@@ -8,8 +8,10 @@ import com.railly_linker.springboot_mvc_project_template.configurations.database
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RefreshTokenInfoRepository
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RegisterMembershipEmailVerificationRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_SignInAccessTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RefreshTokenInfo
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RegisterMembershipEmailVerification
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_SignInAccessTokenInfo
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
 import com.railly_linker.springboot_mvc_project_template.util_objects.AuthorizationTokenUtilObject
@@ -43,7 +45,8 @@ class C7TkAuthService(
 
     // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
-    private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository
+    private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository,
+    private val redis1RegisterMembershipEmailVerificationRepository: Redis1_RegisterMembershipEmailVerificationRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -96,7 +99,6 @@ class C7TkAuthService(
     fun api1(httpServletResponse: HttpServletResponse): Map<String, Any>? {
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "connectTest OK!"
-
         httpServletResponse.setHeader("api-result-code", "ok")
         return result
     }
@@ -108,7 +110,6 @@ class C7TkAuthService(
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
-
         httpServletResponse.setHeader("api-result-code", "ok")
         return result
 
@@ -120,7 +121,6 @@ class C7TkAuthService(
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
-
         httpServletResponse.setHeader("api-result-code", "ok")
         return result
 
@@ -132,7 +132,6 @@ class C7TkAuthService(
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
-
         httpServletResponse.setHeader("api-result-code", "ok")
         return result
 
@@ -159,7 +158,6 @@ class C7TkAuthService(
                 )
 
                 if (member == null) { // 가입된 회원이 없음
-                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
@@ -174,7 +172,6 @@ class C7TkAuthService(
                 )
 
                 if (memberEmail == null) { // 가입된 회원이 없음
-                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
@@ -189,7 +186,6 @@ class C7TkAuthService(
                 )
 
                 if (memberPhone == null) { // 가입된 회원이 없음
-                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
@@ -207,7 +203,6 @@ class C7TkAuthService(
         )
 
         if (member == null) { // 가입된 회원이 없음
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -216,7 +211,6 @@ class C7TkAuthService(
             !passwordEncoder.matches(inputVo.password, member.accountPassword!!) // 패스워드 불일치
         ) {
             // 두 상황 모두 비밀번호 찾기를 하면 해결이 됨
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "2")
             return null
         }
@@ -313,7 +307,7 @@ class C7TkAuthService(
                             loginAccessToken.expireTimeMs
                         )
                     }
-                    httpServletResponse.status = 500
+
                     httpServletResponse.setHeader("api-result-code", "3")
                     return null
                 } else { // 기존 로그인 제거 설정
@@ -465,7 +459,6 @@ class C7TkAuthService(
 //                    atResponse.body() == null ||
 //                    atResponse.body()!!.accessToken == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
@@ -511,7 +504,6 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
@@ -531,7 +523,6 @@ class C7TkAuthService(
 //                if (appleInfo != null) {
 //                    loginId = appleInfo.snsId
 //                } else {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
@@ -551,7 +542,6 @@ class C7TkAuthService(
 //
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
@@ -573,7 +563,6 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
@@ -591,7 +580,6 @@ class C7TkAuthService(
 //        }
 //
 //        if (snsOauth2 == null) { // 가입된 회원이 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -602,7 +590,6 @@ class C7TkAuthService(
 //        )
 //
 //        if (member == null) { // 가입된 회원이 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -699,7 +686,7 @@ class C7TkAuthService(
 //                            loginAccessToken.expireTimeMs
 //                        )
 //                    }
-//                    httpServletResponse.status = 500
+//
 //                    httpServletResponse.setHeader("api-result-code", "3")
 //                    return null
 //                } else { // 기존 로그인 제거 설정
@@ -855,7 +842,6 @@ class C7TkAuthService(
 
         if (memberInfo == null) {
             // 가입되지 않은 회원
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "4")
             return null
         }
@@ -887,7 +873,6 @@ class C7TkAuthService(
                         JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) * 1000 > JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS || // 최대 만료시간을 초과
                         JwtTokenUtilObject.getMemberUid(jwtRefreshToken) != accessTokenMemberUid // 리프레시 토큰의 멤버 고유번호와 액세스 토큰 멤버 고유번호가 다를시
                     ) {
-                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "1")
                         return null
                     }
@@ -898,14 +883,12 @@ class C7TkAuthService(
                     if (JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) == 0L || // 만료시간 지남
                         refreshTokenInfoOptional == null // jwtAccessToken 의 리프레시 토큰이 저장소에 없음
                     ) {
-                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
 
                     if (jwtRefreshToken != refreshTokenInfoOptional.value.refreshToken) {
                         // 건내받은 토큰이 해당 액세스 토큰의 가용 토큰과 맞지 않음
-                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "3")
                         return null
                     }
@@ -1019,14 +1002,12 @@ class C7TkAuthService(
 
                 else -> {
                     // 처리 가능한 토큰 타입이 아닐 때
-                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "1")
                     return null
                 }
             }
         } else {
             // 타입을 전달 하지 않았을 때
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -1077,7 +1058,6 @@ class C7TkAuthService(
         val userInfo = database1MemberMemberDataRepository.findById(memberUid.toLong()).get()
 
         if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(nickName, true)) {
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return
         }
@@ -1091,110 +1071,113 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    fun api9(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api9InputVo
-//    ): C7TkAuthController.Api9OutputVo? {
-//        // 입력 데이터 검증
-//        val isDatabase1MemberUserExists =
-//            database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
-//                inputVo.email,
-//                true
-//            )
-//        if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//            httpServletResponse.status = 500
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return null
-//        }
-//
-//        // 정보 저장 후 이메일 발송
-//        val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//        RedisUtilObject.putValue<RegisterMembershipEmailVerification>(
-//            redis1RedisTemplate,
-//            inputVo.email,
-//            RegisterMembershipEmailVerification(
-//                verificationCode
-//            ),
-//            signUpEmailVerificationTimeSecMbr * 1000
-//        )
-//
-//        val expireWhen = SimpleDateFormat(
-//            "yyyy-MM-dd HH:mm:ss.SSS"
-//        ).format(Calendar.getInstance().apply {
-//            this.time = Date()
-//            this.add(Calendar.SECOND, signUpEmailVerificationTimeSecMbr.toInt())
-//        }.time)
-//
-//        emailSenderUtilDi.sendThymeLeafHtmlMail(
-//            "ProwdTemplate",
-//            arrayOf(inputVo.email),
-//            null,
-//            "ProwdTemplate 회원가입 - 본인 계정 확인용 이메일입니다.",
-//            "c2_n9/email_verification_email",
-//            hashMapOf(
-//                Pair("verificationCode", verificationCode)
-//            ),
-//            null,
-//            null,
-//            null,
-//            null
-//        )
-//
-//        return C7TkAuthController.Api9OutputVo(
-//            expireWhen
-//        )
-//    }
-//
-//
-//    ////
-//    fun api10(
-//        httpServletResponse: HttpServletResponse,
-//        email: String,
-//        verificationCode: String
-//    ): C7TkAuthController.Api10OutputVo? {
-//        val emailVerification =
-//            RedisUtilObject.getValue<RegisterMembershipEmailVerification>(redis1RedisTemplate, email)
-//
-//        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return null
-//        }
-//
-//        val newVerificationInfo = emailVerification.value as RegisterMembershipEmailVerification
-//
-//        // 입력 코드와 발급된 코드와의 매칭
-//        val codeMatched = newVerificationInfo.secret == verificationCode
-//
-//        if (codeMatched) { // 코드 일치
-//            RedisUtilObject.putValue<RegisterMembershipEmailVerification>(
-//                redis1RedisTemplate,
-//                email,
-//                newVerificationInfo,
-//                signUpEmailVerificationTimeUntilJoinSecMbr * 1000
-//            )
-//
-//            val expireWhen = SimpleDateFormat(
-//                "yyyy-MM-dd HH:mm:ss.SSS"
-//            ).format(Calendar.getInstance().apply {
-//                this.time = Date()
-//                this.add(Calendar.SECOND, signUpEmailVerificationTimeUntilJoinSecMbr.toInt())
-//            }.time)
-//
-//            return C7TkAuthController.Api10OutputVo(
-//                true,
-//                expireWhen
-//            )
-//        } else { // 코드 불일치
-//            return C7TkAuthController.Api10OutputVo(
-//                false,
-//                null
-//            )
-//        }
-//    }
-//
-//
+    ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipEmailVerification.TABLE_NAME}"
+        ]
+    )
+    fun api13(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api13InputVo
+    ): C7TkAuthController.Api13OutputVo? {
+        // 입력 데이터 검증
+        val isDatabase1MemberUserExists =
+            database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
+                inputVo.email,
+                true
+            )
+
+        if (isDatabase1MemberUserExists) { // 기존 회원 존재
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
+
+        // 정보 저장 후 이메일 발송
+        val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+        redis1RegisterMembershipEmailVerificationRepository.saveKeyValue(
+            inputVo.email,
+            Redis1_RegisterMembershipEmailVerification(
+                verificationCode
+            ),
+            signUpEmailVerificationTimeSecMbr * 1000
+        )
+
+        val expireWhen = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.SECOND, signUpEmailVerificationTimeSecMbr.toInt())
+        }.time)
+
+        emailSenderUtilDi.sendThymeLeafHtmlMail(
+            "ProwdTemplate",
+            arrayOf(inputVo.email),
+            null,
+            "ProwdTemplate 회원가입 - 본인 계정 확인용 이메일입니다.",
+            "template_c7_n13/email_verification_email",
+            hashMapOf(
+                Pair("verificationCode", verificationCode)
+            ),
+            null,
+            null,
+            null,
+            null
+        )
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api13OutputVo(
+            expireWhen
+        )
+    }
+
+
+    ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipEmailVerification.TABLE_NAME}"
+        ]
+    )
+    fun api14(
+        httpServletResponse: HttpServletResponse,
+        email: String,
+        verificationCode: String
+    ): C7TkAuthController.Api14OutputVo? {
+        val emailVerification = redis1RegisterMembershipEmailVerificationRepository.findKeyValue(email)
+
+        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.value.secret == verificationCode
+
+        if (codeMatched) { // 코드 일치
+            redis1RegisterMembershipEmailVerificationRepository.saveKeyValue(
+                email,
+                emailVerification.value,
+                signUpEmailVerificationTimeUntilJoinSecMbr * 1000
+            )
+
+            val expireWhen = SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss.SSS"
+            ).format(Calendar.getInstance().apply {
+                this.time = Date()
+                this.add(Calendar.SECOND, signUpEmailVerificationTimeUntilJoinSecMbr.toInt())
+            }.time)
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return C7TkAuthController.Api14OutputVo(
+                expireWhen
+            )
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "2")
+            return null
+        }
+    }
+
+
 //    ////
 //    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
 //    fun api11(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api11InputVo) {
@@ -1206,7 +1189,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (isUserExists) { // 기존 회원이 있을 때
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
@@ -1216,7 +1198,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<RegisterMembershipEmailVerification>(redis1RedisTemplate, loginId)
 //
 //        if (emailVerification == null) { // 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        }
@@ -1226,7 +1207,6 @@ class C7TkAuthService(
 //        val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
 //
 //        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "4")
 //            return
 //        }
@@ -1234,7 +1214,6 @@ class C7TkAuthService(
 //        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
@@ -1286,7 +1265,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -1341,7 +1319,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<RegisterMembershipPhoneNumberVerification>(redis1RedisTemplate, phoneNumber)
 //
 //        if (smsVerification == null) { // 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -1390,7 +1367,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (isUserExists) { // 기존 회원이 있을 때
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
@@ -1400,7 +1376,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<RegisterMembershipPhoneNumberVerification>(redis1RedisTemplate, loginId)
 //
 //        if (emailVerification == null) { // 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        }
@@ -1410,7 +1385,6 @@ class C7TkAuthService(
 //        val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
 //
 //        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "4")
 //            return
 //        }
@@ -1418,7 +1392,6 @@ class C7TkAuthService(
 //        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
@@ -1476,7 +1449,6 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
@@ -1490,7 +1462,6 @@ class C7TkAuthService(
 //                        true
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
@@ -1527,7 +1498,6 @@ class C7TkAuthService(
 //                if (appleInfo != null) {
 //                    loginId = appleInfo.snsId
 //                } else {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
@@ -1539,7 +1509,6 @@ class C7TkAuthService(
 //                        true
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
@@ -1577,7 +1546,6 @@ class C7TkAuthService(
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
@@ -1589,7 +1557,6 @@ class C7TkAuthService(
 //                        true
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
@@ -1628,7 +1595,6 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return null
 //                }
@@ -1640,7 +1606,6 @@ class C7TkAuthService(
 //                        true
 //                    )
 //                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "1")
 //                    return null
 //                }
@@ -1687,7 +1652,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (isUserExists) { // 기존 회원이 있을 때
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
@@ -1703,7 +1667,6 @@ class C7TkAuthService(
 //                )
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
@@ -1719,7 +1682,6 @@ class C7TkAuthService(
 //                )
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
@@ -1735,7 +1697,6 @@ class C7TkAuthService(
 //                )
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
@@ -1751,7 +1712,6 @@ class C7TkAuthService(
 //                )
 //
 //                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
@@ -1769,13 +1729,11 @@ class C7TkAuthService(
 //        val codeMatched = secret == inputVo.verificationCode
 //
 //        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "4")
 //            return
 //        }
 //
 //        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
@@ -1859,14 +1817,12 @@ class C7TkAuthService(
 //        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(memberUid.toLong(), true)
 //
 //        if (member == null) { // 멤버 정보가 없을 때
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
 //
 //        if (member.accountPassword == null) { // 기존 비번이 존재하지 않음
 //            if (inputVo.oldPassword != null) { // 비밀번호 불일치
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "2")
 //                return
 //            }
@@ -1876,7 +1832,6 @@ class C7TkAuthService(
 //                    member.accountPassword
 //                )
 //            ) { // 비밀번호 불일치
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "2")
 //                return
 //            }
@@ -1888,7 +1843,6 @@ class C7TkAuthService(
 //
 //            if (oAuth2EntityList.isEmpty()) {
 //                // null 로 만들려고 할 때 account 외의 OAuth2 인증이 없다면 제거 불가
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
@@ -1929,7 +1883,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (!isDatabase1MemberUserExists) { // 회원 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -1980,7 +1933,6 @@ class C7TkAuthService(
 //        val emailVerification = RedisUtilObject.getValue<FindPwEmailVerification>(redis1RedisTemplate, email)
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2023,7 +1975,6 @@ class C7TkAuthService(
 //        val emailVerification = RedisUtilObject.getValue<FindPwEmailVerification>(redis1RedisTemplate, inputVo.email)
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
@@ -2033,7 +1984,6 @@ class C7TkAuthService(
 //            val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
@@ -2046,7 +1996,6 @@ class C7TkAuthService(
 //                )
 //
 //            if (memberEmail == null) {
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
@@ -2057,7 +2006,6 @@ class C7TkAuthService(
 //            )
 //
 //            if (member == null) {
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
@@ -2118,7 +2066,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (!isDatabase1MemberUserExists) { // 회원 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2170,7 +2117,6 @@ class C7TkAuthService(
 //        val smsVerification = RedisUtilObject.getValue<FindPwPhoneNumberVerification>(redis1RedisTemplate, phoneNumber)
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2214,7 +2160,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<FindPwPhoneNumberVerification>(redis1RedisTemplate, inputVo.phoneNumber)
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
@@ -2224,7 +2169,6 @@ class C7TkAuthService(
 //            val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 검증 요청을 하지 않거나 만료됨
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
@@ -2237,7 +2181,6 @@ class C7TkAuthService(
 //                )
 //
 //            if (memberPhone == null) {
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
@@ -2248,7 +2191,6 @@ class C7TkAuthService(
 //            )
 //
 //            if (member == null) {
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
@@ -2370,7 +2312,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2424,7 +2365,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<AddEmailVerification>(redis1RedisTemplate, "${memberUid}_${email}")
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2474,7 +2414,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<AddEmailVerification>(redis1RedisTemplate, "${memberUid}_${inputVo.email}")
 //
 //        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
@@ -2486,7 +2425,6 @@ class C7TkAuthService(
 //            )
 //
 //            if (member == null) {
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
@@ -2498,7 +2436,6 @@ class C7TkAuthService(
 //                )
 //
 //            if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
@@ -2507,7 +2444,6 @@ class C7TkAuthService(
 //            val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "4")
 //                return
 //            }
@@ -2589,7 +2525,6 @@ class C7TkAuthService(
 //        }
 //
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
-//        httpServletResponse.status = 500
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
@@ -2628,7 +2563,6 @@ class C7TkAuthService(
 //                true
 //            )
 //        if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2683,7 +2617,6 @@ class C7TkAuthService(
 //            RedisUtilObject.getValue<AddPhoneNumberVerification>(redis1RedisTemplate, "${memberUid}_${phoneNumber}")
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return null
 //        }
@@ -2736,7 +2669,6 @@ class C7TkAuthService(
 //            )
 //
 //        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "2")
 //            return
 //        } else {
@@ -2748,7 +2680,6 @@ class C7TkAuthService(
 //            )
 //
 //            if (member == null) {
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "1")
 //                return
 //            }
@@ -2760,7 +2691,6 @@ class C7TkAuthService(
 //                )
 //
 //            if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "3")
 //                return
 //            }
@@ -2769,7 +2699,6 @@ class C7TkAuthService(
 //            val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
 //
 //            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//                httpServletResponse.status = 500
 //                httpServletResponse.setHeader("api-result-code", "4")
 //                return
 //            }
@@ -2853,7 +2782,6 @@ class C7TkAuthService(
 //        }
 //
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
-//        httpServletResponse.status = 500
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
@@ -2904,7 +2832,6 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
@@ -2921,7 +2848,6 @@ class C7TkAuthService(
 //                if (appleInfo != null) {
 //                    loginId = appleInfo.snsId
 //                } else {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return
 //                }
@@ -2939,7 +2865,6 @@ class C7TkAuthService(
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return
 //                }
@@ -2958,7 +2883,6 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.status = 500
 //                    httpServletResponse.setHeader("api-error-code", "2")
 //                    return
 //                }
@@ -2979,7 +2903,6 @@ class C7TkAuthService(
 //        )
 //
 //        if (member == null) {
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "1")
 //            return
 //        }
@@ -2993,7 +2916,6 @@ class C7TkAuthService(
 //            )
 //
 //        if (isDatabase1MemberUserExists) { // 이미 사용중인 SNS 인증
-//            httpServletResponse.status = 500
 //            httpServletResponse.setHeader("api-result-code", "3")
 //            return
 //        }
@@ -3071,7 +2993,6 @@ class C7TkAuthService(
 //        }
 //
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
-//        httpServletResponse.status = 500
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }

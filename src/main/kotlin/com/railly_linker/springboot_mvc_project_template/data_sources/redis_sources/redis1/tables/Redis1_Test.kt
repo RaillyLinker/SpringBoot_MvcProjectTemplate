@@ -1,5 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables
 
+// (테스트 Redis Table)
+// 키 : 임의 값
 data class Redis1_Test(
     var content: String,
     var innerVo: InnerVo,

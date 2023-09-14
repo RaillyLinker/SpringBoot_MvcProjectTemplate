@@ -230,7 +230,6 @@ class C6TkDatabaseTestService(
         val oldEntity = database1TemplateTestRepository.findById(testTableUid)
 
         if (oldEntity.isEmpty || !oldEntity.get().rowActivate) {
-            httpServletResponse.status = 500
             httpServletResponse.addHeader("api-error-codes", "1")
             return null
         }
@@ -266,7 +265,6 @@ class C6TkDatabaseTestService(
         val testEntity = database1TemplateTestRepository.findById(testTableUid)
 
         if (testEntity.isEmpty || !testEntity.get().rowActivate) {
-            httpServletResponse.status = 500
             httpServletResponse.addHeader("api-error-codes", "1")
             // 트랜젝션 커밋
             return
