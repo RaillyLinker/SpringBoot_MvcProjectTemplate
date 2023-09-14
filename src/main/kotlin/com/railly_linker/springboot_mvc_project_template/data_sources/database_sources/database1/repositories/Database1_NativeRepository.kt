@@ -181,11 +181,12 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
                 FROM 
                 template.test_data, 
                 (SELECT @rownum \:= 0) r 
+                WHERE 
+                row_activate = b'1' 
                 ORDER BY distance ASC
             ) AS ordered_table
             WHERE 
-            row_activate = b'1' 
-            and row_num > 
+            row_num > 
             (
                 select if 
                 (
@@ -201,6 +202,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
                             FROM 
                             template.test_data, 
                             (SELECT @rownum2 \:= 0) r 
+                            WHERE 
+                            row_activate = b'1' 
                             ORDER BY distance ASC
                         ) AS ordered_table2 
                         WHERE 
