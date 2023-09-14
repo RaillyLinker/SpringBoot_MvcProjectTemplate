@@ -17,17 +17,19 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
     // <C6>
     @Query(
         nativeQuery = true,
-        value = "select " +
-                "test_data.uid as uid, " +
-                "test_data.row_create_date as rowCreateDate, " +
-                "test_data.row_update_date as rowUpdateDate, " +
-                "test_data.content as content, " +
-                "test_data.random_num as randomNum, " +
-                "ABS(test_data.random_num-:num) as distance " +
-                "from template.test_data " +
-                "where row_activate = b'1'" +
-                "order by " +
-                "distance"
+        value = """
+            select 
+            test_data.uid as uid, 
+            test_data.row_create_date as rowCreateDate, 
+            test_data.row_update_date as rowUpdateDate, 
+            test_data.content as content, 
+            test_data.random_num as randomNum, 
+            ABS(test_data.random_num-:num) as distance 
+            from template.test_data 
+            where row_activate = b'1' 
+            order by 
+            distance
+            """
     )
     fun selectListForC6N5(
         @Param(value = "num") num: Int
@@ -44,17 +46,19 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
 
     @Query(
         nativeQuery = true,
-        value = "select " +
-                "test_data.uid as uid, " +
-                "test_data.content as content, " +
-                "test_data.random_num as randomNum, " +
-                "test_data.row_create_date as rowCreateDate, " +
-                "test_data.row_update_date as rowUpdateDate, " +
-                "ABS(TIMESTAMPDIFF(SECOND, test_data.row_create_date, :date)) as timeDiffSec " +
-                "from template.test_data " +
-                "where row_activate = b'1'" +
-                "order by " +
-                "timeDiffSec"
+        value = """
+            select 
+            test_data.uid as uid, 
+            test_data.content as content, 
+            test_data.random_num as randomNum, 
+            test_data.row_create_date as rowCreateDate, 
+            test_data.row_update_date as rowUpdateDate, 
+            ABS(TIMESTAMPDIFF(SECOND, test_data.row_create_date, :date)) as timeDiffSec 
+            from template.test_data 
+            where row_activate = b'1' 
+            order by 
+            timeDiffSec
+            """
     )
     fun selectListForC6N6(
         @Param(value = "date") date: String
@@ -71,21 +75,26 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
 
     @Query(
         nativeQuery = true,
-        value = "select " +
-                "test_data.uid as uid, " +
-                "test_data.row_create_date as rowCreateDate, " +
-                "test_data.row_update_date as rowUpdateDate, " +
-                "test_data.content as content, " +
-                "test_data.random_num as randomNum, " +
-                "ABS(test_data.random_num-:num) as distance " +
-                "from " +
-                "template.test_data " +
-                "where row_activate = b'1'" +
-                "order by distance",
-        countQuery = "select " +
-                "count(*) " +
-                "from test " +
-                "where row_activate = b'1'"
+        value = """
+            select 
+            test_data.uid as uid, 
+            test_data.row_create_date as rowCreateDate, 
+            test_data.row_update_date as rowUpdateDate, 
+            test_data.content as content, 
+            test_data.random_num as randomNum, 
+            ABS(test_data.random_num-:num) as distance 
+            from 
+            template.test_data 
+            where row_activate = b'1' 
+            order by distance
+            """,
+        countQuery = """
+            select 
+            count(*) 
+            from test 
+            where 
+            row_activate = b'1'
+            """
     )
     fun selectListForC6N8(
         @Param(value = "num") num: Int,
@@ -104,11 +113,13 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
     @Modifying // Native Query 에서 Delete, Update 문은 이것을 붙여야함
     @Query(
         nativeQuery = true,
-        value = "UPDATE template.test_data " +
-                "SET " +
-                "content = :content " +
-                "WHERE " +
-                "uid = :uid"
+        value ="""
+            UPDATE template.test_data 
+            SET 
+            content = :content 
+            WHERE 
+            uid = :uid
+            """
     )
     fun updateForC6N10(
         @Param(value = "uid") uid: Long,
@@ -118,22 +129,26 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
     // like 문을 사용할 때, replace 로 검색어와 탐색 정보의 공백을 없애줌으로써 공백에 유연한 검색이 가능
     @Query(
         nativeQuery = true,
-        value = "select " +
-                "test_data.uid as uid, " +
-                "test_data.row_create_date as rowCreateDate, " +
-                "test_data.row_update_date as rowUpdateDate, " +
-                "test_data.content as content, " +
-                "test_data.random_num as randomNum " +
-                "from template.test_data " +
-                "where " +
-                "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
-                "and row_activate = b'1'",
-        countQuery = "select " +
-                "count(*) " +
-                "from template.test_data " +
-                "where " +
-                "replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') " +
-                "and row_activate = b'1'"
+        value = """
+            select 
+            test_data.uid as uid, 
+            test_data.row_create_date as rowCreateDate, 
+            test_data.row_update_date as rowUpdateDate, 
+            test_data.content as content, 
+            test_data.random_num as randomNum 
+            from template.test_data 
+            where 
+            replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') 
+            and row_activate = b'1'
+            """,
+        countQuery = """
+            select 
+            count(*) 
+            from template.test_data 
+            where 
+            replace(content, ' ', '') like replace(concat('%',:searchKeyword,'%'), ' ', '') 
+            and row_activate = b'1'
+            """
     )
     fun selectListForC6N11(
         @Param(value = "searchKeyword") searchKeyword: String,
