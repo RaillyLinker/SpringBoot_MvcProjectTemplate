@@ -23,10 +23,11 @@ class RedisConfig {
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     companion object {
-        // !!!RedisTemplate Bean 이름 작성 및 적용하기!!
+        // !!!RedisTemplate Bean 이름 작성!!
         const val TN_REDIS1 = "redis1RedisTemplate"
     }
 
+    // !!!RedisTemplate Bean 이름과 RedisTemplate 객체 매칭!!
     val redisTemplatesMap: Map<String, RedisTemplate<String, Any>> by lazy {
         mapOf(
             TN_REDIS1 to redis1RedisTemplate()

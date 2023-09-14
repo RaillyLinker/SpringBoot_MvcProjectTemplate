@@ -18,7 +18,7 @@ object JwtTokenUtilObject {
 
     // (JWT signature 비밀키)
     // !!!비밀키 변경!!
-    private const val JWT_SECRET_KEY_STRING = "testtesttesttesttesttesttesttest"
+    private const val JWT_SECRET_KEY_STRING = "123456789abcdefghijklmnopqrstuvw"
 
     // (액세스 토큰 유효시간)
     // !!!유효시간 변경!!
