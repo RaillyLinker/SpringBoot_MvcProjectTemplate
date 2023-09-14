@@ -113,7 +113,7 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
     @Modifying // Native Query 에서 Delete, Update 문은 이것을 붙여야함
     @Query(
         nativeQuery = true,
-        value ="""
+        value = """
             UPDATE template.test_data 
             SET 
             content = :content 
@@ -165,46 +165,47 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
 
     @Query(
         nativeQuery = true,
-        value = "SELECT " +
-                "uid as uid, " +
-                "row_create_date as rowCreateDate, " +
-                "row_update_date as rowUpdateDate, " +
-                "content as content, random_num as randomNum, " +
-                "distance as distance " +
-                "FROM (" +
-                "    SELECT " +
-                "    *, " +
-                "    ABS(test_data.random_num-:num) as distance," +
-                "    @rownum \\:= @rownum + 1 AS row_num " +
-                "    FROM " +
-                "    template.test_data, " +
-                "    (SELECT @rownum \\:= 0) r " +
-                "    ORDER BY distance ASC" +
-                ") AS ordered_table " +
-                "WHERE " +
-                "row_activate = b'1' and " +
-                "row_num > (" +
-                "    select if (" +
-                "        :lastItemUid > 0, " +
-                "        (SELECT " +
-                "            row_num " +
-                "            FROM (" +
-                "                SELECT " +
-                "                *, " +
-                "                ABS(test_data.random_num-:num) as distance, " +
-                "                @rownum2 \\:= @rownum2 + 1 AS row_num " +
-                "                FROM " +
-                "                template.test_data, " +
-                "                (SELECT @rownum2 \\:= 0) r " +
-                "                ORDER BY distance ASC" +
-                "            ) AS o2 " +
-                "            WHERE " +
-                "            uid = :lastItemUid" +
-                "        ), " +
-                "        0" +
-                "    )" +
-                ")" +
-                "LIMIT :pageElementsCount"
+        value = """
+            SELECT 
+            uid as uid, 
+            row_create_date as rowCreateDate, 
+            row_update_date as rowUpdateDate, 
+            content as content, random_num as randomNum, 
+            distance as distance 
+            FROM (
+            SELECT 
+            *, 
+            ABS(test_data.random_num-:num) as distance, 
+            @rownum \:= @rownum + 1 AS row_num 
+            FROM 
+            template.test_data, 
+            (SELECT @rownum \:= 0) r 
+            ORDER BY distance ASC) AS ordered_table 
+            WHERE 
+            row_activate = b'1' and 
+            row_num > (
+            select if (
+            :lastItemUid > 0, 
+            (SELECT 
+            row_num 
+            FROM (
+            SELECT 
+            *, 
+            ABS(test_data.random_num-:num) as distance, 
+            @rownum2 \:= @rownum2 + 1 AS row_num 
+            FROM 
+            template.test_data, 
+            (SELECT @rownum2 \:= 0) r 
+            ORDER BY distance ASC
+            ) AS o2 
+            WHERE 
+            uid = :lastItemUid
+            ), 
+            0
+            )
+            )
+            LIMIT :pageElementsCount
+            """
     )
     fun selectListForC6N14(
         @Param(value = "lastItemUid") lastItemUid: Long,
