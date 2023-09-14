@@ -92,6 +92,9 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
+    // (Apache Common Codec)
+    implementation("commons-codec:commons-codec:1.16.0")
+
 }
 
 tasks.withType<KotlinCompile> {

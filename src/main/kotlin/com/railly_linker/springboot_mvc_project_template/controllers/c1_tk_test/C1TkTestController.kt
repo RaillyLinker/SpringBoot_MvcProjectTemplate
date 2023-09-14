@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "/tk/test APIs", description = "C1. 테스트 API 컨트롤러")
@@ -110,5 +107,39 @@ class C1TkTestController(
         @Schema(description = "첨부 파일 리스트", required = false)
         @JsonProperty("multipartFileList")
         val multipartFileList: List<MultipartFile>?
+    )
+
+
+    ////
+    @Operation(
+        summary = "N3. Naver API SMS 발송 샘플",
+        description = "Naver API 를 사용한 SMS 발송 샘플\n\n" +
+                "Service 에서 사용하는 Naver SMS 발송 유틸 내의 개인정보를 변경해야 사용 가능\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/naver-sms-sample")
+    fun api3(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api3InputVo
+    ) {
+        return service.api3(httpServletResponse, inputVo)
+    }
+
+    data class Api3InputVo(
+        @Schema(description = "SMS 수신측 휴대전화 번호", required = true, example = "82)010-1111-1111")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String,
+        @Schema(description = "SMS 메세지", required = true, example = "테스트 메세지 발송입니다.")
+        @JsonProperty("smsMessage")
+        val smsMessage: String
     )
 }

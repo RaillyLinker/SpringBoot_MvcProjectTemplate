@@ -28,7 +28,7 @@ class EmailSenderUtilDi(
         val isMultipart = !sendFileList.isNullOrEmpty() || !sendMultipartFileList.isNullOrEmpty() // multipart 전송 여부
         val mimeMessageHelper = MimeMessageHelper(mimeMessage, isMultipart, "UTF-8")
 
-        mimeMessageHelper.setFrom(InternetAddress(MailConfig.MAIL_SENDER_NAME, senderName)) // 수신자명 적용
+        mimeMessageHelper.setFrom(InternetAddress(MailConfig.MAIL_SENDER_NAME, senderName)) // 발송자명 적용
         mimeMessageHelper.setTo(receiverEmailAddressArray) // 수신자 이메일 적용
         if (carbonCopyEmailAddressArray != null) {
             mimeMessageHelper.setCc(carbonCopyEmailAddressArray) // 참조자 이메일 적용
@@ -72,7 +72,7 @@ class EmailSenderUtilDi(
         val mimeMessage = javaMailSender.createMimeMessage()
         val mimeMessageHelper = MimeMessageHelper(mimeMessage, true, "UTF-8")
 
-        mimeMessageHelper.setFrom(InternetAddress(MailConfig.MAIL_SENDER_NAME, senderName)) // 수신자명 설정
+        mimeMessageHelper.setFrom(InternetAddress(MailConfig.MAIL_SENDER_NAME, senderName)) // 발송자명 적용
         mimeMessageHelper.setTo(receiverEmailAddressArray) // 수신자 이메일 설정
         if (carbonCopyEmailAddressArray != null) {
             mimeMessageHelper.setCc(carbonCopyEmailAddressArray) // 참조자 이메일 설정

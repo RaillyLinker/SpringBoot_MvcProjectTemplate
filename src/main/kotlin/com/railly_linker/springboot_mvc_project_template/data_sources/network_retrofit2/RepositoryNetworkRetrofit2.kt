@@ -2,6 +2,7 @@ package com.railly_linker.springboot_mvc_project_template.data_sources.network_r
 
 import com.google.gson.GsonBuilder
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.LocalHostRequestApi
+import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.SensApigwNtrussComRequestApi
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -14,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
-
 
 // Retrofit2 함수 네트워크 URL 과 API 객체를 이어주고 제공하는 역할
 // : 주소 1개당 API 객체 1개를 request_apis 안에 생성하여 아래 (Network Request Api 객체) 공간에 변수를 추가하여 사용
@@ -32,6 +32,16 @@ class RepositoryNetworkRetrofit2 private constructor() {
             7000L,
             false
         )).create(LocalHostRequestApi::class.java)
+
+    // Naver SMS 발송용
+    val sensApigwNtrussComRequestApiMbr: SensApigwNtrussComRequestApi =
+        (getRetrofitClient(
+            "https://sens.apigw.ntruss.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(SensApigwNtrussComRequestApi::class.java)
 
 
     // ---------------------------------------------------------------------------------------------

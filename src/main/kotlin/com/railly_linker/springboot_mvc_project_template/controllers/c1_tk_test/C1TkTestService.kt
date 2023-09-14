@@ -1,6 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c1_tk_test
 
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
+import com.railly_linker.springboot_mvc_project_template.util_objects.NaverSmsUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -57,5 +58,26 @@ class C1TkTestService(
         )
 
         httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
+    ////
+    fun api3(httpServletResponse: HttpServletResponse, inputVo: C1TkTestController.Api3InputVo) {
+        val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
+
+        // 국가 코드 (ex : 82)
+        val countryCode = phoneNumberSplit[0]
+
+        // 전화번호 (ex : "01000000000")
+        val phoneNumber = (phoneNumberSplit[1].replace("-", "")).replace(" ", "")
+
+        // SMS 전송
+        NaverSmsUtilObject.sendSms(
+            NaverSmsUtilObject.SendSmsInputVo(
+                countryCode,
+                phoneNumber,
+                inputVo.smsMessage
+            )
+        )
     }
 }
