@@ -598,39 +598,39 @@ class C7TkAuthController(
     )
 
 
-//    ////
-//    @Operation(
-//        summary = "N8 : 닉네임 수정하기 <>",
-//        description = "닉네임 수정하기\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1. 중복된 닉네임 : 중복검사를 했음에도 그 사이에 동일 닉네임이 등록되었을 수 있음",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PatchMapping("/my/profile/nickname")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api8(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @Parameter(name = "nickName", description = "닉네임", example = "홍길동")
-//        @RequestParam(value = "nickName")
-//        nickName: String
-//    ) {
-//        service.api8(
-//            httpServletResponse,
-//            authorization!!,
-//            nickName
-//        )
-//    }
-//
+    ////
+    @Operation(
+        summary = "N12 : 닉네임 수정하기 <>",
+        description = "닉네임 수정하기\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1. 중복된 닉네임 : 중복검사를 했음에도 그 사이에 동일 닉네임이 등록되었을 수 있음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PatchMapping("/my/profile/nickname")
+    @PreAuthorize("isAuthenticated()")
+    fun api12(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "nickName", description = "닉네임", example = "홍길동")
+        @RequestParam(value = "nickName")
+        nickName: String
+    ) {
+        service.api12(
+            httpServletResponse,
+            authorization!!,
+            nickName
+        )
+    }
+
 //    ////
 //    @Operation(
 //        summary = "N9 : 이메일 회원가입 본인 인증 이메일 발송",

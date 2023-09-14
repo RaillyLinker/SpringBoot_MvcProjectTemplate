@@ -1,8 +1,10 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c7_tk_auth
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
+import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
 import com.railly_linker.springboot_mvc_project_template.configurations.SecurityConfig
+import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RefreshTokenInfoRepository
@@ -1068,26 +1070,27 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api8(httpServletResponse: HttpServletResponse, authorization: String, nickName: String) {
-//        val memberUid = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val trimmedNickname = nickName.trim()
-//        val userInfo = database1MemberMemberDataRepository.findById(memberUid.toLong()).get()
-//
-//        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(trimmedNickname, true)) {
-//            httpServletResponse.status = 500
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return
-//        }
-//
-//        userInfo.nickName = trimmedNickname
-//        database1MemberMemberDataRepository.save(
-//            userInfo
-//        )
-//    }
-//
-//
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api12(httpServletResponse: HttpServletResponse, authorization: String, nickName: String) {
+        val memberUid = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val userInfo = database1MemberMemberDataRepository.findById(memberUid.toLong()).get()
+
+        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(nickName, true)) {
+            httpServletResponse.status = 500
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        userInfo.nickName = nickName
+        database1MemberMemberDataRepository.save(
+            userInfo
+        )
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
 //    ////
 //    fun api9(
 //        httpServletResponse: HttpServletResponse,
