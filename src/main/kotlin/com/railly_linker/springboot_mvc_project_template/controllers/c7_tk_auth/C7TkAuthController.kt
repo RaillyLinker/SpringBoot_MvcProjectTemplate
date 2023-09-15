@@ -1434,6 +1434,38 @@ class C7TkAuthController(
     )
 
 
+    ////
+    @Operation(
+        summary = "N30 : 내 전화번호 리스트 가져오기 <>",
+        description = "내 전화번호 리스트 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/my-phone-numbers")
+    @PreAuthorize("isAuthenticated()")
+    fun api30(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api30OutputVo? {
+        return service.api30(httpServletResponse, authorization!!)
+    }
+
+    data class Api30OutputVo(
+        @Schema(description = "내가 등록한 전화번호 리스트", required = true, example = "true")
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<String>
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N28 : 이메일 추가하기 본인 인증 이메일 발송 <>",
@@ -1605,38 +1637,6 @@ class C7TkAuthController(
 //        @Schema(description = "제거할 이메일", required = true, example = "test@gmail.com")
 //        @JsonProperty("email")
 //        val email: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N32 : 내 전화번호 리스트 가져오기 <>",
-//        description = "내 전화번호 리스트 가져오기\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/my-phone-numbers")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api32(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?
-//    ): Api32OutputVo? {
-//        return service.api32(httpServletResponse, authorization!!)
-//    }
-//
-//    data class Api32OutputVo(
-//        @Schema(description = "내가 등록한 전화번호 리스트", required = true, example = "true")
-//        @JsonProperty("myPhoneNumberList")
-//        val myPhoneNumberList: List<String>
 //    )
 //
 //

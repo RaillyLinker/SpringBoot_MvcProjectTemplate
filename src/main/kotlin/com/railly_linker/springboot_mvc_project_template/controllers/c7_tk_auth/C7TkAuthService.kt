@@ -2271,6 +2271,7 @@ class C7TkAuthService(
             )
         }
 
+        httpServletResponse.setHeader("api-result-code", "ok")
         return C7TkAuthController.Api28OutputVo(
             emailList,
             phoneNumberList,
@@ -2292,8 +2293,28 @@ class C7TkAuthService(
             )
         }
 
+        httpServletResponse.setHeader("api-result-code", "ok")
         return C7TkAuthController.Api29OutputVo(
             emailList
+        )
+    }
+
+
+    ////
+    fun api30(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api30OutputVo {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val phoneEntityList = database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val phoneNumberList = ArrayList<String>()
+        for (emailEntity in phoneEntityList) {
+            phoneNumberList.add(
+                emailEntity.phoneNumber
+            )
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api30OutputVo(
+            phoneNumberList
         )
     }
 
@@ -2528,24 +2549,6 @@ class C7TkAuthService(
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
-//    }
-//
-//
-//    ////
-//    fun api32(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api32OutputVo {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        val phoneEntityList = database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//        val phoneNumberList = ArrayList<String>()
-//        for (emailEntity in phoneEntityList) {
-//            phoneNumberList.add(
-//                emailEntity.phoneNumber
-//            )
-//        }
-//
-//        return C7TkAuthController.Api32OutputVo(
-//            phoneNumberList
-//        )
 //    }
 //
 //
