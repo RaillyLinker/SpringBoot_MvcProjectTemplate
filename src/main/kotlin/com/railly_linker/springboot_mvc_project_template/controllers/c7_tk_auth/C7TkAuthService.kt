@@ -1828,12 +1828,6 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    @CustomRedisTransactional(
-        [
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
-        ]
-    )
     fun api21(
         httpServletResponse: HttpServletResponse,
         authorization: String,
@@ -1881,20 +1875,6 @@ class C7TkAuthService(
             member.accountPassword = passwordEncoder.encode(inputVo.newPassword) // 비밀번호는 암호화
         }
         database1MemberMemberDataRepository.save(member)
-
-        // loginAccessToken 의 Iterable 가져오기
-        val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
-
-        // 비밀번호가 바뀌었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-        for (loginAccessToken in loginAccessTokenIterable) {
-            if (loginAccessToken.value.memberUid == memberUid) {
-                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-                redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-
-                // 로그인 가능 액세스 토큰 정보 삭제
-                redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-            }
-        }
 
         httpServletResponse.setHeader("api-result-code", "ok")
     }
@@ -2007,9 +1987,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordEmailVerification.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordEmailVerification.TABLE_NAME}"
         ]
     )
     fun api24(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api24InputVo) {
@@ -2071,20 +2049,6 @@ class C7TkAuthService(
                 null,
                 null
             )
-
-            // loginAccessToken 의 Iterable 가져오기
-            val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
-
-            // 비밀번호가 변경되었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-            for (loginAccessToken in loginAccessTokenIterable) {
-                if (loginAccessToken.value.memberUid == member.uid.toString()) {
-                    // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-                    redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-
-                    // 로그인 가능 액세스 토큰 정보 삭제
-                    redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                }
-            }
 
             // 확인 완료된 검증 요청 정보 삭제
             redis1FindPasswordEmailVerificationRepository.deleteKeyValue(inputVo.email)
@@ -2203,9 +2167,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordPhoneNumberVerification.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordPhoneNumberVerification.TABLE_NAME}"
         ]
     )
     fun api27(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api27InputVo) {
@@ -2267,20 +2229,6 @@ class C7TkAuthService(
                 )
             )
 
-            // loginAccessToken 의 Iterable 가져오기
-            val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
-
-            // 비밀번호가 변경되었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-            for (loginAccessToken in loginAccessTokenIterable) {
-                if (loginAccessToken.value.memberUid == member.uid.toString()) {
-                    // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-                    redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-
-                    // 로그인 가능 액세스 토큰 정보 삭제
-                    redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                }
-            }
-
             // 확인 완료된 검증 요청 정보 삭제
             redis1FindPasswordPhoneNumberVerificationRepository.deleteKeyValue(inputVo.phoneNumber)
 
@@ -2289,64 +2237,67 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    fun api26(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api26OutputVo {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        val emailEntityList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//        val emailList = ArrayList<String>()
-//        for (emailEntity in emailEntityList) {
-//            emailList.add(
-//                emailEntity.emailAddress
-//            )
-//        }
-//
-//        val phoneEntityList = database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//        val phoneNumberList = ArrayList<String>()
-//        for (emailEntity in phoneEntityList) {
-//            phoneNumberList.add(
-//                emailEntity.phoneNumber
-//            )
-//        }
-//
-//        val oAuth2EntityList =
-//            database1MemberMemberSnsOauth2Repository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//        val myOAuth2List = ArrayList<C7TkAuthController.Api26OutputVo.OAuth2Info>()
-//        for (oAuth2Entity in oAuth2EntityList) {
-//            myOAuth2List.add(
-//                C7TkAuthController.Api26OutputVo.OAuth2Info(
-//                    oAuth2Entity.oauth2TypeCode,
-//                    oAuth2Entity.oauth2Id
-//                )
-//            )
-//        }
-//
-//        return C7TkAuthController.Api26OutputVo(
-//            emailList,
-//            phoneNumberList,
-//            myOAuth2List
-//        )
-//    }
-//
-//
-//    ////
-//    fun api27(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api27OutputVo {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        val emailEntityList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//        val emailList = ArrayList<String>()
-//        for (emailEntity in emailEntityList) {
-//            emailList.add(
-//                emailEntity.emailAddress
-//            )
-//        }
-//
-//        return C7TkAuthController.Api27OutputVo(
-//            emailList
-//        )
-//    }
-//
-//
+    ////
+    fun api28(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api28OutputVo {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val emailEntityList =
+            database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val emailList = ArrayList<String>()
+        for (emailEntity in emailEntityList) {
+            emailList.add(
+                emailEntity.emailAddress
+            )
+        }
+
+        val phoneEntityList =
+            database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val phoneNumberList = ArrayList<String>()
+        for (emailEntity in phoneEntityList) {
+            phoneNumberList.add(
+                emailEntity.phoneNumber
+            )
+        }
+
+        val oAuth2EntityList =
+            database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val myOAuth2List = ArrayList<C7TkAuthController.Api28OutputVo.OAuth2Info>()
+        for (oAuth2Entity in oAuth2EntityList) {
+            myOAuth2List.add(
+                C7TkAuthController.Api28OutputVo.OAuth2Info(
+                    oAuth2Entity.oauth2TypeCode.toInt(),
+                    oAuth2Entity.oauth2Id
+                )
+            )
+        }
+
+        return C7TkAuthController.Api28OutputVo(
+            emailList,
+            phoneNumberList,
+            myOAuth2List
+        )
+    }
+
+
+    ////
+    fun api29(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api29OutputVo {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val emailEntityList =
+            database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val emailList = ArrayList<String>()
+        for (emailEntity in emailEntityList) {
+            emailList.add(
+                emailEntity.emailAddress
+            )
+        }
+
+        return C7TkAuthController.Api29OutputVo(
+            emailList
+        )
+    }
+
+
 //    ////
 //    fun api28(
 //        httpServletResponse: HttpServletResponse,

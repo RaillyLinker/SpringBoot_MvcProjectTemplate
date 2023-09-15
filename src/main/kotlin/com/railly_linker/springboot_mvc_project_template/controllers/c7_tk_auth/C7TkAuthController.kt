@@ -1060,7 +1060,7 @@ class C7TkAuthController(
     @Operation(
         summary = "N21. 계정 비밀번호 변경 <>",
         description = "계정 비밀번호 변경\n\n" +
-                "변경 완료된 후엔 기존 모든 액세스 토큰이 비활성화됨\n\n" +
+                "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
                 "1 : 탈퇴된 회원\n\n" +
@@ -1185,6 +1185,7 @@ class C7TkAuthController(
     @Operation(
         summary = "N24. 이메일 비밀번호 찾기 완료",
         description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 이메일로 발송\n\n" +
+                "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
                 "1 : 탈퇴된 회원\n\n" +
@@ -1309,6 +1310,7 @@ class C7TkAuthController(
     @Operation(
         summary = "N27. 전화번호 비밀번호 찾기 완료",
         description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 전화번호로 발송\n\n" +
+                "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
                 "1 : 탈퇴된 회원\n\n" +
@@ -1346,92 +1348,92 @@ class C7TkAuthController(
     )
 
 
-//    ////
-//    @Operation(
-//        summary = "N26 : 내 로그인 관련 정보 리스트 가져오기 <>",
-//        description = "내 계정에 연결된 로그인 수단 리스트 가져오기\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/my-auth-list")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api26(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?
-//    ): Api26OutputVo? {
-//        return service.api26(httpServletResponse, authorization!!)
-//    }
-//
-//    data class Api26OutputVo(
-//        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-//        @JsonProperty("myEmailList")
-//        val myEmailList: List<String>,
-//
-//        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-//        @JsonProperty("myPhoneNumberList")
-//        val myPhoneNumberList: List<String>,
-//
-//        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
-//        @JsonProperty("myOAuth2List")
-//        val myOAuth2List: List<OAuth2Info>
-//    ) {
-//        @Schema(description = "OAuth2 정보")
-//        data class OAuth2Info(
-//            @Schema(
-//                description = "OAuth2 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
-//                required = true,
-//                example = "1"
-//            )
-//            @JsonProperty("oauth2Type")
-//            val oauth2Type: Int,
-//            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
-//            @JsonProperty("oauth2Id")
-//            val oauth2Id: String
-//        )
-//    }
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N27 : 내 이메일 리스트 가져오기 <>",
-//        description = "내 이메일 리스트 가져오기\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/my-email-addresses")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api27(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?
-//    ): Api27OutputVo? {
-//        return service.api27(httpServletResponse, authorization!!)
-//    }
-//
-//    data class Api27OutputVo(
-//        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-//        @JsonProperty("myEmailList")
-//        val myEmailList: List<String>
-//    )
-//
-//
+    ////
+    @Operation(
+        summary = "N28. 내 로그인 관련 정보 리스트 가져오기 <>",
+        description = "내 계정에 연결된 로그인 수단 리스트 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/my-auth-list")
+    @PreAuthorize("isAuthenticated()")
+    fun api26(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api28OutputVo? {
+        return service.api28(httpServletResponse, authorization!!)
+    }
+
+    data class Api28OutputVo(
+        @Schema(description = "내가 등록한 이메일 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<String>,
+
+        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<String>,
+
+        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
+        @JsonProperty("myOAuth2List")
+        val myOAuth2List: List<OAuth2Info>
+    ) {
+        @Schema(description = "OAuth2 정보")
+        data class OAuth2Info(
+            @Schema(
+                description = "OAuth2 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
+                required = true,
+                example = "1"
+            )
+            @JsonProperty("oauth2Type")
+            val oauth2Type: Int,
+            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
+            @JsonProperty("oauth2Id")
+            val oauth2Id: String
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N29. 내 이메일 리스트 가져오기 <>",
+        description = "내 이메일 리스트 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/my-email-addresses")
+    @PreAuthorize("isAuthenticated()")
+    fun api29(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api29OutputVo? {
+        return service.api29(httpServletResponse, authorization!!)
+    }
+
+    data class Api29OutputVo(
+        @Schema(description = "내가 등록한 이메일 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<String>
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N28 : 이메일 추가하기 본인 인증 이메일 발송 <>",
