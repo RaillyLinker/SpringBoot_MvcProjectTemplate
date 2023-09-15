@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
+// todo : 전화 문자 관련 API 테스트 및 OAuth2 관련 API 구현 및 테스트
 @Tag(name = "/tk/auth APIs", description = "C7. 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
@@ -1512,99 +1513,97 @@ class C7TkAuthController(
     }
 
 
-//    ////
-//    @Operation(
-//        summary = "N28 : 이메일 추가하기 본인 인증 이메일 발송 <>",
-//        description = "이메일 추가하기 본인 이메일 확인 메일 발송\n\n" +
-//                "발송 후 10분 후 만료됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 이미 사용중인 이메일",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/add-email-verification")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api28(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api28InputVo
-//    ): Api28OutputVo? {
-//        return service.api28(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api28InputVo(
-//        @Schema(description = "수신 이메일", required = true, example = "test@gmail.com")
-//        @JsonProperty("email")
-//        val email: String
-//    )
-//
-//    data class Api28OutputVo(
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N29 : 이메일 추가하기 본인 확인 이메일에서 받은 코드 검증하기 <>",
-//        description = "이메일 추가하기 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
-//                "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/add-email-verification-check")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api29(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
-//        @RequestParam("email")
-//        email: String,
-//        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
-//        @RequestParam("verificationCode")
-//        verificationCode: String
-//    ): Api29OutputVo? {
-//        return service.api29(httpServletResponse, email, verificationCode, authorization!!)
-//    }
-//
-//    data class Api29OutputVo(
-//        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
-//        @JsonProperty("isVerified")
-//        val isVerified: Boolean,
-//        @Schema(
-//            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = false,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String?
-//    )
-//
-//
+    ////
+    @Operation(
+        summary = "N32. 이메일 추가하기 본인 인증 이메일 발송 <>",
+        description = "이메일 추가하기 본인 이메일 확인 메일 발송\n\n" +
+                "발송 후 10분 후 만료됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 이미 사용중인 이메일",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/add-email-verification")
+    @PreAuthorize("isAuthenticated()")
+    fun api32(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api32InputVo
+    ): Api32OutputVo? {
+        return service.api32(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api32InputVo(
+        @Schema(description = "수신 이메일", required = true, example = "test@gmail.com")
+        @JsonProperty("email")
+        val email: String
+    )
+
+    data class Api32OutputVo(
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N33. 이메일 추가하기 본인 확인 이메일에서 받은 코드 검증하기 <>",
+        description = "이메일 추가하기 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
+                "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 검증 코드가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/add-email-verification-check")
+    @PreAuthorize("isAuthenticated()")
+    fun api33(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
+        @RequestParam("email")
+        email: String,
+        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
+        @RequestParam("verificationCode")
+        verificationCode: String
+    ): Api33OutputVo? {
+        return service.api33(httpServletResponse, email, verificationCode, authorization!!)
+    }
+
+    data class Api33OutputVo(
+        @Schema(
+            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = false,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String?
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N30 : 이메일 추가하기 <>",
