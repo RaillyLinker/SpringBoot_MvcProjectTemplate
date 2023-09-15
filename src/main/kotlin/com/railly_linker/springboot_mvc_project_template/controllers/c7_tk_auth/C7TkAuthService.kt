@@ -2455,135 +2455,132 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    fun api30(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api30InputVo,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        // 코드 체크
-//        val emailVerification =
-//            RedisUtilObject.getValue<AddEmailVerification>(redis1RedisTemplate, "${memberUid}_${inputVo.email}")
-//
-//        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.setHeader("api-result-code", "2")
-//            return
-//        } else {
-//            val newVerificationInfo = emailVerification.value as AddEmailVerification
-//
-//            val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//                memberUid.toLong(),
-//                true
-//            )
-//
-//            if (member == null) {
-//                httpServletResponse.setHeader("api-result-code", "1")
-//                return
-//            }
-//
-//            val isDatabase1MemberUserExists =
-//                database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
-//                    inputVo.email,
-//                    true
-//                )
-//
-//            if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
-//                httpServletResponse.setHeader("api-result-code", "3")
-//                return
-//            }
-//
-//            // 입력 코드와 발급된 코드와의 매칭
-//            val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
-//
-//            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//                httpServletResponse.setHeader("api-result-code", "4")
-//                return
-//            }
-//
-//            // 이메일 추가
-//            database1MemberMemberEmailDataRepository.save(
-//                Database1_Member_MemberEmail(
-//                    memberUid.toLong(),
-//                    inputVo.email,
-//                    true
-//                )
-//            )
-//
-//            // 확인 완료된 검증 요청 정보 삭제
-//            RedisUtilObject.deleteValue<AddEmailVerification>(redis1RedisTemplate, "${memberUid}_${inputVo.email}")
-//
-//        }
-//    }
-//
-//
-//    ////
-//    fun api31(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api31InputVo,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val memberUidLong = memberUid.toLong()
-//
-//        // 내 계정에 등록된 모든 이메일 리스트 가져오기
-//        val myEmailList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        if (myEmailList.isEmpty()) {
-//            // 이메일 리스트가 비어있다면
-//            return
-//        }
-//
-//        // 지우려는 이메일 정보 인덱스 찾기
-//        val selectedEmailIdx = myEmailList.indexOfFirst {
-//            it.emailAddress == inputVo.email
-//        }
-//
-//        if (selectedEmailIdx == -1) {
-//            // 지우려는 이메일 정보가 없다면
-//            return
-//        }
-//
-//        val selectedEmailEntity = myEmailList[selectedEmailIdx]
-//
-//        val isOauth2Exists = database1MemberMemberSnsOauth2Repository.existsByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        // 지우려는 이메일 외에 로그인 방법이 존재하는지 확인
-//        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )!!
-//
-//        val isMemberPhoneExists = database1MemberMemberPhoneDataRepository.existsByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        if (isOauth2Exists || (member.accountPassword != null && (isMemberPhoneExists || myEmailList.size > 1))) {
-//            // 사용 가능한 계정 로그인 정보가 존재
-//
-//            // 이메일 지우기
-//            selectedEmailEntity.rowActivate = false
-//            database1MemberMemberEmailDataRepository.save(
-//                selectedEmailEntity
-//            )
-//
-//            return
-//        }
-//
-//        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
-//        httpServletResponse.setHeader("api-result-code", "1")
-//        return
-//    }
-//
-//
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_AddEmailVerification.TABLE_NAME}"
+        ]
+    )
+    fun api34(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api34InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        // 코드 체크
+        val emailVerification =
+            redis1AddEmailVerificationRepository.findKeyValue("${memberUid}_${inputVo.email}")
+
+        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        } else {
+            val isDatabase1MemberUserExists =
+                database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
+                    inputVo.email,
+                    true
+                )
+
+            if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
+                httpServletResponse.setHeader("api-result-code", "2")
+                return
+            }
+
+            // 입력 코드와 발급된 코드와의 매칭
+            val codeMatched = emailVerification.value.secret == inputVo.verificationCode
+
+            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
+                httpServletResponse.setHeader("api-result-code", "3")
+                return
+            }
+
+            // 이메일 추가
+            database1MemberMemberEmailDataRepository.save(
+                Database1_Member_MemberEmailData(
+                    memberUid.toLong(),
+                    inputVo.email,
+                    true
+                )
+            )
+
+            // 확인 완료된 검증 요청 정보 삭제
+            redis1AddEmailVerificationRepository.deleteKeyValue("${memberUid}_${inputVo.email}")
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+        }
+    }
+
+
+    ////
+    fun api35(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api35InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val memberUidLong = memberUid.toLong()
+
+        // 내 계정에 등록된 모든 이메일 리스트 가져오기
+        val myEmailList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        if (myEmailList.isEmpty()) {
+            // 이메일 리스트가 비어있다면
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        }
+
+        // 지우려는 이메일 정보 인덱스 찾기
+        val selectedEmailIdx = myEmailList.indexOfFirst {
+            it.emailAddress == inputVo.email
+        }
+
+        if (selectedEmailIdx == -1) {
+            // 지우려는 이메일 정보가 없다면
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        }
+
+        val isOauth2Exists = database1MemberMemberOauth2LoginDataRepository.existsByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        // 지우려는 이메일 외에 로그인 방법이 존재하는지 확인
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            memberUidLong,
+            true
+        )!!
+
+        val isMemberPhoneExists = database1MemberMemberPhoneDataRepository.existsByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        if (isOauth2Exists || (member.accountPassword != null && (isMemberPhoneExists || myEmailList.size > 1))) {
+            // 사용 가능한 계정 로그인 정보가 존재
+            val selectedEmailEntity = myEmailList[selectedEmailIdx]
+
+            // 이메일 지우기
+            selectedEmailEntity.rowActivate = false
+            database1MemberMemberEmailDataRepository.save(
+                selectedEmailEntity
+            )
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        }
+
+        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
+        httpServletResponse.setHeader("api-result-code", "1")
+        return
+    }
+
+
 //    ////
 //    fun api33(
 //        httpServletResponse: HttpServletResponse,

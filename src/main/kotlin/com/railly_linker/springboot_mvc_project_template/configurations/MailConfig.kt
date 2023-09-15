@@ -11,8 +11,8 @@ class MailConfig {
         // !!!SMTP 설정!!
         const val SMTP_HOST = "smtp.gmail.com"
         const val SMTP_PORT = 587
-        const val MAIL_SENDER_NAME = "contact@petlogon.com"
-        const val MAIL_SENDER_PASSWORD = "focweigkugmbctcq"
+        const val MAIL_SENDER_NAME = "TODO"
+        const val MAIL_SENDER_PASSWORD = "TODO"
         const val TIME_OUT_MILLIS = 1000 * 10
     }
 

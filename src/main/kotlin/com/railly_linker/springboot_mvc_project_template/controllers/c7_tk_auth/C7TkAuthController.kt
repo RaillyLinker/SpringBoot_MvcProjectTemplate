@@ -1604,87 +1604,86 @@ class C7TkAuthController(
     )
 
 
-//    ////
-//    @Operation(
-//        summary = "N30 : 이메일 추가하기 <>",
-//        description = "내 계정에 이메일 추가\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 탈퇴된 회원\n\n" +
-//                "2 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 이미 사용중인 이메일\n\n" +
-//                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/my-new-email")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api30(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api30InputVo
-//    ) {
-//        service.api30(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api30InputVo(
-//        @Schema(description = "추가할 이메일", required = true, example = "test@gmail.com")
-//        @JsonProperty("email")
-//        val email: String,
-//
-//        @Schema(
-//            description = "이메일 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N31 : 내 이메일 제거하기 <>",
-//        description = "내 계정에서 이메일 제거\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @DeleteMapping("/my-email")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api31(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api31InputVo
-//    ) {
-//        service.api31(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api31InputVo(
-//        @Schema(description = "제거할 이메일", required = true, example = "test@gmail.com")
-//        @JsonProperty("email")
-//        val email: String
-//    )
-//
-//
+    ////
+    @Operation(
+        summary = "N34. 이메일 추가하기 <>",
+        description = "내 계정에 이메일 추가\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 이미 사용중인 이메일\n\n" +
+                "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/my-new-email")
+    @PreAuthorize("isAuthenticated()")
+    fun api34(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api34InputVo
+    ) {
+        service.api34(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api34InputVo(
+        @Schema(description = "추가할 이메일", required = true, example = "test@gmail.com")
+        @JsonProperty("email")
+        val email: String,
+
+        @Schema(
+            description = "이메일 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N35. 내 이메일 제거하기 <>",
+        description = "내 계정에서 이메일 제거\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @DeleteMapping("/my-email")
+    @PreAuthorize("isAuthenticated()")
+    fun api35(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api35InputVo
+    ) {
+        service.api35(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api35InputVo(
+        @Schema(description = "제거할 이메일", required = true, example = "test@gmail.com")
+        @JsonProperty("email")
+        val email: String
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N33 : 전화번호 추가하기 본인 인증 문자 발송 <>",
