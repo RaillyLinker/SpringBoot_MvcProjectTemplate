@@ -1436,7 +1436,7 @@ class C7TkAuthController(
 
     ////
     @Operation(
-        summary = "N30 : 내 전화번호 리스트 가져오기 <>",
+        summary = "N30. 내 전화번호 리스트 가져오기 <>",
         description = "내 전화번호 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작",
@@ -1464,6 +1464,52 @@ class C7TkAuthController(
         @JsonProperty("myPhoneNumberList")
         val myPhoneNumberList: List<String>
     )
+
+
+    ////
+    @Operation(
+        summary = "N31. 내 OAuth2 로그인 리스트 가져오기 <>",
+        description = "내 OAuth2 로그인 리스트 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/my-oauth2-list")
+    @PreAuthorize("isAuthenticated()")
+    fun api31(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api31OutputVo? {
+        return service.api31(httpServletResponse, authorization!!)
+    }
+
+    data class Api31OutputVo(
+        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true, example = "true")
+        @JsonProperty("myOAuth2List")
+        val myOAuth2List: List<OAuth2Info>
+    ) {
+        @Schema(description = "OAuth2 정보")
+        data class OAuth2Info(
+            @Schema(
+                description = "OAuth2 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
+                required = true,
+                example = "1"
+            )
+            @JsonProperty("oauth2Type")
+            val oauth2Type: Int,
+            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
+            @JsonProperty("oauth2Id")
+            val oauth2Id: String
+        )
+    }
 
 
 //    ////
@@ -1811,52 +1857,6 @@ class C7TkAuthController(
 //        @JsonProperty("phoneNumber")
 //        val phoneNumber: String
 //    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N37 : 내 OAuth2 로그인 리스트 가져오기 <>",
-//        description = "내 OAuth2 로그인 리스트 가져오기\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/my-oauth2-list")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api37(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?
-//    ): Api37OutputVo? {
-//        return service.api37(httpServletResponse, authorization!!)
-//    }
-//
-//    data class Api37OutputVo(
-//        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true, example = "true")
-//        @JsonProperty("myOAuth2List")
-//        val myOAuth2List: List<OAuth2Info>
-//    ) {
-//        @Schema(description = "OAuth2 정보")
-//        data class OAuth2Info(
-//            @Schema(
-//                description = "OAuth2 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
-//                required = true,
-//                example = "1"
-//            )
-//            @JsonProperty("oauth2Type")
-//            val oauth2Type: Int,
-//            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
-//            @JsonProperty("oauth2Id")
-//            val oauth2Id: String
-//        )
-//    }
 //
 //
 //    ////

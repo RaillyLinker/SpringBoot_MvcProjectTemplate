@@ -2304,7 +2304,8 @@ class C7TkAuthService(
     fun api30(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api30OutputVo {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
-        val phoneEntityList = database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val phoneEntityList =
+            database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
         val phoneNumberList = ArrayList<String>()
         for (emailEntity in phoneEntityList) {
             phoneNumberList.add(
@@ -2315,6 +2316,29 @@ class C7TkAuthService(
         httpServletResponse.setHeader("api-result-code", "ok")
         return C7TkAuthController.Api30OutputVo(
             phoneNumberList
+        )
+    }
+
+
+    ////
+    fun api31(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api31OutputVo {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val oAuth2EntityList =
+            database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
+        val myOAuth2List = ArrayList<C7TkAuthController.Api31OutputVo.OAuth2Info>()
+        for (oAuth2Entity in oAuth2EntityList) {
+            myOAuth2List.add(
+                C7TkAuthController.Api31OutputVo.OAuth2Info(
+                    oAuth2Entity.oauth2TypeCode.toInt(),
+                    oAuth2Entity.oauth2Id
+                )
+            )
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api31OutputVo(
+            myOAuth2List
         )
     }
 
@@ -2788,28 +2812,6 @@ class C7TkAuthService(
 //        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
-//    }
-//
-//
-//    ////
-//    fun api37(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api37OutputVo {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        val oAuth2EntityList =
-//            database1MemberMemberSnsOauth2Repository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//        val myOAuth2List = ArrayList<C7TkAuthController.Api37OutputVo.OAuth2Info>()
-//        for (oAuth2Entity in oAuth2EntityList) {
-//            myOAuth2List.add(
-//                C7TkAuthController.Api37OutputVo.OAuth2Info(
-//                    oAuth2Entity.oauth2TypeCode,
-//                    oAuth2Entity.oauth2Id
-//                )
-//            )
-//        }
-//
-//        return C7TkAuthController.Api37OutputVo(
-//            myOAuth2List
-//        )
 //    }
 //
 //
