@@ -775,156 +775,155 @@ class C7TkAuthController(
         val verificationCode: String
     )
 
-//    ////
+    ////
+    @Operation(
+        summary = "N16. 전화번호 회원가입 본인 인증 문자 발송",
+        description = "전화번호 회원가입시 본인 전화번호 확인 문자 발송\n\n" +
+                "발송 후 10분 후 만료됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 기존 회원 존재",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-phone-number-verification")
+    fun api16(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api16InputVo
+    ): Api16OutputVo? {
+        return service.api16(httpServletResponse, inputVo)
+    }
+
+    data class Api16InputVo(
+        @Schema(description = "인증 문자 수신 전화번호(국가번호 + 전화번호)", required = true, example = "82)010-0000-0000")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String
+    )
+
+    data class Api16OutputVo(
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N17. 전화번호 회원가입 본인 확인 문자에서 받은 코드 검증하기",
+        description = "전화번호 회원가입시 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
+                "첫 인증 완료시 SMS 회원가입까지의 만료시간은 10분\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : verificationCode 가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/register-with-phone-number-verification-check")
+    fun api17(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "phoneNumber", description = "인증 문자 수신 전화번호(국가번호 + 전화번호)", example = "82)010-0000-0000")
+        @RequestParam("phoneNumber")
+        phoneNumber: String,
+        @Parameter(name = "verificationCode", description = "확인 문자에 전송된 코드", example = "123456")
+        @RequestParam("verificationCode")
+        verificationCode: String
+    ): Api17OutputVo? {
+        return service.api17(httpServletResponse, phoneNumber, verificationCode)
+    }
+
+    data class Api17OutputVo(
+        @Schema(
+            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = false,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String?
+    )
+
+
+    ////
+    @Operation(
+        summary = "N18. 전화번호 회원가입",
+        description = "전화번호 회원가입 처리\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 기존 회원 존재\n\n" +
+                "2 : 닉네임 중복\n\n" +
+                "3 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-phone-number")
+    fun api18(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api18InputVo
+    ) {
+        service.api18(httpServletResponse, inputVo)
+    }
+
+    data class Api18InputVo(
+        @Schema(
+            description = "아이디 - 전화번호(국가번호 + 전화번호)",
+            required = true,
+            example = "82)010-0000-0000"
+        )
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String,
+
+        @Schema(
+            description = "사용할 비밀번호",
+            required = true,
+            example = "kkdli!!"
+        )
+        @JsonProperty("password")
+        val password: String,
+
+        @Schema(
+            description = "닉네임",
+            required = true,
+            example = "홍길동"
+        )
+        @JsonProperty("nickName")
+        val nickName: String,
+
+        @Schema(
+            description = "문자 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
+
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N12 : 전화번호 회원가입 본인 인증 문자 발송",
-//        description = "전화번호 회원가입시 본인 전화번호 확인 문자 발송\n\n" +
-//                "발송 후 10분 후 만료됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 기존 회원 존재",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/register-with-phone-number-verification")
-//    fun api12(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api12InputVo
-//    ): Api12OutputVo? {
-//        return service.api12(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api12InputVo(
-//        @Schema(description = "인증 문자 수신 전화번호(국가번호 + 전화번호)", required = true, example = "82)010-0000-0000")
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String
-//    )
-//
-//    data class Api12OutputVo(
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N13 : 전화번호 회원가입 본인 확인 문자에서 받은 코드 검증하기",
-//        description = "전화번호 회원가입시 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
-//                "첫 인증 완료시 SMS 회원가입까지의 만료시간은 10분\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/register-with-phone-number-verification-check")
-//    fun api13(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(name = "phoneNumber", description = "인증 문자 수신 전화번호(국가번호 + 전화번호)", example = "82)010-0000-0000")
-//        @RequestParam("phoneNumber")
-//        phoneNumber: String,
-//        @Parameter(name = "verificationCode", description = "확인 문자에 전송된 코드", example = "123456")
-//        @RequestParam("verificationCode")
-//        verificationCode: String
-//    ): Api13OutputVo? {
-//        return service.api13(httpServletResponse, phoneNumber, verificationCode)
-//    }
-//
-//    data class Api13OutputVo(
-//        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
-//        @JsonProperty("isVerified")
-//        val isVerified: Boolean,
-//        @Schema(
-//            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = false,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String?
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N14 : 전화번호 회원가입",
-//        description = "전화번호 회원가입 처리\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 기존 회원 존재\n\n" +
-//                "2 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 닉네임 중복\n\n" +
-//                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/register-with-phone-number")
-//    fun api14(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api14InputVo
-//    ) {
-//        service.api14(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api14InputVo(
-//        @Schema(
-//            description = "아이디 - 전화번호(국가번호 + 전화번호)",
-//            required = true,
-//            example = "82)010-0000-0000"
-//        )
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String,
-//
-//        @Schema(
-//            description = "사용할 비밀번호",
-//            required = true,
-//            example = "kkdli!!"
-//        )
-//        @JsonProperty("password")
-//        val password: String,
-//
-//        @Schema(
-//            description = "닉네임",
-//            required = true,
-//            example = "홍길동"
-//        )
-//        @JsonProperty("nickName")
-//        val nickName: String,
-//
-//        @Schema(
-//            description = "문자 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N16 : OAuth2 토큰으로 회원가입 검증",
+//        summary = "N19. OAuth2 토큰으로 회원가입 검증",
 //        description = "OAuth2 토큰으로 회원가입 검증\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -938,16 +937,16 @@ class C7TkAuthController(
 //        ]
 //    )
 //    @PostMapping("/register-with-oauth2-token-verification")
-//    fun api16(
+//    fun api19(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @RequestBody
-//        inputVo: Api16InputVo
-//    ): Api16OutputVo? {
-//        return service.api16(httpServletResponse, inputVo)
+//        inputVo: Api19InputVo
+//    ): Api19OutputVo? {
+//        return service.api19(httpServletResponse, inputVo)
 //    }
 //
-//    data class Api16InputVo(
+//    data class Api19InputVo(
 //        @Schema(
 //            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : APPLE, 3 : NAVER, 4 : KAKAO)",
 //            required = true,
@@ -967,7 +966,7 @@ class C7TkAuthController(
 //        val oauth2Secret: String
 //    )
 //
-//    data class Api16OutputVo(
+//    data class Api19OutputVo(
 //        @Schema(
 //            description = "OAuth2 검증에 사용할 코드",
 //            required = true,
@@ -992,11 +991,12 @@ class C7TkAuthController(
 //        @JsonProperty("expireWhen")
 //        val expireWhen: String
 //    )
-//
-//
-//    ////
+
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N17 : OAuth2 회원가입",
+//        summary = "N20. OAuth2 회원가입",
 //        description = "OAuth2 회원가입 처리\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -1012,16 +1012,16 @@ class C7TkAuthController(
 //        ]
 //    )
 //    @PostMapping("/register-with-oauth2")
-//    fun api17(
+//    fun api20(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @RequestBody
-//        inputVo: Api17InputVo
+//        inputVo: Api20InputVo
 //    ) {
-//        service.api17(httpServletResponse, inputVo)
+//        service.api20(httpServletResponse, inputVo)
 //    }
 //
-//    data class Api17InputVo(
+//    data class Api20InputVo(
 //        @Schema(
 //            description = "가입에 사용할 OAuth2 고유 아이디",
 //            required = true,
@@ -1054,50 +1054,50 @@ class C7TkAuthController(
 //        @JsonProperty("verificationCode")
 //        val verificationCode: String
 //    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N19 : 계정 비밀번호 변경 <>",
-//        description = "계정 비밀번호 변경\n\n" +
-//                "변경 완료된 후엔 기존 모든 액세스 토큰이 비활성화됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 탈퇴된 회원\n\n" +
-//                "2 : 기존 비밀번호가 일치하지 않음\n\n" +
-//                "3 : 비번을 null 로 만들려고 할 때 account 외의 OAuth2 인증이 없기에 비번 제거 불가\n\n",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PutMapping("/change-account-password")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api19(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api19InputVo
-//    ) {
-//        service.api19(httpServletResponse, authorization!!, inputVo)
-//    }
-//
-//    data class Api19InputVo(
-//        @Schema(description = "기존 이메일 로그인용 비밀번호(기존 비밀번호가 없다면 null)", required = false, example = "kkdli!!")
-//        @JsonProperty("oldPassword")
-//        val oldPassword: String?,
-//
-//        @Schema(description = "새 이메일 로그인용 비밀번호(비밀번호를 없애려면 null)", required = false, example = "fddsd##")
-//        @JsonProperty("newPassword")
-//        val newPassword: String?
-//    )
-//
-//
+
+
+    ////
+    @Operation(
+        summary = "N21. 계정 비밀번호 변경 <>",
+        description = "계정 비밀번호 변경\n\n" +
+                "변경 완료된 후엔 기존 모든 액세스 토큰이 비활성화됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 탈퇴된 회원\n\n" +
+                "2 : 기존 비밀번호가 일치하지 않음\n\n" +
+                "3 : 비번을 null 로 만들려고 할 때 account 외의 OAuth2 인증이 없기에 비번 제거 불가\n\n",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PutMapping("/change-account-password")
+    @PreAuthorize("isAuthenticated()")
+    fun api21(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api21InputVo
+    ) {
+        service.api21(httpServletResponse, authorization!!, inputVo)
+    }
+
+    data class Api21InputVo(
+        @Schema(description = "기존 계정 로그인용 비밀번호(기존 비밀번호가 없다면 null)", required = false, example = "kkdli!!")
+        @JsonProperty("oldPassword")
+        val oldPassword: String?,
+
+        @Schema(description = "새 계정 로그인용 비밀번호(비밀번호를 없애려면 null)", required = false, example = "fddsd##")
+        @JsonProperty("newPassword")
+        val newPassword: String?
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N20 : 이메일 비밀번호 찾기 본인 인증 이메일 발송",

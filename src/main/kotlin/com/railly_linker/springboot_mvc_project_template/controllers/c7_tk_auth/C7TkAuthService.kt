@@ -8,17 +8,21 @@ import com.railly_linker.springboot_mvc_project_template.configurations.database
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberData
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberEmailData
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberPhoneData
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_MemberRoleData
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RefreshTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RegisterMembershipEmailVerificationRepository
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RegisterMembershipPhoneNumberVerificationRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_SignInAccessTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RefreshTokenInfo
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RegisterMembershipEmailVerification
+import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RegisterMembershipPhoneNumberVerification
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_SignInAccessTokenInfo
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
 import com.railly_linker.springboot_mvc_project_template.util_objects.AuthorizationTokenUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.JwtTokenUtilObject
+import com.railly_linker.springboot_mvc_project_template.util_objects.NaverSmsUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -49,7 +53,8 @@ class C7TkAuthService(
     // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
     private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository,
-    private val redis1RegisterMembershipEmailVerificationRepository: Redis1_RegisterMembershipEmailVerificationRepository
+    private val redis1RegisterMembershipEmailVerificationRepository: Redis1_RegisterMembershipEmailVerificationRepository,
+    private val redis1RegisterMembershipPhoneNumberVerificationRepository: Redis1_RegisterMembershipPhoneNumberVerificationRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -1114,10 +1119,10 @@ class C7TkAuthService(
         }.time)
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
-            "ProwdTemplate",
+            "Springboot Mvc Project Template",
             arrayOf(inputVo.email),
             null,
-            "ProwdTemplate 회원가입 - 본인 계정 확인용 이메일입니다.",
+            "Springboot Mvc Project Template 회원가입 - 본인 계정 확인용 이메일입니다.",
             "template_c7_n13/email_verification_email",
             hashMapOf(
                 Pair("verificationCode", verificationCode)
@@ -1260,190 +1265,201 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    fun api12(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api12InputVo
-//    ): C7TkAuthController.Api12OutputVo? {
-//        // 입력 데이터 검증
-//        val isDatabase1MemberUserExists =
-//            database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
-//                inputVo.phoneNumber,
-//                true
-//            )
-//        if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return null
-//        }
-//
-//        // 정보 저장 후 문자 발송
-//        val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//        RedisUtilObject.putValue<RegisterMembershipPhoneNumberVerification>(
-//            redis1RedisTemplate,
-//            inputVo.phoneNumber,
-//            RegisterMembershipPhoneNumberVerification(
-//                verificationCode
-//            ),
-//            signUpSmsVerificationTimeSecMbr * 1000
-//        )
-//
-//        val expireWhen = SimpleDateFormat(
-//            "yyyy-MM-dd HH:mm:ss.SSS"
-//        ).format(Calendar.getInstance().apply {
-//            this.time = Date()
-//            this.add(Calendar.SECOND, signUpSmsVerificationTimeSecMbr.toInt())
-//        }.time)
-//
-//        val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
-//
-//        // 국가 코드 (ex : 82)
-//        val countryCode = phoneNumberSplit[0]
-//
-//        // 전화번호 (ex : "01000000000")
-//        val phoneNumber = (phoneNumberSplit[1].replace("-", "")).replace(" ", "")
-//
-//        NaverSmsUtilObject.sendSms(
-//            NaverSmsUtilObject.SendSmsInputVo(
-//                countryCode,
-//                phoneNumber,
-//                "[ProwdTemplate - 회원가입] 인증번호 [${verificationCode}]"
-//            )
-//        )
-//
-//        return C7TkAuthController.Api12OutputVo(
-//            expireWhen
-//        )
-//    }
-//
-//
-//    ////
-//    fun api13(
-//        httpServletResponse: HttpServletResponse,
-//        phoneNumber: String,
-//        verificationCode: String
-//    ): C7TkAuthController.Api13OutputVo? {
-//        val smsVerification =
-//            RedisUtilObject.getValue<RegisterMembershipPhoneNumberVerification>(redis1RedisTemplate, phoneNumber)
-//
-//        if (smsVerification == null) { // 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return null
-//        }
-//
-//        val newVerificationInfo = smsVerification.value as RegisterMembershipPhoneNumberVerification
-//
-//        // 입력 코드와 발급된 코드와의 매칭
-//        val codeMatched = newVerificationInfo.secret == verificationCode
-//
-//        if (codeMatched) { // 코드 일치
-//            RedisUtilObject.putValue<RegisterMembershipPhoneNumberVerification>(
-//                redis1RedisTemplate,
-//                phoneNumber,
-//                newVerificationInfo,
-//                signUpSmsVerificationTimeUntilJoinSecMbr * 1000
-//            )
-//
-//            val expireWhen = SimpleDateFormat(
-//                "yyyy-MM-dd HH:mm:ss.SSS"
-//            ).format(Calendar.getInstance().apply {
-//                this.time = Date()
-//                this.add(Calendar.SECOND, signUpSmsVerificationTimeUntilJoinSecMbr.toInt())
-//            }.time)
-//
-//            return C7TkAuthController.Api13OutputVo(
-//                true,
-//                expireWhen
-//            )
-//        } else { // 코드 불일치
-//            return C7TkAuthController.Api13OutputVo(
-//                false,
-//                null
-//            )
-//        }
-//    }
-//
-//
-//    ////
-//    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api14(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api14InputVo) {
-//        val loginId: String = inputVo.phoneNumber // 검증 로직에서 정해지면 충족시키기
-//        // 기존 회원 확인
-//        val isUserExists =
-//            database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
-//                loginId,
-//                true
-//            )
-//        if (isUserExists) { // 기존 회원이 있을 때
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return
-//        }
-//
-//        // 본인 이메일 검증 여부 확인
-//        val emailVerification =
-//            RedisUtilObject.getValue<RegisterMembershipPhoneNumberVerification>(redis1RedisTemplate, loginId)
-//
-//        if (emailVerification == null) { // 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.setHeader("api-result-code", "2")
-//            return
-//        }
-//
-//        // 입력 코드와 발급된 코드와의 매칭
-//        val newVerificationInfo = (emailVerification.value as RegisterMembershipPhoneNumberVerification)
-//        val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
-//
-//        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.setHeader("api-result-code", "4")
-//            return
-//        }
-//
-//        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
-//
-//        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-//            httpServletResponse.setHeader("api-result-code", "3")
-//            return
-//        }
-//
-//        // 회원가입
-//        val database1MemberUser: Database1_Member_Member = database1MemberMemberDataRepository.save(
-//            Database1_Member_Member(
-//                inputVo.nickName,
-//                password,
-//                true
-//            )
-//        )
-//
-//        // 전화번호 저장
-//        database1MemberMemberPhoneDataRepository.save(
-//            Database1_Member_MemberPhone(
+    ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipPhoneNumberVerification.TABLE_NAME}"
+        ]
+    )
+    fun api16(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api16InputVo
+    ): C7TkAuthController.Api16OutputVo? {
+        // 입력 데이터 검증
+        val isDatabase1MemberUserExists =
+            database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
+                inputVo.phoneNumber,
+                true
+            )
+        if (isDatabase1MemberUserExists) { // 기존 회원 존재
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
+
+        // 정보 저장 후 문자 발송
+        val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+        redis1RegisterMembershipPhoneNumberVerificationRepository.saveKeyValue(
+            inputVo.phoneNumber,
+            Redis1_RegisterMembershipPhoneNumberVerification(
+                verificationCode
+            ),
+            signUpSmsVerificationTimeSecMbr * 1000
+        )
+
+        val expireWhen = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.SECOND, signUpSmsVerificationTimeSecMbr.toInt())
+        }.time)
+
+        val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
+
+        // 국가 코드 (ex : 82)
+        val countryCode = phoneNumberSplit[0]
+
+        // 전화번호 (ex : "01000000000")
+        val phoneNumber = (phoneNumberSplit[1].replace("-", "")).replace(" ", "")
+
+        NaverSmsUtilObject.sendSms(
+            NaverSmsUtilObject.SendSmsInputVo(
+                countryCode,
+                phoneNumber,
+                "[Springboot Mvc Project Template - 회원가입] 인증번호 [${verificationCode}]"
+            )
+        )
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api16OutputVo(
+            expireWhen
+        )
+    }
+
+
+    ////
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipPhoneNumberVerification.TABLE_NAME}"
+        ]
+    )
+    fun api17(
+        httpServletResponse: HttpServletResponse,
+        phoneNumber: String,
+        verificationCode: String
+    ): C7TkAuthController.Api17OutputVo? {
+        val smsVerification = redis1RegisterMembershipPhoneNumberVerificationRepository.findKeyValue(phoneNumber)
+
+        if (smsVerification == null) { // 검증이 만료되거나 요청한적 없음
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = smsVerification.value.secret == verificationCode
+
+        if (codeMatched) { // 코드 일치
+            redis1RegisterMembershipPhoneNumberVerificationRepository.saveKeyValue(
+                phoneNumber,
+                smsVerification.value,
+                signUpSmsVerificationTimeUntilJoinSecMbr * 1000
+            )
+
+            val expireWhen = SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss.SSS"
+            ).format(Calendar.getInstance().apply {
+                this.time = Date()
+                this.add(Calendar.SECOND, signUpSmsVerificationTimeUntilJoinSecMbr.toInt())
+            }.time)
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return C7TkAuthController.Api17OutputVo(
+                expireWhen
+            )
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "2")
+            return null
+        }
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipPhoneNumberVerification.TABLE_NAME}"
+        ]
+    )
+    fun api18(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api18InputVo) {
+        val loginId: String = inputVo.phoneNumber // 검증 로직에서 정해지면 충족시키기
+        // 기존 회원 확인
+        val isUserExists =
+            database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
+                loginId,
+                true
+            )
+        if (isUserExists) { // 기존 회원이 있을 때
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName, true)) {
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
+        // 본인 이메일 검증 여부 확인
+        val emailVerification = redis1RegisterMembershipPhoneNumberVerificationRepository.findKeyValue(loginId)
+
+        if (emailVerification == null) { // 검증 요청을 하지 않거나 만료됨
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.value.secret == inputVo.verificationCode
+
+        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
+            httpServletResponse.setHeader("api-result-code", "4")
+            return
+        }
+
+        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
+
+
+        // 회원가입
+        val database1MemberUser = database1MemberMemberDataRepository.save(
+            Database1_Member_MemberData(
+                inputVo.nickName,
+                password,
+                true
+            )
+        )
+
+        // 전화번호 저장
+        database1MemberMemberPhoneDataRepository.save(
+            Database1_Member_MemberPhoneData(
+                database1MemberUser.uid!!,
+                loginId,
+                true
+            )
+        )
+
+        // 역할 저장
+        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
+        // 기본 권한 추가
+//        database1MemberUserRoleList.add(
+//            Database1_Member_MemberRole(
 //                database1MemberUser.uid!!,
-//                loginId,
+//                2,
 //                true
 //            )
 //        )
-//
-//        // 역할 저장
-//        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRole>()
-//        // 기본 권한 추가
-////        database1MemberUserRoleList.add(
-////            Database1_Member_MemberRole(
-////                database1MemberUser.uid!!,
-////                2,
-////                true
-////            )
-////        )
-//        database1MemberMemberRoleRepository.saveAll(database1MemberUserRoleList)
-//
-//        // 확인 완료된 검증 요청 정보 삭제
-//        RedisUtilObject.deleteValue<RegisterMembershipPhoneNumberVerification>(redis1RedisTemplate, loginId)
-//    }
-//
-//
-//    ////
+        database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
+
+        // 확인 완료된 검증 요청 정보 삭제
+        redis1RegisterMembershipPhoneNumberVerificationRepository.deleteKeyValue(loginId)
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
+    ////
+    // todo
 //    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api16(
+//    fun api19(
 //        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api16InputVo
-//    ): C7TkAuthController.Api16OutputVo? {
+//        inputVo: C7TkAuthController.Api19InputVo
+//    ): C7TkAuthController.Api19OutputVo? {
 //        // (정보 검증 로직 수행)
 //        when (inputVo.oauth2TypeCode) {
 //            1 -> { // GOOGLE
@@ -1646,11 +1662,12 @@ class C7TkAuthService(
 //            }
 //        }
 //    }
-//
-//
-//    ////
+
+
+    ////
+    // todo
 //    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api17(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api17InputVo) {
+//    fun api20(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api20InputVo) {
 //        // 기존 회원 확인
 //        val isUserExists =
 //            database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
@@ -1811,73 +1828,82 @@ class C7TkAuthService(
 //            }
 //        }
 //    }
-//
-//
-//    ////
-//    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api19(
-//        httpServletResponse: HttpServletResponse,
-//        authorization: String,
-//        inputVo: C7TkAuthController.Api19InputVo
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(memberUid.toLong(), true)
-//
-//        if (member == null) { // 멤버 정보가 없을 때
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return
-//        }
-//
-//        if (member.accountPassword == null) { // 기존 비번이 존재하지 않음
-//            if (inputVo.oldPassword != null) { // 비밀번호 불일치
-//                httpServletResponse.setHeader("api-result-code", "2")
-//                return
-//            }
-//        } else { // 기존 비번 존재
-//            if (inputVo.oldPassword == null || !passwordEncoder.matches(
-//                    inputVo.oldPassword,
-//                    member.accountPassword
-//                )
-//            ) { // 비밀번호 불일치
-//                httpServletResponse.setHeader("api-result-code", "2")
-//                return
-//            }
-//        }
-//
-//        if (inputVo.newPassword == null) {
-//            val oAuth2EntityList =
-//                database1MemberMemberSnsOauth2Repository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-//
-//            if (oAuth2EntityList.isEmpty()) {
-//                // null 로 만들려고 할 때 account 외의 OAuth2 인증이 없다면 제거 불가
-//                httpServletResponse.setHeader("api-result-code", "3")
-//                return
-//            }
-//
-//            member.accountPassword = null
-//        } else {
-//            member.accountPassword = passwordEncoder.encode(inputVo.newPassword) // 비밀번호는 암호화
-//        }
-//        database1MemberMemberDataRepository.save(member)
-//
-//        // loginAccessToken 의 Iterable 가져오기
-//        val loginAccessTokenIterable = RedisUtilObject.getAllValues<SignInAccessTokenInfo>(
-//            redis1RedisTemplate
-//        )
-//
-//        // 비밀번호가 바뀌었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-//        for (loginAccessToken in loginAccessTokenIterable) {
-//            if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == memberUid) {
-//                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-//                RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
-//
-//                // 로그인 가능 액세스 토큰 정보 삭제
-//                RedisUtilObject.deleteValue<SignInAccessTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
-//            }
-//        }
-//    }
-//
-//
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
+            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+        ]
+    )
+    fun api21(
+        httpServletResponse: HttpServletResponse,
+        authorization: String,
+        inputVo: C7TkAuthController.Api21InputVo
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(memberUid.toLong(), true)
+
+        if (member == null) { // 멤버 정보가 없을 때
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (member.accountPassword == null) { // 기존 비번이 존재하지 않음
+            if (inputVo.oldPassword != null) { // 비밀번호 불일치
+                httpServletResponse.setHeader("api-result-code", "2")
+                return
+            }
+        } else { // 기존 비번 존재
+            if (inputVo.oldPassword == null || !passwordEncoder.matches(
+                    inputVo.oldPassword,
+                    member.accountPassword
+                )
+            ) { // 비밀번호 불일치
+                httpServletResponse.setHeader("api-result-code", "2")
+                return
+            }
+        }
+
+        if (inputVo.newPassword == null) {
+            val oAuth2EntityList =
+                database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(
+                    memberUid.toLong(),
+                    true
+                )
+
+            if (oAuth2EntityList.isEmpty()) {
+                // null 로 만들려고 할 때 account 외의 OAuth2 인증이 없다면 제거 불가
+                httpServletResponse.setHeader("api-result-code", "3")
+                return
+            }
+
+            member.accountPassword = null
+        } else {
+            member.accountPassword = passwordEncoder.encode(inputVo.newPassword) // 비밀번호는 암호화
+        }
+        database1MemberMemberDataRepository.save(member)
+
+        // loginAccessToken 의 Iterable 가져오기
+        val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
+
+        // 비밀번호가 바뀌었으니 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
+        for (loginAccessToken in loginAccessTokenIterable) {
+            if (loginAccessToken.value.memberUid == memberUid) {
+                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
+                redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+
+                // 로그인 가능 액세스 토큰 정보 삭제
+                redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
+
+
 //    ////
 //    fun api20(
 //        httpServletResponse: HttpServletResponse,
@@ -1904,10 +1930,10 @@ class C7TkAuthService(
 //        )
 //
 //        emailSenderUtilDi.sendThymeLeafHtmlMail(
-//            "ProwdTemplate",
+//            "Springboot Mvc Project Template",
 //            arrayOf(inputVo.email),
 //            null,
-//            "ProwdTemplate 비밀번호 찾기 - 본인 계정 확인용 이메일입니다.",
+//            "Springboot Mvc Project Template 비밀번호 찾기 - 본인 계정 확인용 이메일입니다.",
 //            "c2_n19/find_pw_email_verification_email",
 //            hashMapOf(
 //                Pair("verificationCode", verificationCode)
@@ -2024,10 +2050,10 @@ class C7TkAuthService(
 //
 //            // 생성된 비번 이메일 전송
 //            emailSenderUtilDi.sendThymeLeafHtmlMail(
-//                "ProwdTemplate",
+//                "Springboot Mvc Project Template",
 //                arrayOf(inputVo.email),
 //                null,
-//                "ProwdTemplate 새 비밀번호 발급",
+//                "Springboot Mvc Project Template 새 비밀번호 발급",
 //                "c2_n22/find_pw_new_pw_email",
 //                hashMapOf(
 //                    Pair("newPassword", newPassword)
@@ -2098,7 +2124,7 @@ class C7TkAuthService(
 //            NaverSmsUtilObject.SendSmsInputVo(
 //                countryCode,
 //                phoneNumber,
-//                "[ProwdTemplate - 비밀번호 찾기] 인증번호 [${verificationCode}]"
+//                "[Springboot Mvc Project Template - 비밀번호 찾기] 인증번호 [${verificationCode}]"
 //            )
 //        )
 //
@@ -2219,7 +2245,7 @@ class C7TkAuthService(
 //                NaverSmsUtilObject.SendSmsInputVo(
 //                    countryCode,
 //                    phoneNumber,
-//                    "[ProwdTemplate - 새 비밀번호] $newPassword"
+//                    "[Springboot Mvc Project Template - 새 비밀번호] $newPassword"
 //                )
 //            )
 //
@@ -2333,10 +2359,10 @@ class C7TkAuthService(
 //        )
 //
 //        emailSenderUtilDi.sendThymeLeafHtmlMail(
-//            "ProwdTemplate",
+//            "Springboot Mvc Project Template",
 //            arrayOf(inputVo.email),
 //            null,
-//            "ProwdTemplate 이메일 추가 - 본인 계정 확인용 이메일입니다.",
+//            "Springboot Mvc Project Template 이메일 추가 - 본인 계정 확인용 이메일입니다.",
 //            "c2_n28/add_email_verification_email",
 //            hashMapOf(
 //                Pair("verificationCode", verificationCode)
@@ -2595,7 +2621,7 @@ class C7TkAuthService(
 //            NaverSmsUtilObject.SendSmsInputVo(
 //                countryCode,
 //                phoneNumber,
-//                "[ProwdTemplate - 전화번호 추가] 인증번호 [${verificationCode}]"
+//                "[Springboot Mvc Project Template - 전화번호 추가] 인증번호 [${verificationCode}]"
 //            )
 //        )
 //

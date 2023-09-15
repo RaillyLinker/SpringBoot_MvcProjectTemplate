@@ -15,7 +15,7 @@ import javax.sql.DataSource
 
 // [DB 설정]
 // 트랜젝션 처리를 할 때는
-// @ProwdTransactional([Database1Config.TRANSACTION_NAME])
+// @CustomTransactional([Database1Config.TRANSACTION_NAME])
 // fun api1(...
 // 와 같이 DB 를 사용하는 함수 위에 어노테이션을 붙여주세요.
 @Configuration
