@@ -1098,258 +1098,254 @@ class C7TkAuthController(
     )
 
 
-//    ////
-//    @Operation(
-//        summary = "N20 : 이메일 비밀번호 찾기 본인 인증 이메일 발송",
-//        description = "이메일 비밀번호 찾기 본인 이메일 확인 메일 발송\n\n" +
-//                "발송 후 10분 후 만료됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 가입되지 않은 회원",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/find-password-with-email-verification")
-//    fun api20(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api20InputVo
-//    ): Api20OutputVo? {
-//        return service.api20(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api20InputVo(
-//        @Schema(description = "수신 이메일", required = true, example = "test@gmail.com")
-//        @JsonProperty("email")
-//        val email: String
-//    )
-//
-//    data class Api20OutputVo(
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N21 : 이메일 비밀번호 찾기 본인 확인 이메일에서 받은 코드 검증하기",
-//        description = "이메일 비밀번호 찾기 시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
-//                "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/find-password-with-email-verification-check")
-//    fun api21(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
-//        @RequestParam("email")
-//        email: String,
-//        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
-//        @RequestParam("verificationCode")
-//        verificationCode: String
-//    ): Api21OutputVo? {
-//        return service.api21(httpServletResponse, email, verificationCode)
-//    }
-//
-//    data class Api21OutputVo(
-//        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
-//        @JsonProperty("isVerified")
-//        val isVerified: Boolean,
-//        @Schema(
-//            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = false,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String?
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N22 : 이메일 비밀번호 찾기 완료",
-//        description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 이메일로 발송\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 탈퇴된 회원\n\n" +
-//                "2 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 검증 코드가 일치하지 않음",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/find-password-with-email")
-//    fun api22(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api22InputVo
-//    ) {
-//        service.api22(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api22InputVo(
-//        @Schema(description = "비밀번호를 찾을 계정 이메일", required = true, example = "test@gmail.com")
-//        @JsonProperty("email")
-//        val email: String,
-//
-//        @Schema(
-//            description = "이메일 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N23 : 전화번호 비밀번호 찾기 본인 인증 문자 발송",
-//        description = "전화번호 비밀번호 찾기 본인 전화번호 확인 문자 발송\n\n" +
-//                "발송 후 10분 후 만료됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 가입되지 않은 회원",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/find-password-with-phone-number-verification")
-//    fun api23(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api23InputVo
-//    ): Api23OutputVo? {
-//        return service.api23(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api23InputVo(
-//        @Schema(description = "수신 전화번호", required = true, example = "82)000-0000-0000")
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String
-//    )
-//
-//    data class Api23OutputVo(
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N24 : 전화번호 비밀번호 찾기 본인 확인 문자에서 받은 코드 검증하기",
-//        description = "전화번호 비밀번호 찾기 시 본인 전와번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
-//                "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 검증 요청을 보낸 적 없음 혹은 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/find-password-with-phone-number-verification-check")
-//    fun api24(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(name = "phoneNumber", description = "수신 전화번호", example = "82)000-0000-0000")
-//        @RequestParam("phoneNumber")
-//        phoneNumber: String,
-//        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
-//        @RequestParam("verificationCode")
-//        verificationCode: String
-//    ): Api24OutputVo? {
-//        return service.api24(httpServletResponse, phoneNumber, verificationCode)
-//    }
-//
-//    data class Api24OutputVo(
-//        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
-//        @JsonProperty("isVerified")
-//        val isVerified: Boolean,
-//        @Schema(
-//            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = false,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String?
-//    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N25 : 전화번호 비밀번호 찾기 완료",
-//        description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 전화번호로 발송\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 탈퇴된 회원\n\n" +
-//                "2 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 검증 코드가 일치하지 않음",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/find-password-with-phone-number")
-//    fun api25(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api25InputVo
-//    ) {
-//        service.api25(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api25InputVo(
-//        @Schema(description = "비밀번호를 찾을 계정 전화번호", required = true, example = "82)000-0000-0000")
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String,
-//
-//        @Schema(
-//            description = "이메일 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
-//
-//
+    ////
+    @Operation(
+        summary = "N22. 이메일 비밀번호 찾기 본인 인증 이메일 발송",
+        description = "이메일 비밀번호 찾기 본인 이메일 확인 메일 발송\n\n" +
+                "발송 후 10분 후 만료됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 가입되지 않은 회원",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/find-password-with-email-verification")
+    fun api22(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api22InputVo
+    ): Api22OutputVo? {
+        return service.api22(httpServletResponse, inputVo)
+    }
+
+    data class Api22InputVo(
+        @Schema(description = "수신 이메일", required = true, example = "test@gmail.com")
+        @JsonProperty("email")
+        val email: String
+    )
+
+    data class Api22OutputVo(
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N23. 이메일 비밀번호 찾기 본인 확인 이메일에서 받은 코드 검증하기",
+        description = "이메일 비밀번호 찾기 시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
+                "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : verificationCode 가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/find-password-with-email-verification-check")
+    fun api23(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
+        @RequestParam("email")
+        email: String,
+        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
+        @RequestParam("verificationCode")
+        verificationCode: String
+    ): Api23OutputVo? {
+        return service.api23(httpServletResponse, email, verificationCode)
+    }
+
+    data class Api23OutputVo(
+        @Schema(
+            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = false,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String?
+    )
+
+
+    ////
+    @Operation(
+        summary = "N24. 이메일 비밀번호 찾기 완료",
+        description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 이메일로 발송\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 탈퇴된 회원\n\n" +
+                "2 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "3 : 검증 코드가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/find-password-with-email")
+    fun api24(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api24InputVo
+    ) {
+        service.api24(httpServletResponse, inputVo)
+    }
+
+    data class Api24InputVo(
+        @Schema(description = "비밀번호를 찾을 계정 이메일", required = true, example = "test@gmail.com")
+        @JsonProperty("email")
+        val email: String,
+
+        @Schema(
+            description = "이메일 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N25. 전화번호 비밀번호 찾기 본인 인증 문자 발송",
+        description = "전화번호 비밀번호 찾기 본인 전화번호 확인 문자 발송\n\n" +
+                "발송 후 10분 후 만료됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 가입되지 않은 회원",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/find-password-with-phone-number-verification")
+    fun api25(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api25InputVo
+    ): Api25OutputVo? {
+        return service.api25(httpServletResponse, inputVo)
+    }
+
+    data class Api25InputVo(
+        @Schema(description = "수신 전화번호", required = true, example = "82)000-0000-0000")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String
+    )
+
+    data class Api25OutputVo(
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N26. 전화번호 비밀번호 찾기 본인 확인 문자에서 받은 코드 검증하기",
+        description = "전화번호 비밀번호 찾기 시 본인 전와번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
+                "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 검증 코드가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/find-password-with-phone-number-verification-check")
+    fun api26(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "phoneNumber", description = "수신 전화번호", example = "82)000-0000-0000")
+        @RequestParam("phoneNumber")
+        phoneNumber: String,
+        @Parameter(name = "verificationCode", description = "확인 이메일에 전송된 코드", example = "123456")
+        @RequestParam("verificationCode")
+        verificationCode: String
+    ): Api26OutputVo? {
+        return service.api26(httpServletResponse, phoneNumber, verificationCode)
+    }
+
+    data class Api26OutputVo(
+        @Schema(
+            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = false,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String?
+    )
+
+
+    ////
+    @Operation(
+        summary = "N27. 전화번호 비밀번호 찾기 완료",
+        description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 전화번호로 발송\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 탈퇴된 회원\n\n" +
+                "2 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "3 : 검증 코드가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/find-password-with-phone-number")
+    fun api27(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api27InputVo
+    ) {
+        service.api27(httpServletResponse, inputVo)
+    }
+
+    data class Api27InputVo(
+        @Schema(description = "비밀번호를 찾을 계정 전화번호", required = true, example = "82)000-0000-0000")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String,
+
+        @Schema(
+            description = "이메일 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
+
+
 //    ////
 //    @Operation(
 //        summary = "N26 : 내 로그인 관련 정보 리스트 가져오기 <>",
