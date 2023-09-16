@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_requestTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c3_tk_requestTest
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Service
-class C2TkRequestTestService(
+class C3TkRequestTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfile: String
 ) {
@@ -66,9 +66,9 @@ class C2TkRequestTestService(
         queryParamBooleanNullable: Boolean?,
         queryParamStringList: List<String>,
         queryParamStringListNullable: List<String>?
-    ): C2TkRequestTestController.Api4OutputVo? {
+    ): C3TkRequestTestController.Api4OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api4OutputVo(
+        return C3TkRequestTestController.Api4OutputVo(
             queryParamString,
             queryParamStringNullable,
             queryParamInt,
@@ -84,19 +84,19 @@ class C2TkRequestTestService(
 
 
     ////
-    fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): C2TkRequestTestController.Api5OutputVo? {
+    fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): C3TkRequestTestController.Api5OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api5OutputVo(pathParamInt)
+        return C3TkRequestTestController.Api5OutputVo(pathParamInt)
     }
 
 
     ////
     fun api6(
         httpServletResponse: HttpServletResponse,
-        inputVo: C2TkRequestTestController.Api6InputVo
-    ): C2TkRequestTestController.Api6OutputVo? {
+        inputVo: C3TkRequestTestController.Api6InputVo
+    ): C3TkRequestTestController.Api6OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api6OutputVo(
+        return C3TkRequestTestController.Api6OutputVo(
             inputVo.requestBodyString,
             inputVo.requestBodyStringNullable,
             inputVo.requestBodyInt,
@@ -114,10 +114,10 @@ class C2TkRequestTestService(
     ////
     fun api7(
         httpServletResponse: HttpServletResponse,
-        inputVo: C2TkRequestTestController.Api7InputVo
-    ): C2TkRequestTestController.Api7OutputVo? {
+        inputVo: C3TkRequestTestController.Api7InputVo
+    ): C3TkRequestTestController.Api7OutputVo? {
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api7OutputVo(
+        return C3TkRequestTestController.Api7OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
             inputVo.requestFormInt,
@@ -135,8 +135,8 @@ class C2TkRequestTestService(
     ////
     fun api8(
         httpServletResponse: HttpServletResponse,
-        inputVo: C2TkRequestTestController.Api8InputVo
-    ): C2TkRequestTestController.Api8OutputVo? {
+        inputVo: C3TkRequestTestController.Api8InputVo
+    ): C3TkRequestTestController.Api8OutputVo? {
         // 파일 저장 기본 디렉토리 경로
         val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
 
@@ -221,7 +221,7 @@ class C2TkRequestTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api8OutputVo(
+        return C3TkRequestTestController.Api8OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
             inputVo.requestFormInt,
@@ -239,8 +239,8 @@ class C2TkRequestTestService(
     ////
     fun api9(
         httpServletResponse: HttpServletResponse,
-        inputVo: C2TkRequestTestController.Api9InputVo
-    ): C2TkRequestTestController.Api9OutputVo? {
+        inputVo: C3TkRequestTestController.Api9InputVo
+    ): C3TkRequestTestController.Api9OutputVo? {
         // 파일 저장 기본 디렉토리 경로
         val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
 
@@ -329,7 +329,7 @@ class C2TkRequestTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api9OutputVo(
+        return C3TkRequestTestController.Api9OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
             inputVo.requestFormInt,
@@ -347,12 +347,12 @@ class C2TkRequestTestService(
     ////
     fun api10(
         httpServletResponse: HttpServletResponse,
-        inputVo: C2TkRequestTestController.Api10InputVo
-    ): C2TkRequestTestController.Api10OutputVo? {
+        inputVo: C3TkRequestTestController.Api10InputVo
+    ): C3TkRequestTestController.Api10OutputVo? {
         // input Json String to Object
-        val inputJsonObject = Gson().fromJson<C2TkRequestTestController.Api10InputVo.InputJsonObject>(
+        val inputJsonObject = Gson().fromJson<C3TkRequestTestController.Api10InputVo.InputJsonObject>(
             inputVo.jsonString, // 해석하려는 json 형식의 String
-            object : TypeToken<C2TkRequestTestController.Api10InputVo.InputJsonObject>() {}.type // 파싱할 데이터 스키마 객체 타입
+            object : TypeToken<C3TkRequestTestController.Api10InputVo.InputJsonObject>() {}.type // 파싱할 데이터 스키마 객체 타입
         )
 
         // 파일 저장 기본 디렉토리 경로
@@ -439,7 +439,7 @@ class C2TkRequestTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "ok")
-        return C2TkRequestTestController.Api10OutputVo(
+        return C3TkRequestTestController.Api10OutputVo(
             inputJsonObject.requestFormString,
             inputJsonObject.requestFormStringNullable,
             inputJsonObject.requestFormInt,
@@ -461,23 +461,36 @@ class C2TkRequestTestService(
     }
 
     ////
-    fun api12(httpServletResponse: HttpServletResponse, errorType: C2TkRequestTestController.Api12ErrorTypeEnum?) {
+    fun api12(httpServletResponse: HttpServletResponse, errorType: C3TkRequestTestController.Api12ErrorTypeEnum?) {
         if (errorType == null) {
             httpServletResponse.setHeader("api-result-code", "ok")
         } else {
             when (errorType) {
-                C2TkRequestTestController.Api12ErrorTypeEnum.A -> {
+                C3TkRequestTestController.Api12ErrorTypeEnum.A -> {
                     httpServletResponse.setHeader("api-result-code", "1")
                 }
 
-                C2TkRequestTestController.Api12ErrorTypeEnum.B -> {
+                C3TkRequestTestController.Api12ErrorTypeEnum.B -> {
                     httpServletResponse.setHeader("api-result-code", "2")
                 }
 
-                C2TkRequestTestController.Api12ErrorTypeEnum.C -> {
+                C3TkRequestTestController.Api12ErrorTypeEnum.C -> {
                     httpServletResponse.setHeader("api-result-code", "3")
                 }
             }
         }
+    }
+
+
+    ////
+    fun api13(httpServletResponse: HttpServletResponse, delayTimeSec: Int) {
+        val endTime = System.currentTimeMillis() + (delayTimeSec * 1000)
+
+        while (System.currentTimeMillis() < endTime) {
+            // 아무 것도 하지 않고 대기
+            Thread.sleep(100)  // 100ms마다 스레드를 잠들게 하여 CPU 사용률을 줄임
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
     }
 }

@@ -449,4 +449,15 @@ interface LocalHostRequestApi {
         B,
         C
     }
+
+
+    ////
+    // [인위적 타임아웃 에러 발생 테스트]
+    // 타임아웃 에러를 발생시키기 위해 임의로 응답 시간을 지연시킵니다.
+    // (api-result-code)
+    // ok : 정상 동작
+    @POST("/tk/request-test/generate-time-out-error")
+    fun tkRequestTestGenerateTimeOutError(
+        @Query("delayTimeSec") delayTimeSec: Int
+    ): Call<Unit?>
 }

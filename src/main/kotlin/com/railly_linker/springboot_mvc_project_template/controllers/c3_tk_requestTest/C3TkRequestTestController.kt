@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_requestTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c3_tk_requestTest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -12,11 +12,11 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 
 
-@Tag(name = "/tk/request-test APIs", description = "C2. 요청 / 응답에 대한 테스트 API 컨트롤러")
+@Tag(name = "/tk/request-test APIs", description = "C3. 요청 / 응답에 대한 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/request-test")
-class C2TkRequestTestController(
-    private val service: C2TkRequestTestService
+class C3TkRequestTestController(
+    private val service: C3TkRequestTestService
 ) {
     // <멤버 변수 공간>
 
@@ -876,5 +876,30 @@ class C2TkRequestTestController(
         A,
         B,
         C
+    }
+
+
+    ////
+    @Operation(
+        summary = "N13. 인위적 타임아웃 에러 발생 테스트",
+        description = "타임아웃 에러를 발생시키기 위해 임의로 응답 시간을 지연시킵니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/generate-time-out-error")
+    fun api13(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "delayTimeSec", description = "지연 시간(초)", example = "1")
+        @RequestParam("delayTimeSec")
+        delayTimeSec: Int
+    ) {
+        service.api13(httpServletResponse, delayTimeSec)
     }
 }

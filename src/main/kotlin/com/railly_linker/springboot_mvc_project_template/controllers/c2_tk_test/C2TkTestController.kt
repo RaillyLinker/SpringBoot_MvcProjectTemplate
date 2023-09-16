@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c1_tk_test
+package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_test
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -10,11 +10,11 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/tk/test APIs", description = "C1. 테스트 API 컨트롤러")
+@Tag(name = "/tk/test APIs", description = "C2. 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/test")
-class C1TkTestController(
-    private val service: C1TkTestService
+class C2TkTestController(
+    private val service: C2TkTestService
 ) {
     // <멤버 변수 공간>
 

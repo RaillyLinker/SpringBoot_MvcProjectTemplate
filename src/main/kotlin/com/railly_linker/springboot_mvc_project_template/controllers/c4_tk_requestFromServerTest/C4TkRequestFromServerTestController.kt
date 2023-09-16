@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c3_tk_requestFromServerTest
+package com.railly_linker.springboot_mvc_project_template.controllers.c4_tk_requestFromServerTest
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -9,13 +9,14 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@Tag(name = "/tk/request-from-server-test APIs", description = "C3. 서버에서 요청을 보내는 테스트 API 컨트롤러")
+@Tag(name = "/tk/request-from-server-test APIs", description = "C4. 서버에서 요청을 보내는 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/request-from-server-test")
-class C3TkRequestFromServerTestController(
-    private val service: C3TkRequestFromServerTestService
+class C4TkRequestFromServerTestController(
+    private val service: C4TkRequestFromServerTestService
 ) {
     // <멤버 변수 공간>
 
@@ -527,5 +528,30 @@ class C3TkRequestFromServerTestController(
         httpServletResponse: HttpServletResponse
     ) {
         service.api12(httpServletResponse)
+    }
+
+    ////
+    @Operation(
+        summary = "N13. /tk/request-test/generate-time-out-error 요청 테스트 API",
+        description = "/tk/request-test/generate-time-out-error 로 요청을 보냅니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 타임아웃이 발생함",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/tk/request-test/generate-time-out-error")
+    fun api13(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "delayTimeSec", description = "지연 시간(초)", example = "1")
+        @RequestParam("delayTimeSec")
+        delayTimeSec: Int
+    ) {
+        service.api13(httpServletResponse, delayTimeSec)
     }
 }
