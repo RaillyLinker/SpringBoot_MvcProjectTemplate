@@ -27,13 +27,17 @@ repositories {
 
 dependencies {
     // (기본)
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.boot:spring-boot-starter:3.1.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.1.0")
+
+    // (snakeyaml)
+    // : Gradle 종속성 에러 해결
+    implementation("org.yaml:snakeyaml:2.2")
 
     // (Spring Starter Web)
     // : 스프링 부트 웹 개발
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web:3.1.0")
 
     // (Swagger)
     // : API 자동 문서화
@@ -55,30 +59,30 @@ dependencies {
 
     // (ThymeLeaf)
     // : 웹 뷰 라이브러리
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4")
+    implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
 
     // (Spring email)
     // : 스프링 이메일 발송
-    implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework.boot:spring-boot-starter-mail:3.0.4")
 
     // (JPA)
     // : DB ORM
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.0.4")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5:2.14.2")
     implementation("org.hibernate:hibernate-validator:8.0.0.Final")
 
     // (MySQL)
     // : MySQL 접근 사용 라이브러리
-    implementation("com.mysql:mysql-connector-j")
+    implementation("com.mysql:mysql-connector-j:8.0.32")
 
     // (SpringBoot AOP)
-    implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-aop:3.0.4")
 
     // (Redis)
     // : 메모리 키 값 데이터 구조 스토어
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:3.0.4")
 
     // (JWT)
     // : JWT 인증 토큰 라이브러리
@@ -88,9 +92,9 @@ dependencies {
 
     // (Spring Security)
     // : 스프링 부트 보안
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    testImplementation("org.springframework.security:spring-security-test")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security:3.0.4")
+    testImplementation("org.springframework.security:spring-security-test:6.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client:3.0.4")
 
     // (Apache Common Codec)
     implementation("commons-codec:commons-codec:1.16.0")
