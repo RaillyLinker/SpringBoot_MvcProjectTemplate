@@ -1731,10 +1731,10 @@ class C7TkAuthController(
 //    )
 
 
-//    ////
+    ////
     // todo
 //    @Operation(
-//        summary = "N34 : 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
+//        summary = "N37. 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
 //        description = "전화번호 추가하기 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
 //                "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
 //                "(api-result-code)\n\n" +
@@ -1749,7 +1749,7 @@ class C7TkAuthController(
 //    )
 //    @GetMapping("/add-phone-number-verification-check")
 //    @PreAuthorize("isAuthenticated()")
-//    fun api34(
+//    fun api37(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(hidden = true)
@@ -1761,11 +1761,11 @@ class C7TkAuthController(
 //        @Parameter(name = "verificationCode", description = "확인 문자에 전송된 코드", example = "123456")
 //        @RequestParam("verificationCode")
 //        verificationCode: String
-//    ): Api34OutputVo? {
-//        return service.api34(httpServletResponse, phoneNumber, verificationCode, authorization!!)
+//    ): Api37OutputVo? {
+//        return service.api37(httpServletResponse, phoneNumber, verificationCode, authorization!!)
 //    }
 //
-//    data class Api34OutputVo(
+//    data class Api37OutputVo(
 //        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
 //        @JsonProperty("isVerified")
 //        val isVerified: Boolean,
@@ -1777,10 +1777,11 @@ class C7TkAuthController(
 //        @JsonProperty("expireWhen")
 //        val expireWhen: String?
 //    )
-//
-//    ////
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N35 : 전화번호 추가하기 <>",
+//        summary = "N38. 전화번호 추가하기 <>",
 //        description = "내 계정에 전화번호 추가\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -1797,19 +1798,19 @@ class C7TkAuthController(
 //    )
 //    @PostMapping("/my-new-phone-number")
 //    @PreAuthorize("isAuthenticated()")
-//    fun api35(
+//    fun api38(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(hidden = true)
 //        @RequestHeader("Authorization")
 //        authorization: String?,
 //        @RequestBody
-//        inputVo: Api35InputVo
+//        inputVo: Api38InputVo
 //    ) {
-//        service.api35(httpServletResponse, inputVo, authorization!!)
+//        service.api38(httpServletResponse, inputVo, authorization!!)
 //    }
 //
-//    data class Api35InputVo(
+//    data class Api38InputVo(
 //        @Schema(description = "추가할 전화번호", required = true, example = "82)000-0000-0000")
 //        @JsonProperty("phoneNumber")
 //        val phoneNumber: String,
@@ -1822,11 +1823,12 @@ class C7TkAuthController(
 //        @JsonProperty("verificationCode")
 //        val verificationCode: String
 //    )
-//
-//
-//    ////
+
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N36 : 내 전화번호 제거하기 <>",
+//        summary = "N39. 내 전화번호 제거하기 <>",
 //        description = "내 계정에서 전화번호 제거\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -1840,28 +1842,29 @@ class C7TkAuthController(
 //    )
 //    @DeleteMapping("/my-phone-number")
 //    @PreAuthorize("isAuthenticated()")
-//    fun api36(
+//    fun api39(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(hidden = true)
 //        @RequestHeader("Authorization")
 //        authorization: String?,
 //        @RequestBody
-//        inputVo: Api36InputVo
+//        inputVo: Api39InputVo
 //    ) {
-//        service.api36(httpServletResponse, inputVo, authorization!!)
+//        service.api39(httpServletResponse, inputVo, authorization!!)
 //    }
 //
-//    data class Api36InputVo(
+//    data class Api39InputVo(
 //        @Schema(description = "제거할 전화번호", required = true, example = "82)000-0000-0000")
 //        @JsonProperty("phoneNumber")
 //        val phoneNumber: String
 //    )
-//
-//
-//    ////
+
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N39 : OAuth2 추가하기 (Token) <>",
+//        summary = "N40. OAuth2 추가하기 (Token) <>",
 //        description = "내 계정에 OAuth2 토큰으로 인증 추가\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -1877,19 +1880,19 @@ class C7TkAuthController(
 //    )
 //    @PostMapping("/my-new-oauth2-token")
 //    @PreAuthorize("isAuthenticated()")
-//    fun api39(
+//    fun api40(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(hidden = true)
 //        @RequestHeader("Authorization")
 //        authorization: String?,
 //        @RequestBody
-//        inputVo: Api39InputVo
+//        inputVo: Api40InputVo
 //    ) {
-//        service.api39(httpServletResponse, inputVo, authorization!!)
+//        service.api40(httpServletResponse, inputVo, authorization!!)
 //    }
 //
-//    data class Api39InputVo(
+//    data class Api40InputVo(
 //        @Schema(
 //            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : APPLE, 3 : NAVER, 4 : KAKAO)",
 //            required = true,
@@ -1908,11 +1911,12 @@ class C7TkAuthController(
 //        @JsonProperty("oauth2Secret")
 //        val oauth2Secret: String
 //    )
-//
-//
-//    ////
+
+
+    ////
+    // todo
 //    @Operation(
-//        summary = "N40 : 내 OAuth2 제거하기 <>",
+//        summary = "N41. 내 OAuth2 제거하기 <>",
 //        description = "내 계정에서 OAuth2 제거\n\n" +
 //                "(api-result-code)\n\n" +
 //                "ok : 정상 동작\n\n" +
@@ -1926,19 +1930,19 @@ class C7TkAuthController(
 //    )
 //    @DeleteMapping("/my-oauth2")
 //    @PreAuthorize("isAuthenticated()")
-//    fun api40(
+//    fun api41(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(hidden = true)
 //        @RequestHeader("Authorization")
 //        authorization: String?,
 //        @RequestBody
-//        inputVo: Api40InputVo
+//        inputVo: Api41InputVo
 //    ) {
-//        service.api40(httpServletResponse, inputVo, authorization!!)
+//        service.api41(httpServletResponse, inputVo, authorization!!)
 //    }
 //
-//    data class Api40InputVo(
+//    data class Api41InputVo(
 //        @Schema(
 //            description = "제거할 oAuth2 종류 (1 : Google, 2 : Apple, 3 : Naver, 4 : Kakao)",
 //            required = true,
@@ -1950,30 +1954,30 @@ class C7TkAuthController(
 //        @JsonProperty("oauth2Id")
 //        val oauth2Id: String
 //    )
-//
-//
-//    ////
-//    @Operation(
-//        summary = "N41 : 회원탈퇴 <>",
-//        description = "회원탈퇴 요청\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/withdrawal")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api41(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?
-//    ) {
-//        service.api41(httpServletResponse, authorization!!)
-//    }
+
+
+    ////
+    @Operation(
+        summary = "N42. 회원탈퇴 <>",
+        description = "회원탈퇴 요청\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/withdrawal")
+    @PreAuthorize("isAuthenticated()")
+    fun api42(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ) {
+        service.api42(httpServletResponse, authorization!!)
+    }
 }

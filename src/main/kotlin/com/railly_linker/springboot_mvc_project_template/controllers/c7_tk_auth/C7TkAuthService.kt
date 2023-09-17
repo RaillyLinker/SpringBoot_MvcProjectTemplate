@@ -2,7 +2,6 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c7_tk_auth
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
-import com.railly_linker.springboot_mvc_project_template.configurations.RedisConfig
 import com.railly_linker.springboot_mvc_project_template.configurations.SecurityConfig
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
@@ -2638,13 +2637,14 @@ class C7TkAuthService(
 //    }
 
 
-//    ////
-//    fun api34(
+    ////
+    // todo
+//    fun api37(
 //        httpServletResponse: HttpServletResponse,
 //        phoneNumber: String,
 //        verificationCode: String,
 //        authorization: String
-//    ): C7TkAuthController.Api34OutputVo? {
+//    ): C7TkAuthController.Api37OutputVo? {
 //        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 //        val smsVerification =
 //            RedisUtilObject.getValue<AddPhoneNumberVerification>(redis1RedisTemplate, "${memberUid}_${phoneNumber}")
@@ -2673,23 +2673,24 @@ class C7TkAuthService(
 //                this.add(Calendar.SECOND, addPhoneNumberVerificationTimeUntilJoinSecMbr.toInt())
 //            }.time)
 //
-//            return C7TkAuthController.Api34OutputVo(
+//            return C7TkAuthController.Api37OutputVo(
 //                true,
 //                expireWhen
 //            )
 //        } else { // 코드 불일치
-//            return C7TkAuthController.Api34OutputVo(
+//            return C7TkAuthController.Api37OutputVo(
 //                false,
 //                null
 //            )
 //        }
 //    }
-//
-//
-//    ////
-//    fun api35(
+
+
+    ////
+    // todo
+//    fun api38(
 //        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api35InputVo,
+//        inputVo: C7TkAuthController.Api38InputVo,
 //        authorization: String
 //    ) {
 //        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2752,12 +2753,13 @@ class C7TkAuthService(
 //            )
 //        }
 //    }
-//
-//
-//    ////
-//    fun api36(
+
+
+    ////
+    // todo
+//    fun api39(
 //        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api36InputVo,
+//        inputVo: C7TkAuthController.Api39InputVo,
 //        authorization: String
 //    ) {
 //        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2818,12 +2820,13 @@ class C7TkAuthService(
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
-//
-//
-//    ////
-//    fun api39(
+
+
+    ////
+    // todo
+//    fun api40(
 //        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api39InputVo,
+//        inputVo: C7TkAuthController.Api40InputVo,
 //        authorization: String
 //    ) {
 //        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2941,12 +2944,13 @@ class C7TkAuthService(
 //            )
 //        )
 //    }
-//
-//
-//    ////
-//    fun api40(
+
+
+    ////
+    // todo
+//    fun api41(
 //        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api40InputVo,
+//        inputVo: C7TkAuthController.Api41InputVo,
 //        authorization: String
 //    ) {
 //        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -3007,71 +3011,77 @@ class C7TkAuthService(
 //        httpServletResponse.setHeader("api-result-code", "1")
 //        return
 //    }
-//
-//
-//    ////
-//    fun api41(
-//        httpServletResponse: HttpServletResponse,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val memberUidLong = memberUid.toLong()
-//
-//        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        ) ?: return  // 가입된 회원이 없음 = 회원탈퇴한 것으로 처리
-//
-//        // 회원탈퇴 처리
-//        member.rowActivate = false
-//        database1MemberMemberDataRepository.save(
-//            member
-//        )
-//
-//        // member_phone, member_email, member_role, member_sns_oauth2 비활성화
-//        val emailList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
-//        for (email in emailList) {
-//            email.rowActivate = false
-//            database1MemberMemberEmailDataRepository.save(email)
-//        }
-//
-//        val memberRoleList = database1MemberMemberRoleRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
-//        for (memberRole in memberRoleList) {
-//            memberRole.rowActivate = false
-//            database1MemberMemberRoleRepository.save(memberRole)
-//        }
-//
-//        val memberSnsOauth2List =
-//            database1MemberMemberSnsOauth2Repository.findAllByMemberUidAndRowActivate(memberUidLong, true)
-//        for (memberSnsOauth2 in memberSnsOauth2List) {
-//            memberSnsOauth2.rowActivate = false
-//            database1MemberMemberSnsOauth2Repository.save(memberSnsOauth2)
-//        }
-//
-//        val memberPhoneList =
-//            database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
-//        for (memberPhone in memberPhoneList) {
-//            memberPhone.rowActivate = false
-//            database1MemberMemberPhoneDataRepository.save(memberPhone)
-//        }
-//
-//
-//        // !!!회원과 관계된 처리!!
-//
-//        // loginAccessToken 의 Iterable 가져오기
-//        val loginAccessTokenIterable = RedisUtilObject.getAllValues<SignInAccessTokenInfo>(
-//            redis1RedisTemplate
-//        )
-//
-//        // 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-//        for (loginAccessToken in loginAccessTokenIterable) {
-//            if ((loginAccessToken.value as SignInAccessTokenInfo).memberUid == memberUid) {
-//                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-//                RedisUtilObject.deleteValue<RefreshTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
-//
-//                // 로그인 가능 액세스 토큰 정보 삭제
-//                RedisUtilObject.deleteValue<SignInAccessTokenInfo>(redis1RedisTemplate, loginAccessToken.key)
-//            }
-//        }
-//    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+            Redis1_RefreshTokenInfo.TRANSACTION_NAME
+        ]
+    )
+    fun api42(
+        httpServletResponse: HttpServletResponse,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val memberUidLong = memberUid.toLong()
+
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            memberUidLong,
+            true
+        ) ?: return  // 가입된 회원이 없음 = 회원탈퇴한 것으로 처리
+
+        // 회원탈퇴 처리
+        member.rowActivate = false
+        database1MemberMemberDataRepository.save(
+            member
+        )
+
+        // member_phone, member_email, member_role, member_sns_oauth2 비활성화
+        val emailList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
+        for (email in emailList) {
+            email.rowActivate = false
+            database1MemberMemberEmailDataRepository.save(email)
+        }
+
+        val memberRoleList =
+            database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
+        for (memberRole in memberRoleList) {
+            memberRole.rowActivate = false
+            database1MemberMemberRoleDataRepository.save(memberRole)
+        }
+
+        val memberSnsOauth2List =
+            database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
+        for (memberSnsOauth2 in memberSnsOauth2List) {
+            memberSnsOauth2.rowActivate = false
+            database1MemberMemberOauth2LoginDataRepository.save(memberSnsOauth2)
+        }
+
+        val memberPhoneList =
+            database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
+        for (memberPhone in memberPhoneList) {
+            memberPhone.rowActivate = false
+            database1MemberMemberPhoneDataRepository.save(memberPhone)
+        }
+
+
+        // !!!회원과 관계된 처리!!
+
+        // loginAccessToken 의 Iterable 가져오기
+        val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
+
+        // 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
+        for (loginAccessToken in loginAccessTokenIterable) {
+            if (loginAccessToken.value.memberUid == memberUid) {
+                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
+                redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+
+                // 로그인 가능 액세스 토큰 정보 삭제
+                redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+            }
+        }
+    }
 }
