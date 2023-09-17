@@ -11,7 +11,7 @@ interface KauthKakaoComRequestApi {
     // [KakaoTalk Oauth2 AccessToken 요청]
     @POST("/oauth/token")
     @FormUrlEncoded
-    fun oOauthToken(
+    fun postOOauthToken(
         // 무조건 "authorization_code" 입력
         @Field("grant_type") grantType: String,
         // OAuth2 ClientId
@@ -22,9 +22,9 @@ interface KauthKakaoComRequestApi {
         @Field("redirect_uri") redirectUri: String,
         // OAuth2 로그인으로 발급받은 코드
         @Field("code") code: String
-    ): Call<OOauthTokenOutputVO?>
+    ): Call<PostOOauthTokenOutputVO?>
 
-    data class OOauthTokenOutputVO(
+    data class PostOOauthTokenOutputVO(
         @SerializedName("access_token")
         @Expose
         val accessToken: String?,

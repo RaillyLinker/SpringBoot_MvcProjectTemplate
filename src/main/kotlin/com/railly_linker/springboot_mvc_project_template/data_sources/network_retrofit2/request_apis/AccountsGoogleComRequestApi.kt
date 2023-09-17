@@ -13,7 +13,7 @@ interface AccountsGoogleComRequestApi {
     // [Google Oauth2 AccessToken 요청]
     @POST("/o/oauth2/token")
     @FormUrlEncoded
-    fun oOauth2Token(
+    fun postOOauth2Token(
         // OAuth2 로그인으로 발급받은 코드
         @Field("code") code: String,
         // OAuth2 ClientId
@@ -24,9 +24,9 @@ interface AccountsGoogleComRequestApi {
         @Field("grant_type") grantType: String,
         // OAuth2 로그인할때 사용한 Redirect Uri
         @Field("redirect_uri") redirectUri: String
-    ): Call<OOauth2TokenOutputVO?>
+    ): Call<PostOOauth2TokenOutputVO?>
 
-    data class OOauth2TokenOutputVO(
+    data class PostOOauth2TokenOutputVO(
         @SerializedName("access_token")
         @Expose
         val accessToken: String?,

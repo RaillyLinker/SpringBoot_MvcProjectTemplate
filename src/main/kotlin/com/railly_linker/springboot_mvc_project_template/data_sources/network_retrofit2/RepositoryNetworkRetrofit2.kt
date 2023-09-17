@@ -72,6 +72,36 @@ class RepositoryNetworkRetrofit2 private constructor() {
             false
         )).create(KauthKakaoComRequestApi::class.java)
 
+    // Google AccessToken 으로 Profile 조회용
+    val wwwGoogleapisComRequestApi: WwwGoogleapisComRequestApi =
+        (getRetrofitClient(
+            "https://www.googleapis.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(WwwGoogleapisComRequestApi::class.java)
+
+    // Naver AccessToken 으로 Profile 조회용
+    val openapiNaverComRequestApi: OpenapiNaverComRequestApi =
+        (getRetrofitClient(
+            "https://openapi.naver.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(OpenapiNaverComRequestApi::class.java)
+
+    // KakaoTalk AccessToken 으로 Profile 조회용
+    val kapiKakaoComRequestApi: KapiKakaoComRequestApi =
+        (getRetrofitClient(
+            "https://kapi.kakao.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(KapiKakaoComRequestApi::class.java)
+
 
     // ---------------------------------------------------------------------------------------------
     // <Static 공간>

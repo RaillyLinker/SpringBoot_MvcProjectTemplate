@@ -15,7 +15,7 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @GET("/tk/request-test")
-    fun tkRequestTest(): Call<String?>
+    fun getTkRequestTest(): Call<String?>
 
 
     ////
@@ -24,7 +24,7 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @GET("/tk/request-test/redirect-to-blank")
-    fun tkRequestTestRedirectToBlank(): Call<String?>
+    fun getTkRequestTestRedirectToBlank(): Call<String?>
 
 
     ////
@@ -33,7 +33,7 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @GET("/tk/request-test/forward-to-blank")
-    fun tkRequestTestForwardToBlank(): Call<String?>
+    fun getTkRequestTestForwardToBlank(): Call<String?>
 
 
     ////
@@ -42,7 +42,7 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @GET("/tk/request-test/get-request")
-    fun tkRequestTestGetRequest(
+    fun getTkRequestTestGetRequest(
         @Query("queryParamString") queryParamString: String,
         @Query("queryParamStringNullable") queryParamStringNullable: String?,
         @Query("queryParamInt") queryParamInt: Int,
@@ -53,9 +53,9 @@ interface LocalHostRequestApi {
         @Query("queryParamBooleanNullable") queryParamBooleanNullable: Boolean?,
         @Query("queryParamStringList") queryParamStringList: List<String>,
         @Query("queryParamStringListNullable") queryParamStringListNullable: List<String>?
-    ): Call<TkRequestTestGetRequestOutputVO?>
+    ): Call<GetTkRequestTestGetRequestOutputVO?>
 
-    data class TkRequestTestGetRequestOutputVO(
+    data class GetTkRequestTestGetRequestOutputVO(
         @SerializedName("queryParamString")
         @Expose
         val queryParamString: String,
@@ -95,11 +95,11 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @GET("/tk/request-test/get-request/{pathParamInt}")
-    fun tkRequestTestGetRequestPathParamInt(
+    fun getTkRequestTestGetRequestPathParamInt(
         @Path("pathParamInt") pathParamInt: Int
-    ): Call<TkRequestTestGetRequestPathParamIntOutputVO?>
+    ): Call<GetTkRequestTestGetRequestPathParamIntOutputVO?>
 
-    data class TkRequestTestGetRequestPathParamIntOutputVO(
+    data class GetTkRequestTestGetRequestPathParamIntOutputVO(
         @SerializedName("pathParamInt")
         @Expose
         val pathParamInt: Int
@@ -112,11 +112,11 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @POST("/tk/request-test/post-request-application-json")
-    fun tkRequestTestPostRequestApplicationJson(
-        @Body inputVo: TkRequestTestPostRequestApplicationJsonInputVO
-    ): Call<TkRequestTestPostRequestApplicationJsonOutputVO?>
+    fun postTkRequestTestPostRequestApplicationJson(
+        @Body inputVo: PostTkRequestTestPostRequestApplicationJsonInputVO
+    ): Call<PostTkRequestTestPostRequestApplicationJsonOutputVO?>
 
-    data class TkRequestTestPostRequestApplicationJsonInputVO(
+    data class PostTkRequestTestPostRequestApplicationJsonInputVO(
         @SerializedName("requestBodyString")
         @Expose
         val requestBodyString: String,
@@ -149,7 +149,7 @@ interface LocalHostRequestApi {
         val requestBodyStringListNullable: List<String>?
     )
 
-    data class TkRequestTestPostRequestApplicationJsonOutputVO(
+    data class PostTkRequestTestPostRequestApplicationJsonOutputVO(
         @SerializedName("requestBodyString")
         @Expose
         val requestBodyString: String,
@@ -190,7 +190,7 @@ interface LocalHostRequestApi {
     // ok : 정상 동작
     @POST("/tk/request-test/post-request-x-www-form-urlencoded")
     @FormUrlEncoded
-    fun tkRequestTestPostRequestXWwwFormUrlencoded(
+    fun postTkRequestTestPostRequestXWwwFormUrlencoded(
         @Field("requestFormString") requestFormString: String,
         @Field("requestFormStringNullable") requestFormStringNullable: String?,
         @Field("requestFormInt") requestFormInt: Int,
@@ -201,9 +201,9 @@ interface LocalHostRequestApi {
         @Field("requestFormBooleanNullable") requestFormBooleanNullable: Boolean?,
         @Field("requestFormStringList") requestFormStringList: List<String>,
         @Field("requestFormStringListNullable") requestFormStringListNullable: List<String>?
-    ): Call<TkRequestTestPostRequestXWwwFormUrlencodedOutputVO?>
+    ): Call<PostTkRequestTestPostRequestXWwwFormUrlencodedOutputVO?>
 
-    data class TkRequestTestPostRequestXWwwFormUrlencodedOutputVO(
+    data class PostTkRequestTestPostRequestXWwwFormUrlencodedOutputVO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -245,7 +245,7 @@ interface LocalHostRequestApi {
     // ok : 정상 동작
     @POST("/tk/request-test/post-request-multipart-form-data")
     @Multipart
-    fun tkRequestTestPostRequestMultipartFormData(
+    fun postTkRequestTestPostRequestMultipartFormData(
         @Part requestFormString: MultipartBody.Part,
         @Part requestFormStringNullable: MultipartBody.Part?,
         @Part requestFormInt: MultipartBody.Part,
@@ -258,9 +258,9 @@ interface LocalHostRequestApi {
         @Part requestFormStringListNullable: List<MultipartBody.Part>?,
         @Part multipartFile: MultipartBody.Part,
         @Part multipartFileNullable: MultipartBody.Part?
-    ): Call<TkRequestTestPostRequestMultipartFormDataOutputVO?>
+    ): Call<PostTkRequestTestPostRequestMultipartFormDataOutputVO?>
 
-    data class TkRequestTestPostRequestMultipartFormDataOutputVO(
+    data class PostTkRequestTestPostRequestMultipartFormDataOutputVO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -302,7 +302,7 @@ interface LocalHostRequestApi {
     // ok : 정상 동작
     @POST("/tk/request-test/post-request-multipart-form-data2")
     @Multipart
-    fun tkRequestTestPostRequestMultipartFormData2(
+    fun postTkRequestTestPostRequestMultipartFormData2(
         @Part requestFormString: MultipartBody.Part,
         @Part requestFormStringNullable: MultipartBody.Part?,
         @Part requestFormInt: MultipartBody.Part,
@@ -315,9 +315,9 @@ interface LocalHostRequestApi {
         @Part requestFormStringListNullable: List<MultipartBody.Part>?,
         @Part multipartFileList: List<MultipartBody.Part>,
         @Part multipartFileNullableList: List<MultipartBody.Part>?
-    ): Call<TkRequestTestPostRequestMultipartFormData2VO?>
+    ): Call<PostTkRequestTestPostRequestMultipartFormData2VO?>
 
-    data class TkRequestTestPostRequestMultipartFormData2VO(
+    data class PostTkRequestTestPostRequestMultipartFormData2VO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -359,13 +359,13 @@ interface LocalHostRequestApi {
     // ok : 정상 동작
     @POST("/tk/request-test/post-request-multipart-form-data-json")
     @Multipart
-    fun tkRequestTestPostRequestMultipartFormDataJson(
+    fun postTkRequestTestPostRequestMultipartFormDataJson(
         @Part jsonString: MultipartBody.Part,
         @Part multipartFile: MultipartBody.Part,
         @Part multipartFileNullable: MultipartBody.Part?
-    ): Call<TkRequestTestPostRequestMultipartFormDataJsonOutputVO?>
+    ): Call<PostTkRequestTestPostRequestMultipartFormDataJsonOutputVO?>
 
-    data class TkRequestTestPostRequestMultipartFormDataJsonJsonStringVo(
+    data class PostTkRequestTestPostRequestMultipartFormDataJsonJsonStringVo(
         @JsonProperty("requestFormString")
         val requestFormString: String,
         @JsonProperty("requestFormStringNullable")
@@ -388,7 +388,7 @@ interface LocalHostRequestApi {
         val requestFormStringListNullable: List<String>?
     )
 
-    data class TkRequestTestPostRequestMultipartFormDataJsonOutputVO(
+    data class PostTkRequestTestPostRequestMultipartFormDataJsonOutputVO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -428,7 +428,7 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @POST("/tk/request-test/generate-error")
-    fun tkRequestTestGenerateError(): Call<Unit?>
+    fun postTkRequestTestGenerateError(): Call<Unit?>
 
 
     ////
@@ -440,11 +440,11 @@ interface LocalHostRequestApi {
     //2 : errorType 을 B 로 보냈습니다.
     //3 : errorType 을 C 로 보냈습니다.
     @POST("/tk/request-test/api-result-code-test")
-    fun tkRequestTestApiResultCodeTest(
-        @Query("errorType") errorType: TkRequestTestApiResultCodeTestErrorTypeEnum
+    fun postTkRequestTestApiResultCodeTest(
+        @Query("errorType") errorType: PostTkRequestTestApiResultCodeTestErrorTypeEnum
     ): Call<Unit?>
 
-    enum class TkRequestTestApiResultCodeTestErrorTypeEnum {
+    enum class PostTkRequestTestApiResultCodeTestErrorTypeEnum {
         A,
         B,
         C
@@ -457,7 +457,7 @@ interface LocalHostRequestApi {
     // (api-result-code)
     // ok : 정상 동작
     @POST("/tk/request-test/generate-time-out-error")
-    fun tkRequestTestGenerateTimeOutError(
+    fun postTkRequestTestGenerateTimeOutError(
         @Query("delayTimeSec") delayTimeSec: Int
     ): Call<Unit?>
 }

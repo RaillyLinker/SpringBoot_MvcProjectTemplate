@@ -16,10 +16,10 @@ interface SensApigwNtrussComRequestApi {
         @Header("x-ncp-apigw-timestamp") xNcpApigwTimestamp: String,
         @Header("x-ncp-iam-access-key") xNcpIamAccessKey: String,
         @Header("x-ncp-apigw-signature-v2") xNcpApigwSignatureV2: String,
-        @Body inputVo: SmsV2ServicesNaverSmsServiceIdMessagesInputVO
+        @Body inputVo: PostSmsV2ServicesNaverSmsServiceIdMessagesInputVO
     ): Call<Unit?>
 
-    data class SmsV2ServicesNaverSmsServiceIdMessagesInputVO(
+    data class PostSmsV2ServicesNaverSmsServiceIdMessagesInputVO(
         @SerializedName("type")
         @Expose
         var type: String,

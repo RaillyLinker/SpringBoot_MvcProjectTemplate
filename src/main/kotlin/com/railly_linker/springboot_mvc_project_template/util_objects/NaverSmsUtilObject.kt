@@ -42,14 +42,14 @@ object NaverSmsUtilObject {
             time.toString(),
             ACCESS_KEY,
             Base64.encodeBase64String(mac.doFinal(message.toByteArray(charset("UTF-8")))),
-            SensApigwNtrussComRequestApi.SmsV2ServicesNaverSmsServiceIdMessagesInputVO(
+            SensApigwNtrussComRequestApi.PostSmsV2ServicesNaverSmsServiceIdMessagesInputVO(
                 "SMS",
                 "COMM",
                 inputVo.countryCode,
                 PHONE_NUMBER,
                 inputVo.content,
                 listOf(
-                    SensApigwNtrussComRequestApi.SmsV2ServicesNaverSmsServiceIdMessagesInputVO.MessageVo(
+                    SensApigwNtrussComRequestApi.PostSmsV2ServicesNaverSmsServiceIdMessagesInputVO.MessageVo(
                         inputVo.phoneNumber,
                         inputVo.content
                     )

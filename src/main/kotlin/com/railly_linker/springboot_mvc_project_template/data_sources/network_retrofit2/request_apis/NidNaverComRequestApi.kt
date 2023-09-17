@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface NidNaverComRequestApi {
     // [Naver Oauth2 AccessToken 요청]
     @GET("/oauth2.0/token")
-    fun oAuth2Dot0Token(
+    fun getOAuth2Dot0Token(
         // 무조건 "authorization_code" 입력
         @Query("grant_type") grantType: String,
         // OAuth2 ClientId
@@ -22,9 +22,9 @@ interface NidNaverComRequestApi {
         @Query("code") code: String,
         // OAuth2 로그인할때 사용한 state
         @Query("state") state: String
-    ): Call<OAuth2Dot0TokenRequestOutputVO?>
+    ): Call<GetOAuth2Dot0TokenRequestOutputVO?>
 
-    data class OAuth2Dot0TokenRequestOutputVO(
+    data class GetOAuth2Dot0TokenRequestOutputVO(
         @SerializedName("access_token")
         @Expose
         val accessToken: String?,
