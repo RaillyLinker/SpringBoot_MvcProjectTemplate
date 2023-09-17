@@ -37,14 +37,14 @@ class RedisConfig {
     // ---------------------------------------------------------------------------------------------
     // [redis1]
     @Value("\${datasource-redis.redis1.host}")
-    private lateinit var redis1HostMbr: String
+    private lateinit var redis1Host: String
 
     @Value("\${datasource-redis.redis1.port}")
-    private var redis1PortMbr: Int? = null
+    private var redis1Port: Int? = null
 
     @Bean(TN_REDIS1 + "_ConnectionFactory")
     fun redis1ConnectionFactory(): RedisConnectionFactory {
-        return LettuceConnectionFactory(redis1HostMbr, redis1PortMbr!!)
+        return LettuceConnectionFactory(redis1Host, redis1Port!!)
     }
 
     @Bean(TN_REDIS1)
@@ -58,14 +58,14 @@ class RedisConfig {
     // ---------------------------------------------------------------------------------------------
     // [redis2] (예시)
 //    @Value("\${datasource-redis.redis2.host}")
-//    private lateinit var redis2HostMbr: String
+//    private lateinit var redis2Host: String
 //
 //    @Value("\${datasource-redis.redis2.port}")
-//    private var redis2PortMbr: Int? = null
+//    private var redis2Port: Int? = null
 //
 //    @Bean(TN_REDIS2+"_ConnectionFactory")
 //    fun redis2ConnectionFactory(): RedisConnectionFactory {
-//        return LettuceConnectionFactory(redis2HostMbr, redis2PortMbr!!)
+//        return LettuceConnectionFactory(redis2Host, redis2Port!!)
 //    }
 //
 //    @Bean(TN_REDIS1)

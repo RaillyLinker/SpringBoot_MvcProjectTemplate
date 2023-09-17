@@ -1,8 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2
 
 import com.google.gson.GsonBuilder
-import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.LocalHostRequestApi
-import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.SensApigwNtrussComRequestApi
+import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.*
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -34,7 +33,7 @@ class RepositoryNetworkRetrofit2 private constructor() {
         )).create(LocalHostRequestApi::class.java)
 
     // Naver SMS 발송용
-    val sensApigwNtrussComRequestApiMbr: SensApigwNtrussComRequestApi =
+    val sensApigwNtrussComRequestApi: SensApigwNtrussComRequestApi =
         (getRetrofitClient(
             "https://sens.apigw.ntruss.com",
             7000L,
@@ -42,6 +41,36 @@ class RepositoryNetworkRetrofit2 private constructor() {
             7000L,
             false
         )).create(SensApigwNtrussComRequestApi::class.java)
+
+    // Google AccessToken 발급용
+    val accountsGoogleComRequestApi: AccountsGoogleComRequestApi =
+        (getRetrofitClient(
+            "https://accounts.google.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(AccountsGoogleComRequestApi::class.java)
+
+    // Naver AccessToken 발급용
+    val nidNaverComRequestApi: NidNaverComRequestApi =
+        (getRetrofitClient(
+            "https://nid.naver.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(NidNaverComRequestApi::class.java)
+
+    // KakaoTalk AccessToken 발급용
+    val kauthKakaoComRequestApi: KauthKakaoComRequestApi =
+        (getRetrofitClient(
+            "https://kauth.kakao.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(KauthKakaoComRequestApi::class.java)
 
 
     // ---------------------------------------------------------------------------------------------
@@ -92,8 +121,8 @@ class RepositoryNetworkRetrofit2 private constructor() {
             okHttpClientBuilder.retryOnConnectionFailure(retryOnConnectionFailure)
 
             // 로깅 인터셉터 설정
-            val loggerMbr: Logger = LoggerFactory.getLogger(this::class.java)
-            val interceptor = HttpLoggingInterceptor { message -> loggerMbr.debug("Retrofit2 Interceptor : $message") }
+            val logger: Logger = LoggerFactory.getLogger(this::class.java)
+            val interceptor = HttpLoggingInterceptor { message -> logger.debug("Retrofit2 Interceptor : $message") }
             val httpLoggingInterceptor = interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             okHttpClientBuilder.addInterceptor(httpLoggingInterceptor)
 

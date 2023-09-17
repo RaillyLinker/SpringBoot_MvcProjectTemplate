@@ -43,7 +43,7 @@ class SecurityConfig(
         // 같은 멤버가 동시 로그인을 할 수 있는 개수 (0 보다 작으면 무제한)
         const val SAME_MEMBER_SIGN_IN_COUNT: Int = -1
 
-        // 동시 로그인 개수를 초과 했을 때의 동작 (sameMemberSignInCountMbr 가 0 이상일 때 유의미)
+        // 동시 로그인 개수를 초과 했을 때의 동작 (SAME_MEMBER_SIGN_IN_COUNT 가 0 이상일 때 유의미)
         // (0 : 로그인 API 에서 로그인 금지 처리, 1 : 기존 로그인 중 가장 오래된 토큰을 로그아웃 처리하고 현 로그인 토큰이 추가됨)
         const val SAME_MEMBER_SIGN_IN_OVER_POLICY: Int = 1
     }

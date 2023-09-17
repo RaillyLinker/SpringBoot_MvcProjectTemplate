@@ -245,43 +245,55 @@ class C7TkAuthController(
     }
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N6. OAuth2 Code 로 OAuth2 AccessToken 발급",
-//        description = "OAuth2 Code 를 사용하여 얻은 OAuth2 AccessToken 발급\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 유효하지 않은 OAuth2 인증 정보",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/oauth2-access-token")
-//    fun api6(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(name = "oauth2TypeCode", description = "OAuth2 종류 코드 (1 : NAVER)", example = "1")
-//        @RequestParam("oauth2TypeCode")
-//        oauth2TypeCode: Int,
-//        @Parameter(name = "oauth2Code", description = "OAuth2 인증으로 받은 OAuth2 Code", example = "asdfeqwer1234")
-//        @RequestParam("oauth2Code")
-//        oauth2Code: String
-//    ): Api6OutputVo? {
-//        return service.api6(httpServletResponse, oauth2TypeCode, oauth2Code)
-//    }
-//
-//    data class Api6OutputVo(
-//        @Schema(
-//            description = "Code 로 발급받은 SNS AccessToken",
-//            required = true,
-//            example = "abcd1234!@#$"
-//        )
-//        @JsonProperty("snsAccessToken")
-//        val snsAccessToken: String
-//    )
+    @Operation(
+        summary = "N6. OAuth2 Code 로 OAuth2 AccessToken 발급",
+        description = "OAuth2 Code 를 사용하여 얻은 OAuth2 AccessToken 발급\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 유효하지 않은 OAuth2 인증 정보",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/oauth2-access-token")
+    fun api6(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(
+            name = "oauth2TypeCode",
+            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
+            example = "1"
+        )
+        @RequestParam("oauth2TypeCode")
+        oauth2TypeCode: Int,
+        @Parameter(name = "oauth2Code", description = "OAuth2 인증으로 받은 OAuth2 Code", example = "asdfeqwer1234")
+        @RequestParam("oauth2Code")
+        oauth2Code: String
+    ): Api6OutputVo? {
+        return service.api6(httpServletResponse, oauth2TypeCode, oauth2Code)
+    }
+
+    data class Api6OutputVo(
+
+        @Schema(
+            description = "Code 로 발급받은 SNS AccessToken Type",
+            required = true,
+            example = "Bearer"
+        )
+        @JsonProperty("oAuth2AccessTokenType")
+        val oAuth2AccessTokenType: String,
+
+        @Schema(
+            description = "Code 로 발급받은 SNS AccessToken",
+            required = true,
+            example = "abcd1234!@#$"
+        )
+        @JsonProperty("oAuth2AccessToken")
+        val oAuth2AccessToken: String
+    )
 
     ////
     // todo

@@ -57,46 +57,46 @@ class C7TkAuthService(
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // Retrofit2 요청 객체
-    val networkRetrofit2Mbr: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
+    val networkRetrofit2: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
 
     // 회원 가입 이메일 검증 만료시간(초)
-    private var signUpEmailVerificationTimeSecMbr: Long = 60 * 10
+    private var signUpEmailVerificationTimeSec: Long = 60 * 10
 
     // 회원 가입 이메일 검증 완료 후 회원가입을 할 때까지의 만료시간(초)
-    private var signUpEmailVerificationTimeUntilJoinSecMbr: Long = 60 * 10
+    private var signUpEmailVerificationTimeUntilJoinSec: Long = 60 * 10
 
     // 비밀번호 찾기 이메일 검증 만료시간(초)
-    private var findPwEmailVerificationTimeSecMbr: Long = 60 * 10
+    private var findPwEmailVerificationTimeSec: Long = 60 * 10
 
     // 비밀번호 찾기 이메일 검증 완료 후 회원가입을 할 때까지의 만료시간(초)
-    private var findPwEmailVerificationTimeUntilJoinSecMbr: Long = 60 * 10
+    private var findPwEmailVerificationTimeUntilJoinSec: Long = 60 * 10
 
     // 회원 가입 SMS 검증 만료시간(초)
-    private var signUpSmsVerificationTimeSecMbr: Long = 60 * 10
+    private var signUpSmsVerificationTimeSec: Long = 60 * 10
 
     // 회원 가입 SMS 검증 완료 후 회원가입을 할 때까지의 만료시간(초)
-    private var signUpSmsVerificationTimeUntilJoinSecMbr: Long = 60 * 10
+    private var signUpSmsVerificationTimeUntilJoinSec: Long = 60 * 10
 
     // 비밀번호 찾기 SMS 검증 만료시간(초)
-    private var findPwSmsVerificationTimeSecMbr: Long = 60 * 10
+    private var findPwSmsVerificationTimeSec: Long = 60 * 10
 
     // 비밀번호 찾기 SMS 검증 완료 후 비밀번호 찾기 할 때까지의 만료시간(초)
-    private var findPwSmsVerificationTimeUntilJoinSecMbr: Long = 60 * 10
+    private var findPwSmsVerificationTimeUntilJoinSec: Long = 60 * 10
 
     // 이메일 추가 이메일 검증 만료시간(초)
-    private var addEmailVerificationTimeSecMbr: Long = 60 * 10
+    private var addEmailVerificationTimeSec: Long = 60 * 10
 
     // 이메일 추가 이메일 검증 완료 후 추가 할 때까지의 만료시간(초)
-    private var addEmailVerificationTimeUntilJoinSecMbr: Long = 60 * 10
+    private var addEmailVerificationTimeUntilJoinSec: Long = 60 * 10
 
     // 전화번호 추가 문자 검증 만료시간(초)
-    private var addPhoneNumberVerificationTimeSecMbr: Long = 60 * 10
+    private var addPhoneNumberVerificationTimeSec: Long = 60 * 10
 
     // 전화번호 추가 문자 검증 완료 후 추가 할 때까지의 만료시간(초)
-    private var addPhoneNumberVerificationTimeUntilJoinSecMbr: Long = 60 * 10
+    private var addPhoneNumberVerificationTimeUntilJoinSec: Long = 60 * 10
 
     // 회원 가입 OAuth2 검증 만료시간(초)
-    private var signUpOAuth2VerificationTimeSecMbr: Long = 60 * 10
+    private var signUpOAuth2VerificationTimeSec: Long = 60 * 10
 
 
     // ---------------------------------------------------------------------------------------------
@@ -434,53 +434,126 @@ class C7TkAuthService(
 
 
     ////
-    // todo
-//    fun api6(
-//        httpServletResponse: HttpServletResponse,
-//        oauth2TypeCode: Int,
-//        oauth2Code: String
-//    ): C7TkAuthController.Api6OutputVo? {
-//        val snsAccessToken: String
-//
-//        // (정보 검증 로직 수행)
-//        when (oauth2TypeCode) {
-//            1 -> { // NAVER
-//                val clientId = "GM1MR5AmXmEWkia_Yumw"
-//                val clientSecret = "wpEaHRJ1zY"
-//                val redirectUri = "http://localhost/auth.html"
-//
-//                // Access Token 가져오기
-//                val atResponse = networkRetrofit2Mbr.nidNaverComRequestApiMbr.getOauth2Dot0Token(
-//                    "authorization_code",
-//                    clientId,
-//                    clientSecret,
-//                    redirectUri,
-//                    oauth2Code,
-//                    "3789" // 클라이언트와 상의 후 결정
-//                ).execute()
-//
-//                // code 사용 결과 검증
-//                if (atResponse.code() != 200 ||
-//                    atResponse.body() == null ||
-//                    atResponse.body()!!.accessToken == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "1")
-//                    return null
-//                }
-//
-//                snsAccessToken = atResponse.body()!!.accessToken!!
-//            }
-//
-//            else -> {
-//                throw Exception("SNS Login Type not supported")
-//            }
-//        }
-//
-//        httpServletResponse.setHeader("api-result-code", "ok")
-//        return C7TkAuthController.Api6OutputVo(
-//            snsAccessToken
-//        )
-//    }
+    fun api6(
+        httpServletResponse: HttpServletResponse,
+        oauth2TypeCode: Int,
+        oauth2Code: String
+    ): C7TkAuthController.Api6OutputVo? {
+        val snsAccessTokenType: String
+        val snsAccessToken: String
+
+        // (정보 검증 로직 수행)
+        when (oauth2TypeCode) {
+            1 -> { // GOOGLE
+                // OAuth2 ClientId
+                val clientId = "TODO"
+
+                // OAuth2 clientSecret
+                val clientSecret = "TODO"
+
+                // OAuth2 로그인할때 사용한 Redirect Uri
+                val redirectUri = "TODO"
+
+                // Access Token 가져오기
+                val atResponse = networkRetrofit2.accountsGoogleComRequestApi.oOauth2Token(
+                    oauth2Code,
+                    clientId,
+                    clientSecret,
+                    "authorization_code",
+                    redirectUri
+                ).execute()
+
+                // code 사용 결과 검증
+                if (atResponse.code() != 200 ||
+                    atResponse.body() == null ||
+                    atResponse.body()!!.accessToken == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                snsAccessTokenType = atResponse.body()!!.tokenType!!
+                snsAccessToken = atResponse.body()!!.accessToken!!
+            }
+
+            2 -> { // NAVER
+                // OAuth2 ClientId
+                val clientId = "TODO"
+
+                // OAuth2 clientSecret
+                val clientSecret = "TODO"
+
+                // OAuth2 로그인할때 사용한 Redirect Uri
+                val redirectUri = "TODO"
+
+                val state = "TODO"
+
+                // Access Token 가져오기
+                val atResponse = networkRetrofit2.nidNaverComRequestApi.oAuth2Dot0Token(
+                    "authorization_code",
+                    clientId,
+                    clientSecret,
+                    redirectUri,
+                    oauth2Code,
+                    state
+                ).execute()
+
+                // code 사용 결과 검증
+                if (atResponse.code() != 200 ||
+                    atResponse.body() == null ||
+                    atResponse.body()!!.accessToken == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                snsAccessTokenType = atResponse.body()!!.tokenType!!
+                snsAccessToken = atResponse.body()!!.accessToken!!
+            }
+
+            3 -> { // KAKAO
+                // OAuth2 ClientId
+                val clientId = "TODO"
+
+                // OAuth2 clientSecret
+                val clientSecret = "TODO"
+
+                // OAuth2 로그인할때 사용한 Redirect Uri
+                val redirectUri = "TODO"
+
+                // Access Token 가져오기
+                val atResponse = networkRetrofit2.kauthKakaoComRequestApi.oOauthToken(
+                    "authorization_code",
+                    clientId,
+                    clientSecret,
+                    redirectUri,
+                    oauth2Code
+                ).execute()
+
+                // code 사용 결과 검증
+                if (atResponse.code() != 200 ||
+                    atResponse.body() == null ||
+                    atResponse.body()!!.accessToken == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                snsAccessTokenType = atResponse.body()!!.tokenType!!
+                snsAccessToken = atResponse.body()!!.accessToken!!
+            }
+
+            else -> {
+                throw Exception("SNS Login Type not supported")
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api6OutputVo(
+            snsAccessTokenType,
+            snsAccessToken
+        )
+    }
 
 
     ////
@@ -501,7 +574,7 @@ class C7TkAuthService(
 //        when (inputVo.oauth2TypeCode) {
 //            1 -> { // GOOGLE
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.googleApisComRequestApiMbr.getOauth2V1Userinfo(
+//                val response = networkRetrofit2.googleApisComRequestApi.getOauth2V1Userinfo(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -541,7 +614,7 @@ class C7TkAuthService(
 //
 //            3 -> { // NAVER
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.openapiNaverComRequestApiMbr.getV1NidMe(
+//                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -560,7 +633,7 @@ class C7TkAuthService(
 //
 //            4 -> { // KAKAO
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.kapiKakaoComRequestApiMbr.getV2UserMe(
+//                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -1105,14 +1178,14 @@ class C7TkAuthService(
             Redis1_RegisterMembershipEmailVerification(
                 verificationCode
             ),
-            signUpEmailVerificationTimeSecMbr * 1000
+            signUpEmailVerificationTimeSec * 1000
         )
 
         val expireWhen = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
-            this.add(Calendar.SECOND, signUpEmailVerificationTimeSecMbr.toInt())
+            this.add(Calendar.SECOND, signUpEmailVerificationTimeSec.toInt())
         }.time)
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
@@ -1162,14 +1235,14 @@ class C7TkAuthService(
             redis1RegisterMembershipEmailVerificationRepository.saveKeyValue(
                 email,
                 emailVerification.value,
-                signUpEmailVerificationTimeUntilJoinSecMbr * 1000
+                signUpEmailVerificationTimeUntilJoinSec * 1000
             )
 
             val expireWhen = SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss.SSS"
             ).format(Calendar.getInstance().apply {
                 this.time = Date()
-                this.add(Calendar.SECOND, signUpEmailVerificationTimeUntilJoinSecMbr.toInt())
+                this.add(Calendar.SECOND, signUpEmailVerificationTimeUntilJoinSec.toInt())
             }.time)
 
             httpServletResponse.setHeader("api-result-code", "ok")
@@ -1290,14 +1363,14 @@ class C7TkAuthService(
             Redis1_RegisterMembershipPhoneNumberVerification(
                 verificationCode
             ),
-            signUpSmsVerificationTimeSecMbr * 1000
+            signUpSmsVerificationTimeSec * 1000
         )
 
         val expireWhen = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
-            this.add(Calendar.SECOND, signUpSmsVerificationTimeSecMbr.toInt())
+            this.add(Calendar.SECOND, signUpSmsVerificationTimeSec.toInt())
         }.time)
 
         val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
@@ -1348,14 +1421,14 @@ class C7TkAuthService(
             redis1RegisterMembershipPhoneNumberVerificationRepository.saveKeyValue(
                 phoneNumber,
                 smsVerification.value,
-                signUpSmsVerificationTimeUntilJoinSecMbr * 1000
+                signUpSmsVerificationTimeUntilJoinSec * 1000
             )
 
             val expireWhen = SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss.SSS"
             ).format(Calendar.getInstance().apply {
                 this.time = Date()
-                this.add(Calendar.SECOND, signUpSmsVerificationTimeUntilJoinSecMbr.toInt())
+                this.add(Calendar.SECOND, signUpSmsVerificationTimeUntilJoinSec.toInt())
             }.time)
 
             httpServletResponse.setHeader("api-result-code", "ok")
@@ -1461,7 +1534,7 @@ class C7TkAuthService(
 //        when (inputVo.oauth2TypeCode) {
 //            1 -> { // GOOGLE
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.googleApisComRequestApiMbr.getOauth2V1Userinfo(
+//                val response = networkRetrofit2.googleApisComRequestApi.getOauth2V1Userinfo(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -1493,14 +1566,14 @@ class C7TkAuthService(
 //                    RegisterMembershipOAuth2GoogleVerification(
 //                        verificationCode
 //                    ),
-//                    signUpOAuth2VerificationTimeSecMbr * 1000
+//                    signUpOAuth2VerificationTimeSec * 1000
 //                )
 //
 //                val expireWhen = SimpleDateFormat(
 //                    "yyyy-MM-dd HH:mm:ss.SSS"
 //                ).format(Calendar.getInstance().apply {
 //                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSecMbr.toInt())
+//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
 //                }.time)
 //
 //                return C7TkAuthController.Api16OutputVo(
@@ -1540,14 +1613,14 @@ class C7TkAuthService(
 //                    RegisterMembershipOAuth2AppleVerification(
 //                        verificationCode
 //                    ),
-//                    signUpOAuth2VerificationTimeSecMbr * 1000
+//                    signUpOAuth2VerificationTimeSec * 1000
 //                )
 //
 //                val expireWhen = SimpleDateFormat(
 //                    "yyyy-MM-dd HH:mm:ss.SSS"
 //                ).format(Calendar.getInstance().apply {
 //                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSecMbr.toInt())
+//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
 //                }.time)
 //
 //                return C7TkAuthController.Api16OutputVo(
@@ -1559,7 +1632,7 @@ class C7TkAuthService(
 //
 //            3 -> { // NAVER
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.openapiNaverComRequestApiMbr.getV1NidMe(
+//                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -1588,14 +1661,14 @@ class C7TkAuthService(
 //                    RegisterMembershipOAuth2NaverVerification(
 //                        verificationCode
 //                    ),
-//                    signUpOAuth2VerificationTimeSecMbr * 1000
+//                    signUpOAuth2VerificationTimeSec * 1000
 //                )
 //
 //                val expireWhen = SimpleDateFormat(
 //                    "yyyy-MM-dd HH:mm:ss.SSS"
 //                ).format(Calendar.getInstance().apply {
 //                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSecMbr.toInt())
+//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
 //                }.time)
 //
 //                return C7TkAuthController.Api16OutputVo(
@@ -1607,7 +1680,7 @@ class C7TkAuthService(
 //
 //            4 -> { // KAKAO
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.kapiKakaoComRequestApiMbr.getV2UserMe(
+//                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -1637,14 +1710,14 @@ class C7TkAuthService(
 //                    RegisterMembershipOAuth2KakaoVerification(
 //                        verificationCode
 //                    ),
-//                    signUpOAuth2VerificationTimeSecMbr * 1000
+//                    signUpOAuth2VerificationTimeSec * 1000
 //                )
 //
 //                val expireWhen = SimpleDateFormat(
 //                    "yyyy-MM-dd HH:mm:ss.SSS"
 //                ).format(Calendar.getInstance().apply {
 //                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSecMbr.toInt())
+//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
 //                }.time)
 //
 //                return C7TkAuthController.Api16OutputVo(
@@ -1907,7 +1980,7 @@ class C7TkAuthService(
         redis1FindPasswordEmailVerificationRepository.saveKeyValue(
             inputVo.email,
             Redis1_FindPasswordEmailVerification(verificationCode),
-            findPwEmailVerificationTimeSecMbr * 1000
+            findPwEmailVerificationTimeSec * 1000
         )
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
@@ -1929,7 +2002,7 @@ class C7TkAuthService(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
-            this.add(Calendar.SECOND, findPwEmailVerificationTimeSecMbr.toInt())
+            this.add(Calendar.SECOND, findPwEmailVerificationTimeSec.toInt())
         }.time)
 
         return C7TkAuthController.Api22OutputVo(
@@ -1963,14 +2036,14 @@ class C7TkAuthService(
             redis1FindPasswordEmailVerificationRepository.saveKeyValue(
                 email,
                 emailVerification.value,
-                findPwEmailVerificationTimeUntilJoinSecMbr * 1000
+                findPwEmailVerificationTimeUntilJoinSec * 1000
             )
 
             val expireWhen = SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss.SSS"
             ).format(Calendar.getInstance().apply {
                 this.time = Date()
-                this.add(Calendar.SECOND, findPwEmailVerificationTimeUntilJoinSecMbr.toInt())
+                this.add(Calendar.SECOND, findPwEmailVerificationTimeUntilJoinSec.toInt())
             }.time)
 
             httpServletResponse.setHeader("api-result-code", "ok")
@@ -2085,7 +2158,7 @@ class C7TkAuthService(
         redis1FindPasswordPhoneNumberVerificationRepository.saveKeyValue(
             inputVo.phoneNumber,
             Redis1_FindPasswordPhoneNumberVerification(verificationCode),
-            findPwSmsVerificationTimeSecMbr * 1000
+            findPwSmsVerificationTimeSec * 1000
         )
 
         val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
@@ -2108,7 +2181,7 @@ class C7TkAuthService(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
-            this.add(Calendar.SECOND, findPwSmsVerificationTimeSecMbr.toInt())
+            this.add(Calendar.SECOND, findPwSmsVerificationTimeSec.toInt())
         }.time)
 
         httpServletResponse.setHeader("api-result-code", "ok")
@@ -2144,13 +2217,13 @@ class C7TkAuthService(
             redis1FindPasswordPhoneNumberVerificationRepository.saveKeyValue(
                 phoneNumber,
                 smsVerification.value,
-                findPwSmsVerificationTimeUntilJoinSecMbr * 1000
+                findPwSmsVerificationTimeUntilJoinSec * 1000
             )
             val expireWhen = SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss.SSS"
             ).format(Calendar.getInstance().apply {
                 this.time = Date()
-                this.add(Calendar.SECOND, findPwSmsVerificationTimeUntilJoinSecMbr.toInt())
+                this.add(Calendar.SECOND, findPwSmsVerificationTimeUntilJoinSec.toInt())
             }.time)
 
             httpServletResponse.setHeader("api-result-code", "ok")
@@ -2375,7 +2448,7 @@ class C7TkAuthService(
             Redis1_AddEmailVerification(
                 verificationCode
             ),
-            addEmailVerificationTimeSecMbr * 1000
+            addEmailVerificationTimeSec * 1000
         )
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
@@ -2397,7 +2470,7 @@ class C7TkAuthService(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
-            this.add(Calendar.SECOND, addEmailVerificationTimeSecMbr.toInt())
+            this.add(Calendar.SECOND, addEmailVerificationTimeSec.toInt())
         }.time)
 
         httpServletResponse.setHeader("api-result-code", "ok")
@@ -2434,13 +2507,13 @@ class C7TkAuthService(
             redis1AddEmailVerificationRepository.saveKeyValue(
                 "${memberUid}_${email}",
                 emailVerification.value,
-                addEmailVerificationTimeUntilJoinSecMbr * 1000
+                addEmailVerificationTimeUntilJoinSec * 1000
             )
             val expireWhen = SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss.SSS"
             ).format(Calendar.getInstance().apply {
                 this.time = Date()
-                this.add(Calendar.SECOND, addEmailVerificationTimeUntilJoinSecMbr.toInt())
+                this.add(Calendar.SECOND, addEmailVerificationTimeUntilJoinSec.toInt())
             }.time)
 
             httpServletResponse.setHeader("api-result-code", "ok")
@@ -2612,7 +2685,7 @@ class C7TkAuthService(
             Redis1_AddPhoneNumberVerification(
                 verificationCode
             ),
-            addPhoneNumberVerificationTimeSecMbr * 1000
+            addPhoneNumberVerificationTimeSec * 1000
         )
 
         val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
@@ -2635,7 +2708,7 @@ class C7TkAuthService(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
-            this.add(Calendar.SECOND, addPhoneNumberVerificationTimeSecMbr.toInt())
+            this.add(Calendar.SECOND, addPhoneNumberVerificationTimeSec.toInt())
         }.time)
 
         httpServletResponse.setHeader("api-result-code", "ok")
@@ -2673,13 +2746,13 @@ class C7TkAuthService(
             redis1AddPhoneNumberVerificationRepository.saveKeyValue(
                 "${memberUid}_${phoneNumber}",
                 smsVerification.value,
-                addPhoneNumberVerificationTimeUntilJoinSecMbr * 1000
+                addPhoneNumberVerificationTimeUntilJoinSec * 1000
             )
             val expireWhen = SimpleDateFormat(
                 "yyyy-MM-dd HH:mm:ss.SSS"
             ).format(Calendar.getInstance().apply {
                 this.time = Date()
-                this.add(Calendar.SECOND, addPhoneNumberVerificationTimeUntilJoinSecMbr.toInt())
+                this.add(Calendar.SECOND, addPhoneNumberVerificationTimeUntilJoinSec.toInt())
             }.time)
 
             httpServletResponse.setHeader("api-result-code", "ok")
@@ -2834,7 +2907,7 @@ class C7TkAuthService(
 //        when (inputVo.oauth2TypeCode) {
 //            1 -> { // GOOGLE
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.googleApisComRequestApiMbr.getOauth2V1Userinfo(
+//                val response = networkRetrofit2.googleApisComRequestApi.getOauth2V1Userinfo(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -2868,7 +2941,7 @@ class C7TkAuthService(
 //
 //            3 -> { // NAVER
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.openapiNaverComRequestApiMbr.getV1NidMe(
+//                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
@@ -2885,7 +2958,7 @@ class C7TkAuthService(
 //
 //            4 -> { // KAKAO
 //                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2Mbr.kapiKakaoComRequestApiMbr.getV2UserMe(
+//                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
 //                    "Bearer ${inputVo.oauth2Secret}"
 //                ).execute()
 //
