@@ -847,7 +847,7 @@ class C7TkAuthService(
 
         if (memberInfo == null) {
             // 가입되지 않은 회원
-            httpServletResponse.setHeader("api-result-code", "4")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -878,7 +878,7 @@ class C7TkAuthService(
                         JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) * 1000 > JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS || // 최대 만료시간을 초과
                         JwtTokenUtilObject.getMemberUid(jwtRefreshToken) != accessTokenMemberUid // 리프레시 토큰의 멤버 고유번호와 액세스 토큰 멤버 고유번호가 다를시
                     ) {
-                        httpServletResponse.setHeader("api-result-code", "1")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
 
@@ -888,13 +888,13 @@ class C7TkAuthService(
                     if (JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) == 0L || // 만료시간 지남
                         refreshTokenInfoOptional == null // jwtAccessToken 의 리프레시 토큰이 저장소에 없음
                     ) {
-                        httpServletResponse.setHeader("api-result-code", "2")
+                        httpServletResponse.setHeader("api-result-code", "3")
                         return null
                     }
 
                     if (jwtRefreshToken != refreshTokenInfoOptional.value.refreshToken) {
                         // 건내받은 토큰이 해당 액세스 토큰의 가용 토큰과 맞지 않음
-                        httpServletResponse.setHeader("api-result-code", "3")
+                        httpServletResponse.setHeader("api-result-code", "4")
                         return null
                     }
 
@@ -1007,13 +1007,13 @@ class C7TkAuthService(
 
                 else -> {
                     // 처리 가능한 토큰 타입이 아닐 때
-                    httpServletResponse.setHeader("api-result-code", "1")
+                    httpServletResponse.setHeader("api-result-code", "2")
                     return null
                 }
             }
         } else {
             // 타입을 전달 하지 않았을 때
-            httpServletResponse.setHeader("api-result-code", "1")
+            httpServletResponse.setHeader("api-result-code", "2")
             return null
         }
     }
@@ -1997,14 +1997,14 @@ class C7TkAuthService(
             redis1FindPasswordEmailVerificationRepository.findKeyValue(inputVo.email)
 
         if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-            httpServletResponse.setHeader("api-result-code", "2")
+            httpServletResponse.setHeader("api-result-code", "1")
             return
         } else {
             // 입력 코드와 발급된 코드와의 매칭
             val codeMatched = emailVerification.value.secret == inputVo.verificationCode
 
             if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-                httpServletResponse.setHeader("api-result-code", "3")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return
             }
 
@@ -2016,7 +2016,7 @@ class C7TkAuthService(
                 )
 
             if (memberEmail == null) {
-                httpServletResponse.setHeader("api-result-code", "1")
+                httpServletResponse.setHeader("api-result-code", "3")
                 return
             }
 
@@ -2026,7 +2026,7 @@ class C7TkAuthService(
             )
 
             if (member == null) {
-                httpServletResponse.setHeader("api-result-code", "1")
+                httpServletResponse.setHeader("api-result-code", "3")
                 return
             }
 
@@ -2176,14 +2176,14 @@ class C7TkAuthService(
         val smsVerification = redis1FindPasswordPhoneNumberVerificationRepository.findKeyValue(inputVo.phoneNumber)
 
         if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-            httpServletResponse.setHeader("api-result-code", "2")
+            httpServletResponse.setHeader("api-result-code", "1")
             return
         } else {
             // 입력 코드와 발급된 코드와의 매칭
             val codeMatched = smsVerification.value.secret == inputVo.verificationCode
 
             if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 검증 요청을 하지 않거나 만료됨
-                httpServletResponse.setHeader("api-result-code", "3")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return
             }
 
@@ -2195,7 +2195,7 @@ class C7TkAuthService(
                 )
 
             if (memberPhone == null) {
-                httpServletResponse.setHeader("api-result-code", "1")
+                httpServletResponse.setHeader("api-result-code", "3")
                 return
             }
 
@@ -2205,7 +2205,7 @@ class C7TkAuthService(
             )
 
             if (member == null) {
-                httpServletResponse.setHeader("api-result-code", "1")
+                httpServletResponse.setHeader("api-result-code", "3")
                 return
             }
 
@@ -2345,7 +2345,6 @@ class C7TkAuthService(
 
 
     ////
-    // todo CustomRedisTransactional 의 파라미터를 Redis Table 안에 넣기
     @CustomRedisTransactional(
         [
             "${RedisConfig.TN_REDIS1}:${Redis1_AddEmailVerification.TABLE_NAME}"
@@ -2581,12 +2580,13 @@ class C7TkAuthService(
     }
 
 
-//    ////
-//    fun api33(
+    ////
+    // todo
+//    fun api36(
 //        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api33InputVo,
+//        inputVo: C7TkAuthController.Api36InputVo,
 //        authorization: String
-//    ): C7TkAuthController.Api33OutputVo? {
+//    ): C7TkAuthController.Api36OutputVo? {
 //        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 //
 //        // 입력 데이터 검증
@@ -2632,12 +2632,12 @@ class C7TkAuthService(
 //            this.add(Calendar.SECOND, addPhoneNumberVerificationTimeSecMbr.toInt())
 //        }.time)
 //
-//        return C7TkAuthController.Api33OutputVo(
+//        return C7TkAuthController.Api36OutputVo(
 //            expireWhen
 //        )
 //    }
-//
-//
+
+
 //    ////
 //    fun api34(
 //        httpServletResponse: HttpServletResponse,

@@ -13,5 +13,3 @@ class ApplicationMain
 fun main(args: Array<String>) {
     runApplication<ApplicationMain>(*args)
 }
-
-// todo : api-result-code 순서 제대로 되어있는지 확인

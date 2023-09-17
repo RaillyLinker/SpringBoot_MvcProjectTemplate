@@ -435,10 +435,10 @@ class C7TkAuthController(
         description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 유효하지 않은 리프레시 토큰\n\n" +
-                "2 : 리프레시 토큰 만료\n\n" +
-                "3 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음\n\n" +
-                "4 : 가입되지 않은 회원",
+                "1 : 가입되지 않은 회원\n\n" +
+                "2 : 유효하지 않은 리프레시 토큰\n\n" +
+                "3 : 리프레시 토큰 만료\n\n" +
+                "4 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1189,9 +1189,9 @@ class C7TkAuthController(
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 탈퇴된 회원\n\n" +
-                "2 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "3 : 검증 코드가 일치하지 않음",
+                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 검증 코드가 일치하지 않음\n\n" +
+                "3 : 탈퇴된 회원",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1314,9 +1314,9 @@ class C7TkAuthController(
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 탈퇴된 회원\n\n" +
-                "2 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "3 : 검증 코드가 일치하지 않음",
+                "1 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 검증 코드가 일치하지 않음\n\n" +
+                "3 : 탈퇴된 회원",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1684,9 +1684,10 @@ class C7TkAuthController(
     )
 
 
-//    ////
+    ////
+    // todo
 //    @Operation(
-//        summary = "N33 : 전화번호 추가하기 본인 인증 문자 발송 <>",
+//        summary = "N36. 전화번호 추가하기 본인 인증 문자 발송 <>",
 //        description = "전화번호 추가하기 본인 전화번호 확인 문자 발송\n\n" +
 //                "발송 후 10분 후 만료됨\n\n" +
 //                "(api-result-code)\n\n" +
@@ -1701,25 +1702,25 @@ class C7TkAuthController(
 //    )
 //    @PostMapping("/add-phone-number-verification")
 //    @PreAuthorize("isAuthenticated()")
-//    fun api33(
+//    fun api36(
 //        @Parameter(hidden = true)
 //        httpServletResponse: HttpServletResponse,
 //        @Parameter(hidden = true)
 //        @RequestHeader("Authorization")
 //        authorization: String?,
 //        @RequestBody
-//        inputVo: Api33InputVo
-//    ): Api33OutputVo? {
-//        return service.api33(httpServletResponse, inputVo, authorization!!)
+//        inputVo: Api36InputVo
+//    ): Api36OutputVo? {
+//        return service.api36(httpServletResponse, inputVo, authorization!!)
 //    }
 //
-//    data class Api33InputVo(
+//    data class Api36InputVo(
 //        @Schema(description = "수신 전화번호", required = true, example = "82)000-0000-0000")
 //        @JsonProperty("phoneNumber")
 //        val phoneNumber: String
 //    )
 //
-//    data class Api33OutputVo(
+//    data class Api36OutputVo(
 //        @Schema(
 //            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
 //            required = true,
@@ -1728,9 +1729,10 @@ class C7TkAuthController(
 //        @JsonProperty("expireWhen")
 //        val expireWhen: String
 //    )
-//
-//
+
+
 //    ////
+    // todo
 //    @Operation(
 //        summary = "N34 : 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
 //        description = "전화번호 추가하기 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
