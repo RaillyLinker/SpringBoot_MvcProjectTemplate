@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
-// todo : 전화 문자 관련 API 테스트 및 OAuth2 관련 API 구현 및 테스트
 @Tag(name = "/tk/auth APIs", description = "C7. 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
@@ -1685,180 +1684,173 @@ class C7TkAuthController(
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N36. 전화번호 추가하기 본인 인증 문자 발송 <>",
-//        description = "전화번호 추가하기 본인 전화번호 확인 문자 발송\n\n" +
-//                "발송 후 10분 후 만료됨\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 이미 사용중인 전화번호",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/add-phone-number-verification")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api36(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api36InputVo
-//    ): Api36OutputVo? {
-//        return service.api36(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api36InputVo(
-//        @Schema(description = "수신 전화번호", required = true, example = "82)000-0000-0000")
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String
-//    )
-//
-//    data class Api36OutputVo(
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
+    @Operation(
+        summary = "N36. 전화번호 추가하기 본인 인증 문자 발송 <>",
+        description = "전화번호 추가하기 본인 전화번호 확인 문자 발송\n\n" +
+                "발송 후 10분 후 만료됨\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 이미 사용중인 전화번호",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/add-phone-number-verification")
+    @PreAuthorize("isAuthenticated()")
+    fun api36(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api36InputVo
+    ): Api36OutputVo? {
+        return service.api36(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api36InputVo(
+        @Schema(description = "수신 전화번호", required = true, example = "82)000-0000-0000")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String
+    )
+
+    data class Api36OutputVo(
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N37. 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
-//        description = "전화번호 추가하기 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
-//                "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @GetMapping("/add-phone-number-verification-check")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api37(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @Parameter(name = "phoneNumber", description = "수신 전화번호", example = "82)000-0000-0000")
-//        @RequestParam("phoneNumber")
-//        phoneNumber: String,
-//        @Parameter(name = "verificationCode", description = "확인 문자에 전송된 코드", example = "123456")
-//        @RequestParam("verificationCode")
-//        verificationCode: String
-//    ): Api37OutputVo? {
-//        return service.api37(httpServletResponse, phoneNumber, verificationCode, authorization!!)
-//    }
-//
-//    data class Api37OutputVo(
-//        @Schema(description = "본인 인증 코드 일치 여부", required = true, example = "true")
-//        @JsonProperty("isVerified")
-//        val isVerified: Boolean,
-//        @Schema(
-//            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = false,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String?
-//    )
+    @Operation(
+        summary = "N37. 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
+        description = "전화번호 추가하기 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
+                "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 검증 코드가 일치하지 않음",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/add-phone-number-verification-check")
+    @PreAuthorize("isAuthenticated()")
+    fun api37(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "phoneNumber", description = "수신 전화번호", example = "82)000-0000-0000")
+        @RequestParam("phoneNumber")
+        phoneNumber: String,
+        @Parameter(name = "verificationCode", description = "확인 문자에 전송된 코드", example = "123456")
+        @RequestParam("verificationCode")
+        verificationCode: String
+    ): Api37OutputVo? {
+        return service.api37(httpServletResponse, phoneNumber, verificationCode, authorization!!)
+    }
+
+    data class Api37OutputVo(
+        @Schema(
+            description = "isVerified true 일때 새로 늘어난 검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = false,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String?
+    )
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N38. 전화번호 추가하기 <>",
-//        description = "내 계정에 전화번호 추가\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 탈퇴된 회원\n\n" +
-//                "2 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 이미 사용중인 이메일\n\n" +
-//                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/my-new-phone-number")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api38(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api38InputVo
-//    ) {
-//        service.api38(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api38InputVo(
-//        @Schema(description = "추가할 전화번호", required = true, example = "82)000-0000-0000")
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String,
-//
-//        @Schema(
-//            description = "문자 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
+    @Operation(
+        summary = "N38. 전화번호 추가하기 <>",
+        description = "내 계정에 전화번호 추가\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "2 : 이미 사용중인 전화번호\n\n" +
+                "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/my-new-phone-number")
+    @PreAuthorize("isAuthenticated()")
+    fun api38(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api38InputVo
+    ) {
+        service.api38(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api38InputVo(
+        @Schema(description = "추가할 전화번호", required = true, example = "82)000-0000-0000")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String,
+
+        @Schema(
+            description = "문자 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N39. 내 전화번호 제거하기 <>",
-//        description = "내 계정에서 전화번호 제거\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @DeleteMapping("/my-phone-number")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api39(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api39InputVo
-//    ) {
-//        service.api39(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api39InputVo(
-//        @Schema(description = "제거할 전화번호", required = true, example = "82)000-0000-0000")
-//        @JsonProperty("phoneNumber")
-//        val phoneNumber: String
-//    )
+    @Operation(
+        summary = "N39. 내 전화번호 제거하기 <>",
+        description = "내 계정에서 전화번호 제거\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @DeleteMapping("/my-phone-number")
+    @PreAuthorize("isAuthenticated()")
+    fun api39(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api39InputVo
+    ) {
+        service.api39(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api39InputVo(
+        @Schema(description = "제거할 전화번호", required = true, example = "82)000-0000-0000")
+        @JsonProperty("phoneNumber")
+        val phoneNumber: String
+    )
 
 
     ////
@@ -1969,7 +1961,7 @@ class C7TkAuthController(
             )
         ]
     )
-    @PostMapping("/withdrawal")
+    @DeleteMapping("/withdrawal")
     @PreAuthorize("isAuthenticated()")
     fun api42(
         @Parameter(hidden = true)

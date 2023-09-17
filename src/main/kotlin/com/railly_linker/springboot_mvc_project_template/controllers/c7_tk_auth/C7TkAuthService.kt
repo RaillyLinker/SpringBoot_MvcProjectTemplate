@@ -50,7 +50,8 @@ class C7TkAuthService(
     private val redis1RegisterMembershipPhoneNumberVerificationRepository: Redis1_RegisterMembershipPhoneNumberVerificationRepository,
     private val redis1FindPasswordEmailVerificationRepository: Redis1_FindPasswordEmailVerificationRepository,
     private val redis1FindPasswordPhoneNumberVerificationRepository: Redis1_FindPasswordPhoneNumberVerificationRepository,
-    private val redis1AddEmailVerificationRepository: Redis1_AddEmailVerificationRepository
+    private val redis1AddEmailVerificationRepository: Redis1_AddEmailVerificationRepository,
+    private val redis1AddPhoneNumberVerificationRepository: Redis1_AddPhoneNumberVerificationRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -527,7 +528,7 @@ class C7TkAuthService(
 //                if (appleInfo != null) {
 //                    loginId = appleInfo.snsId
 //                } else {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -546,7 +547,7 @@ class C7TkAuthService(
 //
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null) {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -567,7 +568,7 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -1517,7 +1518,7 @@ class C7TkAuthService(
 //                if (appleInfo != null) {
 //                    loginId = appleInfo.snsId
 //                } else {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -1565,7 +1566,7 @@ class C7TkAuthService(
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null
 //                ) {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -1614,7 +1615,7 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return null
 //                }
 //
@@ -2512,6 +2513,7 @@ class C7TkAuthService(
 
 
     ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api35(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api35InputVo,
@@ -2580,246 +2582,240 @@ class C7TkAuthService(
 
 
     ////
-    // todo
-//    fun api36(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api36InputVo,
-//        authorization: String
-//    ): C7TkAuthController.Api36OutputVo? {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        // 입력 데이터 검증
-//        val isDatabase1MemberUserExists =
-//            database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
-//                inputVo.phoneNumber,
-//                true
-//            )
-//        if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return null
-//        }
-//
-//        // 정보 저장 후 문자 발송
-//        val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//        RedisUtilObject.putValue<AddPhoneNumberVerification>(
-//            redis1RedisTemplate,
-//            "${memberUid}_${inputVo.phoneNumber}",
-//            AddPhoneNumberVerification(verificationCode),
-//            addPhoneNumberVerificationTimeSecMbr * 1000
-//        )
-//
-//        val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
-//
-//        // 국가 코드 (ex : 82)
-//        val countryCode = phoneNumberSplit[0]
-//
-//        // 전화번호 (ex : "01000000000")
-//        val phoneNumber = (phoneNumberSplit[1].replace("-", "")).replace(" ", "")
-//
-//        NaverSmsUtilObject.sendSms(
-//            NaverSmsUtilObject.SendSmsInputVo(
-//                countryCode,
-//                phoneNumber,
-//                "[Springboot Mvc Project Template - 전화번호 추가] 인증번호 [${verificationCode}]"
-//            )
-//        )
-//
-//        val expireWhen = SimpleDateFormat(
-//            "yyyy-MM-dd HH:mm:ss.SSS"
-//        ).format(Calendar.getInstance().apply {
-//            this.time = Date()
-//            this.add(Calendar.SECOND, addPhoneNumberVerificationTimeSecMbr.toInt())
-//        }.time)
-//
-//        return C7TkAuthController.Api36OutputVo(
-//            expireWhen
-//        )
-//    }
+    @CustomRedisTransactional(
+        [
+            Redis1_AddPhoneNumberVerification.TRANSACTION_NAME
+        ]
+    )
+    fun api36(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api36InputVo,
+        authorization: String
+    ): C7TkAuthController.Api36OutputVo? {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        // 입력 데이터 검증
+        val isDatabase1MemberUserExists =
+            database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
+                inputVo.phoneNumber,
+                true
+            )
+        if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
+
+        // 정보 저장 후 문자 발송
+        val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+        redis1AddPhoneNumberVerificationRepository.saveKeyValue(
+            "${memberUid}_${inputVo.phoneNumber}",
+            Redis1_AddPhoneNumberVerification(
+                verificationCode
+            ),
+            addPhoneNumberVerificationTimeSecMbr * 1000
+        )
+
+        val phoneNumberSplit = inputVo.phoneNumber.split(")") // ["82", "010-0000-0000"]
+
+        // 국가 코드 (ex : 82)
+        val countryCode = phoneNumberSplit[0]
+
+        // 전화번호 (ex : "01000000000")
+        val phoneNumber = (phoneNumberSplit[1].replace("-", "")).replace(" ", "")
+
+        NaverSmsUtilObject.sendSms(
+            NaverSmsUtilObject.SendSmsInputVo(
+                countryCode,
+                phoneNumber,
+                "[Springboot Mvc Project Template - 전화번호 추가] 인증번호 [${verificationCode}]"
+            )
+        )
+
+        val expireWhen = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.SECOND, addPhoneNumberVerificationTimeSecMbr.toInt())
+        }.time)
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api36OutputVo(
+            expireWhen
+        )
+    }
 
 
     ////
-    // todo
-//    fun api37(
-//        httpServletResponse: HttpServletResponse,
-//        phoneNumber: String,
-//        verificationCode: String,
-//        authorization: String
-//    ): C7TkAuthController.Api37OutputVo? {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val smsVerification =
-//            RedisUtilObject.getValue<AddPhoneNumberVerification>(redis1RedisTemplate, "${memberUid}_${phoneNumber}")
-//
-//        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return null
-//        }
-//
-//        val newVerificationInfo = smsVerification.value as AddPhoneNumberVerification
-//
-//        // 입력 코드와 발급된 코드와의 매칭
-//        val codeMatched = newVerificationInfo.secret == verificationCode
-//
-//        if (codeMatched) { // 코드 일치
-//            RedisUtilObject.putValue<AddPhoneNumberVerification>(
-//                redis1RedisTemplate,
-//                "${memberUid}_${phoneNumber}",
-//                newVerificationInfo,
-//                addPhoneNumberVerificationTimeUntilJoinSecMbr * 1000
-//            )
-//            val expireWhen = SimpleDateFormat(
-//                "yyyy-MM-dd HH:mm:ss.SSS"
-//            ).format(Calendar.getInstance().apply {
-//                this.time = Date()
-//                this.add(Calendar.SECOND, addPhoneNumberVerificationTimeUntilJoinSecMbr.toInt())
-//            }.time)
-//
-//            return C7TkAuthController.Api37OutputVo(
-//                true,
-//                expireWhen
-//            )
-//        } else { // 코드 불일치
-//            return C7TkAuthController.Api37OutputVo(
-//                false,
-//                null
-//            )
-//        }
-//    }
+    @CustomRedisTransactional(
+        [
+            Redis1_AddPhoneNumberVerification.TRANSACTION_NAME
+        ]
+    )
+    fun api37(
+        httpServletResponse: HttpServletResponse,
+        phoneNumber: String,
+        verificationCode: String,
+        authorization: String
+    ): C7TkAuthController.Api37OutputVo? {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val smsVerification =
+            redis1AddPhoneNumberVerificationRepository.findKeyValue("${memberUid}_${phoneNumber}")
+
+        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = smsVerification.value.secret == verificationCode
+
+        if (codeMatched) { // 코드 일치
+            redis1AddPhoneNumberVerificationRepository.saveKeyValue(
+                "${memberUid}_${phoneNumber}",
+                smsVerification.value,
+                addPhoneNumberVerificationTimeUntilJoinSecMbr * 1000
+            )
+            val expireWhen = SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss.SSS"
+            ).format(Calendar.getInstance().apply {
+                this.time = Date()
+                this.add(Calendar.SECOND, addPhoneNumberVerificationTimeUntilJoinSecMbr.toInt())
+            }.time)
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return C7TkAuthController.Api37OutputVo(
+                expireWhen
+            )
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "2")
+            return null
+        }
+    }
 
 
     ////
-    // todo
-//    fun api38(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api38InputVo,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        // 코드 체크
-//        val smsVerification =
-//            RedisUtilObject.getValue<AddPhoneNumberVerification>(
-//                redis1RedisTemplate,
-//                "${memberUid}_${inputVo.phoneNumber}"
-//            )
-//
-//        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
-//            httpServletResponse.setHeader("api-result-code", "2")
-//            return
-//        } else {
-//            val newVerificationInfo = smsVerification.value as AddPhoneNumberVerification
-//
-//            val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//                memberUid.toLong(),
-//                true
-//            )
-//
-//            if (member == null) {
-//                httpServletResponse.setHeader("api-result-code", "1")
-//                return
-//            }
-//
-//            val isDatabase1MemberUserExists =
-//                database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
-//                    inputVo.phoneNumber,
-//                    true
-//                )
-//
-//            if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
-//                httpServletResponse.setHeader("api-result-code", "3")
-//                return
-//            }
-//
-//            // 입력 코드와 발급된 코드와의 매칭
-//            val codeMatched = newVerificationInfo.secret == inputVo.verificationCode
-//
-//            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//                httpServletResponse.setHeader("api-result-code", "4")
-//                return
-//            }
-//
-//            // 이메일 추가
-//            database1MemberMemberPhoneDataRepository.save(
-//                Database1_Member_MemberPhone(
-//                    memberUid.toLong(),
-//                    inputVo.phoneNumber,
-//                    true
-//                )
-//            )
-//
-//            // 확인 완료된 검증 요청 정보 삭제
-//            RedisUtilObject.deleteValue<AddPhoneNumberVerification>(
-//                redis1RedisTemplate,
-//                "${memberUid}_${inputVo.phoneNumber}"
-//            )
-//        }
-//    }
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            Redis1_AddPhoneNumberVerification.TRANSACTION_NAME
+        ]
+    )
+    fun api38(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api38InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        // 코드 체크
+        val smsVerification =
+            redis1AddPhoneNumberVerificationRepository.findKeyValue("${memberUid}_${inputVo.phoneNumber}")
+
+        if (smsVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        } else {
+            val isDatabase1MemberUserExists =
+                database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
+                    inputVo.phoneNumber,
+                    true
+                )
+
+            if (isDatabase1MemberUserExists) { // 이미 사용중인 전화번호
+                httpServletResponse.setHeader("api-result-code", "2")
+                return
+            }
+
+            // 입력 코드와 발급된 코드와의 매칭
+            val codeMatched = smsVerification.value.secret == inputVo.verificationCode
+
+            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
+                httpServletResponse.setHeader("api-result-code", "3")
+                return
+            }
+
+            // 이메일 추가
+            database1MemberMemberPhoneDataRepository.save(
+                Database1_Member_MemberPhoneData(
+                    memberUid.toLong(),
+                    inputVo.phoneNumber,
+                    true
+                )
+            )
+
+            // 확인 완료된 검증 요청 정보 삭제
+            redis1AddPhoneNumberVerificationRepository.deleteKeyValue("${memberUid}_${inputVo.phoneNumber}")
+            httpServletResponse.setHeader("api-result-code", "ok")
+        }
+    }
 
 
     ////
-    // todo
-//    fun api39(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api39InputVo,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val memberUidLong = memberUid.toLong()
-//
-//        // 내 계정에 등록된 모든 전화번호 리스트 가져오기
-//        val myPhoneList = database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        if (myPhoneList.isEmpty()) {
-//            // 전화번호 리스트가 비어있다면
-//            return
-//        }
-//
-//        // 지우려는 전화번호 정보 인덱스 찾기
-//        val selectedPhoneIdx = myPhoneList.indexOfFirst {
-//            it.phoneNumber == inputVo.phoneNumber
-//        }
-//
-//        if (selectedPhoneIdx == -1) {
-//            // 지우려는 전화번호 정보가 없다면
-//            return
-//        }
-//
-//        val selectedPhoneEntity = myPhoneList[selectedPhoneIdx]
-//
-//        val isOauth2Exists = database1MemberMemberSnsOauth2Repository.existsByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        // 지우려는 전화번호 외에 로그인 방법이 존재하는지 확인
-//        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )!!
-//
-//        val isMemberEmailExists = database1MemberMemberEmailDataRepository.existsByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        if (isOauth2Exists || (member.accountPassword != null && (isMemberEmailExists || myPhoneList.size > 1))) {
-//            // 사용 가능한 계정 로그인 정보가 존재
-//
-//            // 전화번호 지우기
-//            selectedPhoneEntity.rowActivate = false
-//            database1MemberMemberPhoneDataRepository.save(
-//                selectedPhoneEntity
-//            )
-//
-//            return
-//        }
-//
-//        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
-//        httpServletResponse.setHeader("api-result-code", "1")
-//        return
-//    }
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api39(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api39InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val memberUidLong = memberUid.toLong()
+
+        // 내 계정에 등록된 모든 전화번호 리스트 가져오기
+        val myPhoneList = database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        if (myPhoneList.isEmpty()) {
+            // 전화번호 리스트가 비어있다면
+            return
+        }
+
+        // 지우려는 전화번호 정보 인덱스 찾기
+        val selectedPhoneIdx = myPhoneList.indexOfFirst {
+            it.phoneNumber == inputVo.phoneNumber
+        }
+
+        if (selectedPhoneIdx == -1) {
+            // 지우려는 전화번호 정보가 없다면
+            return
+        }
+
+        val selectedPhoneEntity = myPhoneList[selectedPhoneIdx]
+
+        val isOauth2Exists = database1MemberMemberOauth2LoginDataRepository.existsByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        // 지우려는 전화번호 외에 로그인 방법이 존재하는지 확인
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            memberUidLong,
+            true
+        )!!
+
+        val isMemberEmailExists = database1MemberMemberEmailDataRepository.existsByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        if (isOauth2Exists || (member.accountPassword != null && (isMemberEmailExists || myPhoneList.size > 1))) {
+            // 사용 가능한 계정 로그인 정보가 존재
+
+            // 전화번호 지우기
+            selectedPhoneEntity.rowActivate = false
+            database1MemberMemberPhoneDataRepository.save(
+                selectedPhoneEntity
+            )
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        }
+
+        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
+        httpServletResponse.setHeader("api-result-code", "1")
+        return
+    }
 
 
     ////
@@ -2862,7 +2858,7 @@ class C7TkAuthService(
 //                if (appleInfo != null) {
 //                    loginId = appleInfo.snsId
 //                } else {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -2879,7 +2875,7 @@ class C7TkAuthService(
 //                // 액세트 토큰 정상 동작 확인
 //                if (response.body() == null
 //                ) {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
@@ -2897,7 +2893,7 @@ class C7TkAuthService(
 //                if (response.code() != 200 ||
 //                    response.body() == null
 //                ) {
-//                    httpServletResponse.setHeader("api-error-code", "2")
+//                    httpServletResponse.setHeader("api-result-code", "2")
 //                    return
 //                }
 //
