@@ -145,8 +145,8 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+            Redis1_RefreshTokenInfo.TRANSACTION_NAME
         ]
     )
     fun api5(
@@ -487,8 +487,8 @@ class C7TkAuthService(
     // todo
 //    @CustomRedisTransactional(
 //        [
-//            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-//            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+//            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+//            Redis1_RefreshTokenInfo.TRANSACTION_NAME
 //        ]
 //    )
 //    fun api7(
@@ -813,8 +813,8 @@ class C7TkAuthService(
     // 주의점 : 클라이언트 입장에선 강제종료 등의 이유로 항상 로그인과 로그아웃이 쌍을 이루는 것은 아니기에 이점을 유의
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+            Redis1_RefreshTokenInfo.TRANSACTION_NAME
         ]
     )
     fun api8(authorization: String, httpServletResponse: HttpServletResponse) {
@@ -831,8 +831,8 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+            Redis1_RefreshTokenInfo.TRANSACTION_NAME
         ]
     )
     fun api9(
@@ -1022,8 +1022,8 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_SignInAccessTokenInfo.TABLE_NAME}",
-            "${RedisConfig.TN_REDIS1}:${Redis1_RefreshTokenInfo.TABLE_NAME}"
+            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+            Redis1_RefreshTokenInfo.TRANSACTION_NAME
         ]
     )
     fun api10(authorization: String, httpServletResponse: HttpServletResponse) {
@@ -1079,7 +1079,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipEmailVerification.TABLE_NAME}"
+            Redis1_RegisterMembershipEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api13(
@@ -1140,7 +1140,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipEmailVerification.TABLE_NAME}"
+            Redis1_RegisterMembershipEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api14(
@@ -1187,7 +1187,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipEmailVerification.TABLE_NAME}"
+            Redis1_RegisterMembershipEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api15(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api15InputVo) {
@@ -1265,7 +1265,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipPhoneNumberVerification.TABLE_NAME}"
+            Redis1_RegisterMembershipPhoneNumberVerification.TRANSACTION_NAME
         ]
     )
     fun api16(
@@ -1326,7 +1326,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipPhoneNumberVerification.TABLE_NAME}"
+            Redis1_RegisterMembershipPhoneNumberVerification.TRANSACTION_NAME
         ]
     )
     fun api17(
@@ -1373,7 +1373,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_RegisterMembershipPhoneNumberVerification.TABLE_NAME}"
+            Redis1_RegisterMembershipPhoneNumberVerification.TRANSACTION_NAME
         ]
     )
     fun api18(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api18InputVo) {
@@ -1884,7 +1884,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordEmailVerification.TABLE_NAME}"
+            Redis1_FindPasswordEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api22(
@@ -1941,7 +1941,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordEmailVerification.TABLE_NAME}"
+            Redis1_FindPasswordEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api23(
@@ -1988,7 +1988,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordEmailVerification.TABLE_NAME}"
+            Redis1_FindPasswordEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api24(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api24InputVo) {
@@ -2062,7 +2062,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordPhoneNumberVerification.TABLE_NAME}"
+            Redis1_FindPasswordPhoneNumberVerification.TRANSACTION_NAME
         ]
     )
     fun api25(
@@ -2121,7 +2121,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordPhoneNumberVerification.TABLE_NAME}"
+            Redis1_FindPasswordPhoneNumberVerification.TRANSACTION_NAME
         ]
     )
     fun api26(
@@ -2168,7 +2168,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_FindPasswordPhoneNumberVerification.TABLE_NAME}"
+            Redis1_FindPasswordPhoneNumberVerification.TRANSACTION_NAME
         ]
     )
     fun api27(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api27InputVo) {
@@ -2347,7 +2347,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_AddEmailVerification.TABLE_NAME}"
+            Redis1_AddEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api32(
@@ -2410,7 +2410,7 @@ class C7TkAuthService(
     ////
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_AddEmailVerification.TABLE_NAME}"
+            Redis1_AddEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api33(
@@ -2458,7 +2458,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     @CustomRedisTransactional(
         [
-            "${RedisConfig.TN_REDIS1}:${Redis1_AddEmailVerification.TABLE_NAME}"
+            Redis1_AddEmailVerification.TRANSACTION_NAME
         ]
     )
     fun api34(

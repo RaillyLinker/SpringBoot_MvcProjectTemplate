@@ -102,7 +102,7 @@ class C5TkRedisTestService(
 
 
     ////
-    @CustomRedisTransactional(["${RedisConfig.TN_REDIS1}:${Redis1_Test.TABLE_NAME}"])
+    @CustomRedisTransactional([Redis1_Test.TRANSACTION_NAME])
     fun api6(httpServletResponse: HttpServletResponse, inputVo: C5TkRedisTestController.Api6InputVo) {
         redis1TestRepository.saveKeyValue(
             inputVo.key,
