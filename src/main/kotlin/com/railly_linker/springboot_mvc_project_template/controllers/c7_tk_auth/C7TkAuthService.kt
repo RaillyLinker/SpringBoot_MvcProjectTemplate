@@ -3068,5 +3068,7 @@ class C7TkAuthService(
                 redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
             }
         }
+        
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }
