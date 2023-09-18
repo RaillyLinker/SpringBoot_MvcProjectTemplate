@@ -3144,8 +3144,88 @@ class C7TkAuthService(
             )
         }
 
+        httpServletResponse.setHeader("api-result-code", "0")
         return C7TkAuthController.Api43OutputVo(
             myProfileList
         )
+    }
+
+
+    ////
+    fun api44(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api44OutputVo? {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
+
+        var myProfile: C7TkAuthController.Api44OutputVo.ProfileInfo? = null
+        for (profile in profileData) {
+            if (profile.isSelected) {
+                myProfile = C7TkAuthController.Api44OutputVo.ProfileInfo(
+                    profile.uid!!,
+                    profile.imageFullUrl,
+                    profile.isSelected
+                )
+                break
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return C7TkAuthController.Api44OutputVo(
+            myProfile
+        )
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api45(httpServletResponse: HttpServletResponse, authorization: String, profileUid: Long) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        // 내 프로필 리스트 가져오기
+        val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
+
+        if (profileData.isEmpty()) {
+            // 내 프로필이 하나도 없을 때
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        // 기존에 선택된 프로필
+        var frontProfile: Database1_Member_MemberProfileData? = null
+
+        // 이번에 선택하려는 프로필
+        var selectedProfile: Database1_Member_MemberProfileData? = null
+        for (profile in profileData) {
+            if (profile.isSelected) {
+                frontProfile = profile
+            }
+            if (profileUid == profile.uid) {
+                selectedProfile = profile
+            }
+        }
+
+        if (selectedProfile == null) {
+            // 이번에 선택하려는 프로필이 없을 때
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (frontProfile != null) {
+            // 기존에 선택된 프로필 선택 해제
+            frontProfile.isSelected = false
+            database1MemberMemberProfileDataRepository.save(frontProfile)
+        }
+
+        // 이번에 선택하려는 프로필을 선택하기
+        selectedProfile.isSelected = true
+        database1MemberMemberProfileDataRepository.save(selectedProfile)
+
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }

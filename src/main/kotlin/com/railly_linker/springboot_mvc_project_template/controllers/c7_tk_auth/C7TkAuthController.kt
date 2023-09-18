@@ -2171,4 +2171,83 @@ class C7TkAuthController(
             val isFront: Boolean
         )
     }
+
+
+    ////
+    @Operation(
+        summary = "N44. 내 대표 Profile 이미지 정보 가져오기 <>",
+        description = "내 대표 Profile 이미지 정보 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/my-front-profile")
+    @PreAuthorize("isAuthenticated()")
+    fun api44(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api44OutputVo? {
+        return service.api44(httpServletResponse, authorization!!)
+    }
+
+    data class Api44OutputVo(
+        @Schema(description = "내 대표 Profile 이미지 정보", required = true)
+        @JsonProperty("myFrontProfileInfo")
+        val myFrontProfileInfo: ProfileInfo?
+    ) {
+        @Schema(description = "Profile 정보")
+        data class ProfileInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
+            @JsonProperty("imageFullUrl")
+            val imageFullUrl: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N45. 내 대표 프로필 설정하기 <>",
+        description = "내가 등록한 프로필들 중 대표 프로필 설정하기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1. 선택한 profileUid 가 없습니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PatchMapping("/my-front-profile")
+    @PreAuthorize("isAuthenticated()")
+    fun api45(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "profileUid", description = "대표 프로필로 설정할 프로필의 고유값", example = "1")
+        @RequestParam(value = "profileUid")
+        profileUid: Long
+    ) {
+        service.api45(
+            httpServletResponse,
+            authorization!!,
+            profileUid
+        )
+    }
 }
