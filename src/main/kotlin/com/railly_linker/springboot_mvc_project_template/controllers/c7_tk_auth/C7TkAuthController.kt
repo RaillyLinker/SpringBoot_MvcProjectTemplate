@@ -673,12 +673,19 @@ class C7TkAuthController(
 
     data class Api13OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+        @Schema(
             description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
-        @JsonProperty("expireWhen")
-        val expireWhen: String
+        @JsonProperty("verificationExpireWhen")
+        val verificationExpireWhen: String
     )
 
 
@@ -689,8 +696,9 @@ class C7TkAuthController(
                 "첫 인증 완료시 이메일 회원가입까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : verificationCode 가 일치하지 않음",
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -702,6 +710,9 @@ class C7TkAuthController(
     fun api14(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
+        @Parameter(name = "verificationUid", description = "검증 고유값", example = "1")
+        @RequestParam("verificationUid")
+        verificationUid: Long,
         @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
         @RequestParam("email")
         email: String,
@@ -709,7 +720,7 @@ class C7TkAuthController(
         @RequestParam("verificationCode")
         verificationCode: String
     ): Api14OutputVo? {
-        return service.api14(httpServletResponse, email, verificationCode)
+        return service.api14(httpServletResponse, verificationUid, email, verificationCode)
     }
 
     data class Api14OutputVo(
@@ -729,10 +740,11 @@ class C7TkAuthController(
         description = "이메일 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 기존 회원 존재\n\n" +
-                "2 : 닉네임 중복\n\n" +
-                "3 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 이미 가입된 회원이 있습니다.\n\n" +
+                "5 : 이미 사용중인 닉네임",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -758,6 +770,14 @@ class C7TkAuthController(
         )
         @JsonProperty("email")
         val email: String,
+
+        @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
 
         @Schema(
             description = "사용할 비밀번호",
@@ -1136,12 +1156,19 @@ class C7TkAuthController(
 
     data class Api22OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+        @Schema(
             description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
-        @JsonProperty("expireWhen")
-        val expireWhen: String
+        @JsonProperty("verificationExpireWhen")
+        val verificationExpireWhen: String
     )
 
 
@@ -1152,8 +1179,9 @@ class C7TkAuthController(
                 "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : verificationCode 가 일치하지 않음",
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1165,6 +1193,9 @@ class C7TkAuthController(
     fun api23(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
+        @Parameter(name = "verificationUid", description = "검증 고유값", example = "1")
+        @RequestParam("verificationUid")
+        verificationUid: Long,
         @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
         @RequestParam("email")
         email: String,
@@ -1172,7 +1203,7 @@ class C7TkAuthController(
         @RequestParam("verificationCode")
         verificationCode: String
     ): Api23OutputVo? {
-        return service.api23(httpServletResponse, email, verificationCode)
+        return service.api23(httpServletResponse, verificationUid, email, verificationCode)
     }
 
     data class Api23OutputVo(
@@ -1193,9 +1224,10 @@ class C7TkAuthController(
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 검증 코드가 일치하지 않음\n\n" +
-                "3 : 탈퇴된 회원",
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 탈퇴한 회원입니다.",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1217,6 +1249,14 @@ class C7TkAuthController(
         @Schema(description = "비밀번호를 찾을 계정 이메일", required = true, example = "test@gmail.com")
         @JsonProperty("email")
         val email: String,
+
+        @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
 
         @Schema(
             description = "이메일 검증에 사용한 코드",
@@ -1554,12 +1594,20 @@ class C7TkAuthController(
 
     data class Api32OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
             description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
-        @JsonProperty("expireWhen")
-        val expireWhen: String
+        @JsonProperty("verificationExpireWhen")
+        val verificationExpireWhen: String
     )
 
 
@@ -1570,8 +1618,9 @@ class C7TkAuthController(
                 "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 검증 코드가 일치하지 않음",
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1587,6 +1636,9 @@ class C7TkAuthController(
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
         authorization: String?,
+        @Parameter(name = "verificationUid", description = "검증 고유값", example = "1")
+        @RequestParam("verificationUid")
+        verificationUid: Long,
         @Parameter(name = "email", description = "확인 이메일", example = "test@gmail.com")
         @RequestParam("email")
         email: String,
@@ -1594,7 +1646,7 @@ class C7TkAuthController(
         @RequestParam("verificationCode")
         verificationCode: String
     ): Api33OutputVo? {
-        return service.api33(httpServletResponse, email, verificationCode, authorization!!)
+        return service.api33(httpServletResponse, verificationUid, email, verificationCode, authorization!!)
     }
 
     data class Api33OutputVo(
@@ -1614,9 +1666,10 @@ class C7TkAuthController(
         description = "내 계정에 이메일 추가\n\n" +
                 "(api-result-code)\n\n" +
                 "ok : 정상 동작\n\n" +
-                "1 : 이메일 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 이미 사용중인 이메일\n\n" +
-                "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 이미 사용중인 이메일",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1642,6 +1695,14 @@ class C7TkAuthController(
         @Schema(description = "추가할 이메일", required = true, example = "test@gmail.com")
         @JsonProperty("email")
         val email: String,
+
+        @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
 
         @Schema(
             description = "이메일 검증에 사용한 코드",

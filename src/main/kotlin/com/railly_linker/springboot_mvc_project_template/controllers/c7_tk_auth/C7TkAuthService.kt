@@ -39,16 +39,16 @@ class C7TkAuthService(
     private val database1MemberMemberEmailDataRepository: Database1_Member_MemberEmailDataRepository,
     private val database1MemberMemberPhoneDataRepository: Database1_Member_MemberPhoneDataRepository,
     private val database1MemberMemberOauth2LoginDataRepository: Database1_Member_MemberOauth2LoginDataRepository,
+    private val database1MemberRegisterEmailVerificationDataRepository: Database1_Member_RegisterEmailVerificationDataRepository,
+    private val database1MemberFindPasswordEmailVerificationDataRepository: Database1_Member_FindPasswordEmailVerificationDataRepository,
+    private val database1MemberAddEmailVerificationDataRepository: Database1_Member_AddEmailVerificationDataRepository,
 
     // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
     private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository,
-    private val redis1RegisterMembershipEmailVerificationRepository: Redis1_RegisterMembershipEmailVerificationRepository,
     private val redis1RegisterMembershipPhoneNumberVerificationRepository: Redis1_RegisterMembershipPhoneNumberVerificationRepository,
     private val redis1RegisterMembershipOauth2VerificationRepository: Redis1_RegisterMembershipOauth2VerificationRepository,
-    private val redis1FindPasswordEmailVerificationRepository: Redis1_FindPasswordEmailVerificationRepository,
     private val redis1FindPasswordPhoneNumberVerificationRepository: Redis1_FindPasswordPhoneNumberVerificationRepository,
-    private val redis1AddEmailVerificationRepository: Redis1_AddEmailVerificationRepository,
     private val redis1AddPhoneNumberVerificationRepository: Redis1_AddPhoneNumberVerificationRepository
 ) {
     // <멤버 변수 공간>
@@ -1118,11 +1118,7 @@ class C7TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_RegisterMembershipEmailVerification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api13(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api13InputVo
@@ -1141,20 +1137,15 @@ class C7TkAuthService(
 
         // 정보 저장 후 이메일 발송
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-        redis1RegisterMembershipEmailVerificationRepository.saveKeyValue(
-            inputVo.email,
-            Redis1_RegisterMembershipEmailVerification(
-                verificationCode
-            ),
-            signUpEmailVerificationTimeSec * 1000
-        )
-
-        val expireWhen = SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss.SSS"
-        ).format(Calendar.getInstance().apply {
-            this.time = Date()
-            this.add(Calendar.SECOND, signUpEmailVerificationTimeSec.toInt())
-        }.time)
+        val database1MemberRegisterEmailVerificationData =
+            database1MemberRegisterEmailVerificationDataRepository.save(
+                Database1_Member_RegisterEmailVerificationData(
+                    inputVo.email,
+                    verificationCode,
+                    LocalDateTime.now().plusSeconds(signUpEmailVerificationTimeSec),
+                    true
+                )
+            )
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
             "Springboot Mvc Project Template",
@@ -1173,121 +1164,131 @@ class C7TkAuthService(
 
         httpServletResponse.setHeader("api-result-code", "ok")
         return C7TkAuthController.Api13OutputVo(
-            expireWhen
+            database1MemberRegisterEmailVerificationData.uid!!,
+            database1MemberRegisterEmailVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
     }
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_RegisterMembershipEmailVerification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api14(
         httpServletResponse: HttpServletResponse,
+        verificationUid: Long,
         email: String,
         verificationCode: String
     ): C7TkAuthController.Api14OutputVo? {
-        val emailVerification = redis1RegisterMembershipEmailVerificationRepository.findKeyValue(email)
+        val emailVerificationOpt = database1MemberRegisterEmailVerificationDataRepository.findById(verificationUid)
 
-        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+        if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
-        // 입력 코드와 발급된 코드와의 매칭
-        val codeMatched = emailVerification.value.secret == verificationCode
+        val emailVerification = emailVerificationOpt.get()
 
-        if (codeMatched) { // 코드 일치
-            redis1RegisterMembershipEmailVerificationRepository.saveKeyValue(
-                email,
-                emailVerification.value,
-                signUpEmailVerificationTimeUntilJoinSec * 1000
-            )
+        if (!emailVerification.rowActivate ||
+            emailVerification.emailAddress != email
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
 
-            val expireWhen = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
-            ).format(Calendar.getInstance().apply {
-                this.time = Date()
-                this.add(Calendar.SECOND, signUpEmailVerificationTimeUntilJoinSec.toInt())
-            }.time)
-
-            httpServletResponse.setHeader("api-result-code", "ok")
-            return C7TkAuthController.Api14OutputVo(
-                expireWhen
-            )
-        } else { // 코드 불일치
+        if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
+            // 만료됨
             httpServletResponse.setHeader("api-result-code", "2")
             return null
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.verificationSecret == verificationCode
+
+        return if (codeMatched) { // 코드 일치
+            emailVerification.verificationExpireWhen =
+                LocalDateTime.now().plusSeconds(signUpEmailVerificationTimeUntilJoinSec)
+            database1MemberRegisterEmailVerificationDataRepository.save(
+                emailVerification
+            )
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            C7TkAuthController.Api14OutputVo(
+                emailVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
+            )
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            null
         }
     }
 
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    @CustomRedisTransactional(
-        [
-            Redis1_RegisterMembershipEmailVerification.TRANSACTION_NAME
-        ]
-    )
     fun api15(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api15InputVo) {
-        val loginId: String = inputVo.email // 검증 로직에서 정해지면 충족시키기
-        // 기존 회원 확인
-        val isUserExists =
-            database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
-                loginId,
-                true
-            )
-        if (isUserExists) { // 기존 회원이 있을 때
+        val emailVerificationOpt =
+            database1MemberRegisterEmailVerificationDataRepository.findById(inputVo.verificationUid)
+
+        if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
             return
         }
 
-        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
+        val emailVerification = emailVerificationOpt.get()
+
+        if (!emailVerification.rowActivate ||
+            emailVerification.emailAddress != inputVo.email
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
+            // 만료됨
             httpServletResponse.setHeader("api-result-code", "2")
             return
         }
 
-        // 본인 이메일 검증 여부 확인
-        val emailVerification = redis1RegisterMembershipEmailVerificationRepository.findKeyValue(loginId)
-
-        if (emailVerification == null) { // 이메일 검증 요청을 하지 않거나 만료됨
-            httpServletResponse.setHeader("api-result-code", "3")
-            return
-        }
-
         // 입력 코드와 발급된 코드와의 매칭
-        val codeMatched = emailVerification.value.secret == inputVo.verificationCode
+        val codeMatched = emailVerification.verificationSecret == inputVo.verificationCode
 
-        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-            httpServletResponse.setHeader("api-result-code", "4")
-            return
-        }
+        if (codeMatched) { // 코드 일치
+            val isUserExists =
+                database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
+                    inputVo.email,
+                    true
+                )
+            if (isUserExists) { // 기존 회원이 있을 때
+                httpServletResponse.setHeader("api-result-code", "4")
+                return
+            }
 
-        val password: String? = passwordEncoder.encode(inputVo.password) // 검증 로직에서 정해지면 충족시키기 // 비밀번호는 암호화
+            if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
+                httpServletResponse.setHeader("api-result-code", "5")
+                return
+            }
 
-        // 회원가입
-        val database1MemberUser = database1MemberMemberDataRepository.save(
-            Database1_Member_MemberData(
-                inputVo.nickName,
-                password,
-                true
+            val password: String? = passwordEncoder.encode(inputVo.password) // 비밀번호 암호화
+
+            // 회원가입
+            val database1MemberUser = database1MemberMemberDataRepository.save(
+                Database1_Member_MemberData(
+                    inputVo.nickName,
+                    password,
+                    true
+                )
             )
-        )
 
-        // 이메일 저장
-        database1MemberMemberEmailDataRepository.save(
-            Database1_Member_MemberEmailData(
-                database1MemberUser.uid!!,
-                loginId,
-                true
+            // 이메일 저장
+            database1MemberMemberEmailDataRepository.save(
+                Database1_Member_MemberEmailData(
+                    database1MemberUser.uid!!,
+                    inputVo.email,
+                    true
+                )
             )
-        )
 
-        // 역할 저장
-        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
-        // 기본 권한 추가
+            // 역할 저장
+            val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
+            // 기본 권한 추가
 //        database1MemberUserRoleList.add(
 //            Database1_Member_MemberRole(
 //                database1MemberUser.uid!!,
@@ -1295,11 +1296,18 @@ class C7TkAuthService(
 //                true
 //            )
 //        )
-        database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
+            database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
 
-        // 확인 완료된 검증 요청 정보 삭제
-        redis1RegisterMembershipEmailVerificationRepository.deleteKeyValue(loginId)
-        httpServletResponse.setHeader("api-result-code", "ok")
+            // 확인 완료된 검증 요청 정보 삭제
+            emailVerification.rowActivate = false
+            database1MemberRegisterEmailVerificationDataRepository.save(emailVerification)
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
+        }
     }
 
 
@@ -1851,11 +1859,7 @@ class C7TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_FindPasswordEmailVerification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api22(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api22InputVo
@@ -1873,11 +1877,15 @@ class C7TkAuthService(
 
         // 정보 저장 후 이메일 발송
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-        redis1FindPasswordEmailVerificationRepository.saveKeyValue(
-            inputVo.email,
-            Redis1_FindPasswordEmailVerification(verificationCode),
-            findPwEmailVerificationTimeSec * 1000
-        )
+        val database1MemberFindPasswordEmailVerificationData =
+            database1MemberFindPasswordEmailVerificationDataRepository.save(
+                Database1_Member_FindPasswordEmailVerificationData(
+                    inputVo.email,
+                    verificationCode,
+                    LocalDateTime.now().plusSeconds(signUpEmailVerificationTimeSec),
+                    true
+                )
+            )
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
             "Springboot Mvc Project Template",
@@ -1894,89 +1902,94 @@ class C7TkAuthService(
             null
         )
 
-        val expireWhen = SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss.SSS"
-        ).format(Calendar.getInstance().apply {
-            this.time = Date()
-            this.add(Calendar.SECOND, findPwEmailVerificationTimeSec.toInt())
-        }.time)
-
         return C7TkAuthController.Api22OutputVo(
-            expireWhen
+            database1MemberFindPasswordEmailVerificationData.uid!!,
+            database1MemberFindPasswordEmailVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
     }
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_FindPasswordEmailVerification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api23(
         httpServletResponse: HttpServletResponse,
+        verificationUid: Long,
         email: String,
         verificationCode: String
     ): C7TkAuthController.Api23OutputVo? {
-        val emailVerification = redis1FindPasswordEmailVerificationRepository.findKeyValue(email)
+        val emailVerificationOpt = database1MemberFindPasswordEmailVerificationDataRepository.findById(verificationUid)
 
-        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+        if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
-        // 입력 코드와 발급된 코드와의 매칭
-        val codeMatched = emailVerification.value.secret == verificationCode
+        val emailVerification = emailVerificationOpt.get()
 
-        if (codeMatched) { // 코드 일치
-            redis1FindPasswordEmailVerificationRepository.saveKeyValue(
-                email,
-                emailVerification.value,
-                findPwEmailVerificationTimeUntilJoinSec * 1000
-            )
+        if (!emailVerification.rowActivate ||
+            emailVerification.emailAddress != email
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
 
-            val expireWhen = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
-            ).format(Calendar.getInstance().apply {
-                this.time = Date()
-                this.add(Calendar.SECOND, findPwEmailVerificationTimeUntilJoinSec.toInt())
-            }.time)
-
-            httpServletResponse.setHeader("api-result-code", "ok")
-            return C7TkAuthController.Api23OutputVo(
-                expireWhen
-            )
-        } else { // 코드 불일치
+        if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
+            // 만료됨
             httpServletResponse.setHeader("api-result-code", "2")
             return null
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.verificationSecret == verificationCode
+
+        return if (codeMatched) { // 코드 일치
+            emailVerification.verificationExpireWhen =
+                LocalDateTime.now().plusSeconds(signUpEmailVerificationTimeUntilJoinSec)
+            database1MemberFindPasswordEmailVerificationDataRepository.save(
+                emailVerification
+            )
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            C7TkAuthController.Api23OutputVo(
+                emailVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
+            )
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            null
         }
     }
 
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    @CustomRedisTransactional(
-        [
-            Redis1_FindPasswordEmailVerification.TRANSACTION_NAME
-        ]
-    )
     fun api24(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api24InputVo) {
-        // 코드 체크
-        val emailVerification =
-            redis1FindPasswordEmailVerificationRepository.findKeyValue(inputVo.email)
+        val emailVerificationOpt =
+            database1MemberFindPasswordEmailVerificationDataRepository.findById(inputVo.verificationUid)
 
-        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+        if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
             return
-        } else {
-            // 입력 코드와 발급된 코드와의 매칭
-            val codeMatched = emailVerification.value.secret == inputVo.verificationCode
+        }
 
-            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-                httpServletResponse.setHeader("api-result-code", "2")
-                return
-            }
+        val emailVerification = emailVerificationOpt.get()
 
+        if (!emailVerification.rowActivate ||
+            emailVerification.emailAddress != inputVo.email
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
+            // 만료됨
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.verificationSecret == inputVo.verificationCode
+
+        if (codeMatched) { // 코드 일치
             // 입력 데이터 검증
             val memberEmail =
                 database1MemberMemberEmailDataRepository.findByEmailAddressAndRowActivate(
@@ -1985,7 +1998,7 @@ class C7TkAuthService(
                 )
 
             if (memberEmail == null) {
-                httpServletResponse.setHeader("api-result-code", "3")
+                httpServletResponse.setHeader("api-result-code", "4")
                 return
             }
 
@@ -1995,7 +2008,7 @@ class C7TkAuthService(
             )
 
             if (member == null) {
-                httpServletResponse.setHeader("api-result-code", "3")
+                httpServletResponse.setHeader("api-result-code", "4")
                 return
             }
 
@@ -2021,9 +2034,14 @@ class C7TkAuthService(
             )
 
             // 확인 완료된 검증 요청 정보 삭제
-            redis1FindPasswordEmailVerificationRepository.deleteKeyValue(inputVo.email)
+            emailVerification.rowActivate = false
+            database1MemberFindPasswordEmailVerificationDataRepository.save(emailVerification)
 
             httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
         }
     }
 
@@ -2314,11 +2332,7 @@ class C7TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_AddEmailVerification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api32(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api32InputVo,
@@ -2332,19 +2346,22 @@ class C7TkAuthService(
                 inputVo.email,
                 true
             )
-        if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
+
+        if (isDatabase1MemberUserExists) { // 기존 회원 존재
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
         // 정보 저장 후 이메일 발송
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-        redis1AddEmailVerificationRepository.saveKeyValue(
-            "${memberUid}_${inputVo.email}",
-            Redis1_AddEmailVerification(
-                verificationCode
-            ),
-            addEmailVerificationTimeSec * 1000
+        val database1MemberRegisterEmailVerificationData = database1MemberAddEmailVerificationDataRepository.save(
+            Database1_Member_AddEmailVerificationData(
+                memberUid.toLong(),
+                inputVo.email,
+                verificationCode,
+                LocalDateTime.now().plusSeconds(addEmailVerificationTimeSec),
+                true
+            )
         )
 
         emailSenderUtilDi.sendThymeLeafHtmlMail(
@@ -2362,74 +2379,71 @@ class C7TkAuthService(
             null
         )
 
-        val expireWhen = SimpleDateFormat(
-            "yyyy-MM-dd HH:mm:ss.SSS"
-        ).format(Calendar.getInstance().apply {
-            this.time = Date()
-            this.add(Calendar.SECOND, addEmailVerificationTimeSec.toInt())
-        }.time)
-
         httpServletResponse.setHeader("api-result-code", "ok")
         return C7TkAuthController.Api32OutputVo(
-            expireWhen
+            database1MemberRegisterEmailVerificationData.uid!!,
+            database1MemberRegisterEmailVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
     }
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_AddEmailVerification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api33(
         httpServletResponse: HttpServletResponse,
+        verificationUid: Long,
         email: String,
         verificationCode: String,
         authorization: String
     ): C7TkAuthController.Api33OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-        val emailVerification = redis1AddEmailVerificationRepository.findKeyValue("${memberUid}_${email}")
 
-        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+        val emailVerificationOpt = database1MemberAddEmailVerificationDataRepository.findById(verificationUid)
+
+        if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
-        // 입력 코드와 발급된 코드와의 매칭
-        val codeMatched = emailVerification.value.secret == verificationCode
+        val emailVerification = emailVerificationOpt.get()
 
-        if (codeMatched) { // 코드 일치
-            redis1AddEmailVerificationRepository.saveKeyValue(
-                "${memberUid}_${email}",
-                emailVerification.value,
-                addEmailVerificationTimeUntilJoinSec * 1000
-            )
-            val expireWhen = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
-            ).format(Calendar.getInstance().apply {
-                this.time = Date()
-                this.add(Calendar.SECOND, addEmailVerificationTimeUntilJoinSec.toInt())
-            }.time)
+        if (!emailVerification.rowActivate ||
+            emailVerification.memberUid != memberUid.toLong() ||
+            emailVerification.emailAddress != email
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
 
-            httpServletResponse.setHeader("api-result-code", "ok")
-            return C7TkAuthController.Api33OutputVo(
-                expireWhen
-            )
-        } else { // 코드 불일치
+        if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
+            // 만료됨
             httpServletResponse.setHeader("api-result-code", "2")
             return null
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.verificationSecret == verificationCode
+
+        return if (codeMatched) { // 코드 일치
+            emailVerification.verificationExpireWhen =
+                LocalDateTime.now().plusSeconds(signUpEmailVerificationTimeUntilJoinSec)
+            database1MemberAddEmailVerificationDataRepository.save(
+                emailVerification
+            )
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            C7TkAuthController.Api33OutputVo(
+                emailVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
+            )
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            null
         }
     }
 
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    @CustomRedisTransactional(
-        [
-            Redis1_AddEmailVerification.TRANSACTION_NAME
-        ]
-    )
     fun api34(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api34InputVo,
@@ -2437,30 +2451,41 @@ class C7TkAuthService(
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
-        // 코드 체크
-        val emailVerification =
-            redis1AddEmailVerificationRepository.findKeyValue("${memberUid}_${inputVo.email}")
+        val emailVerificationOpt =
+            database1MemberAddEmailVerificationDataRepository.findById(inputVo.verificationUid)
 
-        if (emailVerification == null) { // 해당 이메일 검증이 만료되거나 요청한적 없음
+        if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
             return
-        } else {
-            val isDatabase1MemberUserExists =
+        }
+
+        val emailVerification = emailVerificationOpt.get()
+
+        if (!emailVerification.rowActivate ||
+            emailVerification.memberUid != memberUid.toLong() ||
+            emailVerification.emailAddress != inputVo.email
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
+            // 만료됨
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = emailVerification.verificationSecret == inputVo.verificationCode
+
+        if (codeMatched) { // 코드 일치
+            val isUserExists =
                 database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
                     inputVo.email,
                     true
                 )
-
-            if (isDatabase1MemberUserExists) { // 이미 사용중인 이메일
-                httpServletResponse.setHeader("api-result-code", "2")
-                return
-            }
-
-            // 입력 코드와 발급된 코드와의 매칭
-            val codeMatched = emailVerification.value.secret == inputVo.verificationCode
-
-            if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-                httpServletResponse.setHeader("api-result-code", "3")
+            if (isUserExists) { // 기존 회원이 있을 때
+                httpServletResponse.setHeader("api-result-code", "4")
                 return
             }
 
@@ -2474,9 +2499,14 @@ class C7TkAuthService(
             )
 
             // 확인 완료된 검증 요청 정보 삭제
-            redis1AddEmailVerificationRepository.deleteKeyValue("${memberUid}_${inputVo.email}")
+            emailVerification.rowActivate = false
+            database1MemberAddEmailVerificationDataRepository.save(emailVerification)
 
             httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
         }
     }
 
