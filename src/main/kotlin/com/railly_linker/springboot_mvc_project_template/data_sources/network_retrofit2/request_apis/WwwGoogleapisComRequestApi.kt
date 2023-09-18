@@ -11,7 +11,7 @@ import retrofit2.http.Header
 interface WwwGoogleapisComRequestApi {
     // [Google Oauth2 AccessToken 요청]
     @GET("/oauth2/v1/userinfo")
-    fun getOOauth2V1UserInfo(
+    fun getOauth2V1UserInfo(
         @Header("Authorization") authorization: String
     ): Call<GetOOauth2V1UserInfoOutputVO?>
 

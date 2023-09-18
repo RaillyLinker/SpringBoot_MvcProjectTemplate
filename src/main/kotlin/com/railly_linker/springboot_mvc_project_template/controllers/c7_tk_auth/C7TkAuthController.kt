@@ -311,7 +311,7 @@ class C7TkAuthController(
             )
         ]
     )
-    @PostMapping("/sign-in-with-oauth2-token")
+    @PostMapping("/sign-in-with-oauth2-access-token")
     fun api7(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -930,139 +930,135 @@ class C7TkAuthController(
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N19. OAuth2 토큰으로 회원가입 검증",
-//        description = "OAuth2 토큰으로 회원가입 검증\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 기존 회원 존재\n\n" +
-//                "2 : 잘못된 OAuth2 Code",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/register-with-oauth2-token-verification")
-//    fun api19(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api19InputVo
-//    ): Api19OutputVo? {
-//        return service.api19(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api19InputVo(
-//        @Schema(
-//            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
-//            required = true,
-//            example = "1"
-//        )
-//        @JsonProperty("oauth2TypeCode")
-//        val oauth2TypeCode: Int,
-//
-//        @Schema(
-//            description = "OAuth2 인증으로 받은 OAuth2 코드 - 타입별 의미가 다름\n\n" +
-//                    "Apple 로그인 : 발급받은 IdToken\n\n" +
-//                    "Google, Kakao, Naver 로그인 : 발급받은 AccessToken",
-//            required = true,
-//            example = "asdfeqwer1234"
-//        )
-//        @JsonProperty("oauth2Secret")
-//        val oauth2Secret: String
-//    )
-//
-//    data class Api19OutputVo(
-//        @Schema(
-//            description = "OAuth2 검증에 사용할 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("oauth2VerificationCode")
-//        val oauth2VerificationCode: String,
-//
-//        @Schema(
-//            description = "가입에 사용할 OAuth2 고유 아이디",
-//            required = true,
-//            example = "abcd1234"
-//        )
-//        @JsonProperty("oauth2Id")
-//        val oauth2Id: String,
-//
-//        @Schema(
-//            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
-//            required = true,
-//            example = "2023-01-02 11:11:11.111"
-//        )
-//        @JsonProperty("expireWhen")
-//        val expireWhen: String
-//    )
+    @Operation(
+        summary = "N19. OAuth2 AccessToken 으로 회원가입 검증",
+        description = "OAuth2 AccessToken 으로 회원가입 검증\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 잘못된 OAuth2 AccessToken\n\n" +
+                "2 : 기존 회원 존재",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-oauth2-access-token-verification")
+    fun api19(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api19InputVo
+    ): Api19OutputVo? {
+        return service.api19(httpServletResponse, inputVo)
+    }
+
+    data class Api19InputVo(
+        @Schema(
+            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2TypeCode")
+        val oauth2TypeCode: Int,
+
+        @Schema(
+            description = "OAuth2 인증으로 받은 OAuth2 TokenType + AccessToken",
+            required = true,
+            example = "Bearer asdfeqwer1234"
+        )
+        @JsonProperty("oauth2AccessToken")
+        val oauth2AccessToken: String
+    )
+
+    data class Api19OutputVo(
+        @Schema(
+            description = "OAuth2 가입시 검증에 사용할 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("oauth2VerificationCode")
+        val oauth2VerificationCode: String,
+
+        @Schema(
+            description = "가입에 사용할 OAuth2 고유 아이디",
+            required = true,
+            example = "abcd1234"
+        )
+        @JsonProperty("oauth2Id")
+        val oauth2Id: String,
+
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N20. OAuth2 회원가입",
-//        description = "OAuth2 회원가입 처리\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 기존 회원 존재\n\n" +
-//                "2 : OAuth2 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-//                "3 : 닉네임 중복\n\n" +
-//                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/register-with-oauth2")
-//    fun api20(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @RequestBody
-//        inputVo: Api20InputVo
-//    ) {
-//        service.api20(httpServletResponse, inputVo)
-//    }
-//
-//    data class Api20InputVo(
-//        @Schema(
-//            description = "가입에 사용할 OAuth2 고유 아이디",
-//            required = true,
-//            example = "abcd1234"
-//        )
-//        @JsonProperty("oauth2Id")
-//        val oauth2Id: String,
-//
-//        @Schema(
-//            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
-//            required = true,
-//            example = "1"
-//        )
-//        @JsonProperty("oauth2TypeCode")
-//        val oauth2TypeCode: Int,
-//
-//        @Schema(
-//            description = "닉네임",
-//            required = true,
-//            example = "홍길동"
-//        )
-//        @JsonProperty("nickName")
-//        val nickName: String,
-//
-//        @Schema(
-//            description = "oauth2Id 검증에 사용한 코드",
-//            required = true,
-//            example = "123456"
-//        )
-//        @JsonProperty("verificationCode")
-//        val verificationCode: String
-//    )
+    @Operation(
+        summary = "N20. OAuth2 회원가입",
+        description = "OAuth2 회원가입 처리\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 기존 회원 존재\n\n" +
+                "2 : OAuth2 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
+                "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청\n\n" +
+                "4 : 닉네임 중복",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-oauth2")
+    fun api20(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api20InputVo
+    ) {
+        service.api20(httpServletResponse, inputVo)
+    }
+
+    data class Api20InputVo(
+        @Schema(
+            description = "가입에 사용할 OAuth2 고유 아이디",
+            required = true,
+            example = "abcd1234"
+        )
+        @JsonProperty("oauth2Id")
+        val oauth2Id: String,
+
+        @Schema(
+            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2TypeCode")
+        val oauth2TypeCode: Int,
+
+        @Schema(
+            description = "닉네임",
+            required = true,
+            example = "홍길동"
+        )
+        @JsonProperty("nickName")
+        val nickName: String,
+
+        @Schema(
+            description = "oauth2Id 검증에 사용한 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("verificationCode")
+        val verificationCode: String
+    )
 
 
     ////

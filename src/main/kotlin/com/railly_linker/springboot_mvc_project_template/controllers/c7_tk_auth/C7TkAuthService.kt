@@ -45,6 +45,7 @@ class C7TkAuthService(
     private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository,
     private val redis1RegisterMembershipEmailVerificationRepository: Redis1_RegisterMembershipEmailVerificationRepository,
     private val redis1RegisterMembershipPhoneNumberVerificationRepository: Redis1_RegisterMembershipPhoneNumberVerificationRepository,
+    private val redis1RegisterMembershipOauth2VerificationRepository: Redis1_RegisterMembershipOauth2VerificationRepository,
     private val redis1FindPasswordEmailVerificationRepository: Redis1_FindPasswordEmailVerificationRepository,
     private val redis1FindPasswordPhoneNumberVerificationRepository: Redis1_FindPasswordPhoneNumberVerificationRepository,
     private val redis1AddEmailVerificationRepository: Redis1_AddEmailVerificationRepository,
@@ -537,7 +538,6 @@ class C7TkAuthService(
 
 
     ////
-    // todo OAuth 회원가입 후 테스트
     @CustomRedisTransactional(
         [
             Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
@@ -554,7 +554,7 @@ class C7TkAuthService(
         when (inputVo.oauth2TypeCode) {
             1 -> { // GOOGLE
                 // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-                val response = networkRetrofit2.wwwGoogleapisComRequestApi.getOOauth2V1UserInfo(
+                val response = networkRetrofit2.wwwGoogleapisComRequestApi.getOauth2V1UserInfo(
                     inputVo.oauth2AccessToken
                 ).execute()
 
@@ -1492,380 +1492,308 @@ class C7TkAuthService(
 
 
     ////
-    // todo
-//    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api19(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api19InputVo
-//    ): C7TkAuthController.Api19OutputVo? {
-//        // (정보 검증 로직 수행)
-//        when (inputVo.oauth2TypeCode) {
-//            1 -> { // GOOGLE
-//                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2.googleApisComRequestApi.getOauth2V1Userinfo(
-//                    "Bearer ${inputVo.oauth2Secret}"
-//                ).execute()
-//
-//                // 액세트 토큰 정상 동작 확인
-//                if (response.code() != 200 ||
-//                    response.body() == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return null
-//                }
-//
-//                val loginId = response.body()!!.id
-//
-//                val isDatabase1MemberUserExists =
-//                    database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-//                        1,
-//                        loginId,
-//                        true
-//                    )
-//                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.setHeader("api-result-code", "1")
-//                    return null
-//                }
-//
-//                val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//                RedisUtilObject.putValue<RegisterMembershipOAuth2GoogleVerification>(
-//                    redis1RedisTemplate,
-//                    loginId,
-//                    RegisterMembershipOAuth2GoogleVerification(
-//                        verificationCode
-//                    ),
-//                    signUpOAuth2VerificationTimeSec * 1000
-//                )
-//
-//                val expireWhen = SimpleDateFormat(
-//                    "yyyy-MM-dd HH:mm:ss.SSS"
-//                ).format(Calendar.getInstance().apply {
-//                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
-//                }.time)
-//
-//                return C7TkAuthController.Api16OutputVo(
-//                    verificationCode,
-//                    loginId,
-//                    expireWhen
-//                )
-//            }
-//
-//            2 -> { // APPLE
-//                // (아래는 Id 토큰으로 검증)
-//                val appleInfo = AppleOAuthHelperUtilObject.getAppleMemberData(inputVo.oauth2Secret)
-//
-//                val loginId: String
-//                if (appleInfo != null) {
-//                    loginId = appleInfo.snsId
-//                } else {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return null
-//                }
-//
-//                val isDatabase1MemberUserExists =
-//                    database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-//                        2,
-//                        loginId,
-//                        true
-//                    )
-//                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.setHeader("api-result-code", "1")
-//                    return null
-//                }
-//
-//                val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//                RedisUtilObject.putValue<RegisterMembershipOAuth2AppleVerification>(
-//                    redis1RedisTemplate,
-//                    loginId,
-//                    RegisterMembershipOAuth2AppleVerification(
-//                        verificationCode
-//                    ),
-//                    signUpOAuth2VerificationTimeSec * 1000
-//                )
-//
-//                val expireWhen = SimpleDateFormat(
-//                    "yyyy-MM-dd HH:mm:ss.SSS"
-//                ).format(Calendar.getInstance().apply {
-//                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
-//                }.time)
-//
-//                return C7TkAuthController.Api16OutputVo(
-//                    verificationCode,
-//                    loginId,
-//                    expireWhen
-//                )
-//            }
-//
-//            3 -> { // NAVER
-//                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
-//                    "Bearer ${inputVo.oauth2Secret}"
-//                ).execute()
-//
-//                // 액세트 토큰 정상 동작 확인
-//                if (response.body() == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return null
-//                }
-//
-//                val isDatabase1MemberUserExists =
-//                    database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-//                        3,
-//                        response.body()!!.response.id,
-//                        true
-//                    )
-//                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.setHeader("api-result-code", "1")
-//                    return null
-//                }
-//
-//                val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//                RedisUtilObject.putValue<RegisterMembershipOAuth2NaverVerification>(
-//                    redis1RedisTemplate,
-//                    response.body()!!.response.id,
-//                    RegisterMembershipOAuth2NaverVerification(
-//                        verificationCode
-//                    ),
-//                    signUpOAuth2VerificationTimeSec * 1000
-//                )
-//
-//                val expireWhen = SimpleDateFormat(
-//                    "yyyy-MM-dd HH:mm:ss.SSS"
-//                ).format(Calendar.getInstance().apply {
-//                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
-//                }.time)
-//
-//                return C7TkAuthController.Api16OutputVo(
-//                    verificationCode,
-//                    response.body()!!.response.id,
-//                    expireWhen
-//                )
-//            }
-//
-//            4 -> { // KAKAO
-//                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
-//                    "Bearer ${inputVo.oauth2Secret}"
-//                ).execute()
-//
-//                // 액세트 토큰 정상 동작 확인
-//                if (response.code() != 200 ||
-//                    response.body() == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return null
-//                }
-//
-//                val isDatabase1MemberUserExists =
-//                    database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-//                        4,
-//                        response.body()!!.id.toString(),
-//                        true
-//                    )
-//                if (isDatabase1MemberUserExists) { // 기존 회원 존재
-//                    httpServletResponse.setHeader("api-result-code", "1")
-//                    return null
-//                }
-//
-//                val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-//                RedisUtilObject.putValue<RegisterMembershipOAuth2KakaoVerification>(
-//                    redis1RedisTemplate,
-//                    response.body()!!.id.toString(),
-//                    RegisterMembershipOAuth2KakaoVerification(
-//                        verificationCode
-//                    ),
-//                    signUpOAuth2VerificationTimeSec * 1000
-//                )
-//
-//                val expireWhen = SimpleDateFormat(
-//                    "yyyy-MM-dd HH:mm:ss.SSS"
-//                ).format(Calendar.getInstance().apply {
-//                    this.time = Date()
-//                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
-//                }.time)
-//
-//                return C7TkAuthController.Api16OutputVo(
-//                    verificationCode,
-//                    response.body()!!.id.toString(),
-//                    expireWhen
-//                )
-//            }
-//
-//            else -> {
-//                throw Exception("SNS Login Type not supported")
-//            }
-//        }
-//    }
+    @CustomRedisTransactional(
+        [
+            Redis1_RegisterMembershipOauth2Verification.TRANSACTION_NAME
+        ]
+    )
+    fun api19(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api19InputVo
+    ): C7TkAuthController.Api19OutputVo? {
+        val verificationCode: String
+        val expireWhen: String
+        val loginId: String
+
+        // (정보 검증 로직 수행)
+        when (inputVo.oauth2TypeCode) {
+            1 -> { // GOOGLE
+                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
+                val response = networkRetrofit2.wwwGoogleapisComRequestApi.getOauth2V1UserInfo(
+                    inputVo.oauth2AccessToken
+                ).execute()
+
+                // 액세트 토큰 정상 동작 확인
+                if (response.code() != 200 ||
+                    response.body() == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                loginId = response.body()!!.id!!
+
+                val isDatabase1MemberUserExists =
+                    database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                        1,
+                        loginId,
+                        true
+                    )
+
+                if (isDatabase1MemberUserExists) { // 기존 회원 존재
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return null
+                }
+
+                verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+                redis1RegisterMembershipOauth2VerificationRepository.saveKeyValue(
+                    "1_${loginId}",
+                    Redis1_RegisterMembershipOauth2Verification(verificationCode),
+                    signUpOAuth2VerificationTimeSec * 1000
+                )
+
+                expireWhen = SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.SSS"
+                ).format(Calendar.getInstance().apply {
+                    this.time = Date()
+                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
+                }.time)
+            }
+
+            2 -> { // NAVER
+                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
+                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
+                    inputVo.oauth2AccessToken
+                ).execute()
+
+                // 액세트 토큰 정상 동작 확인
+                if (response.code() != 200 ||
+                    response.body() == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                loginId = response.body()!!.response.id
+
+                val isDatabase1MemberUserExists =
+                    database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                        2,
+                        loginId,
+                        true
+                    )
+
+                if (isDatabase1MemberUserExists) { // 기존 회원 존재
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return null
+                }
+
+                verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+                redis1RegisterMembershipOauth2VerificationRepository.saveKeyValue(
+                    "2_${loginId}",
+                    Redis1_RegisterMembershipOauth2Verification(verificationCode),
+                    signUpOAuth2VerificationTimeSec * 1000
+                )
+
+                expireWhen = SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.SSS"
+                ).format(Calendar.getInstance().apply {
+                    this.time = Date()
+                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
+                }.time)
+            }
+
+            3 -> { // KAKAO TALK
+                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
+                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
+                    inputVo.oauth2AccessToken
+                ).execute()
+
+                // 액세트 토큰 정상 동작 확인
+                if (response.code() != 200 ||
+                    response.body() == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                loginId = response.body()!!.id.toString()
+
+                val isDatabase1MemberUserExists =
+                    database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                        3,
+                        loginId,
+                        true
+                    )
+
+                if (isDatabase1MemberUserExists) { // 기존 회원 존재
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return null
+                }
+
+                verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+                redis1RegisterMembershipOauth2VerificationRepository.saveKeyValue(
+                    "3_${loginId}",
+                    Redis1_RegisterMembershipOauth2Verification(verificationCode),
+                    signUpOAuth2VerificationTimeSec * 1000
+                )
+
+                expireWhen = SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.SSS"
+                ).format(Calendar.getInstance().apply {
+                    this.time = Date()
+                    this.add(Calendar.SECOND, signUpOAuth2VerificationTimeSec.toInt())
+                }.time)
+            }
+
+            else -> {
+                throw Exception("oauth2TypeCode not supported")
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+        return C7TkAuthController.Api19OutputVo(
+            verificationCode,
+            loginId,
+            expireWhen
+        )
+    }
 
 
     ////
-    // todo
-//    @ProwdTransactional([Database1DatasourceConfig.platformTransactionManagerBeanName])
-//    fun api20(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api20InputVo) {
-//        // 기존 회원 확인
-//        val isUserExists =
-//            database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-//                inputVo.oauth2TypeCode,
-//                inputVo.oauth2Id,
-//                true
-//            )
-//        if (isUserExists) { // 기존 회원이 있을 때
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return
-//        }
-//
-//        // 본인 이메일 검증 여부 확인
-//        val secret: String
-//        when (inputVo.oauth2TypeCode) {
-//            1 -> {
-//                // GOOGLE
-//                val verification = RedisUtilObject.getValue<RegisterMembershipOAuth2GoogleVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//
-//                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                secret = (verification.value as RegisterMembershipOAuth2GoogleVerification).secret
-//            }
-//
-//            2 -> {
-//                // APPLE
-//                val verification = RedisUtilObject.getValue<RegisterMembershipOAuth2AppleVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//
-//                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                secret = (verification.value as RegisterMembershipOAuth2AppleVerification).secret
-//            }
-//
-//            3 -> {
-//                // NAVER
-//                val verification = RedisUtilObject.getValue<RegisterMembershipOAuth2NaverVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//
-//                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                secret = (verification.value as RegisterMembershipOAuth2NaverVerification).secret
-//            }
-//
-//            4 -> {
-//                // KAKAO
-//                val verification = RedisUtilObject.getValue<RegisterMembershipOAuth2KakaoVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//
-//                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                secret = (verification.value as RegisterMembershipOAuth2KakaoVerification).secret
-//            }
-//
-//            else -> {
-//                httpServletResponse.status = 400
-//                return
-//            }
-//        }
-//
-//        // 입력 코드와 발급된 코드와의 매칭
-//        val codeMatched = secret == inputVo.verificationCode
-//
-//        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-//            httpServletResponse.setHeader("api-result-code", "4")
-//            return
-//        }
-//
-//        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-//            httpServletResponse.setHeader("api-result-code", "3")
-//            return
-//        }
-//
-//        // 회원가입
-//        val database1MemberUser: Database1_Member_Member = database1MemberMemberDataRepository.save(
-//            Database1_Member_Member(
-//                inputVo.nickName,
-//                null,
-//                true
-//            )
-//        )
-//
-//        // SNS OAUth2 저장
-//        database1MemberMemberSnsOauth2Repository.save(
-//            Database1_Member_MemberOauth2(
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    @CustomRedisTransactional(
+        [
+            Redis1_RegisterMembershipOauth2Verification.TRANSACTION_NAME
+        ]
+    )
+    fun api20(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api20InputVo) {
+        // 기존 회원 확인
+        val isUserExists =
+            database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                inputVo.oauth2TypeCode.toByte(),
+                inputVo.oauth2Id,
+                true
+            )
+        if (isUserExists) { // 기존 회원이 있을 때
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        // 본인 이메일 검증 여부 확인
+        val secret: String
+        when (inputVo.oauth2TypeCode) {
+            1 -> {
+                // GOOGLE
+                val verification =
+                    redis1RegisterMembershipOauth2VerificationRepository.findKeyValue(
+                        "1_${inputVo.oauth2Id}"
+                    )
+
+                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return
+                }
+
+                secret = verification.value.secret
+            }
+
+            2 -> {
+                // NAVER
+                val verification =
+                    redis1RegisterMembershipOauth2VerificationRepository.findKeyValue(
+                        "2_${inputVo.oauth2Id}"
+                    )
+
+                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return
+                }
+
+                secret = verification.value.secret
+            }
+
+            3 -> {
+                // KAKAO
+                val verification =
+                    redis1RegisterMembershipOauth2VerificationRepository.findKeyValue(
+                        "3_${inputVo.oauth2Id}"
+                    )
+
+                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return
+                }
+
+                secret = verification.value.secret
+            }
+
+            else -> {
+                httpServletResponse.status = 400
+                return
+            }
+        }
+
+        // 입력 코드와 발급된 코드와의 매칭
+        val codeMatched = secret == inputVo.verificationCode
+
+        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
+        }
+
+        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
+            httpServletResponse.setHeader("api-result-code", "4")
+            return
+        }
+
+        // 회원가입
+        val database1MemberUser = database1MemberMemberDataRepository.save(
+            Database1_Member_MemberData(
+                inputVo.nickName,
+                null,
+                true
+            )
+        )
+
+        // SNS OAUth2 저장
+        database1MemberMemberOauth2LoginDataRepository.save(
+            Database1_Member_MemberOauth2LoginData(
+                database1MemberUser.uid!!,
+                inputVo.oauth2TypeCode.toByte(),
+                inputVo.oauth2Id,
+                true
+            )
+        )
+
+        // 역할 저장
+        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
+        // 기본 권한 추가
+//        database1MemberUserRoleList.add(
+//            Database1_Member_MemberRole(
 //                database1MemberUser.uid!!,
-//                inputVo.oauth2TypeCode,
-//                inputVo.oauth2Id,
+//                2,
 //                true
 //            )
 //        )
-//
-//        // 역할 저장
-//        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRole>()
-//        // 기본 권한 추가
-////        database1MemberUserRoleList.add(
-////            Database1_Member_MemberRole(
-////                database1MemberUser.uid!!,
-////                2,
-////                true
-////            )
-////        )
-//        database1MemberMemberRoleRepository.saveAll(database1MemberUserRoleList)
-//
-//        // 확인 완료된 검증 요청 정보 삭제
-//        when (inputVo.oauth2TypeCode) {
-//            1 -> {
-//                // GOOGLE
-//                RedisUtilObject.deleteValue<RegisterMembershipOAuth2GoogleVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//            }
-//
-//            2 -> {
-//                // APPLE
-//                RedisUtilObject.deleteValue<RegisterMembershipOAuth2AppleVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//            }
-//
-//            3 -> {
-//                // NAVER
-//                RedisUtilObject.deleteValue<RegisterMembershipOAuth2NaverVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//            }
-//
-//            4 -> {
-//                // KAKAO
-//                RedisUtilObject.deleteValue<RegisterMembershipOAuth2KakaoVerification>(
-//                    redis1RedisTemplate,
-//                    inputVo.oauth2Id
-//                )
-//            }
-//        }
-//    }
+        database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
+
+        // 확인 완료된 검증 요청 정보 삭제
+        when (inputVo.oauth2TypeCode) {
+            1 -> {
+                // GOOGLE
+                redis1RegisterMembershipOauth2VerificationRepository.deleteKeyValue(
+                    "1_${inputVo.oauth2Id}"
+                )
+            }
+
+            2 -> {
+                // NAVER
+                redis1RegisterMembershipOauth2VerificationRepository.deleteKeyValue(
+                    "2_${inputVo.oauth2Id}"
+                )
+            }
+
+            3 -> {
+                // KAKAO
+                redis1RegisterMembershipOauth2VerificationRepository.deleteKeyValue(
+                    "3_${inputVo.oauth2Id}"
+                )
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
 
 
     ////
