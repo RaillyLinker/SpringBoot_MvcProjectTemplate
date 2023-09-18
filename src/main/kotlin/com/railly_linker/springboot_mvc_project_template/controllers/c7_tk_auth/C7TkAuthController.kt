@@ -2254,7 +2254,34 @@ class C7TkAuthController(
         )
     }
 
-    // todo 프로필 삭제
+
+    ////
+    @Operation(
+        summary = "N46. 내 프로필 삭제 <>",
+        description = "내가 등록한 프로필들 중 하나를 삭제합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @DeleteMapping("/my-profile/{profileUid}")
+    @PreAuthorize("isAuthenticated()")
+    fun api46(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "profileUid", description = "프로필의 고유값", example = "1")
+        @PathVariable("profileUid")
+        profileUid: Long
+    ) {
+        service.api46(authorization!!, httpServletResponse, profileUid)
+    }
 
     // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
 }

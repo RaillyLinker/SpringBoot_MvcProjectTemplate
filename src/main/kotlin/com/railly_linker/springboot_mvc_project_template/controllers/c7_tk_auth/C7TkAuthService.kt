@@ -3228,4 +3228,29 @@ class C7TkAuthService(
 
         httpServletResponse.setHeader("api-result-code", "0")
     }
+
+
+    ////
+    fun api46(authorization: String, httpServletResponse: HttpServletResponse, profileUid: Long) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        // 프로필 가져오기
+        val profileDataOpt = database1MemberMemberProfileDataRepository.findById(profileUid)
+
+        if (profileDataOpt.isPresent) {
+            // 프로필이 존재할 때
+            val profileData = profileDataOpt.get()
+
+            if (profileData.rowActivate &&
+                profileData.memberUid == memberUid.toLong()
+            ) {
+                // 프로필이 활성 상태이고, 멤버 고유번호가 내 고유 번호와 같을 때
+                // 프로필 비활성화
+                profileData.rowActivate = false
+                database1MemberMemberProfileDataRepository.save(profileData)
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
 }
