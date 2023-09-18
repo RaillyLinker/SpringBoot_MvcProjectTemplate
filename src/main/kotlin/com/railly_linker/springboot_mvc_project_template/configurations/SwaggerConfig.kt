@@ -131,13 +131,9 @@ class SwaggerConfig {
             위와 같은 형식으로, 토큰 타입 뒤에 한칸을 띄우고 토큰 String 을 합쳐서 헤더에 Authorization 이란 이름으로 보내면 됩니다.
         - <> 가 붙지 않은(로그인이 필요치 않은) API 에도 Authorization Request Header 를 보내줘도 무방합니다.
         
-            다만, 서버는 Authorization 이 요청으로 받는 순간, 
+            로그인이 붙지 않은 API 에서 인증/인가 코드를 입력한 경우, 
             
-            API 의 기능에 로그인 여부가 필요하건 하지 않건 무조건 받은 Authorization 의 토큰을 검증하게 되며, 
-            
-            검증 후 액세스 토큰 만료와 같은 결격 사유가 발견되면 정상 응답이 아닌 에러가 반환됩니다.
-            
-            즉, 로그인이 필요 없는 API 에 Authorization 을 보낸다면 로그인이 필요한 API 에 Authorization 을 보냈을 때와 동일하게 처리해야합니다.
+            액세스 토큰 형식이 잘못 되었건, 만료되었건 상관없이 API 로직이 정상 실행됩니다.
         - tk/** 에서 사용하는 RefreshToken 은 AccessToken 발급(SignIn, Reissue api 사용)시마다 재발행됩니다.
       
             AccessToken 보다 더 길게 설정된 RefreshToken 의 만료시간 동안 토큰 재발급을 전혀 하지 않아 RefreshToken 마저 만료된 경우, 

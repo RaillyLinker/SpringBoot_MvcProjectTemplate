@@ -159,7 +159,9 @@ class C7TkAuthService(
             }
 
             else -> {
-                throw Exception("signInType Not Supported")
+                classLogger.info("signInType ${inputVo.signInTypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return null
             }
         }
 
@@ -488,7 +490,9 @@ class C7TkAuthService(
             }
 
             else -> {
-                throw Exception("SNS Login Type not supported")
+                classLogger.info("SNS Login Type $oauth2TypeCode Not Supported")
+                httpServletResponse.status = 400
+                return null
             }
         }
 
@@ -582,7 +586,9 @@ class C7TkAuthService(
             }
 
             else -> {
-                throw Exception("SNS Login Type not supported")
+                classLogger.info("SNS Login Type ${inputVo.oauth2TypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return null
             }
         }
 
@@ -1634,7 +1640,9 @@ class C7TkAuthService(
             }
 
             else -> {
-                throw Exception("oauth2TypeCode not supported")
+                classLogger.info("SNS Login Type ${inputVo.oauth2TypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return null
             }
         }
 
@@ -2879,7 +2887,9 @@ class C7TkAuthService(
             }
 
             else -> {
-                throw Exception("SNS Login Type not supported")
+                classLogger.info("SNS Login Type ${inputVo.oauth2TypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return
             }
         }
 

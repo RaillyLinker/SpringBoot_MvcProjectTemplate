@@ -206,18 +206,15 @@ class SecurityConfig(
                                 }
                             } else {
                                 response.setHeader("api-result-code", "c")
-                                throw RuntimeException("Invalid AccessToken")
                             }
                         }
 
                         else -> {
                             response.setHeader("api-result-code", "c")
-                            throw RuntimeException("Unknown accessTokenType")
                         }
                     }
                 } else {
                     response.setHeader("api-result-code", "c")
-                    throw RuntimeException("AccessToken Type not include")
                 }
             }
 
