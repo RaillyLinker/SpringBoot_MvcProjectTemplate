@@ -1054,10 +1054,11 @@ class C7TkAuthController(
         description = "OAuth2 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 기존 회원 존재\n\n" +
-                "2 : OAuth2 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청\n\n" +
-                "4 : 닉네임 중복",
+                "1 : OAuth2 검증 요청을 보낸 적 없음\n\n" +
+                "2 : OAuth2 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 이미 가입된 회원이 있습니다.\n\n" +
+                "5 : 이미 사용중인 닉네임",
         responses = [
             ApiResponse(
                 responseCode = "200",
