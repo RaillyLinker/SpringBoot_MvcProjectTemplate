@@ -747,6 +747,7 @@ class C7TkAuthController(
 
 
     ////
+    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
     @Operation(
         summary = "N15 : 이메일 회원가입",
         description = "이메일 회원가입 처리\n\n" +
@@ -912,6 +913,7 @@ class C7TkAuthController(
 
 
     ////
+    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
     @Operation(
         summary = "N18. 전화번호 회원가입",
         description = "전화번호 회원가입 처리\n\n" +
@@ -1061,6 +1063,7 @@ class C7TkAuthController(
 
 
     ////
+    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
     @Operation(
         summary = "N20. OAuth2 회원가입",
         description = "OAuth2 회원가입 처리\n\n" +
@@ -2250,4 +2253,8 @@ class C7TkAuthController(
             profileUid
         )
     }
+
+    // todo 프로필 삭제
+
+    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
 }
