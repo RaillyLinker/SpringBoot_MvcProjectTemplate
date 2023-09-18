@@ -49,6 +49,7 @@ class C7TkAuthService(
     private val database1MemberFindPasswordPhoneNumberVerificationDataRepository: Database1_Member_FindPasswordPhoneNumberVerificationDataRepository,
     private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Member_AddPhoneNumberVerificationDataRepository,
     private val database1MemberRegisterOauth2VerificationDataRepository: Database1_Member_RegisterOauth2VerificationDataRepository,
+    private val database1MemberMemberProfileDataRepository: Database1_Member_MemberProfileDataRepository,
 
     // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
@@ -380,10 +381,24 @@ class C7TkAuthService(
             )
         }
 
+        val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+            memberUid,
+            true
+        )
+
+        var frontProfileFullUrl: String? = null
+        for (profile in profileData) {
+            if (profile.isSelected) {
+                frontProfileFullUrl = profile.imageFullUrl
+                break
+            }
+        }
+
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkAuthController.Api5OutputVo(
             memberUidString,
             member.nickName,
+            frontProfileFullUrl,
             roleList,
             "Bearer",
             jwtAccessToken,
@@ -803,10 +818,24 @@ class C7TkAuthService(
             )
         }
 
+        val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+            snsOauth2.memberUid,
+            true
+        )
+
+        var frontProfileFullUrl: String? = null
+        for (profile in profileData) {
+            if (profile.isSelected) {
+                frontProfileFullUrl = profile.imageFullUrl
+                break
+            }
+        }
+
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkAuthController.Api7OutputVo(
             memberUidString,
             member.nickName,
+            frontProfileFullUrl,
             roleList,
             "Bearer",
             jwtAccessToken,
@@ -1000,10 +1029,24 @@ class C7TkAuthService(
                         )
                     }
 
+                    val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+                        accessTokenMemberUid.toLong(),
+                        true
+                    )
+
+                    var frontProfileFullUrl: String? = null
+                    for (profile in profileData) {
+                        if (profile.isSelected) {
+                            frontProfileFullUrl = profile.imageFullUrl
+                            break
+                        }
+                    }
+
                     httpServletResponse.setHeader("api-result-code", "0")
                     return C7TkAuthController.Api9OutputVo(
                         accessTokenMemberUid,
                         memberInfo.nickName,
+                        frontProfileFullUrl,
                         roleList,
                         "Bearer",
                         newJwtAccessToken,
@@ -3025,7 +3068,7 @@ class C7TkAuthService(
             member
         )
 
-        // member_phone, member_email, member_role, member_sns_oauth2 비활성화
+        // member_phone, member_email, member_role, member_sns_oauth2, member_profile 비활성화
         val emailList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
         for (email in emailList) {
             email.rowActivate = false
@@ -3053,6 +3096,13 @@ class C7TkAuthService(
             database1MemberMemberPhoneDataRepository.save(memberPhone)
         }
 
+        val profileData =
+            database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(memberUidLong, true)
+        for (profile in profileData) {
+            profile.rowActivate = false
+            database1MemberMemberProfileDataRepository.save(profile)
+        }
+
 
         // !!!회원과 관계된 처리!!
 
@@ -3071,5 +3121,31 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api43(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api43OutputVo? {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
+
+        val myProfileList: ArrayList<C7TkAuthController.Api43OutputVo.ProfileInfo> = ArrayList()
+        for (profile in profileData) {
+            myProfileList.add(
+                C7TkAuthController.Api43OutputVo.ProfileInfo(
+                    profile.uid!!,
+                    profile.imageFullUrl,
+                    profile.isSelected
+                )
+            )
+        }
+
+        return C7TkAuthController.Api43OutputVo(
+            myProfileList
+        )
     }
 }

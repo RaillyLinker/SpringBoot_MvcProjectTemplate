@@ -181,6 +181,10 @@ class C7TkAuthController(
         @JsonProperty("nickName")
         val nickName: String,
 
+        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
+        @JsonProperty("profileImageFullUrl")
+        val profileImageFullUrl: String?,
+
         @Schema(
             description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
             required = true,
@@ -348,6 +352,10 @@ class C7TkAuthController(
         @JsonProperty("nickName")
         val nickName: String,
 
+        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
+        @JsonProperty("profileImageFullUrl")
+        val profileImageFullUrl: String?,
+
         @Schema(
             description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
             required = true,
@@ -482,6 +490,10 @@ class C7TkAuthController(
         @Schema(description = "닉네임", required = true, example = "홍길동")
         @JsonProperty("nickName")
         val nickName: String,
+
+        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
+        @JsonProperty("profileImageFullUrl")
+        val profileImageFullUrl: String?,
 
         @Schema(
             description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
@@ -2113,5 +2125,50 @@ class C7TkAuthController(
         authorization: String?
     ) {
         service.api42(httpServletResponse, authorization!!)
+    }
+
+
+    ////
+    @Operation(
+        summary = "N43. 내 Profile 이미지 정보 리스트 가져오기 <>",
+        description = "내 Profile 이미지 정보 리스트 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/my-profile-list")
+    @PreAuthorize("isAuthenticated()")
+    fun api43(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api43OutputVo? {
+        return service.api43(httpServletResponse, authorization!!)
+    }
+
+    data class Api43OutputVo(
+        @Schema(description = "내가 등록한 Profile 이미지 정보 리스트", required = true)
+        @JsonProperty("myProfileList")
+        val myProfileList: List<ProfileInfo>
+    ) {
+        @Schema(description = "Profile 정보")
+        data class ProfileInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
+            @JsonProperty("imageFullUrl")
+            val imageFullUrl: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
     }
 }
