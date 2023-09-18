@@ -27,7 +27,7 @@ class SwaggerConfig {
       **[읽어주세요]**
       
       **(공지)**
-        - 기본 발생하는 HTTP Status Code 는 https://en.wikipedia.org/wiki/List_of_HTTP_status_codes 를 참고하세요.
+        - 적극적인 오류 제보, 요청 사항 환영 합니다.
           
       **(일반 규칙)**
         - Swagger 문서의 대분류는 컨트롤러라고 합니다.
