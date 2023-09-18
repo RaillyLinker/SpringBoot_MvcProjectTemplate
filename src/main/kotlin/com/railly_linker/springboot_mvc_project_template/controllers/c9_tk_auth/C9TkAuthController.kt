@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c7_tk_auth
+package com.railly_linker.springboot_mvc_project_template.controllers.c9_tk_auth
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -10,11 +10,11 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "/tk/auth APIs", description = "C7. 인증/인가 API 컨트롤러")
+@Tag(name = "/tk/auth APIs", description = "C9. 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
-class C7TkAuthController(
-    private val service: C7TkAuthService
+class C9TkAuthController(
+    private val service: C9TkAuthService
 ) {
     // <멤버 변수 공간>
 

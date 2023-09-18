@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c7_tk_auth
+package com.railly_linker.springboot_mvc_project_template.controllers.c9_tk_auth
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
@@ -29,7 +29,7 @@ import java.util.*
 
 // todo : 블로그 게시하면서 로직 / 주석 다시 확인 후 리펙토링
 @Service
-class C7TkAuthService(
+class C9TkAuthService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfile: String,
 
@@ -53,7 +53,7 @@ class C7TkAuthService(
 
     // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
-    private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository,
+    private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -114,8 +114,8 @@ class C7TkAuthService(
     )
     fun api5(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api5InputVo
-    ): C7TkAuthController.Api5OutputVo? {
+        inputVo: C9TkAuthController.Api5InputVo
+    ): C9TkAuthController.Api5OutputVo? {
         val memberUid: Long
         when (inputVo.signInTypeCode) {
             0 -> { // 닉네임
@@ -371,10 +371,10 @@ class C7TkAuthService(
 
         val oAuth2EntityList =
             database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUid, true)
-        val myOAuth2List = ArrayList<C7TkAuthController.Api5OutputVo.OAuth2Info>()
+        val myOAuth2List = ArrayList<C9TkAuthController.Api5OutputVo.OAuth2Info>()
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
-                C7TkAuthController.Api5OutputVo.OAuth2Info(
+                C9TkAuthController.Api5OutputVo.OAuth2Info(
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
@@ -395,7 +395,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api5OutputVo(
+        return C9TkAuthController.Api5OutputVo(
             memberUidString,
             member.nickName,
             frontProfileFullUrl,
@@ -417,7 +417,7 @@ class C7TkAuthService(
         httpServletResponse: HttpServletResponse,
         oauth2TypeCode: Int,
         oauth2Code: String
-    ): C7TkAuthController.Api6OutputVo? {
+    ): C9TkAuthController.Api6OutputVo? {
         val snsAccessTokenType: String
         val snsAccessToken: String
 
@@ -513,7 +513,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api6OutputVo(
+        return C9TkAuthController.Api6OutputVo(
             snsAccessTokenType,
             snsAccessToken
         )
@@ -529,8 +529,8 @@ class C7TkAuthService(
     )
     fun api7(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api7InputVo
-    ): C7TkAuthController.Api7OutputVo? {
+        inputVo: C9TkAuthController.Api7InputVo
+    ): C9TkAuthController.Api7OutputVo? {
         val snsOauth2: Database1_Member_MemberOauth2LoginData?
 
         // (정보 검증 로직 수행)
@@ -808,10 +808,10 @@ class C7TkAuthService(
 
         val oAuth2EntityList =
             database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
-        val myOAuth2List = ArrayList<C7TkAuthController.Api7OutputVo.OAuth2Info>()
+        val myOAuth2List = ArrayList<C9TkAuthController.Api7OutputVo.OAuth2Info>()
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
-                C7TkAuthController.Api7OutputVo.OAuth2Info(
+                C9TkAuthController.Api7OutputVo.OAuth2Info(
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
@@ -832,7 +832,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api7OutputVo(
+        return C9TkAuthController.Api7OutputVo(
             memberUidString,
             member.nickName,
             frontProfileFullUrl,
@@ -877,9 +877,9 @@ class C7TkAuthService(
     )
     fun api9(
         authorization: String,
-        inputVo: C7TkAuthController.Api9InputVo,
+        inputVo: C9TkAuthController.Api9InputVo,
         httpServletResponse: HttpServletResponse
-    ): C7TkAuthController.Api9OutputVo? {
+    ): C9TkAuthController.Api9OutputVo? {
         val accessTokenMemberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val memberInfo =
@@ -1019,10 +1019,10 @@ class C7TkAuthService(
                             accessTokenMemberUid.toLong(),
                             true
                         )
-                    val myOAuth2List = ArrayList<C7TkAuthController.Api9OutputVo.OAuth2Info>()
+                    val myOAuth2List = ArrayList<C9TkAuthController.Api9OutputVo.OAuth2Info>()
                     for (oAuth2Entity in oAuth2EntityList) {
                         myOAuth2List.add(
-                            C7TkAuthController.Api9OutputVo.OAuth2Info(
+                            C9TkAuthController.Api9OutputVo.OAuth2Info(
                                 oAuth2Entity.oauth2TypeCode.toInt(),
                                 oAuth2Entity.oauth2Id
                             )
@@ -1043,7 +1043,7 @@ class C7TkAuthService(
                     }
 
                     httpServletResponse.setHeader("api-result-code", "0")
-                    return C7TkAuthController.Api9OutputVo(
+                    return C9TkAuthController.Api9OutputVo(
                         accessTokenMemberUid,
                         memberInfo.nickName,
                         frontProfileFullUrl,
@@ -1102,9 +1102,9 @@ class C7TkAuthService(
 
 
     ////
-    fun api11(httpServletResponse: HttpServletResponse, nickName: String): C7TkAuthController.Api11OutputVo? {
+    fun api11(httpServletResponse: HttpServletResponse, nickName: String): C9TkAuthController.Api11OutputVo? {
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api11OutputVo(
+        return C9TkAuthController.Api11OutputVo(
             database1MemberMemberDataRepository.existsByNickNameAndRowActivate(nickName.trim(), true)
         )
     }
@@ -1134,8 +1134,8 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api13(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api13InputVo
-    ): C7TkAuthController.Api13OutputVo? {
+        inputVo: C9TkAuthController.Api13InputVo
+    ): C9TkAuthController.Api13OutputVo? {
         // 입력 데이터 검증
         val isDatabase1MemberUserExists =
             database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
@@ -1166,7 +1166,7 @@ class C7TkAuthService(
             arrayOf(inputVo.email),
             null,
             "Springboot Mvc Project Template 회원가입 - 본인 계정 확인용 이메일입니다.",
-            "template_c7_n13/email_verification_email",
+            "template_c9_n13/email_verification_email",
             hashMapOf(
                 Pair("verificationCode", verificationCode)
             ),
@@ -1177,7 +1177,7 @@ class C7TkAuthService(
         )
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api13OutputVo(
+        return C9TkAuthController.Api13OutputVo(
             database1MemberRegisterEmailVerificationData.uid!!,
             database1MemberRegisterEmailVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
@@ -1191,7 +1191,7 @@ class C7TkAuthService(
         verificationUid: Long,
         email: String,
         verificationCode: String
-    ): C7TkAuthController.Api14OutputVo? {
+    ): C9TkAuthController.Api14OutputVo? {
         val emailVerificationOpt = database1MemberRegisterEmailVerificationDataRepository.findById(verificationUid)
 
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
@@ -1226,7 +1226,7 @@ class C7TkAuthService(
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
-            C7TkAuthController.Api14OutputVo(
+            C9TkAuthController.Api14OutputVo(
                 emailVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
             )
         } else { // 코드 불일치
@@ -1238,7 +1238,7 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    fun api15(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api15InputVo) {
+    fun api15(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api15InputVo) {
         val emailVerificationOpt =
             database1MemberRegisterEmailVerificationDataRepository.findById(inputVo.verificationUid)
 
@@ -1330,8 +1330,8 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api16(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api16InputVo
-    ): C7TkAuthController.Api16OutputVo? {
+        inputVo: C9TkAuthController.Api16InputVo
+    ): C9TkAuthController.Api16OutputVo? {
         // 입력 데이터 검증
         val isDatabase1MemberUserExists =
             database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
@@ -1374,7 +1374,7 @@ class C7TkAuthService(
         )
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api16OutputVo(
+        return C9TkAuthController.Api16OutputVo(
             database1MemberRegisterPhoneNumberVerificationData.uid!!,
             database1MemberRegisterPhoneNumberVerificationData.verificationExpireWhen.format(
                 DateTimeFormatter.ofPattern(
@@ -1392,7 +1392,7 @@ class C7TkAuthService(
         verificationUid: Long,
         phoneNumber: String,
         verificationCode: String
-    ): C7TkAuthController.Api17OutputVo? {
+    ): C9TkAuthController.Api17OutputVo? {
         val phoneNumberVerificationOpt =
             database1MemberRegisterPhoneNumberVerificationDataRepository.findById(verificationUid)
 
@@ -1428,7 +1428,7 @@ class C7TkAuthService(
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
-            C7TkAuthController.Api17OutputVo(
+            C9TkAuthController.Api17OutputVo(
                 phoneNumberVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
             )
         } else { // 코드 불일치
@@ -1440,7 +1440,7 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    fun api18(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api18InputVo) {
+    fun api18(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api18InputVo) {
         val phoneNumberVerificationOpt =
             database1MemberRegisterPhoneNumberVerificationDataRepository.findById(inputVo.verificationUid)
 
@@ -1532,8 +1532,8 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api19(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api19InputVo
-    ): C7TkAuthController.Api19OutputVo? {
+        inputVo: C9TkAuthController.Api19InputVo
+    ): C9TkAuthController.Api19OutputVo? {
         val verificationUid: Long
         val verificationCode: String
         val expireWhen: String
@@ -1691,7 +1691,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api19OutputVo(
+        return C9TkAuthController.Api19OutputVo(
             verificationUid,
             verificationCode,
             loginId,
@@ -1702,7 +1702,7 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    fun api20(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api20InputVo) {
+    fun api20(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api20InputVo) {
         // oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)
         val oauth2TypeCode: Int
 
@@ -1818,7 +1818,7 @@ class C7TkAuthService(
     fun api21(
         httpServletResponse: HttpServletResponse,
         authorization: String,
-        inputVo: C7TkAuthController.Api21InputVo
+        inputVo: C9TkAuthController.Api21InputVo
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
         val member = database1MemberMemberDataRepository.findByUidAndRowActivate(memberUid.toLong(), true)
@@ -1871,8 +1871,8 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api22(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api22InputVo
-    ): C7TkAuthController.Api22OutputVo? {
+        inputVo: C9TkAuthController.Api22InputVo
+    ): C9TkAuthController.Api22OutputVo? {
         // 입력 데이터 검증
         val isDatabase1MemberUserExists =
             database1MemberMemberEmailDataRepository.existsByEmailAddressAndRowActivate(
@@ -1902,7 +1902,7 @@ class C7TkAuthService(
             arrayOf(inputVo.email),
             null,
             "Springboot Mvc Project Template 비밀번호 찾기 - 본인 계정 확인용 이메일입니다.",
-            "template_c7_n22/find_password_email_verification_email",
+            "template_c9_n22/find_password_email_verification_email",
             hashMapOf(
                 Pair("verificationCode", verificationCode)
             ),
@@ -1912,7 +1912,7 @@ class C7TkAuthService(
             null
         )
 
-        return C7TkAuthController.Api22OutputVo(
+        return C9TkAuthController.Api22OutputVo(
             database1MemberFindPasswordEmailVerificationData.uid!!,
             database1MemberFindPasswordEmailVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
@@ -1926,7 +1926,7 @@ class C7TkAuthService(
         verificationUid: Long,
         email: String,
         verificationCode: String
-    ): C7TkAuthController.Api23OutputVo? {
+    ): C9TkAuthController.Api23OutputVo? {
         val emailVerificationOpt = database1MemberFindPasswordEmailVerificationDataRepository.findById(verificationUid)
 
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
@@ -1961,7 +1961,7 @@ class C7TkAuthService(
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
-            C7TkAuthController.Api23OutputVo(
+            C9TkAuthController.Api23OutputVo(
                 emailVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
             )
         } else { // 코드 불일치
@@ -1973,7 +1973,7 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    fun api24(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api24InputVo) {
+    fun api24(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api24InputVo) {
         val emailVerificationOpt =
             database1MemberFindPasswordEmailVerificationDataRepository.findById(inputVo.verificationUid)
 
@@ -2034,7 +2034,7 @@ class C7TkAuthService(
                 arrayOf(inputVo.email),
                 null,
                 "Springboot Mvc Project Template 새 비밀번호 발급",
-                "template_c7_n24/find_password_new_password_email",
+                "template_c9_n24/find_password_new_password_email",
                 hashMapOf(
                     Pair("newPassword", newPassword)
                 ),
@@ -2061,8 +2061,8 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api25(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api25InputVo
-    ): C7TkAuthController.Api25OutputVo? {
+        inputVo: C9TkAuthController.Api25InputVo
+    ): C9TkAuthController.Api25OutputVo? {
         // 입력 데이터 검증
         val isDatabase1MemberUserExists =
             database1MemberMemberPhoneDataRepository.existsByPhoneNumberAndRowActivate(
@@ -2103,7 +2103,7 @@ class C7TkAuthService(
             )
         )
 
-        return C7TkAuthController.Api25OutputVo(
+        return C9TkAuthController.Api25OutputVo(
             database1MemberFindPasswordPhoneNumberVerificationData.uid!!,
             database1MemberFindPasswordPhoneNumberVerificationData.verificationExpireWhen.format(
                 DateTimeFormatter.ofPattern(
@@ -2121,7 +2121,7 @@ class C7TkAuthService(
         verificationUid: Long,
         phoneNumber: String,
         verificationCode: String
-    ): C7TkAuthController.Api26OutputVo? {
+    ): C9TkAuthController.Api26OutputVo? {
         val phoneNumberVerificationOpt =
             database1MemberFindPasswordPhoneNumberVerificationDataRepository.findById(verificationUid)
 
@@ -2157,7 +2157,7 @@ class C7TkAuthService(
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
-            C7TkAuthController.Api26OutputVo(
+            C9TkAuthController.Api26OutputVo(
                 phoneNumberVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
             )
         } else { // 코드 불일치
@@ -2169,7 +2169,7 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    fun api27(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api27InputVo) {
+    fun api27(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api27InputVo) {
         val phoneNumberVerificationOpt =
             database1MemberFindPasswordPhoneNumberVerificationDataRepository.findById(inputVo.verificationUid)
 
@@ -2254,7 +2254,7 @@ class C7TkAuthService(
 
 
     ////
-    fun api28(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api28OutputVo {
+    fun api28(httpServletResponse: HttpServletResponse, authorization: String): C9TkAuthController.Api28OutputVo {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val emailEntityList =
@@ -2277,10 +2277,10 @@ class C7TkAuthService(
 
         val oAuth2EntityList =
             database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val myOAuth2List = ArrayList<C7TkAuthController.Api28OutputVo.OAuth2Info>()
+        val myOAuth2List = ArrayList<C9TkAuthController.Api28OutputVo.OAuth2Info>()
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
-                C7TkAuthController.Api28OutputVo.OAuth2Info(
+                C9TkAuthController.Api28OutputVo.OAuth2Info(
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
@@ -2288,7 +2288,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api28OutputVo(
+        return C9TkAuthController.Api28OutputVo(
             emailList,
             phoneNumberList,
             myOAuth2List
@@ -2297,7 +2297,7 @@ class C7TkAuthService(
 
 
     ////
-    fun api29(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api29OutputVo {
+    fun api29(httpServletResponse: HttpServletResponse, authorization: String): C9TkAuthController.Api29OutputVo {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val emailEntityList =
@@ -2310,14 +2310,14 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api29OutputVo(
+        return C9TkAuthController.Api29OutputVo(
             emailList
         )
     }
 
 
     ////
-    fun api30(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api30OutputVo {
+    fun api30(httpServletResponse: HttpServletResponse, authorization: String): C9TkAuthController.Api30OutputVo {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val phoneEntityList =
@@ -2330,22 +2330,22 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api30OutputVo(
+        return C9TkAuthController.Api30OutputVo(
             phoneNumberList
         )
     }
 
 
     ////
-    fun api31(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api31OutputVo {
+    fun api31(httpServletResponse: HttpServletResponse, authorization: String): C9TkAuthController.Api31OutputVo {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val oAuth2EntityList =
             database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val myOAuth2List = ArrayList<C7TkAuthController.Api31OutputVo.OAuth2Info>()
+        val myOAuth2List = ArrayList<C9TkAuthController.Api31OutputVo.OAuth2Info>()
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
-                C7TkAuthController.Api31OutputVo.OAuth2Info(
+                C9TkAuthController.Api31OutputVo.OAuth2Info(
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
@@ -2353,7 +2353,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api31OutputVo(
+        return C9TkAuthController.Api31OutputVo(
             myOAuth2List
         )
     }
@@ -2363,9 +2363,9 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api32(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api32InputVo,
+        inputVo: C9TkAuthController.Api32InputVo,
         authorization: String
-    ): C7TkAuthController.Api32OutputVo? {
+    ): C9TkAuthController.Api32OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         // 입력 데이터 검증
@@ -2398,7 +2398,7 @@ class C7TkAuthService(
             arrayOf(inputVo.email),
             null,
             "Springboot Mvc Project Template 이메일 추가 - 본인 계정 확인용 이메일입니다.",
-            "template_c7_n32/add_email_verification_email",
+            "template_c9_n32/add_email_verification_email",
             hashMapOf(
                 Pair("verificationCode", verificationCode)
             ),
@@ -2409,7 +2409,7 @@ class C7TkAuthService(
         )
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api32OutputVo(
+        return C9TkAuthController.Api32OutputVo(
             database1MemberRegisterEmailVerificationData.uid!!,
             database1MemberRegisterEmailVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
@@ -2424,7 +2424,7 @@ class C7TkAuthService(
         email: String,
         verificationCode: String,
         authorization: String
-    ): C7TkAuthController.Api33OutputVo? {
+    ): C9TkAuthController.Api33OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val emailVerificationOpt = database1MemberAddEmailVerificationDataRepository.findById(verificationUid)
@@ -2462,7 +2462,7 @@ class C7TkAuthService(
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
-            C7TkAuthController.Api33OutputVo(
+            C9TkAuthController.Api33OutputVo(
                 emailVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
             )
         } else { // 코드 불일치
@@ -2476,7 +2476,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api34(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api34InputVo,
+        inputVo: C9TkAuthController.Api34InputVo,
         authorization: String
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2545,7 +2545,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api35(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api35InputVo,
+        inputVo: C9TkAuthController.Api35InputVo,
         authorization: String
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2614,9 +2614,9 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api36(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api36InputVo,
+        inputVo: C9TkAuthController.Api36InputVo,
         authorization: String
-    ): C7TkAuthController.Api36OutputVo? {
+    ): C9TkAuthController.Api36OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         // 입력 데이터 검증
@@ -2662,7 +2662,7 @@ class C7TkAuthService(
         )
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api36OutputVo(
+        return C9TkAuthController.Api36OutputVo(
             database1MemberAddPhoneNumberVerificationData.uid!!,
             database1MemberAddPhoneNumberVerificationData.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
         )
@@ -2677,7 +2677,7 @@ class C7TkAuthService(
         phoneNumber: String,
         verificationCode: String,
         authorization: String
-    ): C7TkAuthController.Api37OutputVo? {
+    ): C9TkAuthController.Api37OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val phoneNumberVerificationOpt =
@@ -2716,7 +2716,7 @@ class C7TkAuthService(
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
-            C7TkAuthController.Api37OutputVo(
+            C9TkAuthController.Api37OutputVo(
                 phoneNumberVerification.verificationExpireWhen.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))
             )
         } else { // 코드 불일치
@@ -2730,7 +2730,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api38(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api38InputVo,
+        inputVo: C9TkAuthController.Api38InputVo,
         authorization: String
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2799,7 +2799,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api39(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api39InputVo,
+        inputVo: C9TkAuthController.Api39InputVo,
         authorization: String
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2867,7 +2867,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api40(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api40InputVo,
+        inputVo: C9TkAuthController.Api40InputVo,
         authorization: String
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -2978,7 +2978,7 @@ class C7TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api41(
         httpServletResponse: HttpServletResponse,
-        inputVo: C7TkAuthController.Api41InputVo,
+        inputVo: C9TkAuthController.Api41InputVo,
         authorization: String
     ) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
@@ -3125,7 +3125,7 @@ class C7TkAuthService(
 
 
     ////
-    fun api43(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api43OutputVo? {
+    fun api43(httpServletResponse: HttpServletResponse, authorization: String): C9TkAuthController.Api43OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
@@ -3133,10 +3133,10 @@ class C7TkAuthService(
             true
         )
 
-        val myProfileList: ArrayList<C7TkAuthController.Api43OutputVo.ProfileInfo> = ArrayList()
+        val myProfileList: ArrayList<C9TkAuthController.Api43OutputVo.ProfileInfo> = ArrayList()
         for (profile in profileData) {
             myProfileList.add(
-                C7TkAuthController.Api43OutputVo.ProfileInfo(
+                C9TkAuthController.Api43OutputVo.ProfileInfo(
                     profile.uid!!,
                     profile.imageFullUrl,
                     profile.isSelected
@@ -3145,14 +3145,14 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api43OutputVo(
+        return C9TkAuthController.Api43OutputVo(
             myProfileList
         )
     }
 
 
     ////
-    fun api44(httpServletResponse: HttpServletResponse, authorization: String): C7TkAuthController.Api44OutputVo? {
+    fun api44(httpServletResponse: HttpServletResponse, authorization: String): C9TkAuthController.Api44OutputVo? {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
@@ -3160,10 +3160,10 @@ class C7TkAuthService(
             true
         )
 
-        var myProfile: C7TkAuthController.Api44OutputVo.ProfileInfo? = null
+        var myProfile: C9TkAuthController.Api44OutputVo.ProfileInfo? = null
         for (profile in profileData) {
             if (profile.isSelected) {
-                myProfile = C7TkAuthController.Api44OutputVo.ProfileInfo(
+                myProfile = C9TkAuthController.Api44OutputVo.ProfileInfo(
                     profile.uid!!,
                     profile.imageFullUrl,
                     profile.isSelected
@@ -3173,7 +3173,7 @@ class C7TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-        return C7TkAuthController.Api44OutputVo(
+        return C9TkAuthController.Api44OutputVo(
             myProfile
         )
     }
