@@ -1015,6 +1015,14 @@ class C7TkAuthController(
 
     data class Api19OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
             description = "OAuth2 가입시 검증에 사용할 코드",
             required = true,
             example = "123456"
@@ -1068,6 +1076,14 @@ class C7TkAuthController(
     }
 
     data class Api20InputVo(
+        @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
         @Schema(
             description = "가입에 사용할 OAuth2 고유 아이디",
             required = true,

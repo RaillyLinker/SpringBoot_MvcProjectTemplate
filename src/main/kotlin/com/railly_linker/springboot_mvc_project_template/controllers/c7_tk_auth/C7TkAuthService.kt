@@ -8,10 +8,8 @@ import com.railly_linker.springboot_mvc_project_template.data_sources.database_s
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RefreshTokenInfoRepository
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RegisterMembershipOauth2VerificationRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_SignInAccessTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RefreshTokenInfo
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RegisterMembershipOauth2Verification
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_SignInAccessTokenInfo
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
 import com.railly_linker.springboot_mvc_project_template.util_objects.AuthorizationTokenUtilObject
@@ -49,11 +47,11 @@ class C7TkAuthService(
     private val database1MemberRegisterPhoneNumberVerificationDataRepository: Database1_Member_RegisterPhoneNumberVerificationDataRepository,
     private val database1MemberFindPasswordPhoneNumberVerificationDataRepository: Database1_Member_FindPasswordPhoneNumberVerificationDataRepository,
     private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Member_AddPhoneNumberVerificationDataRepository,
+    private val database1MemberRegisterOauth2VerificationDataRepository: Database1_Member_RegisterOauth2VerificationDataRepository,
 
     // (Redis1 Repository)
     private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
     private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository,
-    private val redis1RegisterMembershipOauth2VerificationRepository: Redis1_RegisterMembershipOauth2VerificationRepository,
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -1481,15 +1479,12 @@ class C7TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_RegisterMembershipOauth2Verification.TRANSACTION_NAME
-        ]
-    )
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api19(
         httpServletResponse: HttpServletResponse,
         inputVo: C7TkAuthController.Api19InputVo
     ): C7TkAuthController.Api19OutputVo? {
+        val verificationUid: Long
         val verificationCode: String
         val expireWhen: String
         val loginId: String
@@ -1526,18 +1521,22 @@ class C7TkAuthService(
                 }
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-                redis1RegisterMembershipOauth2VerificationRepository.saveKeyValue(
-                    "1_${loginId}",
-                    Redis1_RegisterMembershipOauth2Verification(verificationCode),
-                    verificationTimeSec * 1000
-                )
+                val database1MemberRegisterOauth2VerificationData =
+                    database1MemberRegisterOauth2VerificationDataRepository.save(
+                        Database1_Member_RegisterOauth2VerificationData(
+                            1,
+                            loginId,
+                            verificationCode,
+                            LocalDateTime.now().plusSeconds(verificationTimeSec),
+                            true
+                        )
+                    )
 
-                expireWhen = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss.SSS"
-                ).format(Calendar.getInstance().apply {
-                    this.time = Date()
-                    this.add(Calendar.SECOND, verificationTimeSec.toInt())
-                }.time)
+                verificationUid = database1MemberRegisterOauth2VerificationData.uid!!
+
+                expireWhen = database1MemberRegisterOauth2VerificationData.verificationExpireWhen.format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                )
             }
 
             2 -> { // NAVER
@@ -1569,18 +1568,22 @@ class C7TkAuthService(
                 }
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-                redis1RegisterMembershipOauth2VerificationRepository.saveKeyValue(
-                    "2_${loginId}",
-                    Redis1_RegisterMembershipOauth2Verification(verificationCode),
-                    verificationTimeSec * 1000
-                )
+                val database1MemberRegisterOauth2VerificationData =
+                    database1MemberRegisterOauth2VerificationDataRepository.save(
+                        Database1_Member_RegisterOauth2VerificationData(
+                            2,
+                            loginId,
+                            verificationCode,
+                            LocalDateTime.now().plusSeconds(verificationTimeSec),
+                            true
+                        )
+                    )
 
-                expireWhen = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss.SSS"
-                ).format(Calendar.getInstance().apply {
-                    this.time = Date()
-                    this.add(Calendar.SECOND, verificationTimeSec.toInt())
-                }.time)
+                verificationUid = database1MemberRegisterOauth2VerificationData.uid!!
+
+                expireWhen = database1MemberRegisterOauth2VerificationData.verificationExpireWhen.format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                )
             }
 
             3 -> { // KAKAO TALK
@@ -1612,18 +1615,22 @@ class C7TkAuthService(
                 }
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
-                redis1RegisterMembershipOauth2VerificationRepository.saveKeyValue(
-                    "3_${loginId}",
-                    Redis1_RegisterMembershipOauth2Verification(verificationCode),
-                    verificationTimeSec * 1000
-                )
+                val database1MemberRegisterOauth2VerificationData =
+                    database1MemberRegisterOauth2VerificationDataRepository.save(
+                        Database1_Member_RegisterOauth2VerificationData(
+                            3,
+                            loginId,
+                            verificationCode,
+                            LocalDateTime.now().plusSeconds(verificationTimeSec),
+                            true
+                        )
+                    )
 
-                expireWhen = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss.SSS"
-                ).format(Calendar.getInstance().apply {
-                    this.time = Date()
-                    this.add(Calendar.SECOND, verificationTimeSec.toInt())
-                }.time)
+                verificationUid = database1MemberRegisterOauth2VerificationData.uid!!
+
+                expireWhen = database1MemberRegisterOauth2VerificationData.verificationExpireWhen.format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                )
             }
 
             else -> {
@@ -1633,6 +1640,7 @@ class C7TkAuthService(
 
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkAuthController.Api19OutputVo(
+            verificationUid,
             verificationCode,
             loginId,
             expireWhen
@@ -1642,70 +1650,21 @@ class C7TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    @CustomRedisTransactional(
-        [
-            Redis1_RegisterMembershipOauth2Verification.TRANSACTION_NAME
-        ]
-    )
     fun api20(httpServletResponse: HttpServletResponse, inputVo: C7TkAuthController.Api20InputVo) {
-        // 기존 회원 확인
-        val isUserExists =
-            database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-                inputVo.oauth2TypeCode.toByte(),
-                inputVo.oauth2Id,
-                true
-            )
-        if (isUserExists) { // 기존 회원이 있을 때
-            httpServletResponse.setHeader("api-result-code", "1")
-            return
-        }
+        // oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)
+        val oauth2TypeCode: Int
 
-        // 본인 이메일 검증 여부 확인
-        val secret: String
         when (inputVo.oauth2TypeCode) {
             1 -> {
-                // GOOGLE
-                val verification =
-                    redis1RegisterMembershipOauth2VerificationRepository.findKeyValue(
-                        "1_${inputVo.oauth2Id}"
-                    )
-
-                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-                    httpServletResponse.setHeader("api-result-code", "2")
-                    return
-                }
-
-                secret = verification.value.secret
+                oauth2TypeCode = 1
             }
 
             2 -> {
-                // NAVER
-                val verification =
-                    redis1RegisterMembershipOauth2VerificationRepository.findKeyValue(
-                        "2_${inputVo.oauth2Id}"
-                    )
-
-                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-                    httpServletResponse.setHeader("api-result-code", "2")
-                    return
-                }
-
-                secret = verification.value.secret
+                oauth2TypeCode = 2
             }
 
             3 -> {
-                // KAKAO
-                val verification =
-                    redis1RegisterMembershipOauth2VerificationRepository.findKeyValue(
-                        "3_${inputVo.oauth2Id}"
-                    )
-
-                if (verification == null) { // 검증 요청을 하지 않거나 만료됨
-                    httpServletResponse.setHeader("api-result-code", "2")
-                    return
-                }
-
-                secret = verification.value.secret
+                oauth2TypeCode = 3
             }
 
             else -> {
@@ -1714,41 +1673,72 @@ class C7TkAuthService(
             }
         }
 
+        val oauth2VerificationOpt =
+            database1MemberRegisterOauth2VerificationDataRepository.findById(inputVo.verificationUid)
+
+        if (oauth2VerificationOpt.isEmpty) { // 해당 검증을 요청한적이 없음
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        val oauth2Verification = oauth2VerificationOpt.get()
+
+        if (!oauth2Verification.rowActivate ||
+            oauth2Verification.oauth2TypeCode != oauth2TypeCode.toByte() ||
+            oauth2Verification.oauth2Id != inputVo.oauth2Id
+        ) {
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (LocalDateTime.now().isAfter(oauth2Verification.verificationExpireWhen)) {
+            // 만료됨
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
         // 입력 코드와 발급된 코드와의 매칭
-        val codeMatched = secret == inputVo.verificationCode
+        val codeMatched = oauth2Verification.verificationSecret == inputVo.verificationCode
 
-        if (!codeMatched) { // 입력한 코드와 일치하지 않음 == 이메일 검증 요청을 하지 않거나 만료됨
-            httpServletResponse.setHeader("api-result-code", "3")
-            return
-        }
+        if (codeMatched) { // 코드 일치
+            val isUserExists =
+                database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                    inputVo.oauth2TypeCode.toByte(),
+                    inputVo.oauth2Id,
+                    true
+                )
+            if (isUserExists) { // 기존 회원이 있을 때
+                httpServletResponse.setHeader("api-result-code", "4")
+                return
+            }
 
-        if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
-            httpServletResponse.setHeader("api-result-code", "4")
-            return
-        }
+            if (database1MemberMemberDataRepository.existsByNickNameAndRowActivate(inputVo.nickName.trim(), true)) {
+                httpServletResponse.setHeader("api-result-code", "5")
+                return
+            }
 
-        // 회원가입
-        val database1MemberUser = database1MemberMemberDataRepository.save(
-            Database1_Member_MemberData(
-                inputVo.nickName,
-                null,
-                true
+            // 회원가입
+            val database1MemberUser = database1MemberMemberDataRepository.save(
+                Database1_Member_MemberData(
+                    inputVo.nickName,
+                    null,
+                    true
+                )
             )
-        )
 
-        // SNS OAUth2 저장
-        database1MemberMemberOauth2LoginDataRepository.save(
-            Database1_Member_MemberOauth2LoginData(
-                database1MemberUser.uid!!,
-                inputVo.oauth2TypeCode.toByte(),
-                inputVo.oauth2Id,
-                true
+            // SNS OAUth2 저장
+            database1MemberMemberOauth2LoginDataRepository.save(
+                Database1_Member_MemberOauth2LoginData(
+                    database1MemberUser.uid!!,
+                    inputVo.oauth2TypeCode.toByte(),
+                    inputVo.oauth2Id,
+                    true
+                )
             )
-        )
 
-        // 역할 저장
-        val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
-        // 기본 권한 추가
+            // 역할 저장
+            val database1MemberUserRoleList = ArrayList<Database1_Member_MemberRoleData>()
+            // 기본 권한 추가
 //        database1MemberUserRoleList.add(
 //            Database1_Member_MemberRole(
 //                database1MemberUser.uid!!,
@@ -1756,33 +1746,18 @@ class C7TkAuthService(
 //                true
 //            )
 //        )
-        database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
+            database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
 
-        // 확인 완료된 검증 요청 정보 삭제
-        when (inputVo.oauth2TypeCode) {
-            1 -> {
-                // GOOGLE
-                redis1RegisterMembershipOauth2VerificationRepository.deleteKeyValue(
-                    "1_${inputVo.oauth2Id}"
-                )
-            }
+            // 확인 완료된 검증 요청 정보 삭제
+            oauth2Verification.rowActivate = false
+            database1MemberRegisterOauth2VerificationDataRepository.save(oauth2Verification)
 
-            2 -> {
-                // NAVER
-                redis1RegisterMembershipOauth2VerificationRepository.deleteKeyValue(
-                    "2_${inputVo.oauth2Id}"
-                )
-            }
-
-            3 -> {
-                // KAKAO
-                redis1RegisterMembershipOauth2VerificationRepository.deleteKeyValue(
-                    "3_${inputVo.oauth2Id}"
-                )
-            }
+            httpServletResponse.setHeader("api-result-code", "0")
+            return
+        } else { // 코드 불일치
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
         }
-
-        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
