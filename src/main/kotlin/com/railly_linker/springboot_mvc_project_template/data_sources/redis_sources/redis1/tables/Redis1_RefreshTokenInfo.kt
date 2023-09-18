@@ -6,7 +6,7 @@ import com.railly_linker.springboot_mvc_project_template.configurations.RedisCon
 // 키 : "{tokenType} {accessToken}"
 data class Redis1_RefreshTokenInfo(
     var refreshToken: String, // "{tokenType} {refreshToken}" (ex : "Bearer abcd1234")
-){
+) {
     companion object {
         // !!!Redis Template 이름 설정!!
         private const val TEMPLATE_NAME = RedisConfig.TN_REDIS1

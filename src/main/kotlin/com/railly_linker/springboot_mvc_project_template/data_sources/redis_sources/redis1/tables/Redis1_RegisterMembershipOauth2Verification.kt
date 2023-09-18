@@ -7,7 +7,7 @@ import com.railly_linker.springboot_mvc_project_template.configurations.RedisCon
 // OAuth2 타입 : 1 = Google, 2 = Naver, 3 = KakaoTalk
 data class Redis1_RegisterMembershipOauth2Verification(
     var secret: String // 전화 문자로 발송된 비밀키
-){
+) {
     companion object {
         // !!!Redis Template 이름 설정!!
         private const val TEMPLATE_NAME = RedisConfig.TN_REDIS1

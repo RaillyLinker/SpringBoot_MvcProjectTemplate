@@ -28,7 +28,7 @@ class C3TkRequestTestService(
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): String? {
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return activeProfile
     }
 
@@ -38,7 +38,7 @@ class C3TkRequestTestService(
         val mv = ModelAndView()
         mv.viewName = "redirect:/tk/request-test"
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
 
@@ -48,7 +48,7 @@ class C3TkRequestTestService(
         val mv = ModelAndView()
         mv.viewName = "forward:/tk/request-test"
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
 
@@ -67,7 +67,7 @@ class C3TkRequestTestService(
         queryParamStringList: List<String>,
         queryParamStringListNullable: List<String>?
     ): C3TkRequestTestController.Api4OutputVo? {
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api4OutputVo(
             queryParamString,
             queryParamStringNullable,
@@ -85,7 +85,7 @@ class C3TkRequestTestService(
 
     ////
     fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): C3TkRequestTestController.Api5OutputVo? {
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api5OutputVo(pathParamInt)
     }
 
@@ -95,7 +95,7 @@ class C3TkRequestTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: C3TkRequestTestController.Api6InputVo
     ): C3TkRequestTestController.Api6OutputVo? {
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api6OutputVo(
             inputVo.requestBodyString,
             inputVo.requestBodyStringNullable,
@@ -116,7 +116,7 @@ class C3TkRequestTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: C3TkRequestTestController.Api7InputVo
     ): C3TkRequestTestController.Api7OutputVo? {
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api7OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
@@ -220,7 +220,7 @@ class C3TkRequestTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api8OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
@@ -328,7 +328,7 @@ class C3TkRequestTestService(
             }
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api9OutputVo(
             inputVo.requestFormString,
             inputVo.requestFormStringNullable,
@@ -438,7 +438,7 @@ class C3TkRequestTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api10OutputVo(
             inputJsonObject.requestFormString,
             inputJsonObject.requestFormStringNullable,
@@ -457,13 +457,13 @@ class C3TkRequestTestService(
     ////
     fun api11(httpServletResponse: HttpServletResponse) {
         throw RuntimeException("Test Error")
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
     ////
     fun api12(httpServletResponse: HttpServletResponse, errorType: C3TkRequestTestController.Api12ErrorTypeEnum?) {
         if (errorType == null) {
-            httpServletResponse.setHeader("api-result-code", "ok")
+            httpServletResponse.setHeader("api-result-code", "0")
         } else {
             when (errorType) {
                 C3TkRequestTestController.Api12ErrorTypeEnum.A -> {
@@ -491,6 +491,6 @@ class C3TkRequestTestService(
             Thread.sleep(100)  // 100ms마다 스레드를 잠들게 하여 CPU 사용률을 줄임
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }

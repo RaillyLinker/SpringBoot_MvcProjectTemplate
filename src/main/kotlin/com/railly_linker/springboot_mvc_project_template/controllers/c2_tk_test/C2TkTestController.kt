@@ -25,7 +25,7 @@ class C2TkTestController(
         summary = "N1. 이메일 발송 테스트",
         description = "이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -70,7 +70,7 @@ class C2TkTestController(
         summary = "N2. HTML 이메일 발송 테스트",
         description = "HTML 로 이루어진 이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -116,7 +116,7 @@ class C2TkTestController(
         description = "Naver API 를 사용한 SMS 발송 샘플\n\n" +
                 "Service 에서 사용하는 Naver SMS 발송 유틸 내의 개인정보를 변경해야 사용 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",

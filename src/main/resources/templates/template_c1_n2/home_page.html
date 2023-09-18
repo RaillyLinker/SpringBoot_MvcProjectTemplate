@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.w3.org/1999/xhtml"
-      lang="ko">
+<html lang="ko"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link href="/resource_global/font.css" rel="stylesheet"/>
@@ -22,7 +22,7 @@
 <br/>
 
 <h3 th:if="${mvVo.env != 'prod80'}">Swagger 문서</h3>
-<form th:if="${mvVo.env != 'prod80'}" th:action="@{/swagger-ui/index.html}" method="get">
+<form method="get" th:action="@{/swagger-ui/index.html}" th:if="${mvVo.env != 'prod80'}">
     <input class="main_btn" type="submit" value="Swagger"/>
 </form>
 

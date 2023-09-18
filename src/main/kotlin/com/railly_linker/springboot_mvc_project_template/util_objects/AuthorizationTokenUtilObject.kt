@@ -1,7 +1,5 @@
 package com.railly_linker.springboot_mvc_project_template.util_objects
 
-import java.lang.RuntimeException
-
 // [Authorization 유틸]
 // Request Header 의 Authorization 키로 전달되는 토큰의 정보를 가져오는 유틸
 // JWT 등 종류에 상관 없이 공통적인 정보를 반환해주는 wrapper 역할

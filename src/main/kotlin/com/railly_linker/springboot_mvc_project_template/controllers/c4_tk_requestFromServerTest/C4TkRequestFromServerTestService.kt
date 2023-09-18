@@ -41,8 +41,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         responseObj.body()!!
                     }
 
@@ -78,8 +78,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         responseObj.body()!!
                     }
 
@@ -115,8 +115,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         responseObj.body()!!
                     }
 
@@ -163,8 +163,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api4OutputVo(
                             responseBody.queryParamString,
@@ -214,8 +214,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api5OutputVo(
                             responseBody.pathParamInt
@@ -267,8 +267,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api6OutputVo(
                             responseBody.requestBodyString,
@@ -327,8 +327,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api7OutputVo(
                             responseBody.requestFormString,
@@ -413,8 +413,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api8OutputVo(
                             responseBody.requestFormString,
@@ -514,8 +514,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api9OutputVo(
                             responseBody.requestFormString,
@@ -594,8 +594,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                         val responseBody = responseObj.body()!!
                         C4TkRequestFromServerTestController.Api10OutputVo(
                             responseBody.requestFormString,
@@ -643,8 +643,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                     }
 
                     else -> {
@@ -679,8 +679,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                     }
 
                     "1" -> {
@@ -725,8 +725,8 @@ class C4TkRequestFromServerTestService(
 
                 // api-result-code 분기
                 when (apiResultCode) {
-                    "ok" -> {
-                        httpServletResponse.setHeader("api-result-code", "ok")
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
                     }
 
                     else -> {

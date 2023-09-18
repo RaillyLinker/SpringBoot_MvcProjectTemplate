@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository
 // (JPA 레포지토리)
 // : 함수 작성 명명법에 따라 데이터베이스 SQL 동작을 자동지원
 @Repository
-interface Database1_Member_FindPasswordEmailVerificationDataRepository : JpaRepository<Database1_Member_FindPasswordEmailVerificationData, Long> {
-
-}
+interface Database1_Member_FindPasswordEmailVerificationDataRepository :
+    JpaRepository<Database1_Member_FindPasswordEmailVerificationData, Long>

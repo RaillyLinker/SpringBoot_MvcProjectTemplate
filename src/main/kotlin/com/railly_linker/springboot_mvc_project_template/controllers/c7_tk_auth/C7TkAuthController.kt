@@ -25,7 +25,7 @@ class C7TkAuthController(
         summary = "N1. 비 로그인 접속 테스트",
         description = "비 로그인 접속 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -47,7 +47,7 @@ class C7TkAuthController(
         summary = "N2. 로그인 진입 테스트 <>",
         description = "로그인 되어 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -73,7 +73,7 @@ class C7TkAuthController(
         summary = "N3. ADMIN 권한 진입 테스트 <'ADMIN'>",
         description = "ADMIN 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -99,7 +99,7 @@ class C7TkAuthController(
         summary = "N4. Developer 권한 진입 테스트 <'ADMIN' or 'Developer'>",
         description = "Developer 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -125,9 +125,9 @@ class C7TkAuthController(
         summary = "N5. 계정 비밀번호 로그인",
         description = "계정 아이디 + 비밀번호를 사용하는 로그인 요청\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 가입 되지 않은 회원\n\n" +
-                "2 : 로그인 정보 검증 불일치\n\n" +
+                "2 : 패스워드 불일치\n\n" +
                 "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)",
         responses = [
             ApiResponse(
@@ -249,7 +249,7 @@ class C7TkAuthController(
         summary = "N6. OAuth2 Code 로 OAuth2 AccessToken 발급",
         description = "OAuth2 Code 를 사용하여 얻은 OAuth2 AccessToken 발급\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 유효하지 않은 OAuth2 인증 정보",
         responses = [
             ApiResponse(
@@ -300,7 +300,7 @@ class C7TkAuthController(
         summary = "N7. OAuth2 로그인 (Access Token)",
         description = "OAuth2 Access Token 으로 로그인 요청\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 유효하지 않은 OAuth2 Access Token\n\n" +
                 "2 : 가입 되지 않은 회원\n\n" +
                 "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)",
@@ -417,7 +417,7 @@ class C7TkAuthController(
         summary = "N8. 로그아웃 처리 <>",
         description = "로그아웃 처리\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -442,7 +442,7 @@ class C7TkAuthController(
         summary = "N9. 토큰 재발급 <>",
         description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 가입되지 않은 회원\n\n" +
                 "2 : 유효하지 않은 리프레시 토큰\n\n" +
                 "3 : 리프레시 토큰 만료\n\n" +
@@ -552,7 +552,7 @@ class C7TkAuthController(
         summary = "N10. 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
         description = "멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -578,7 +578,7 @@ class C7TkAuthController(
         summary = "N11. 닉네임 중복 검사",
         description = "닉네임 중복 여부 반환\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -612,7 +612,7 @@ class C7TkAuthController(
         summary = "N12. 닉네임 수정하기 <>",
         description = "닉네임 수정하기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1. 중복된 닉네임 : 중복검사를 했음에도 그 사이에 동일 닉네임이 등록되었을 수 있음",
         responses = [
             ApiResponse(
@@ -646,7 +646,7 @@ class C7TkAuthController(
         description = "이메일 회원가입시 본인 이메일 확인 메일 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 기존 회원 존재",
         responses = [
             ApiResponse(
@@ -695,7 +695,7 @@ class C7TkAuthController(
         description = "이메일 회원가입시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 이메일 회원가입까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음",
@@ -739,7 +739,7 @@ class C7TkAuthController(
         summary = "N15 : 이메일 회원가입",
         description = "이메일 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
@@ -810,7 +810,7 @@ class C7TkAuthController(
         description = "전화번호 회원가입시 본인 전화번호 확인 문자 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 기존 회원 존재",
         responses = [
             ApiResponse(
@@ -837,12 +837,20 @@ class C7TkAuthController(
 
     data class Api16OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
             description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
-        @JsonProperty("expireWhen")
-        val expireWhen: String
+        @JsonProperty("verificationExpireWhen")
+        val verificationExpireWhen: String
     )
 
 
@@ -852,9 +860,10 @@ class C7TkAuthController(
         description = "전화번호 회원가입시 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 SMS 회원가입까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
-                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : verificationCode 가 일치하지 않음",
+                "0 : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 전화번호 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -866,6 +875,9 @@ class C7TkAuthController(
     fun api17(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
+        @Parameter(name = "verificationUid", description = "검증 고유값", example = "1")
+        @RequestParam("verificationUid")
+        verificationUid: Long,
         @Parameter(name = "phoneNumber", description = "인증 문자 수신 전화번호(국가번호 + 전화번호)", example = "82)010-0000-0000")
         @RequestParam("phoneNumber")
         phoneNumber: String,
@@ -873,7 +885,7 @@ class C7TkAuthController(
         @RequestParam("verificationCode")
         verificationCode: String
     ): Api17OutputVo? {
-        return service.api17(httpServletResponse, phoneNumber, verificationCode)
+        return service.api17(httpServletResponse, verificationUid, phoneNumber, verificationCode)
     }
 
     data class Api17OutputVo(
@@ -892,11 +904,12 @@ class C7TkAuthController(
         summary = "N18. 전화번호 회원가입",
         description = "전화번호 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
-                "1 : 기존 회원 존재\n\n" +
-                "2 : 닉네임 중복\n\n" +
-                "3 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "4 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+                "0 : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 전화번호 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 이미 가입된 회원이 있습니다.\n\n" +
+                "5 : 이미 사용중인 닉네임",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -922,6 +935,14 @@ class C7TkAuthController(
         )
         @JsonProperty("phoneNumber")
         val phoneNumber: String,
+
+        @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
 
         @Schema(
             description = "사용할 비밀번호",
@@ -954,7 +975,7 @@ class C7TkAuthController(
         summary = "N19. OAuth2 AccessToken 으로 회원가입 검증",
         description = "OAuth2 AccessToken 으로 회원가입 검증\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 잘못된 OAuth2 AccessToken\n\n" +
                 "2 : 기존 회원 존재",
         responses = [
@@ -1024,7 +1045,7 @@ class C7TkAuthController(
         summary = "N20. OAuth2 회원가입",
         description = "OAuth2 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 기존 회원 존재\n\n" +
                 "2 : OAuth2 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
                 "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청\n\n" +
@@ -1087,7 +1108,7 @@ class C7TkAuthController(
         description = "계정 비밀번호 변경\n\n" +
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 탈퇴된 회원\n\n" +
                 "2 : 기존 비밀번호가 일치하지 않음\n\n" +
                 "3 : 비번을 null 로 만들려고 할 때 account 외의 OAuth2 인증이 없기에 비번 제거 불가\n\n",
@@ -1129,7 +1150,7 @@ class C7TkAuthController(
         description = "이메일 비밀번호 찾기 본인 이메일 확인 메일 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 가입되지 않은 회원",
         responses = [
             ApiResponse(
@@ -1178,7 +1199,7 @@ class C7TkAuthController(
         description = "이메일 비밀번호 찾기 시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음",
@@ -1223,7 +1244,7 @@ class C7TkAuthController(
         description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 이메일로 발송\n\n" +
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
@@ -1274,7 +1295,7 @@ class C7TkAuthController(
         description = "전화번호 비밀번호 찾기 본인 전화번호 확인 문자 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 가입되지 않은 회원",
         responses = [
             ApiResponse(
@@ -1301,12 +1322,20 @@ class C7TkAuthController(
 
     data class Api25OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
             description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
-        @JsonProperty("expireWhen")
-        val expireWhen: String
+        @JsonProperty("verificationExpireWhen")
+        val verificationExpireWhen: String
     )
 
 
@@ -1316,9 +1345,10 @@ class C7TkAuthController(
         description = "전화번호 비밀번호 찾기 시 본인 전와번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
-                "1 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 검증 코드가 일치하지 않음",
+                "0 : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 전화번호 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1330,6 +1360,9 @@ class C7TkAuthController(
     fun api26(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
+        @Parameter(name = "verificationUid", description = "검증 고유값", example = "1")
+        @RequestParam("verificationUid")
+        verificationUid: Long,
         @Parameter(name = "phoneNumber", description = "수신 전화번호", example = "82)000-0000-0000")
         @RequestParam("phoneNumber")
         phoneNumber: String,
@@ -1337,7 +1370,7 @@ class C7TkAuthController(
         @RequestParam("verificationCode")
         verificationCode: String
     ): Api26OutputVo? {
-        return service.api26(httpServletResponse, phoneNumber, verificationCode)
+        return service.api26(httpServletResponse, verificationUid, phoneNumber, verificationCode)
     }
 
     data class Api26OutputVo(
@@ -1357,10 +1390,11 @@ class C7TkAuthController(
         description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 전화번호로 발송\n\n" +
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
-                "1 : 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 검증 코드가 일치하지 않음\n\n" +
-                "3 : 탈퇴된 회원",
+                "0 : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 전화번호 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 탈퇴된 회원",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1384,7 +1418,15 @@ class C7TkAuthController(
         val phoneNumber: String,
 
         @Schema(
-            description = "이메일 검증에 사용한 코드",
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
+            description = "검증에 사용한 코드",
             required = true,
             example = "123456"
         )
@@ -1398,7 +1440,7 @@ class C7TkAuthController(
         summary = "N28. 내 로그인 관련 정보 리스트 가져오기 <>",
         description = "내 계정에 연결된 로그인 수단 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1452,7 +1494,7 @@ class C7TkAuthController(
         summary = "N29. 내 이메일 리스트 가져오기 <>",
         description = "내 이메일 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1484,7 +1526,7 @@ class C7TkAuthController(
         summary = "N30. 내 전화번호 리스트 가져오기 <>",
         description = "내 전화번호 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1516,7 +1558,7 @@ class C7TkAuthController(
         summary = "N31. 내 OAuth2 로그인 리스트 가져오기 <>",
         description = "내 OAuth2 로그인 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1563,7 +1605,7 @@ class C7TkAuthController(
         description = "이메일 추가하기 본인 이메일 확인 메일 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이미 사용중인 이메일",
         responses = [
             ApiResponse(
@@ -1617,7 +1659,7 @@ class C7TkAuthController(
         description = "이메일 추가하기 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음",
@@ -1665,7 +1707,7 @@ class C7TkAuthController(
         summary = "N34. 이메일 추가하기 <>",
         description = "내 계정에 이메일 추가\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
@@ -1719,7 +1761,7 @@ class C7TkAuthController(
         summary = "N35. 내 이메일 제거하기 <>",
         description = "내 계정에서 이메일 제거\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
         responses = [
             ApiResponse(
@@ -1755,7 +1797,7 @@ class C7TkAuthController(
         description = "전화번호 추가하기 본인 전화번호 확인 문자 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 이미 사용중인 전화번호",
         responses = [
             ApiResponse(
@@ -1786,12 +1828,20 @@ class C7TkAuthController(
 
     data class Api36OutputVo(
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
             description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
             required = true,
             example = "2023-01-02 11:11:11.111"
         )
-        @JsonProperty("expireWhen")
-        val expireWhen: String
+        @JsonProperty("verificationExpireWhen")
+        val verificationExpireWhen: String
     )
 
 
@@ -1801,9 +1851,10 @@ class C7TkAuthController(
         description = "전화번호 추가하기 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
-                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 검증 코드가 일치하지 않음",
+                "0 : 정상 동작\n\n" +
+                "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 전화번호 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1819,6 +1870,9 @@ class C7TkAuthController(
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
         authorization: String?,
+        @Parameter(name = "verificationUid", description = "검증 고유값", example = "1")
+        @RequestParam("verificationUid")
+        verificationUid: Long,
         @Parameter(name = "phoneNumber", description = "수신 전화번호", example = "82)000-0000-0000")
         @RequestParam("phoneNumber")
         phoneNumber: String,
@@ -1826,7 +1880,7 @@ class C7TkAuthController(
         @RequestParam("verificationCode")
         verificationCode: String
     ): Api37OutputVo? {
-        return service.api37(httpServletResponse, phoneNumber, verificationCode, authorization!!)
+        return service.api37(httpServletResponse, verificationUid, phoneNumber, verificationCode, authorization!!)
     }
 
     data class Api37OutputVo(
@@ -1844,10 +1898,11 @@ class C7TkAuthController(
         summary = "N38. 전화번호 추가하기 <>",
         description = "내 계정에 전화번호 추가\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
-                "1 : 전화번호 검증 요청을 보낸 적 없음 혹은 만료된 요청\n\n" +
-                "2 : 이미 사용중인 전화번호\n\n" +
-                "3 : 입력한 verificationCode 와 검증된 code 가 일치하지 않거나 만료된 요청",
+                "0 : 정상 동작\n\n" +
+                "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
+                "2 : 이메일 검증 요청이 만료됨\n\n" +
+                "3 : verificationCode 가 일치하지 않음\n\n" +
+                "4 : 이미 사용중인 전화번호",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -1875,6 +1930,14 @@ class C7TkAuthController(
         val phoneNumber: String,
 
         @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
             description = "문자 검증에 사용한 코드",
             required = true,
             example = "123456"
@@ -1889,7 +1952,7 @@ class C7TkAuthController(
         summary = "N39. 내 전화번호 제거하기 <>",
         description = "내 계정에서 전화번호 제거\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
         responses = [
             ApiResponse(
@@ -1924,7 +1987,7 @@ class C7TkAuthController(
         summary = "N40. OAuth2 추가하기 (Access Token) <>",
         description = "내 계정에 OAuth2 Access Token 으로 인증 추가\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : oAuth2 Access Token 정보 검증 불일치\n\n" +
                 "2 : 탈퇴된 회원\n\n" +
                 "3 : 이미 사용중인 인증",
@@ -1973,7 +2036,7 @@ class C7TkAuthController(
         summary = "N41. 내 OAuth2 제거하기 <>",
         description = "내 계정에서 OAuth2 제거\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작\n\n" +
+                "0 : 정상 동작\n\n" +
                 "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
         responses = [
             ApiResponse(
@@ -2015,7 +2078,7 @@ class C7TkAuthController(
         summary = "N42. 회원탈퇴 <>",
         description = "회원탈퇴 요청\n\n" +
                 "(api-result-code)\n\n" +
-                "ok : 정상 동작",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",

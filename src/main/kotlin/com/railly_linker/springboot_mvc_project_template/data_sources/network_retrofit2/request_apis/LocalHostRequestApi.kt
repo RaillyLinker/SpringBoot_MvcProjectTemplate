@@ -13,7 +13,7 @@ interface LocalHostRequestApi {
     // [기본 요청 테스트 API]
     // 이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @GET("/tk/request-test")
     fun getTkRequestTest(): Call<String?>
 
@@ -22,7 +22,7 @@ interface LocalHostRequestApi {
     // [요청 Redirect 테스트 API]
     // 이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @GET("/tk/request-test/redirect-to-blank")
     fun getTkRequestTestRedirectToBlank(): Call<String?>
 
@@ -31,7 +31,7 @@ interface LocalHostRequestApi {
     // [요청 Forward 테스트 API]
     // 이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @GET("/tk/request-test/forward-to-blank")
     fun getTkRequestTestForwardToBlank(): Call<String?>
 
@@ -40,7 +40,7 @@ interface LocalHostRequestApi {
     // [Get 요청(Query Parameter) 테스트 API]
     // Query Parameter 를 받는 Get 메소드 요청 테스트
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @GET("/tk/request-test/get-request")
     fun getTkRequestTestGetRequest(
         @Query("queryParamString") queryParamString: String,
@@ -93,7 +93,7 @@ interface LocalHostRequestApi {
     // [Get 요청(Path Parameter) 테스트 API]
     // Path Parameter 를 받는 Get 메소드 요청 테스트
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @GET("/tk/request-test/get-request/{pathParamInt}")
     fun getTkRequestTestGetRequestPathParamInt(
         @Path("pathParamInt") pathParamInt: Int
@@ -110,7 +110,7 @@ interface LocalHostRequestApi {
     // [Post 요청(Application-Json) 테스트 API]
     // application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/post-request-application-json")
     fun postTkRequestTestPostRequestApplicationJson(
         @Body inputVo: PostTkRequestTestPostRequestApplicationJsonInputVO
@@ -187,7 +187,7 @@ interface LocalHostRequestApi {
     // [Post 요청(x-www-form-urlencoded) 테스트 API]
     // x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/post-request-x-www-form-urlencoded")
     @FormUrlEncoded
     fun postTkRequestTestPostRequestXWwwFormUrlencoded(
@@ -242,7 +242,7 @@ interface LocalHostRequestApi {
     // multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)
     // MultipartFile 파라미터가 null 이 아니라면 저장
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/post-request-multipart-form-data")
     @Multipart
     fun postTkRequestTestPostRequestMultipartFormData(
@@ -299,7 +299,7 @@ interface LocalHostRequestApi {
     // multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)
     // 파일 리스트가 null 이 아니라면 저장
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/post-request-multipart-form-data2")
     @Multipart
     fun postTkRequestTestPostRequestMultipartFormData2(
@@ -356,7 +356,7 @@ interface LocalHostRequestApi {
     // multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)
     // 파일 리스트가 null 이 아니라면 저장
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/post-request-multipart-form-data-json")
     @Multipart
     fun postTkRequestTestPostRequestMultipartFormDataJson(
@@ -426,7 +426,7 @@ interface LocalHostRequestApi {
     // [인위적 에러 발생 테스트 API]
     // 요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/generate-error")
     fun postTkRequestTestGenerateError(): Call<Unit?>
 
@@ -435,7 +435,7 @@ interface LocalHostRequestApi {
     // [결과 코드 발생 테스트 API]
     // Response Header 에 api-result-code 를 반환하는 테스트 API
     //(api-result-code)
-    //ok : 정상 동작
+    //0 : 정상 동작
     //1 : errorType 을 A 로 보냈습니다.
     //2 : errorType 을 B 로 보냈습니다.
     //3 : errorType 을 C 로 보냈습니다.
@@ -455,7 +455,7 @@ interface LocalHostRequestApi {
     // [인위적 타임아웃 에러 발생 테스트]
     // 타임아웃 에러를 발생시키기 위해 임의로 응답 시간을 지연시킵니다.
     // (api-result-code)
-    // ok : 정상 동작
+    // 0 : 정상 동작
     @POST("/tk/request-test/generate-time-out-error")
     fun postTkRequestTestGenerateTimeOutError(
         @Query("delayTimeSec") delayTimeSec: Int

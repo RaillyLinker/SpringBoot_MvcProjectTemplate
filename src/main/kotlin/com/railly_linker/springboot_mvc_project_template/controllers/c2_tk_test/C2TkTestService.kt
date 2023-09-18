@@ -34,7 +34,7 @@ class C2TkTestService(
             inputVo.multipartFileList
         )
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -57,7 +57,7 @@ class C2TkTestService(
             inputVo.multipartFileList
         )
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -79,5 +79,7 @@ class C2TkTestService(
                 inputVo.smsMessage
             )
         )
+
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }

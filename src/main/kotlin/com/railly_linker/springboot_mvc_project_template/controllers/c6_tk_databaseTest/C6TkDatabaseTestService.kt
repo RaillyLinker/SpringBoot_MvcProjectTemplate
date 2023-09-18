@@ -2,9 +2,9 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c6_tk_data
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
-import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Template_TestData
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.Database1_NativeRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.Database1_Template_TestsRepository
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Template_TestData
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -38,7 +38,7 @@ class C6TkDatabaseTestService(
             Database1_Template_TestData(inputVo.content, (0..99999999).random(), true)
         )
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
 
         return C6TkDatabaseTestController.Api1OutputVo(
             result.uid!!,
@@ -55,7 +55,7 @@ class C6TkDatabaseTestService(
     fun api2(httpServletResponse: HttpServletResponse) {
         database1TemplateTestRepository.deleteAll()
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -64,7 +64,7 @@ class C6TkDatabaseTestService(
     fun api3(httpServletResponse: HttpServletResponse, index: Long) {
         database1TemplateTestRepository.deleteById(index)
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -85,7 +85,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api4OutputVo(
             testEntityVoList
         )
@@ -115,7 +115,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api5OutputVo(
             testEntityVoList
         )
@@ -145,7 +145,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api6OutputVo(
             testEntityVoList
         )
@@ -177,7 +177,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api7OutputVo(
             entityList.totalElements,
             testEntityVoList
@@ -212,7 +212,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api8OutputVo(
             voList.totalElements,
             testEntityVoList
@@ -241,7 +241,7 @@ class C6TkDatabaseTestService(
             testObject
         )
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api9OutputVo(
             result.uid!!,
             result.content,
@@ -271,7 +271,7 @@ class C6TkDatabaseTestService(
         }
 
         database1NativeRepository.updateForC6N10(testTableUid, inputVo.content)
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -301,7 +301,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api11OutputVo(
             voList.totalElements,
             testEntityVoList
@@ -319,7 +319,7 @@ class C6TkDatabaseTestService(
         )
 
         throw Exception("Transaction Rollback Test!")
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -330,7 +330,7 @@ class C6TkDatabaseTestService(
         )
 
         throw Exception("No Transaction Exception Test!")
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -363,7 +363,7 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.setHeader("api-result-code", "ok")
+        httpServletResponse.setHeader("api-result-code", "0")
 
         return C6TkDatabaseTestController.Api14OutputVo(count, testEntityVoList)
     }
