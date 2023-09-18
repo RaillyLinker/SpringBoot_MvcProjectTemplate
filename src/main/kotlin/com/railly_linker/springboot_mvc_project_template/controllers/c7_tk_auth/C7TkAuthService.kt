@@ -2788,194 +2788,180 @@ class C7TkAuthService(
 
 
     ////
-    // todo
-//    fun api40(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api40InputVo,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//
-//        val snsTypeCode: Int
-//        val snsId: String
-//
-//        // (정보 검증 로직 수행)
-//        when (inputVo.oauth2TypeCode) {
-//            1 -> { // GOOGLE
-//                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2.googleApisComRequestApi.getOauth2V1Userinfo(
-//                    "Bearer ${inputVo.oauth2Secret}"
-//                ).execute()
-//
-//                // 액세트 토큰 정상 동작 확인
-//                if (response.code() != 200 ||
-//                    response.body() == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                snsTypeCode = 1
-//                snsId = response.body()!!.id
-//            }
-//
-//            2 -> { // APPLE
-//                // (아래는 Id 토큰으로 검증)
-//                val appleInfo = AppleOAuthHelperUtilObject.getAppleMemberData(inputVo.oauth2Secret)
-//
-//                val loginId: String
-//                if (appleInfo != null) {
-//                    loginId = appleInfo.snsId
-//                } else {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                snsTypeCode = 2
-//                snsId = loginId
-//            }
-//
-//            3 -> { // NAVER
-//                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
-//                    "Bearer ${inputVo.oauth2Secret}"
-//                ).execute()
-//
-//                // 액세트 토큰 정상 동작 확인
-//                if (response.body() == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                snsTypeCode = 3
-//                snsId = response.body()!!.response.id
-//            }
-//
-//            4 -> { // KAKAO
-//                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
-//                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
-//                    "Bearer ${inputVo.oauth2Secret}"
-//                ).execute()
-//
-//                // 액세트 토큰 정상 동작 확인
-//                if (response.code() != 200 ||
-//                    response.body() == null
-//                ) {
-//                    httpServletResponse.setHeader("api-result-code", "2")
-//                    return
-//                }
-//
-//                snsTypeCode = 4
-//                snsId = response.body()!!.id.toString()
-//            }
-//
-//            else -> {
-//                throw Exception("SNS Login Type not supported")
-//            }
-//        }
-//
-//        // 검증됨
-//        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//            memberUid.toLong(),
-//            true
-//        )
-//
-//        if (member == null) {
-//            httpServletResponse.setHeader("api-result-code", "1")
-//            return
-//        }
-//
-//        // 사용중인지 아닌지 검증
-//        val isDatabase1MemberUserExists =
-//            database1MemberMemberSnsOauth2Repository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
-//                snsTypeCode,
-//                snsId,
-//                true
-//            )
-//
-//        if (isDatabase1MemberUserExists) { // 이미 사용중인 SNS 인증
-//            httpServletResponse.setHeader("api-result-code", "3")
-//            return
-//        }
-//
-//        // SNS 인증 추가
-//        database1MemberMemberSnsOauth2Repository.save(
-//            Database1_Member_MemberOauth2(
-//                memberUid.toLong(),
-//                snsTypeCode,
-//                snsId,
-//                true
-//            )
-//        )
-//    }
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api40(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api40InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val snsTypeCode: Int
+        val snsId: String
+
+        // (정보 검증 로직 수행)
+        when (inputVo.oauth2TypeCode) {
+            1 -> { // GOOGLE
+                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
+                val response = networkRetrofit2.wwwGoogleapisComRequestApi.getOauth2V1UserInfo(
+                    inputVo.oauth2AccessToken
+                ).execute()
+
+                // 액세트 토큰 정상 동작 확인
+                if (response.code() != 200 ||
+                    response.body() == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return
+                }
+
+                snsTypeCode = 1
+                snsId = response.body()!!.id!!
+            }
+
+            2 -> { // NAVER
+                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
+                val response = networkRetrofit2.openapiNaverComRequestApi.getV1NidMe(
+                    inputVo.oauth2AccessToken
+                ).execute()
+
+                // 액세트 토큰 정상 동작 확인
+                if (response.body() == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return
+                }
+
+                snsTypeCode = 2
+                snsId = response.body()!!.response.id
+            }
+
+            3 -> { // KAKAO
+                // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
+                val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
+                    inputVo.oauth2AccessToken
+                ).execute()
+
+                // 액세트 토큰 정상 동작 확인
+                if (response.code() != 200 ||
+                    response.body() == null
+                ) {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return
+                }
+
+                snsTypeCode = 3
+                snsId = response.body()!!.id.toString()
+            }
+
+            else -> {
+                throw Exception("SNS Login Type not supported")
+            }
+        }
+
+        // 검증됨
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
+
+        if (member == null) {
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
+        // 사용중인지 아닌지 검증
+        val isDatabase1MemberUserExists =
+            database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                snsTypeCode.toByte(),
+                snsId,
+                true
+            )
+
+        if (isDatabase1MemberUserExists) { // 이미 사용중인 SNS 인증
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
+        }
+
+        // SNS 인증 추가
+        database1MemberMemberOauth2LoginDataRepository.save(
+            Database1_Member_MemberOauth2LoginData(
+                memberUid.toLong(),
+                snsTypeCode.toByte(),
+                snsId,
+                true
+            )
+        )
+        httpServletResponse.setHeader("api-result-code", "ok")
+    }
 
 
     ////
-    // todo
-//    fun api41(
-//        httpServletResponse: HttpServletResponse,
-//        inputVo: C7TkAuthController.Api41InputVo,
-//        authorization: String
-//    ) {
-//        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
-//        val memberUidLong = memberUid.toLong()
-//
-//        // 내 계정에 등록된 모든 인증 리스트 가져오기
-//        val myOAuth2List = database1MemberMemberSnsOauth2Repository.findAllByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        if (myOAuth2List.isEmpty()) {
-//            // 리스트가 비어있다면
-//            return
-//        }
-//
-//        // 지우려는 정보 인덱스 찾기
-//        val selectedOAuth2Idx = myOAuth2List.indexOfFirst {
-//            it.oauth2TypeCode == inputVo.oauth2Type && it.oauth2Id == inputVo.oauth2Id
-//        }
-//
-//        if (selectedOAuth2Idx == -1) {
-//            // 지우려는 정보가 없다면
-//            return
-//        }
-//
-//        val selectedOAuth2Entity = myOAuth2List[selectedOAuth2Idx]
-//
-//        val isMemberEmailExists = database1MemberMemberEmailDataRepository.existsByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        val isMemberPhoneExists = database1MemberMemberPhoneDataRepository.existsByMemberUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )
-//
-//        // 지우려는 정보 외에 로그인 방법이 존재하는지 확인
-//        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
-//            memberUidLong,
-//            true
-//        )!!
-//
-//        if (myOAuth2List.size > 1 || (member.accountPassword != null && (isMemberEmailExists || isMemberPhoneExists))) {
-//            // 사용 가능한 계정 로그인 정보가 존재
-//
-//            // 로그인 정보 지우기
-//            selectedOAuth2Entity.rowActivate = false
-//            database1MemberMemberSnsOauth2Repository.save(
-//                selectedOAuth2Entity
-//            )
-//
-//            return
-//        }
-//
-//        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
-//        httpServletResponse.setHeader("api-result-code", "1")
-//        return
-//    }
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api41(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C7TkAuthController.Api41InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+        val memberUidLong = memberUid.toLong()
+
+        // 내 계정에 등록된 모든 인증 리스트 가져오기
+        val myOAuth2List = database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        if (myOAuth2List.isEmpty()) {
+            // 리스트가 비어있다면
+            return
+        }
+
+        // 지우려는 정보 인덱스 찾기
+        val selectedOAuth2Idx = myOAuth2List.indexOfFirst {
+            it.oauth2TypeCode == inputVo.oauth2Type.toByte() && it.oauth2Id == inputVo.oauth2Id
+        }
+
+        if (selectedOAuth2Idx == -1) {
+            // 지우려는 정보가 없다면
+            return
+        }
+
+        val selectedOAuth2Entity = myOAuth2List[selectedOAuth2Idx]
+
+        val isMemberEmailExists = database1MemberMemberEmailDataRepository.existsByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        val isMemberPhoneExists = database1MemberMemberPhoneDataRepository.existsByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        // 지우려는 정보 외에 로그인 방법이 존재하는지 확인
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            memberUidLong,
+            true
+        )!!
+
+        if (myOAuth2List.size > 1 || (member.accountPassword != null && (isMemberEmailExists || isMemberPhoneExists))) {
+            // 사용 가능한 계정 로그인 정보가 존재
+
+            // 로그인 정보 지우기
+            selectedOAuth2Entity.rowActivate = false
+            database1MemberMemberOauth2LoginDataRepository.save(
+                selectedOAuth2Entity
+            )
+
+            httpServletResponse.setHeader("api-result-code", "ok")
+            return
+        }
+
+        // 이외에 사용 가능한 로그인 정보가 존재하지 않을 때
+        httpServletResponse.setHeader("api-result-code", "1")
+        return
+    }
 
 
     ////

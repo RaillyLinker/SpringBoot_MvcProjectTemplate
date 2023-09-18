@@ -1859,98 +1859,94 @@ class C7TkAuthController(
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N40. OAuth2 추가하기 (Token) <>",
-//        description = "내 계정에 OAuth2 토큰으로 인증 추가\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 탈퇴된 회원\n\n" +
-//                "2 : oAuth2 Code 정보 검증 불일치\n\n" +
-//                "3 : 이미 사용중인 인증",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @PostMapping("/my-new-oauth2-token")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api40(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api40InputVo
-//    ) {
-//        service.api40(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api40InputVo(
-//        @Schema(
-//            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
-//            required = true,
-//            example = "1"
-//        )
-//        @JsonProperty("oauth2TypeCode")
-//        val oauth2TypeCode: Int,
-//
-//        @Schema(
-//            description = "OAuth2 인증으로 받은 OAuth2 코드 - 타입별 의미가 다름\n\n" +
-//                    "Apple 로그인 : 발급받은 IdToken\n\n" +
-//                    "Google, Kakao, Naver 로그인 : 발급받은 AccessToken",
-//            required = true,
-//            example = "asdfeqwer1234"
-//        )
-//        @JsonProperty("oauth2Secret")
-//        val oauth2Secret: String
-//    )
+    @Operation(
+        summary = "N40. OAuth2 추가하기 (Access Token) <>",
+        description = "내 계정에 OAuth2 Access Token 으로 인증 추가\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : oAuth2 Access Token 정보 검증 불일치\n\n" +
+                "2 : 탈퇴된 회원\n\n" +
+                "3 : 이미 사용중인 인증",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/my-new-oauth2-token")
+    @PreAuthorize("isAuthenticated()")
+    fun api40(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api40InputVo
+    ) {
+        service.api40(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api40InputVo(
+        @Schema(
+            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2TypeCode")
+        val oauth2TypeCode: Int,
+
+        @Schema(
+            description = "OAuth2 인증으로 받은 oauth2 TokenType + AccessToken",
+            required = true,
+            example = "Bearer asdfeqwer1234"
+        )
+        @JsonProperty("oauth2AccessToken")
+        val oauth2AccessToken: String
+    )
 
 
     ////
-    // todo
-//    @Operation(
-//        summary = "N41. 내 OAuth2 제거하기 <>",
-//        description = "내 계정에서 OAuth2 제거\n\n" +
-//                "(api-result-code)\n\n" +
-//                "ok : 정상 동작\n\n" +
-//                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
-//        responses = [
-//            ApiResponse(
-//                responseCode = "200",
-//                description = "OK"
-//            )
-//        ]
-//    )
-//    @DeleteMapping("/my-oauth2")
-//    @PreAuthorize("isAuthenticated()")
-//    fun api41(
-//        @Parameter(hidden = true)
-//        httpServletResponse: HttpServletResponse,
-//        @Parameter(hidden = true)
-//        @RequestHeader("Authorization")
-//        authorization: String?,
-//        @RequestBody
-//        inputVo: Api41InputVo
-//    ) {
-//        service.api41(httpServletResponse, inputVo, authorization!!)
-//    }
-//
-//    data class Api41InputVo(
-//        @Schema(
-//            description = "제거할 oAuth2 종류 (1 : Google, 2 : Naver, 3 : Kakao)",
-//            required = true,
-//            example = "1"
-//        )
-//        @JsonProperty("oauth2Type")
-//        val oauth2Type: Int,
-//        @Schema(description = "제거할 oAuth2 고유값", required = true, example = "asdf1234")
-//        @JsonProperty("oauth2Id")
-//        val oauth2Id: String
-//    )
+    @Operation(
+        summary = "N41. 내 OAuth2 제거하기 <>",
+        description = "내 계정에서 OAuth2 제거\n\n" +
+                "(api-result-code)\n\n" +
+                "ok : 정상 동작\n\n" +
+                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @DeleteMapping("/my-oauth2")
+    @PreAuthorize("isAuthenticated()")
+    fun api41(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api41InputVo
+    ) {
+        service.api41(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api41InputVo(
+        @Schema(
+            description = "제거할 oAuth2 종류 (1 : Google, 2 : Naver, 3 : Kakao)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2Type")
+        val oauth2Type: Int,
+        @Schema(description = "제거할 oAuth2 고유값", required = true, example = "asdf1234")
+        @JsonProperty("oauth2Id")
+        val oauth2Id: String
+    )
 
 
     ////
