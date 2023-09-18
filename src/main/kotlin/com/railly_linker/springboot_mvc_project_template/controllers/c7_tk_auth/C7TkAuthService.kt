@@ -27,6 +27,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+// todo : 블로그 게시하면서 로직 / 주석 다시 확인 후 리펙토링
 @Service
 class C7TkAuthService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
