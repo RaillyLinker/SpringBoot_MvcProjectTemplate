@@ -25,8 +25,8 @@ class C8TkFileTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N1 : temps 폴더로 파일 업로드",
-        description = "multipart File 을 하나 업로드하여 서버의 temps 폴더에 저장\n\n" +
+        summary = "N1 : files/temp 폴더로 파일 업로드",
+        description = "multipart File 을 하나 업로드하여 서버의 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -36,7 +36,7 @@ class C8TkFileTestController(
             )
         ]
     )
-    @PostMapping("/upload-to-temps", consumes = ["multipart/form-data"])
+    @PostMapping("/upload-to-temp", consumes = ["multipart/form-data"])
     fun api1(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -61,7 +61,7 @@ class C8TkFileTestController(
 
     ////
     @Operation(
-        summary = "N2. temps 폴더에서 파일 다운받기",
+        summary = "N2. files/temp 폴더에서 파일 다운받기",
         description = "업로드 API 를 사용하여 templs 로 업로드한 파일을 다운로드\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -73,11 +73,11 @@ class C8TkFileTestController(
             )
         ]
     )
-    @GetMapping("/download-from-temps/{fileName}")
+    @GetMapping("/download-from-temp/{fileName}")
     fun api2(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
-        @Parameter(name = "fileName", description = "temps 폴더 안의 파일명", example = "test.txt")
+        @Parameter(name = "fileName", description = "files/temp 폴더 안의 파일명", example = "test.txt")
         @PathVariable("fileName")
         fileName: String
     ): ResponseEntity<Resource>? {
@@ -88,7 +88,7 @@ class C8TkFileTestController(
     ////
     @Operation(
         summary = "N3. 파일 zip 압축 테스트",
-        description = "파일들을 zip 타입으로 압축하여 temps 폴더에 저장\n\n" +
+        description = "파일들을 zip 타입으로 압축하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -110,7 +110,7 @@ class C8TkFileTestController(
     ////
     @Operation(
         summary = "N4. zip 압축 파일 해제 테스트",
-        description = "zip 압축 파일을 해제하여 temps 폴더에 저장\n\n" +
+        description = "zip 압축 파일을 해제하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [

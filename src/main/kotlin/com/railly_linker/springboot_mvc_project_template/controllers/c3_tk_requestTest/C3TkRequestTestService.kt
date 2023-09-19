@@ -138,7 +138,7 @@ class C3TkRequestTestService(
         inputVo: C3TkRequestTestController.Api8InputVo
     ): C3TkRequestTestController.Api8OutputVo? {
         // 파일 저장 기본 디렉토리 경로
-        val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
+        val saveDirectoryPath: Path = Paths.get("./files/temp").toAbsolutePath().normalize()
 
         // 파일 저장 기본 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)
@@ -242,7 +242,7 @@ class C3TkRequestTestService(
         inputVo: C3TkRequestTestController.Api9InputVo
     ): C3TkRequestTestController.Api9OutputVo? {
         // 파일 저장 기본 디렉토리 경로
-        val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
+        val saveDirectoryPath: Path = Paths.get("./files/temp").toAbsolutePath().normalize()
 
         // 파일 저장 기본 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)
@@ -356,7 +356,7 @@ class C3TkRequestTestService(
         )
 
         // 파일 저장 기본 디렉토리 경로
-        val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
+        val saveDirectoryPath: Path = Paths.get("./files/temp").toAbsolutePath().normalize()
 
         // 파일 저장 기본 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)

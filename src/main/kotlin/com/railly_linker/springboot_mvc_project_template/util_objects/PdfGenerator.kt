@@ -24,7 +24,7 @@ import java.nio.file.Path
 object PdfGenerator {
     // (HTML String 을 PDF 로 변환)
     fun createPdfFileFromHtmlString(
-        createPdfFileDirectoryPathString: String, // 생성된 PDF 파일을 저장할 위치(ex : "D:\ZZZ_DEV\SpringBoot\springboot_kotlinprojecttemplate\temps" 혹은 상대경로 사용 가능)
+        createPdfFileDirectoryPathString: String, // 생성된 PDF 파일을 저장할 위치(ex : "D:\ZZZ_DEV\SpringBoot\springboot_kotlinprojecttemplate\files\temp" 혹은 상대경로 사용 가능)
         createPdfFileNameString: String, // 확장자를 제외한 파일명 (ex : "sample")
         htmlString: String, // PDF 로 변환할 HTML String (ex : <!DOCTYPE html> <html> ....)
         // 주의사항 : HTML 내에서 폰트를 사용하고 싶다면 아래 리스트 변수에 resource 내의 폰트 파일 URI 를 추가하고 HTML 내에서 CSS 로 적용할것.

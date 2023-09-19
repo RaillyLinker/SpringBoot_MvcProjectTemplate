@@ -38,7 +38,7 @@ class C8TkFileTestService(
         inputVo: C8TkFileTestController.Api1InputVo
     ): C8TkFileTestController.Api1OutputVo? {
         // 파일 저장 기본 디렉토리 경로
-        val saveDirectoryPath: Path = Paths.get("./temps").toAbsolutePath().normalize()
+        val saveDirectoryPath: Path = Paths.get("./files/temp").toAbsolutePath().normalize()
 
         // 파일 저장 기본 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)
@@ -80,7 +80,7 @@ class C8TkFileTestService(
 
         httpServletResponse.setHeader("api-result-code", "0")
 
-        return C8TkFileTestController.Api1OutputVo("http://127.0.0.1:8080/tk/file-test/download-from-temps/$savedFileName")
+        return C8TkFileTestController.Api1OutputVo("http://127.0.0.1:8080/tk/file-test/download-from-temp/$savedFileName")
     }
 
     fun api2(httpServletResponse: HttpServletResponse, fileName: String): ResponseEntity<Resource>? {
@@ -90,9 +90,9 @@ class C8TkFileTestService(
         // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
         val projectRootAbsolutePathString: String = File("").absolutePath
 
-        // 파일 절대 경로 및 파일명 (프로젝트 루트 경로에 있는 temps 폴더를 기준으로 함)
+        // 파일 절대 경로 및 파일명 (프로젝트 루트 경로에 있는 files/temp 폴더를 기준으로 함)
         val serverFilePathObject =
-            Paths.get("$projectRootAbsolutePathString/temps/$fileName")
+            Paths.get("$projectRootAbsolutePathString/files/temp/$fileName")
 
         when {
             Files.isDirectory(serverFilePathObject) -> {
@@ -136,7 +136,7 @@ class C8TkFileTestService(
             "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/4.mp4"
 
         // 파일 저장 디렉토리 경로
-        val saveDirectoryPathString = "./temps"
+        val saveDirectoryPathString = "./files/temp"
         val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
         // 파일 저장 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)
@@ -175,7 +175,7 @@ class C8TkFileTestService(
             "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n4/test.zip"
 
         // 파일 저장 디렉토리 경로
-        val saveDirectoryPathString = "./temps"
+        val saveDirectoryPathString = "./files/temp"
         val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
         // 파일 저장 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)

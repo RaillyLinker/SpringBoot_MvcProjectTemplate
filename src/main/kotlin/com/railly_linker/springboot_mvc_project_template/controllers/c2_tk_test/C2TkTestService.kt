@@ -137,7 +137,7 @@ class C2TkTestService(
     ////
     fun api6(httpServletResponse: HttpServletResponse, inputVo: C2TkTestController.Api6InputVo) {
         // 파일 저장 디렉토리 경로
-        val saveDirectoryPathString = "./temps"
+        val saveDirectoryPathString = "./files/temp"
         val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
         // 파일 저장 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)
@@ -179,7 +179,7 @@ class C2TkTestService(
         // htmlString 을 PDF 로 변환하여 저장
         // XHTML 1.0(strict), CSS 2.1 (@page 의 size 는 가능)
         val pdfFileObject = PdfGenerator.createPdfFileFromHtmlString(
-            "./temps",
+            "./files/temp",
             "temp(${
                 LocalDateTime.now().format(
                     DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm-ss-SSS")
