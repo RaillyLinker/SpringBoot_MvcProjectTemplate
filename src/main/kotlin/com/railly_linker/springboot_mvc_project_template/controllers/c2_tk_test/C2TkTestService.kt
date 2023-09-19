@@ -2,9 +2,7 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_test
 
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.FcmGoogleapisComRequestApi
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
-import com.railly_linker.springboot_mvc_project_template.util_objects.ExcelFileUtilObject
-import com.railly_linker.springboot_mvc_project_template.util_objects.FcmPushUtilObject
-import com.railly_linker.springboot_mvc_project_template.util_objects.NaverSmsUtilObject
+import com.railly_linker.springboot_mvc_project_template.util_objects.*
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -128,6 +126,7 @@ class C2TkTestService(
             inputVo.minColumnLength
         )
 
+        httpServletResponse.setHeader("api-result-code", "0")
         return C2TkTestController.Api5OutputVo(
             excelData?.size ?: 0,
             excelData.toString()
@@ -159,5 +158,40 @@ class C2TkTestService(
         }
 
         ExcelFileUtilObject.writeExcel(file.outputStream(), inputExcelSheetDataMap)
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api7(
+        httpServletResponse: HttpServletResponse
+    ) {
+        // thymeLeaf 엔진으로 파싱한 HTML String 가져오기
+        // 여기서 가져온 HTML 내에 기입된 static resources 의 경로는 절대경로가 아님
+        val htmlString = ThymeleafParserUtilObject.parseHtmlFileToHtmlString(
+            "template_c2_n7/html_to_pdf_sample", // thymeLeaf Html 이름 (ModelAndView 의 사용과 동일)
+            // thymeLeaf 에 전해줄 데이터 Map
+            mapOf(
+                "title" to "PDF 변환 테스트"
+            )
+        )
+
+        // htmlString 을 PDF 로 변환하여 저장
+        // XHTML 1.0(strict), CSS 2.1 (@page 의 size 는 가능)
+        val pdfFileObject = PdfGenerator.createPdfFileFromHtmlString(
+            "./temps",
+            "temp(${
+                LocalDateTime.now().format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm-ss-SSS")
+                )
+            }).pdf",
+            htmlString,
+            arrayListOf(
+                "/static/resource_global/fonts/NanumGothic.ttf",
+                "/static/resource_global/fonts/NanumMyeongjo.ttf"
+            )
+        )
+
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }

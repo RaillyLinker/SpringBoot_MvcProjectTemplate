@@ -109,6 +109,10 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.2")
     implementation("sax:sax:2.0.1")
 
+    // (HTML 2 PDF)
+    // : HTML -> PDF 변환 라이브러리
+    implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.22")
+
 }
 
 tasks.withType<KotlinCompile> {

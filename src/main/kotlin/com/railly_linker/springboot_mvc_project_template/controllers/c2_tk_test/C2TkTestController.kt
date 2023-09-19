@@ -295,4 +295,28 @@ class C2TkTestController(
             val sheetData: List<List<String>>
         )
     }
+
+
+    ////
+    @Operation(
+        summary = "N7. HTML 을 기반으로 PDF 를 생성",
+        description = "준비된 HTML 1.0(strict), CSS 2.1 을 기반으로 PDF 를 생성 후 temps 폴더에 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping(
+        "/html-to-pdf"
+    )
+    fun api7(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api7(httpServletResponse)
+    }
 }
