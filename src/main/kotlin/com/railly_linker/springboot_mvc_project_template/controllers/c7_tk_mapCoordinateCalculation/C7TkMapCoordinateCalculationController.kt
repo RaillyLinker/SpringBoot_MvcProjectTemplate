@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
+// Google 맵과 비교하여 정상 동작 테스트를 하면 됩니다.
 @Tag(name = "/tk/map-coordinate-calculation APIs", description = "C7. 지도/좌표 계산에 대한 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/map-coordinate-calculation")
