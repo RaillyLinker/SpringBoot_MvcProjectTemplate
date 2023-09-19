@@ -24,7 +24,6 @@ class C10TkAdvancedRequestTestController(
 
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
-    ////
     @Operation(
         summary = "N1 : byte 반환 샘플",
         description = " byte array('a', .. , 'f') 에서 아래와 같은 요청으로 원하는 바이트를 요청 가능\n\n" +

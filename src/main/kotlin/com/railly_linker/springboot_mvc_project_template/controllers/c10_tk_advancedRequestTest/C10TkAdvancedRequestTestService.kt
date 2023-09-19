@@ -153,6 +153,7 @@ class C10TkAdvancedRequestTestService(
         api5SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
         api5SseEmitterWrapperMbr.emitterMapSemaphore.release()
 
+        httpServletResponse.setHeader("api-result-code", "0")
         return sseEmitter
     }
 
@@ -195,5 +196,7 @@ class C10TkAdvancedRequestTestService(
 
         api5SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
         api5SseEmitterWrapperMbr.emitterMapSemaphore.release()
+
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }
