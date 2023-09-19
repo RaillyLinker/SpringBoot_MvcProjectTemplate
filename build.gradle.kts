@@ -103,6 +103,12 @@ dependencies {
     // : File Zip / UnZip
     implementation("net.lingala.zip4j:zip4j:2.11.4")
 
+    // (Excel File Read Write)
+    // : 액셀 파일 입출력 라이브러리
+    implementation("org.apache.poi:poi:5.2.2")
+    implementation("org.apache.poi:poi-ooxml:5.2.2")
+    implementation("sax:sax:2.0.1")
+
 }
 
 tasks.withType<KotlinCompile> {

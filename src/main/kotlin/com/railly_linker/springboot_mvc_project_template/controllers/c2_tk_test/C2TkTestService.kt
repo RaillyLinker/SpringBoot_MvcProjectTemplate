@@ -2,6 +2,7 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_test
 
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.FcmGoogleapisComRequestApi
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
+import com.railly_linker.springboot_mvc_project_template.util_objects.ExcelFileUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.FcmPushUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.NaverSmsUtilObject
 import jakarta.servlet.http.HttpServletResponse
@@ -10,6 +11,11 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Service
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.HashMap
 
 @Service
 class C2TkTestService(
@@ -105,5 +111,53 @@ class C2TkTestService(
         )
 
         httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api5(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C2TkTestController.Api5InputVo
+    ): C2TkTestController.Api5OutputVo? {
+        val excelData = ExcelFileUtilObject.readExcel(
+            inputVo.excelFile.inputStream,
+            inputVo.sheetIdx,
+            inputVo.rowRangeStartIdx,
+            inputVo.rowRangeEndIdx,
+            inputVo.columnRangeIdxList,
+            inputVo.minColumnLength
+        )
+
+        return C2TkTestController.Api5OutputVo(
+            excelData?.size ?: 0,
+            excelData.toString()
+        )
+    }
+
+
+    ////
+    fun api6(httpServletResponse: HttpServletResponse, inputVo: C2TkTestController.Api6InputVo) {
+        // 파일 저장 디렉토리 경로
+        val saveDirectoryPathString = "./temps"
+        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
+        // 파일 저장 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 확장자 포함 파일명 생성
+        val saveFileName = "temp_${timeString}.xlsx"
+
+        // 파일 저장 경로와 파일명(with index) 을 합친 path 객체
+        val fileTargetPath = saveDirectoryPath.resolve(saveFileName).normalize()
+        val file = fileTargetPath.toFile()
+
+        val inputExcelSheetDataMap: HashMap<String, List<List<String>>> = hashMapOf()
+        for (data in inputVo.inputExcelSheetDataList) {
+            inputExcelSheetDataMap[data.sheetName] = data.sheetData
+        }
+
+        ExcelFileUtilObject.writeExcel(file.outputStream(), inputExcelSheetDataMap)
     }
 }

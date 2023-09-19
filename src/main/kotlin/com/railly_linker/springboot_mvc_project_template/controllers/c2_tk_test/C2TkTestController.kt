@@ -197,4 +197,102 @@ class C2TkTestController(
         @JsonProperty("notificationContent")
         val notificationContent: String
     )
+
+
+    ////
+    @Operation(
+        summary = "N5. 액셀 파일을 받아서 해석 후 데이터 반환",
+        description = "액셀 파일을 받아서 해석 후 데이터 반환\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/read-excel", consumes = ["multipart/form-data"])
+    fun api5(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api5InputVo
+    ): Api5OutputVo? {
+        return service.api5(httpServletResponse, inputVo)
+    }
+
+    data class Api5InputVo(
+        @Schema(description = "가져오려는 시트 인덱스 (0부터 시작)", required = true, example = "0")
+        @JsonProperty("sheetIdx")
+        val sheetIdx: Int,
+        @Schema(description = "가져올 행 범위 시작 인덱스 (0부터 시작)", required = true, example = "0")
+        @JsonProperty("rowRangeStartIdx")
+        val rowRangeStartIdx: Int,
+        @Schema(description = "가져올 행 범위 끝 인덱스 null 이라면 전부 (0부터 시작)", required = false, example = "10")
+        @JsonProperty("rowRangeEndIdx")
+        val rowRangeEndIdx: Int?,
+        @Schema(description = "가져올 열 범위 인덱스 리스트 null 이라면 전부 (0부터 시작)", required = false, example = "[0, 1, 2]")
+        @JsonProperty("columnRangeIdxList")
+        val columnRangeIdxList: List<Int>?,
+        @Schema(description = "결과 컬럼의 최소 길이 (길이를 넘으면 그대로, 미만이라면 \"\" 로 채움)", required = false, example = "5")
+        @JsonProperty("minColumnLength")
+        val minColumnLength: Int?,
+        @Schema(description = "액셀 파일", required = true)
+        @JsonProperty("excelFile")
+        val excelFile: MultipartFile
+    )
+
+    data class Api5OutputVo(
+        @Schema(description = "행 카운트", required = true, example = "1")
+        @JsonProperty("rowCount")
+        val rowCount: Int,
+        @Schema(description = "분석한 객체를 toString 으로 표현한 데이터 String", required = true, example = "[[\"데이터1\", \"데이터2\"]]")
+        @JsonProperty("dataString")
+        val dataString: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N6. 액셀 파일 쓰기",
+        description = "받은 데이터를 기반으로 액셀 파일을 만들어 temps 폴더에 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/write-excel")
+    fun api6(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api6InputVo
+    ) {
+        service.api6(httpServletResponse, inputVo)
+    }
+
+    data class Api6InputVo(
+        @Schema(description = "입력할 시트 데이터 리스트 (= 액셀 데이터)", required = true)
+        @JsonProperty("inputExcelSheetDataList")
+        val inputExcelSheetDataList: List<SheetData>
+    ) {
+        @Schema(description = "입력할 시트 데이터 : [시트번호][행번호][컬럼번호] == 셀값")
+        data class SheetData(
+            @Schema(description = "시트 이름", required = true, example = "test")
+            @JsonProperty("sheetName")
+            val sheetName: String,
+            @Schema(
+                description = "시트 데이터 [행번호][컬럼번호] == 셀값",
+                required = true,
+                example = "[[\"test1\", \"test2\"], [\"test3\"]]"
+            )
+            @JsonProperty("sheetData")
+            val sheetData: List<List<String>>
+        )
+    }
 }
