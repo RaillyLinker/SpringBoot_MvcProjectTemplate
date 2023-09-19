@@ -44,6 +44,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         var distance: Int
     }
 
+
+    ////
     @Query(
         nativeQuery = true,
         value = """
@@ -73,6 +75,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         var timeDiffSec: Long
     }
 
+
+    ////
     @Query(
         nativeQuery = true,
         value = """
@@ -110,6 +114,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         var distance: Int
     }
 
+
+    ////
     @Modifying // Native Query 에서 Delete, Update 문은 이것을 붙여야함
     @Query(
         nativeQuery = true,
@@ -126,6 +132,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         @Param(value = "content") content: String
     )
 
+
+    ////
     // like 문을 사용할 때, replace 로 검색어와 탐색 정보의 공백을 없애줌으로써 공백에 유연한 검색이 가능
     @Query(
         nativeQuery = true,
@@ -163,6 +171,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         var randomNum: Int
     }
 
+
+    ////
     @Query(
         nativeQuery = true,
         value = """
@@ -228,6 +238,82 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         var content: String
         var randomNum: Int
         var distance: Int
+    }
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    // <C7>
+    @Query(
+        nativeQuery = true,
+        value = """
+            SELECT 
+            *, 
+            (
+                6371 * acos(
+                    cos(radians(latitude)) * 
+                    cos(radians(:latitude)) * 
+                    cos(radians(:longitude) - 
+                    radians(longitude)) + 
+                    sin(radians(latitude)) * 
+                    sin(radians(:latitude))
+                )
+            ) as distanceKiloMeter 
+            FROM template.test_map 
+            HAVING 
+            distanceKiloMeter <= :radiusKiloMeter 
+            order by 
+            distanceKiloMeter
+            """
+    )
+    fun selectListForApiC7N5(
+        @Param(value = "latitude") latitude: Double,
+        @Param(value = "longitude") longitude: Double,
+        @Param(value = "radiusKiloMeter") radiusKiloMeter: Double
+    ): List<SelectListForApiC7N5OutputVo>
+
+    interface SelectListForApiC7N5OutputVo {
+        var uid: Long
+        var latitude: Double
+        var longitude: Double
+        var distanceKiloMeter: Double
+    }
+
+    @Query(
+        nativeQuery = true,
+        value = """
+            SELECT * 
+            FROM 
+            template.test_map 
+            WHERE 
+            latitude BETWEEN :southLatitude AND :northLatitude 
+            AND 
+            (
+                (
+                    :westLongitude <= :eastLongitude AND 
+                    longitude BETWEEN :westLongitude AND :eastLongitude
+                )
+                OR
+                (
+                    :westLongitude > :eastLongitude AND 
+                    (
+                        longitude >= :westLongitude OR 
+                        longitude <= :eastLongitude
+                    )
+                )
+            )
+            """
+    )
+    fun selectListForApiC7N6(
+        @Param(value = "northLatitude") northLatitude: Double,
+        @Param(value = "eastLongitude") eastLongitude: Double,
+        @Param(value = "southLatitude") southLatitude: Double,
+        @Param(value = "westLongitude") westLongitude: Double
+    ): List<SelectListForApiC7N6OutputVo>
+
+    interface SelectListForApiC7N6OutputVo {
+        var uid: Long
+        var latitude: Double
+        var longitude: Double
     }
 
 }

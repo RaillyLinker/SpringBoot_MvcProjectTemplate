@@ -86,6 +86,16 @@ object CustomUtilObject {
         return builder.toString()
     }
 
+    // degree 를 radian 으로
+    fun deg2rad(deg: Double): Double {
+        return deg * Math.PI / 180.0
+    }
+
+    // radian 을 degree 로
+    fun rad2deg(rad: Double): Double {
+        return rad * 180 / Math.PI
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
