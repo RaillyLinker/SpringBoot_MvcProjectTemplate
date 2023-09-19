@@ -111,7 +111,7 @@ dependencies {
 
     // (HTML 2 PDF)
     // : HTML -> PDF 변환 라이브러리
-    implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.22")
+    implementation("org.xhtmlrenderer:flying-saucer-pdf:9.2.2")
 
 }
 
