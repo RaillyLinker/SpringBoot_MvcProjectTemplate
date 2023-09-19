@@ -22,7 +22,7 @@ class C1Controller(
     // <매핑 함수 공간>
     @Hidden
     @Operation(
-        summary = "N1. 서버 Root 경로의 URL 로 포워딩",
+        summary = "N1 : 서버 Root 경로의 URL 로 포워딩",
         description = "서버 Root 경로의 URL 로 포워딩 합니다.",
         responses = [
             ApiResponse(
@@ -43,7 +43,7 @@ class C1Controller(
     ////
     @Hidden
     @Operation(
-        summary = "N2. 홈페이지",
+        summary = "N2 : 홈페이지",
         description = "홈페이지를 반환합니다.",
         responses = [
             ApiResponse(

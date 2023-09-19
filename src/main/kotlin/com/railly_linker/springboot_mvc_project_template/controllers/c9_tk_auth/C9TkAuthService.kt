@@ -19,6 +19,8 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.InputStreamResource
+import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
@@ -26,6 +28,15 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
+import org.springframework.core.io.Resource
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.util.Assert
+import java.io.File
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 
 // todo : 블로그 게시하면서 로직 / 주석 다시 확인 후 리펙토링
 @Service
@@ -3252,5 +3263,45 @@ class C9TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api48(httpServletResponse: HttpServletResponse, fileName: String): ResponseEntity<Resource>? {
+        // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
+        Assert.state(!fileName.contains(".."), "Name of file cannot contain '..'")
+
+        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
+        val projectRootAbsolutePathString: String = File("").absolutePath
+
+        // 파일 절대 경로 및 파일명 (프로젝트 루트 경로에 있는 files/temp 폴더를 기준으로 함)
+        val serverFilePathObject =
+            Paths.get("$projectRootAbsolutePathString/files/member/profile/$fileName")
+
+        when {
+            Files.isDirectory(serverFilePathObject) -> {
+                // 파일이 디렉토리일때
+                httpServletResponse.setHeader("api-result-code", "1")
+                return null
+            }
+
+            Files.notExists(serverFilePathObject) -> {
+                // 파일이 없을 때
+                httpServletResponse.setHeader("api-result-code", "1")
+                return null
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return ResponseEntity<Resource>(
+            InputStreamResource(Files.newInputStream(serverFilePathObject)),
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename(fileName, StandardCharsets.UTF_8)
+                    .build()
+                this.add(HttpHeaders.CONTENT_TYPE, Files.probeContentType(serverFilePathObject))
+            },
+            HttpStatus.OK
+        )
     }
 }

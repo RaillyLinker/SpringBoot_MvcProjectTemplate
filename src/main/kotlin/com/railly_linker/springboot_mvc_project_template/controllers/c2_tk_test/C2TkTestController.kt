@@ -22,7 +22,7 @@ class C2TkTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N1. 이메일 발송 테스트",
+        summary = "N1 : 이메일 발송 테스트",
         description = "이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -67,7 +67,7 @@ class C2TkTestController(
 
     ////
     @Operation(
-        summary = "N2. HTML 이메일 발송 테스트",
+        summary = "N2 : HTML 이메일 발송 테스트",
         description = "HTML 로 이루어진 이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -112,7 +112,7 @@ class C2TkTestController(
 
     ////
     @Operation(
-        summary = "N3. Naver API SMS 발송 샘플",
+        summary = "N3 : Naver API SMS 발송 샘플",
         description = "Naver API 를 사용한 SMS 발송 샘플\n\n" +
                 "Service 에서 사용하는 Naver SMS 발송 유틸 내의 개인정보를 변경해야 사용 가능\n\n" +
                 "(api-result-code)\n\n" +
@@ -146,7 +146,7 @@ class C2TkTestController(
 
     ////
     @Operation(
-        summary = "N4. FCM Push 테스트",
+        summary = "N4 : FCM Push 테스트",
         description = "FCM Push 메세지 발신\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -201,7 +201,7 @@ class C2TkTestController(
 
     ////
     @Operation(
-        summary = "N5. 액셀 파일을 받아서 해석 후 데이터 반환",
+        summary = "N5 : 액셀 파일을 받아서 해석 후 데이터 반환",
         description = "액셀 파일을 받아서 해석 후 데이터 반환\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -255,7 +255,7 @@ class C2TkTestController(
 
     ////
     @Operation(
-        summary = "N6. 액셀 파일 쓰기",
+        summary = "N6 : 액셀 파일 쓰기",
         description = "받은 데이터를 기반으로 액셀 파일을 만들어 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -299,7 +299,7 @@ class C2TkTestController(
 
     ////
     @Operation(
-        summary = "N7. HTML 을 기반으로 PDF 를 생성",
+        summary = "N7 : HTML 을 기반으로 PDF 를 생성",
         description = "준비된 HTML 1.0(strict), CSS 2.1 을 기반으로 PDF 를 생성 후 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",

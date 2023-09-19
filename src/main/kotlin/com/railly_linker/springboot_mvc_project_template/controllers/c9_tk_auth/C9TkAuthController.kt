@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.core.io.Resource
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -22,7 +24,7 @@ class C9TkAuthController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N1. 비 로그인 접속 테스트",
+        summary = "N1 : 비 로그인 접속 테스트",
         description = "비 로그인 접속 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -44,7 +46,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N2. 로그인 진입 테스트 <>",
+        summary = "N2 : 로그인 진입 테스트 <>",
         description = "로그인 되어 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -70,7 +72,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N3. ADMIN 권한 진입 테스트 <'ADMIN'>",
+        summary = "N3 : ADMIN 권한 진입 테스트 <'ADMIN'>",
         description = "ADMIN 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -96,7 +98,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N4. Developer 권한 진입 테스트 <'ADMIN' or 'Developer'>",
+        summary = "N4 : Developer 권한 진입 테스트 <'ADMIN' or 'Developer'>",
         description = "Developer 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -122,7 +124,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N5. 계정 비밀번호 로그인",
+        summary = "N5 : 계정 비밀번호 로그인",
         description = "계정 아이디 + 비밀번호를 사용하는 로그인 요청\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -250,7 +252,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N6. OAuth2 Code 로 OAuth2 AccessToken 발급",
+        summary = "N6 : OAuth2 Code 로 OAuth2 AccessToken 발급",
         description = "OAuth2 Code 를 사용하여 얻은 OAuth2 AccessToken 발급\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -301,7 +303,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N7. OAuth2 로그인 (Access Token)",
+        summary = "N7 : OAuth2 로그인 (Access Token)",
         description = "OAuth2 Access Token 으로 로그인 요청\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -422,7 +424,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N8. 로그아웃 처리 <>",
+        summary = "N8 : 로그아웃 처리 <>",
         description = "로그아웃 처리\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -447,7 +449,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N9. 토큰 재발급 <>",
+        summary = "N9 : 토큰 재발급 <>",
         description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -561,7 +563,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N10. 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
+        summary = "N10 : 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
         description = "멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -587,7 +589,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N11. 닉네임 중복 검사",
+        summary = "N11 : 닉네임 중복 검사",
         description = "닉네임 중복 여부 반환\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -621,7 +623,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N12. 닉네임 수정하기 <>",
+        summary = "N12 : 닉네임 수정하기 <>",
         description = "닉네임 수정하기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -654,7 +656,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N13. 이메일 회원가입 본인 인증 이메일 발송",
+        summary = "N13 : 이메일 회원가입 본인 인증 이메일 발송",
         description = "이메일 회원가입시 본인 이메일 확인 메일 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -703,7 +705,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N14. 이메일 회원가입 본인 확인 이메일에서 받은 코드 검증하기",
+        summary = "N14 : 이메일 회원가입 본인 확인 이메일에서 받은 코드 검증하기",
         description = "이메일 회원가입시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 이메일 회원가입까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
@@ -747,7 +749,8 @@ class C9TkAuthController(
 
 
     ////
-    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
+    // todo 프로필 추가시 그 경로 저장을 위해서, 각 시스템 프로필별 접속 주소(ex : "http://127.0.0.1:8080") 를 준비하기
+    // todo 프로필 추가
     @Operation(
         summary = "N15 : 이메일 회원가입",
         description = "이메일 회원가입 처리\n\n" +
@@ -819,7 +822,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N16. 전화번호 회원가입 본인 인증 문자 발송",
+        summary = "N16 : 전화번호 회원가입 본인 인증 문자 발송",
         description = "전화번호 회원가입시 본인 전화번호 확인 문자 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -869,7 +872,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N17. 전화번호 회원가입 본인 확인 문자에서 받은 코드 검증하기",
+        summary = "N17 : 전화번호 회원가입 본인 확인 문자에서 받은 코드 검증하기",
         description = "전화번호 회원가입시 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 SMS 회원가입까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
@@ -913,9 +916,9 @@ class C9TkAuthController(
 
 
     ////
-    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
+    // todo 프로필 추가
     @Operation(
-        summary = "N18. 전화번호 회원가입",
+        summary = "N18 : 전화번호 회원가입",
         description = "전화번호 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -986,7 +989,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N19. OAuth2 AccessToken 으로 회원가입 검증",
+        summary = "N19 : OAuth2 AccessToken 으로 회원가입 검증",
         description = "OAuth2 AccessToken 으로 회원가입 검증\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -1063,9 +1066,9 @@ class C9TkAuthController(
 
 
     ////
-    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
+    // todo 프로필 추가
     @Operation(
-        summary = "N20. OAuth2 회원가입",
+        summary = "N20 : OAuth2 회원가입",
         description = "OAuth2 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -1136,7 +1139,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N21. 계정 비밀번호 변경 <>",
+        summary = "N21 : 계정 비밀번호 변경 <>",
         description = "계정 비밀번호 변경\n\n" +
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
@@ -1178,7 +1181,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N22. 이메일 비밀번호 찾기 본인 인증 이메일 발송",
+        summary = "N22 : 이메일 비밀번호 찾기 본인 인증 이메일 발송",
         description = "이메일 비밀번호 찾기 본인 이메일 확인 메일 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -1227,7 +1230,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N23. 이메일 비밀번호 찾기 본인 확인 이메일에서 받은 코드 검증하기",
+        summary = "N23 : 이메일 비밀번호 찾기 본인 확인 이메일에서 받은 코드 검증하기",
         description = "이메일 비밀번호 찾기 시 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
@@ -1272,7 +1275,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N24. 이메일 비밀번호 찾기 완료",
+        summary = "N24 : 이메일 비밀번호 찾기 완료",
         description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 이메일로 발송\n\n" +
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
@@ -1323,7 +1326,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N25. 전화번호 비밀번호 찾기 본인 인증 문자 발송",
+        summary = "N25 : 전화번호 비밀번호 찾기 본인 인증 문자 발송",
         description = "전화번호 비밀번호 찾기 본인 전화번호 확인 문자 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -1373,7 +1376,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N26. 전화번호 비밀번호 찾기 본인 확인 문자에서 받은 코드 검증하기",
+        summary = "N26 : 전화번호 비밀번호 찾기 본인 확인 문자에서 받은 코드 검증하기",
         description = "전화번호 비밀번호 찾기 시 본인 전와번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 비밀번호 찾기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
@@ -1418,7 +1421,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N27. 전화번호 비밀번호 찾기 완료",
+        summary = "N27 : 전화번호 비밀번호 찾기 완료",
         description = "계정 비밀번호를 랜덤 값으로 변경 후 인증한 전화번호로 발송\n\n" +
                 "변경 완료된 후, 기존 모든 인증/인가 토큰을 비활성화 시키고 싶다면 별도의 API 사용하기\n\n" +
                 "(api-result-code)\n\n" +
@@ -1469,7 +1472,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N28. 내 로그인 관련 정보 리스트 가져오기 <>",
+        summary = "N28 : 내 로그인 관련 정보 리스트 가져오기 <>",
         description = "내 계정에 연결된 로그인 수단 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -1523,7 +1526,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N29. 내 이메일 리스트 가져오기 <>",
+        summary = "N29 : 내 이메일 리스트 가져오기 <>",
         description = "내 이메일 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -1555,7 +1558,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N30. 내 전화번호 리스트 가져오기 <>",
+        summary = "N30 : 내 전화번호 리스트 가져오기 <>",
         description = "내 전화번호 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -1587,7 +1590,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N31. 내 OAuth2 로그인 리스트 가져오기 <>",
+        summary = "N31 : 내 OAuth2 로그인 리스트 가져오기 <>",
         description = "내 OAuth2 로그인 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -1633,7 +1636,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N32. 이메일 추가하기 본인 인증 이메일 발송 <>",
+        summary = "N32 : 이메일 추가하기 본인 인증 이메일 발송 <>",
         description = "이메일 추가하기 본인 이메일 확인 메일 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -1687,7 +1690,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N33. 이메일 추가하기 본인 확인 이메일에서 받은 코드 검증하기 <>",
+        summary = "N33 : 이메일 추가하기 본인 확인 이메일에서 받은 코드 검증하기 <>",
         description = "이메일 추가하기 본인 이메일에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
@@ -1736,7 +1739,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N34. 이메일 추가하기 <>",
+        summary = "N34 : 이메일 추가하기 <>",
         description = "내 계정에 이메일 추가\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -1790,7 +1793,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N35. 내 이메일 제거하기 <>",
+        summary = "N35 : 내 이메일 제거하기 <>",
         description = "내 계정에서 이메일 제거\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -1825,7 +1828,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N36. 전화번호 추가하기 본인 인증 문자 발송 <>",
+        summary = "N36 : 전화번호 추가하기 본인 인증 문자 발송 <>",
         description = "전화번호 추가하기 본인 전화번호 확인 문자 발송\n\n" +
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -1879,7 +1882,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N37. 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
+        summary = "N37 : 전화번호 추가하기 본인 확인 문자에서 받은 코드 검증하기 <>",
         description = "전화번호 추가하기 본인 전화번호에 보내진 코드를 입력하여 일치 결과 확인\n\n" +
                 "첫 인증 완료시 추가하기 까지의 만료시간은 10분\n\n" +
                 "(api-result-code)\n\n" +
@@ -1927,7 +1930,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N38. 전화번호 추가하기 <>",
+        summary = "N38 : 전화번호 추가하기 <>",
         description = "내 계정에 전화번호 추가\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -1981,7 +1984,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N39. 내 전화번호 제거하기 <>",
+        summary = "N39 : 내 전화번호 제거하기 <>",
         description = "내 계정에서 전화번호 제거\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -2016,7 +2019,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N40. OAuth2 추가하기 (Access Token) <>",
+        summary = "N40 : OAuth2 추가하기 (Access Token) <>",
         description = "내 계정에 OAuth2 Access Token 으로 인증 추가\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -2065,7 +2068,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N41. 내 OAuth2 제거하기 <>",
+        summary = "N41 : 내 OAuth2 제거하기 <>",
         description = "내 계정에서 OAuth2 제거\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -2107,7 +2110,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N42. 회원탈퇴 <>",
+        summary = "N42 : 회원탈퇴 <>",
         description = "회원탈퇴 요청\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -2133,7 +2136,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N43. 내 Profile 이미지 정보 리스트 가져오기 <>",
+        summary = "N43 : 내 Profile 이미지 정보 리스트 가져오기 <>",
         description = "내 Profile 이미지 정보 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -2178,7 +2181,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N44. 내 대표 Profile 이미지 정보 가져오기 <>",
+        summary = "N44 : 내 대표 Profile 이미지 정보 가져오기 <>",
         description = "내 대표 Profile 이미지 정보 가져오기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -2223,7 +2226,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N45. 내 대표 프로필 설정하기 <>",
+        summary = "N45 : 내 대표 프로필 설정하기 <>",
         description = "내가 등록한 프로필들 중 대표 프로필 설정하기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -2257,7 +2260,7 @@ class C9TkAuthController(
 
     ////
     @Operation(
-        summary = "N46. 내 프로필 삭제 <>",
+        summary = "N46 : 내 프로필 삭제 <>",
         description = "내가 등록한 프로필들 중 하나를 삭제합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -2283,5 +2286,33 @@ class C9TkAuthController(
         service.api46(authorization!!, httpServletResponse, profileUid)
     }
 
-    // todo 프로필 추가 (파일이 아니라 기본 이미지 URL 추가도 고려)
+
+    // todo 프로필 추가 (대표 프로필로 설정하지는 않고, 대표 프로필로 설정할 수 있게 다운로드 경로와 프로필 고유값을 반환)
+
+
+    ////
+    @Operation(
+        summary = "N48 : files/member/profile 폴더에서 파일 다운받기",
+        description = "프로필 이미지를 files/member/profile 위치에 저장했을 때 파일을 가져오기 위한 API 로,\n\n" +
+                "AWS 나 다른 Storage 서비스를 사용해도 좋습니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 파일이 존재하지 않습니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/member-profile/{fileName}")
+    fun api48(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "fileName", description = "files/member/profile 폴더 안의 파일명", example = "test.jpg")
+        @PathVariable("fileName")
+        fileName: String
+    ): ResponseEntity<Resource>? {
+        return service.api48(httpServletResponse, fileName)
+    }
 }

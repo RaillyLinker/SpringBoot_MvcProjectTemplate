@@ -110,7 +110,7 @@ class C10TkAdvancedRequestTestController(
 
     ////
     @Operation(
-        summary = "N4. 비동기 처리 결과 반환 샘플",
+        summary = "N4 : 비동기 처리 결과 반환 샘플",
         description = "API 호출시 함수 내에서 별도 스레드로 작업을 수행하고,\n\n" +
                 "비동기 작업 완료 후 그 처리 결과가 반환됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -138,7 +138,7 @@ class C10TkAdvancedRequestTestController(
 
     ////
     @Operation(
-        summary = "N5. 클라이언트가 특정 SSE 이벤트를 구독",
+        summary = "N5 : 클라이언트가 특정 SSE 이벤트를 구독",
         description = "구독 수신 중 연결이 끊어질 경우, 클라이언트가 헤더에 Last-Event-ID 라는 값을 넣어서 다시 요청함\n\n" +
                 "!주의점! : 로깅 필터와 충돌되므로, 꼭 요청 헤더에는 Accept:text/event-stream 를 넣어서 요청을 해야함 (이것으로 SSE 요청임을 필터가 확인함)\n\n" +
                 "테스트는, CMD 를 열고, \n\n" +
@@ -169,7 +169,7 @@ class C10TkAdvancedRequestTestController(
 
     ////
     @Operation(
-        summary = "N6. api1 에서 구독한 수신 객체에 대한 이벤트 전송 트리거 테스트",
+        summary = "N6 : api1 에서 구독한 수신 객체에 대한 이벤트 전송 트리거 테스트",
         description = "어떠한 사건이 일어나면 알림을 위하여 SSE 이벤트 전송을 한다고 가정\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",

@@ -24,7 +24,7 @@ class C4TkRequestFromServerTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N1. /tk/request-test 요청 테스트 API",
+        summary = "N1 : /tk/request-test 요청 테스트 API",
         description = "/tk/request-test 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -45,7 +45,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N2. /tk/request-test/redirect-to-blank 요청 테스트 API",
+        summary = "N2 : /tk/request-test/redirect-to-blank 요청 테스트 API",
         description = "/tk/request-test/redirect-to-blank 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -66,7 +66,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N3. /tk/request-test/forward-to-blank 요청 테스트 API",
+        summary = "N3 : /tk/request-test/forward-to-blank 요청 테스트 API",
         description = "/tk/request-test/forward-to-blank 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -87,7 +87,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N4. /tk/request-test/get-request 요청 테스트 API",
+        summary = "N4 : /tk/request-test/get-request 요청 테스트 API",
         description = "/tk/request-test/get-request 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -149,7 +149,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N5. /tk/request-test/get-request/{pathParamInt} 요청 테스트 API",
+        summary = "N5 : /tk/request-test/get-request/{pathParamInt} 요청 테스트 API",
         description = "/tk/request-test/get-request/{pathParamInt} 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -176,7 +176,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N6. /tk/request-test/post-request-application-json 요청 테스트 API",
+        summary = "N6 : /tk/request-test/post-request-application-json 요청 테스트 API",
         description = "/tk/request-test/post-request-application-json 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -238,7 +238,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N7. /tk/request-test/post-request-x-www-form-urlencoded 요청 테스트 API",
+        summary = "N7 : /tk/request-test/post-request-x-www-form-urlencoded 요청 테스트 API",
         description = "/tk/request-test/post-request-x-www-form-urlencoded 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -300,7 +300,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N8. /tk/request-test/post-request-multipart-form-data 요청 테스트 API",
+        summary = "N8 : /tk/request-test/post-request-multipart-form-data 요청 테스트 API",
         description = "/tk/request-test/post-request-multipart-form-data 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -362,7 +362,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N9. /tk/request-test/post-request-multipart-form-data2 요청 테스트 API",
+        summary = "N9 : /tk/request-test/post-request-multipart-form-data2 요청 테스트 API",
         description = "/tk/request-test/post-request-multipart-form-data2 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -424,7 +424,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N10. /tk/request-test/post-request-multipart-form-data-json 요청 테스트 API",
+        summary = "N10 : /tk/request-test/post-request-multipart-form-data-json 요청 테스트 API",
         description = "/tk/request-test/post-request-multipart-form-data-json 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -486,7 +486,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N11. /tk/request-test/generate-error 요청 테스트 API",
+        summary = "N11 : /tk/request-test/generate-error 요청 테스트 API",
         description = "/tk/request-test/generate-error 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -508,7 +508,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N12. /tk/request-test/api-result-code-test 요청 테스트 API",
+        summary = "N12 : /tk/request-test/api-result-code-test 요청 테스트 API",
         description = "/tk/request-test/api-result-code-test 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
@@ -532,7 +532,7 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N13. /tk/request-test/generate-time-out-error 요청 테스트 API",
+        summary = "N13 : /tk/request-test/generate-time-out-error 요청 테스트 API",
         description = "/tk/request-test/generate-time-out-error 로 요청을 보냅니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +

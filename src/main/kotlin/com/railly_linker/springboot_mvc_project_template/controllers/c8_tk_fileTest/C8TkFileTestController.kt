@@ -61,8 +61,8 @@ class C8TkFileTestController(
 
     ////
     @Operation(
-        summary = "N2. files/temp 폴더에서 파일 다운받기",
-        description = "업로드 API 를 사용하여 templs 로 업로드한 파일을 다운로드\n\n" +
+        summary = "N2 : files/temp 폴더에서 파일 다운받기",
+        description = "업로드 API 를 사용하여 files/temp 로 업로드한 파일을 다운로드\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 파일이 존재하지 않습니다.",
@@ -87,7 +87,7 @@ class C8TkFileTestController(
 
     ////
     @Operation(
-        summary = "N3. 파일 zip 압축 테스트",
+        summary = "N3 : 파일 zip 압축 테스트",
         description = "파일들을 zip 타입으로 압축하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -109,7 +109,7 @@ class C8TkFileTestController(
 
     ////
     @Operation(
-        summary = "N4. zip 압축 파일 해제 테스트",
+        summary = "N4 : zip 압축 파일 해제 테스트",
         description = "zip 압축 파일을 해제하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",

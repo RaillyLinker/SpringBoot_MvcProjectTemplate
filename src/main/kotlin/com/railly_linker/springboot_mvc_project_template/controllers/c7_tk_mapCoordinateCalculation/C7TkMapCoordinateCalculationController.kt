@@ -22,7 +22,7 @@ class C7TkMapCoordinateCalculationController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N0. 테스트용 기본 좌표 리스트를 DB에 저장",
+        summary = "N0 : 테스트용 기본 좌표 리스트를 DB에 저장",
         description = "테스트용 기본 좌표 리스트를 DB에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -44,7 +44,7 @@ class C7TkMapCoordinateCalculationController(
 
     ////
     @Operation(
-        summary = "N1. 두 좌표 사이의 거리를 반환",
+        summary = "N1 : 두 좌표 사이의 거리를 반환",
         description = "함수를 사용하여 두 좌표 사이의 거리를 meter 단위로 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -84,7 +84,7 @@ class C7TkMapCoordinateCalculationController(
 
     ////
     @Operation(
-        summary = "N2. 좌표들 사이의 중심 좌표를 반환",
+        summary = "N2 : 좌표들 사이의 중심 좌표를 반환",
         description = "함수를 사용하여 좌표들 사이의 중심 좌표를 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -133,7 +133,7 @@ class C7TkMapCoordinateCalculationController(
 
     ////
     @Operation(
-        summary = "N3. DB 의 좌표 테이블에 좌표 정보를 저장",
+        summary = "N3 : DB 의 좌표 테이블에 좌표 정보를 저장",
         description = "DB 의 좌표 테이블에 좌표 정보를 저장하는 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -185,7 +185,7 @@ class C7TkMapCoordinateCalculationController(
 
     ////
     @Operation(
-        summary = "N4. DB 의 좌표 테이블의 모든 데이터 삭제",
+        summary = "N4 : DB 의 좌표 테이블의 모든 데이터 삭제",
         description = "DB 의 좌표 테이블의 모든 데이터 삭제 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -207,7 +207,7 @@ class C7TkMapCoordinateCalculationController(
 
     ////
     @Operation(
-        summary = "N5. DB 에 저장된 좌표들을 SQL 을 사용하여, 기준 좌표의 N Km 내의 결과만 필터",
+        summary = "N5 : DB 에 저장된 좌표들을 SQL 을 사용하여, 기준 좌표의 N Km 내의 결과만 필터",
         description = "기준 좌표를 입력하면 DB 에 저장된 좌표들과의 거리를 SQL 로 계산하여 N Km 내의 결과만 필터링 하여 리스트로 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -264,7 +264,7 @@ class C7TkMapCoordinateCalculationController(
 
     ////
     @Operation(
-        summary = "N6. DB 에 저장된 좌표들을 SQL 을 사용하여, 북서 좌표에서 남동 좌표까지의 사각 영역 안에 들어오는 좌표들만 필터링하여 반환",
+        summary = "N6 : DB 에 저장된 좌표들을 SQL 을 사용하여, 북서 좌표에서 남동 좌표까지의 사각 영역 안에 들어오는 좌표들만 필터링하여 반환",
         description = "북, 서, 남, 동 좌표를 입력하면 DB 에 저장된 좌표들 중 좌표 사각 영역 안에 들어오는 좌표를 필터링 하여 리스트로 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
