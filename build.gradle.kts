@@ -99,6 +99,10 @@ dependencies {
     // (Apache Common Codec)
     implementation("commons-codec:commons-codec:1.16.0")
 
+    // (zip4j)
+    // : File Zip / UnZip
+    implementation("net.lingala.zip4j:zip4j:2.11.4")
+
 }
 
 tasks.withType<KotlinCompile> {

@@ -83,4 +83,48 @@ class C8TkFileTestController(
     ): ResponseEntity<Resource>? {
         return service.api2(httpServletResponse, fileName)
     }
+
+
+    ////
+    @Operation(
+        summary = "N3. 파일 zip 압축 테스트",
+        description = "파일들을 zip 타입으로 압축하여 temps 폴더에 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/zip-files")
+    fun api3(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api3(httpServletResponse)
+    }
+
+
+    ////
+    @Operation(
+        summary = "N4. zip 압축 파일 해제 테스트",
+        description = "zip 압축 파일을 해제하여 temps 폴더에 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/unzip-file")
+    fun api4(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api4(httpServletResponse)
+    }
 }

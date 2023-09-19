@@ -1,6 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c8_tk_fileTest
 
 import jakarta.servlet.http.HttpServletResponse
+import net.lingala.zip4j.ZipFile
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -118,6 +119,79 @@ class C8TkFileTestService(
             },
             HttpStatus.OK
         )
+    }
+
+
+    ////
+    fun api3(httpServletResponse: HttpServletResponse) {
+        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
+        val projectRootAbsolutePathString: String = File("").absolutePath
+        val filePathString1 =
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/1.txt"
+        val filePathString2 =
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/2.xlsx"
+        val filePathString3 =
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/3.png"
+        val filePathString4 =
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/4.mp4"
+
+        // 파일 저장 디렉토리 경로
+        val saveDirectoryPathString = "./temps"
+        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
+        // 파일 저장 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 확장자 포함 파일명 생성
+        val saveFileName = "zipped_${timeString}.zip"
+
+        val fileTargetPath = saveDirectoryPath.resolve(saveFileName).normalize()
+
+        // 압축 파일 저장 위치 지정
+        val zipFile = ZipFile(fileTargetPath.toFile().absoluteFile)
+        zipFile.addFiles( // 파일 리스트 단위 압축시
+            arrayListOf(
+                File(filePathString1),
+                File(filePathString2),
+                File(filePathString3),
+                File(filePathString4)
+            )
+        )
+//        zipFile.addFolder( // 폴더 단위 압축시
+//            File("$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3")
+//        )
+
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api4(httpServletResponse: HttpServletResponse) {
+        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
+        val projectRootAbsolutePathString: String = File("").absolutePath
+        val filePathString =
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n4/test.zip"
+
+        // 파일 저장 디렉토리 경로
+        val saveDirectoryPathString = "./temps"
+        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
+        // 파일 저장 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 확장자 포함 파일명 생성
+        val saveFileName = "unzipped_${timeString}/"
+
+        val fileTargetPath = saveDirectoryPath.resolve(saveFileName).normalize()
+
+        val zipFile = ZipFile(filePathString)
+        zipFile.extractAll(fileTargetPath.toFile().absolutePath)
+
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
