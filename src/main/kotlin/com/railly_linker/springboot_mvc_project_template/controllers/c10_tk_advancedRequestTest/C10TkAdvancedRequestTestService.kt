@@ -8,8 +8,11 @@ import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
+import org.springframework.web.context.request.async.DeferredResult
 import java.io.File
 import java.io.FileInputStream
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 @Service
 class C10TkAdvancedRequestTestService(
@@ -18,6 +21,9 @@ class C10TkAdvancedRequestTestService(
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
+
+    // (스레드 풀)
+    private val executorService: ExecutorService = Executors.newCachedThreadPool()
 
 
     // ---------------------------------------------------------------------------------------------
@@ -90,6 +96,27 @@ class C10TkAdvancedRequestTestService(
 
         httpServletResponse.setHeader("api-result-code", "0")
         return ByteArrayResource(FileCopyUtils.copyToByteArray(fileInputStream))
+    }
+
+
+    ////
+    fun api4(httpServletResponse: HttpServletResponse): DeferredResult<C10TkAdvancedRequestTestController.Api4OutputVo>? {
+        // 연결 타임아웃 밀리초
+        val deferredResultTimeoutMs = 1000L * 60
+        val deferredResult = DeferredResult<C10TkAdvancedRequestTestController.Api4OutputVo>(deferredResultTimeoutMs)
+
+        // 비동기 처리
+        executorService.execute {
+            // 지연시간 대기
+            val delayMs = 5000L
+            Thread.sleep(delayMs)
+
+            // 결과 반환
+            deferredResult.setResult(C10TkAdvancedRequestTestController.Api4OutputVo("${delayMs / 1000} 초 경과 후 반환했습니다."))
+        }
+
+        // 결과 대기 객체를 먼저 반환
+        return deferredResult
     }
 
 

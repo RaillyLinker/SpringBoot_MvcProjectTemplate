@@ -1,13 +1,16 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c10_tk_advancedRequestTest
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.async.DeferredResult
 
 @Tag(name = "/tk/advanced-request-test APIs", description = "C10. 고급 요청 / 응답에 대한 테스트 API 컨트롤러")
 @RestController
@@ -111,6 +114,34 @@ class C10TkAdvancedRequestTestController(
     ): Resource? {
         return service.api3(httpServletResponse)
     }
+
+
+    ////
+    @Operation(
+        summary = "N4. 비동기 처리 결과 반환 샘플",
+        description = "API 호출시 함수 내에서 별도 스레드로 작업을 수행하고,\n\n" +
+                "비동기 작업 완료 후 그 처리 결과가 반환됨\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/async-result")
+    fun api4(
+        httpServletResponse: HttpServletResponse
+    ): DeferredResult<Api4OutputVo>? {
+        return service.api4(httpServletResponse)
+    }
+
+    data class Api4OutputVo(
+        @Schema(description = "결과 메세지", required = true, example = "n 초 경과 후 반환했습니다.")
+        @JsonProperty("resultMessage")
+        val resultMessage: String
+    )
 
 
     ////
