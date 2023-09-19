@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.context.request.async.DeferredResult
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 @Tag(name = "/tk/advanced-request-test APIs", description = "C10. 고급 요청 / 응답에 대한 테스트 API 컨트롤러")
 @RestController
@@ -54,14 +55,10 @@ class C10TkAdvancedRequestTestController(
 
 
     ////
-    /**
-     * 스트리밍을 하려면,
-     * <video src="http://127.0.0.1:8080/tk/advanced-request-test/video-streaming?videoHeight=H720" width="1280px" height="720px" controls></video>
-     * 위와 같이 웹 페이지에서 접근이 가능
-     * **/
     @Operation(
         summary = "N2 : 비디오 스트리밍 샘플",
         description = "비디오 스트리밍 샘플\n\n" +
+                "테스트는 프로젝트 파일 경로의 samples 안의 video-streaming.html 파일을 사용하세요.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -90,14 +87,10 @@ class C10TkAdvancedRequestTestController(
 
 
     ////
-    /**
-     * 스트리밍을 하려면,
-     * <audio src="http://127.0.0.1:8080/tk/advanced-request-test/audio-streaming" controls></audio>
-     * 위와 같이 웹 페이지에서 접근이 가능
-     * **/
     @Operation(
         summary = "N3 : 오디오 스트리밍 샘플",
         description = "오디오 스트리밍 샘플\n\n" +
+                "테스트는 프로젝트 파일 경로의 samples 안의 audio-streaming.html 파일을 사용하세요.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -145,4 +138,53 @@ class C10TkAdvancedRequestTestController(
 
 
     ////
+    @Operation(
+        summary = "N5. 클라이언트가 특정 SSE 이벤트를 구독",
+        description = "구독 수신 중 연결이 끊어질 경우, 클라이언트가 헤더에 Last-Event-ID 라는 값을 넣어서 다시 요청함\n\n" +
+                "!주의점! : 로깅 필터와 충돌되므로, 꼭 요청 헤더에는 Accept:text/event-stream 를 넣어서 요청을 해야함 (이것으로 SSE 요청임을 필터가 확인함)\n\n" +
+                "테스트는, CMD 를 열고, \n\n" +
+                "    >>> curl -N --http2 -H \"Accept:text/event-stream\" http://127.0.0.1:8080/tk/advanced-request-test/sse-test/subscribe\n\n" +
+                "혹은, 프로젝트 파일 경로의 samples 안의 sse-test.html 파일을 사용하세요. (cors 설정 필요)\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/sse-test/subscribe", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun api5(
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "Last-Event-ID", description = "멤버가 수신한 마지막 event id")
+        @RequestHeader(value = "Last-Event-ID")
+        lastSseEventId: String?
+    ): SseEmitter? {
+        return service.api5(httpServletResponse, authorization, lastSseEventId)
+    }
+
+
+    ////
+    @Operation(
+        summary = "N6. api1 에서 구독한 수신 객체에 대한 이벤트 전송 트리거 테스트",
+        description = "어떠한 사건이 일어나면 알림을 위하여 SSE 이벤트 전송을 한다고 가정\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/sse-test/event-trigger")
+    fun api6(
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api6(httpServletResponse)
+    }
 }
