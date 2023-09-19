@@ -142,4 +142,59 @@ class C2TkTestController(
         @JsonProperty("smsMessage")
         val smsMessage: String
     )
+
+
+    ////
+    @Operation(
+        summary = "N4. FCM Push 테스트",
+        description = "FCM Push 메세지 발신\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/fcm-push/push-message")
+    fun api4(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api4InputVo
+    ) {
+        return service.api4(httpServletResponse, inputVo)
+    }
+
+    data class Api4InputVo(
+        @Schema(
+            description = "푸시 메세지 발신 서버 키 : FCM 프로젝트 생성 후 가져오기",
+            required = true,
+            example = "AAAAx-a8CLQ:APA91bEgU_DIwgvpiK4jiTIMt1ah16UCSdVrVOIVEZ2407i6hasZq3B0EuppcuqEL-pE5PsBl19hxOUt0miOYcW241-WzdsU1lZpXNdOzoNKOex2GlUQcZiioJDk3C2hlZcgq4Yf6EP4"
+        )
+        @JsonProperty("senderServerKey")
+        val senderServerKey: String,
+        @Schema(
+            description = "푸시 메세지 수신 디바이스 토큰 리스트 : FCM 프로젝트에 소속된 FCM 설정을 마친 디바이스에서 가져오기",
+            required = true,
+            example = "[\"aaaaaaa\",\"bbbbbbb\"]"
+        )
+        @JsonProperty("receiverDeviceTokenList")
+        val receiverDeviceTokenList: List<String>,
+        @Schema(
+            description = "노티피케이션 타이틀",
+            required = true,
+            example = "타이틀"
+        )
+        @JsonProperty("notificationTitle")
+        val notificationTitle: String,
+        @Schema(
+            description = "노티피케이션 본문",
+            required = true,
+            example = "본문"
+        )
+        @JsonProperty("notificationContent")
+        val notificationContent: String
+    )
 }

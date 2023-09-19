@@ -1,6 +1,8 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c2_tk_test
 
+import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.FcmGoogleapisComRequestApi
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
+import com.railly_linker.springboot_mvc_project_template.util_objects.FcmPushUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.NaverSmsUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
@@ -77,6 +79,28 @@ class C2TkTestService(
                 countryCode,
                 phoneNumber,
                 inputVo.smsMessage
+            )
+        )
+
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api4(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C2TkTestController.Api4InputVo
+    ) {
+        FcmPushUtilObject.sendMessageTo(
+            inputVo.senderServerKey,
+            FcmPushUtilObject.SendMessageToInputVo(
+                inputVo.receiverDeviceTokenList,
+                "high",
+                true,
+                FcmGoogleapisComRequestApi.PostFcmSendInputVo.Notification(
+                    inputVo.notificationTitle, inputVo.notificationContent
+                ),
+                hashMapOf()
             )
         )
 

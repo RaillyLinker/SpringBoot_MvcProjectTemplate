@@ -102,6 +102,16 @@ class RepositoryNetworkRetrofit2 private constructor() {
             false
         )).create(KapiKakaoComRequestApi::class.java)
 
+    // FCM 메세지 발송용
+    val fcmGoogleapisComRequestApi: FcmGoogleapisComRequestApi =
+        (getRetrofitClient(
+            "https://fcm.googleapis.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(FcmGoogleapisComRequestApi::class.java)
+
 
     // ---------------------------------------------------------------------------------------------
     // <Static 공간>
