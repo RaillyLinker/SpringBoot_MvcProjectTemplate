@@ -2296,7 +2296,47 @@ class C9TkAuthController(
     }
 
 
-    // todo 프로필 추가 (대표 프로필로 설정하지는 않고, 대표 프로필로 설정할 수 있게 다운로드 경로와 프로필 고유값을 반환)
+    ////
+    @Operation(
+        summary = "N47 : 내 프로필 이미지 추가",
+        description = "내 프로필 이미지 추가 (대표 이미지 설정은 다른 API 로 해야합니다.)\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/my-profile", consumes = ["multipart/form-data"])
+    @PreAuthorize("isAuthenticated()")
+    fun api47(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @ModelAttribute
+        inputVo: Api47InputVo
+    ): Api47OutputVo? {
+        return service.api47(httpServletResponse, authorization!!, inputVo)
+    }
+
+    data class Api47InputVo(
+        @Schema(description = "프로필 이미지 파일", required = true)
+        @JsonProperty("profileImageFile")
+        val profileImageFile: MultipartFile
+    )
+
+    data class Api47OutputVo(
+        @Schema(description = "프로필의 고유값", required = true, example = "1")
+        @JsonProperty("profileUid")
+        val profileUid: Long,
+        @Schema(description = "업로드한 프로필 이미지 파일 Full URL", required = true, example = "1")
+        @JsonProperty("profileImageFullUrl")
+        val profileImageFullUrl: String
+    )
 
 
     ////

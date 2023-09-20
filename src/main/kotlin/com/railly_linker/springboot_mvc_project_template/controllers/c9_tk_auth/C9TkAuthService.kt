@@ -3450,6 +3450,7 @@ class C9TkAuthService(
 
 
     ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api46(authorization: String, httpServletResponse: HttpServletResponse, profileUid: Long) {
         val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
@@ -3471,6 +3472,84 @@ class C9TkAuthService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api47(
+        httpServletResponse: HttpServletResponse,
+        authorization: String,
+        inputVo: C9TkAuthController.Api47InputVo
+    ): C9TkAuthController.Api47OutputVo? {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        // 저장된 프로필 이미지 파일을 다운로드 할 수 있는 URL
+        val savedProfileImageUrl: String
+
+        // 프로필 이미지 파일 저장
+
+        //----------------------------------------------------------------------------------------------------------
+        // 프로필 이미지를 서버 스토리지에 저장할 때 사용하는 방식
+        // 파일 저장 기본 디렉토리 경로
+        val saveDirectoryPath: Path = Paths.get("./files/member/profile").toAbsolutePath().normalize()
+
+        // 파일 저장 기본 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
+
+        // 원본 파일명(with suffix)
+        val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
+
+        // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
+        Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
+
+        // 파일 확장자 구분 위치
+        val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
+
+        // 확장자가 없는 파일명
+        val fileNameWithOutExtension: String
+        // 확장자
+        val fileExtension: String
+
+        if (fileExtensionSplitIdx == -1) {
+            fileNameWithOutExtension = multiPartFileNameString
+            fileExtension = ""
+        } else {
+            fileNameWithOutExtension = multiPartFileNameString.substring(0, fileExtensionSplitIdx)
+            fileExtension =
+                multiPartFileNameString.substring(fileExtensionSplitIdx + 1, multiPartFileNameString.length)
+        }
+
+        val savedFileName = "${fileNameWithOutExtension}(${
+            LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm-ss-SSS")
+            )
+        }).$fileExtension"
+
+        // multipartFile 을 targetPath 에 저장
+        inputVo.profileImageFile.transferTo(
+            // 파일 저장 경로와 파일명(with index) 을 합친 path 객체
+            saveDirectoryPath.resolve(savedFileName).normalize()
+        )
+
+        savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+        //----------------------------------------------------------------------------------------------------------
+
+        val profileData = database1MemberMemberProfileDataRepository.save(
+            Database1_Member_MemberProfileData(
+                memberUid.toLong(),
+                savedProfileImageUrl,
+                false,
+                rowActivate = true
+            )
+        )
+
+        httpServletResponse.setHeader("api-result-code", "0")
+
+        return C9TkAuthController.Api47OutputVo(
+            profileData.uid!!,
+            profileData.imageFullUrl
+        )
     }
 
 
