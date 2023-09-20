@@ -227,6 +227,76 @@ class C10TkMediaResourceProcessController(
         val resizingHeight: Int
     )
 
+
+    ////
+    @Operation(
+        summary = "N7 : FFMPEG 을 이용하여 비디오 파일에서 GIF 추출 후 반환",
+        description = "FFMPEG 을 이용하여 비디오 파일에서 GIF 를 추출하여 반환합니다.\n\n" +
+                "ProcessBuilder 를 사용하므로 OS 에 FFMPEG 이 설치되어 있어야합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 지원하는 파일이 아닙니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/ffmpeg-video-to-gif", consumes = ["multipart/form-data"])
+    fun api7(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api7InputVo
+    ): ResponseEntity<Resource>? {
+        return service.api7(inputVo, httpServletResponse)
+    }
+
+    data class Api7InputVo(
+        @Schema(description = "업로드 비디오 파일", required = true)
+        @JsonProperty("multipartVideoFile")
+        val multipartVideoFile: MultipartFile,
+        @Schema(description = "잘라내기 시작 시간 (HH:mm:ss)", required = true, example = "00:00:00")
+        @JsonProperty("startTime")
+        val startTime: String,
+        @Schema(description = "잘라내기 지속 시간 (초)", required = true, example = "3")
+        @JsonProperty("duration")
+        val duration: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N8 : FFMPEG 을 이용하여 GIF 파일을 비디오 파일로 변환 후 반환",
+        description = "FFMPEG 을 이용하여 GIF 파일을 비디오 파일로 변환하여 반환합니다.\n\n" +
+                "ProcessBuilder 를 사용하므로 OS 에 FFMPEG 이 설치되어 있어야합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 지원하는 파일이 아닙니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/ffmpeg-gif-to-video", consumes = ["multipart/form-data"])
+    fun api8(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api8InputVo
+    ): ResponseEntity<Resource>? {
+        return service.api8(inputVo, httpServletResponse)
+    }
+
+    data class Api8InputVo(
+        @Schema(description = "업로드 GIF 파일", required = true)
+        @JsonProperty("multipartGifFile")
+        val multipartGifFile: MultipartFile
+    )
+
     // todo jpg to avif
     // todo png to avif
     // todo bmp to avif

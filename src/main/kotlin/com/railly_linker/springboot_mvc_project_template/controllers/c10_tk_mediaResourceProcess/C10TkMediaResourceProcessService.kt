@@ -17,9 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
+import java.io.*
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -318,6 +316,128 @@ class C10TkMediaResourceProcessService(
                 this.add(
                     HttpHeaders.CONTENT_TYPE,
                     "image/gif"
+                )
+            },
+            HttpStatus.OK
+        )
+    }
+
+
+    ////
+    fun api7(
+        inputVo: C10TkMediaResourceProcessController.Api7InputVo,
+        httpServletResponse: HttpServletResponse
+    ): ResponseEntity<Resource>? {
+        val tempVideoFile = File.createTempFile("video", null)
+        inputVo.multipartVideoFile.transferTo(tempVideoFile)
+
+        val gifFile = File.createTempFile("converted", ".gif")
+
+        // todo : OS 별 FFMPEG 사용 처리하기
+        // FFMPEG 명령어 작성
+        val command =
+            "./samples/ffmpeg-win64/bin/ffmpeg -y -i ${tempVideoFile.absolutePath} -ss ${inputVo.startTime} -t ${inputVo.duration} -an ${gifFile.absolutePath}"
+        val process = ProcessBuilder(*command.split(" ").toTypedArray())
+            .redirectErrorStream(true) // 오류 스트림을 표준 출력 스트림에 병합
+            .start()
+
+        // 로그에 프로세스의 출력 내용 출력
+        BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                classLogger.debug(line)
+            }
+        }
+
+        val exitCode = process.waitFor()
+        if (exitCode != 0) {
+            classLogger.error("FFmpeg process failed with exit code $exitCode")
+        }
+
+        val resource = InputStreamResource(FileInputStream(gifFile))
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 결과 파일의 확장자 포함 파일명 생성
+        val resultFileName = "result_${timeString}.gif"
+
+        httpServletResponse.addHeader("api-error-codes", "0")
+        return ResponseEntity<Resource>(
+            resource,
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename(resultFileName, StandardCharsets.UTF_8)
+                    .build()
+                this.add(
+                    HttpHeaders.CONTENT_TYPE,
+                    "image/gif"
+                )
+            },
+            HttpStatus.OK
+        )
+    }
+
+
+    ////
+    fun api8(
+        inputVo: C10TkMediaResourceProcessController.Api8InputVo,
+        httpServletResponse: HttpServletResponse
+    ): ResponseEntity<Resource>? {
+        val contentType = inputVo.multipartGifFile.contentType
+
+        val allowedContentTypes = setOf(
+            "image/gif"
+        )
+
+        if (contentType !in allowedContentTypes) {
+            httpServletResponse.addHeader("api-error-codes", "1")
+            return null
+        }
+
+        val tempGifFile = File.createTempFile("input", ".gif")
+        inputVo.multipartGifFile.transferTo(tempGifFile)
+
+        val videoFile = File.createTempFile("converted", ".mp4")
+
+        // todo : OS 별 FFMPEG 사용 처리하기
+        val command =
+            "./samples/ffmpeg-win64/bin/ffmpeg -y -i ${tempGifFile.absolutePath} ${videoFile.absolutePath}"
+        val process = ProcessBuilder(*command.split(" ").toTypedArray())
+            .redirectErrorStream(true) // 오류 스트림을 표준 출력 스트림에 병합
+            .start()
+
+        // 로그에 프로세스의 출력 내용 출력
+        BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                classLogger.debug(line)
+            }
+        }
+
+        val exitCode = process.waitFor()
+        if (exitCode != 0) {
+            classLogger.error("FFmpeg process failed with exit code $exitCode")
+        }
+
+        val resource = InputStreamResource(FileInputStream(videoFile))
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 결과 파일의 확장자 포함 파일명 생성
+        val resultFileName = "result_${timeString}.mp4"
+
+        httpServletResponse.addHeader("api-error-codes", "0")
+        return ResponseEntity<Resource>(
+            resource,
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename(resultFileName, StandardCharsets.UTF_8)
+                    .build()
+                this.add(
+                    HttpHeaders.CONTENT_TYPE,
+                    "video/mp4"
                 )
             },
             HttpStatus.OK
