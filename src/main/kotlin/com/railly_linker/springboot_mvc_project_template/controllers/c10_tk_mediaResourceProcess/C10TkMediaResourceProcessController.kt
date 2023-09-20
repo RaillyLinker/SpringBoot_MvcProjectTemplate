@@ -227,5 +227,16 @@ class C10TkMediaResourceProcessController(
         val resizingHeight: Int
     )
 
-    // todo avif
+    // todo jpg to avif
+    // todo png to avif
+    // todo bmp to avif
+    // todo gif to avif
+
+    // todo avif to jpg
+    // todo avif to png
+    // todo avif to bmp
+    // todo avif to gif
+
+    // todo avif resize
+    // todo animated avif resize
 }
