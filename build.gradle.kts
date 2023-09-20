@@ -113,6 +113,9 @@ dependencies {
     // : HTML -> PDF 변환 라이브러리
     implementation("org.xhtmlrenderer:flying-saucer-pdf:9.2.2")
 
+    // (정적 이미지 리사이징)
+    implementation("net.coobird:thumbnailator:0.4.20")
+
 }
 
 tasks.withType<KotlinCompile> {
