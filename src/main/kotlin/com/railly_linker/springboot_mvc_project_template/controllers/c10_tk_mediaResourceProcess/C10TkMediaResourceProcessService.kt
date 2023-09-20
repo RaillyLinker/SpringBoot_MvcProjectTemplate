@@ -1,5 +1,7 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c11_tk_mediaResourceProcess
+package com.railly_linker.springboot_mvc_project_template.controllers.c10_tk_mediaResourceProcess
 
+import com.railly_linker.springboot_mvc_project_template.util_objects.GifUtilObject
+import com.railly_linker.springboot_mvc_project_template.util_objects.ImageProcessUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import net.coobird.thumbnailator.Thumbnails
 import org.apache.commons.io.FilenameUtils
@@ -13,13 +15,19 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.ArrayList
+import javax.imageio.ImageIO
 
 @Service
-class C11TkMediaResourceProcessService(
+class C10TkMediaResourceProcessService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfile: String
 ) {
@@ -30,7 +38,7 @@ class C11TkMediaResourceProcessService(
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(
-        inputVo: C11TkMediaResourceProcessController.Api1InputVo,
+        inputVo: C10TkMediaResourceProcessController.Api1InputVo,
         httpServletResponse: HttpServletResponse
     ): ResponseEntity<Resource>? {
         val contentType = inputVo.multipartImageFile.contentType
@@ -84,7 +92,7 @@ class C11TkMediaResourceProcessService(
 
     ////
     fun api2(
-        inputVo: C11TkMediaResourceProcessController.Api2InputVo,
+        inputVo: C10TkMediaResourceProcessController.Api2InputVo,
         httpServletResponse: HttpServletResponse
     ): ResponseEntity<Resource>? {
         val contentType = inputVo.multipartImageFile.contentType
@@ -137,7 +145,7 @@ class C11TkMediaResourceProcessService(
 
     ////
     fun api3(
-        inputVo: C11TkMediaResourceProcessController.Api3InputVo,
+        inputVo: C10TkMediaResourceProcessController.Api3InputVo,
         httpServletResponse: HttpServletResponse
     ): ResponseEntity<Resource>? {
         val contentType = inputVo.multipartImageFile.contentType
@@ -192,14 +200,81 @@ class C11TkMediaResourceProcessService(
     fun api4(
         httpServletResponse: HttpServletResponse
     ) {
-        // todo
+        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
+        val projectRootAbsolutePathString: String = File("").absolutePath
+
+        val gifFilePathObject =
+            Paths.get("$projectRootAbsolutePathString/src/main/resources/static/resource_c10_n4/test.gif")
+
+        val frameSplit = ImageProcessUtilObject.gifToImageList(Files.newInputStream(gifFilePathObject))
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 파일 저장 디렉토리 경로
+        val saveDirectoryPathString = "./files/temp/$timeString"
+        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
+        // 파일 저장 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
+
+        // 받은 파일 순회
+        for (bufferedImageIndexedValue in frameSplit.withIndex()) {
+            val bufferedImage = bufferedImageIndexedValue.value
+
+            // 확장자 포함 파일명 생성
+            val saveFileName = "${bufferedImageIndexedValue.index + 1}.png"
+
+            // 파일 저장 경로와 파일명(with index) 을 합친 path 객체
+            val fileTargetPath = saveDirectoryPath.resolve(saveFileName).normalize()
+
+            // 파일 저장
+            ImageIO.write(bufferedImage.frameBufferedImage, "png", fileTargetPath.toFile())
+        }
+
+        httpServletResponse.addHeader("api-error-codes", "0")
     }
 
 
     ////
     fun api5(httpServletResponse: HttpServletResponse) {
-        // todo
+        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
+        val projectRootAbsolutePathString: String = File("").absolutePath
 
+        // 파일 절대 경로 및 파일명
+        val bufferedImageList = ArrayList<BufferedImage>()
+        for (idx in 1..15) {
+            val imageFilePathString =
+                "$projectRootAbsolutePathString/src/main/resources/static/resource_c10_n5/gif_frame_images/${idx}.png"
+            bufferedImageList.add(
+                ImageIO.read(
+                    Paths.get(imageFilePathString).toFile()
+                )
+            )
+        }
+
+        val saveDirectoryPathString = "./files/temp"
+        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
+        // 파일 저장 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
+        val resultFileName = "${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))}.gif"
+        val fileTargetPath = saveDirectoryPath.resolve(resultFileName).normalize()
+
+        val gifFrameList: ArrayList<GifUtilObject.GifFrame> = arrayListOf()
+        for (bufferedImage in bufferedImageList) {
+            gifFrameList.add(
+                GifUtilObject.GifFrame(
+                    bufferedImage,
+                    30
+                )
+            )
+        }
+
+        ImageProcessUtilObject.imageListToGif(
+            gifFrameList,
+            fileTargetPath.toFile().outputStream()
+        )
+
+        httpServletResponse.addHeader("api-error-codes", "0")
     }
 
 }

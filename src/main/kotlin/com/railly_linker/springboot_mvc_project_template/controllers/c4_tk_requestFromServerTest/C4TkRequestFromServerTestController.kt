@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@Tag(name = "/tk/request-from-server-test APIs", description = "C4. 서버에서 요청을 보내는 테스트 API 컨트롤러")
+@Tag(name = "/tk/request-from-server-test APIs", description = "C4 : 서버에서 요청을 보내는 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/request-from-server-test")
 class C4TkRequestFromServerTestController(

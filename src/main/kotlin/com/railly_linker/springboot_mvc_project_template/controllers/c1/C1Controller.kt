@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.servlet.ModelAndView
 
-@Tag(name = "root APIs", description = "C1. Root 경로에 대한 API 컨트롤러")
+@Tag(name = "root APIs", description = "C1 : Root 경로에 대한 API 컨트롤러")
 @Controller
 class C1Controller(
     private val service: C1Service

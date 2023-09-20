@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 
-@Tag(name = "/tk/file-test APIs", description = "C8. 파일을 다루는 테스트 API 컨트롤러")
+@Tag(name = "/tk/file-test APIs", description = "C8 : 파일을 다루는 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/file-test")
 class C8TkFileTestController(

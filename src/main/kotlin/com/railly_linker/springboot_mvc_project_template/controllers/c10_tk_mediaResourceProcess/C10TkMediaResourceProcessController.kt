@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c11_tk_mediaResourceProcess
+package com.railly_linker.springboot_mvc_project_template.controllers.c10_tk_mediaResourceProcess
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/tk/media-resource-process APIs", description = "C11. 미디어 리소스(이미지, 비디오, 오디오 등...) 처리 API 컨트롤러")
+@Tag(name = "/tk/media-resource-process APIs", description = "C10 : 미디어 리소스(이미지, 비디오, 오디오 등...) 처리 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/media-resource-process")
-class C11TkMediaResourceProcessController(
-    private val service: C11TkMediaResourceProcessService
+class C10TkMediaResourceProcessController(
+    private val service: C10TkMediaResourceProcessService
 ) {
     // <멤버 변수 공간>
 
@@ -148,7 +148,6 @@ class C11TkMediaResourceProcessController(
 
 
     ////
-    // todo : 기존 방식으로 변경 후 테스트
     @Operation(
         summary = "N4 : 서버에 저장된 움직이는 Gif 이미지 파일에서 프레임을 PNG 이미지 파일로 분리한 후 files/temps 폴더 안에 저장",
         description = "서버에 저장된 움직이는 Gif 이미지 파일에서 프레임을 PNG 이미지 파일로 분리한 후 files/temps 폴더 안에 저장\n\n" +
@@ -171,7 +170,6 @@ class C11TkMediaResourceProcessController(
 
 
     ////
-    // todo : 기존 방식으로 변경 후 테스트
     @Operation(
         summary = "N5 : 서버에 저장된 움직이는 PNG 이미지 프레임들을 움직이는 Gif 파일로 병합 후 files/temps 폴더 안에 저장",
         description = "서버에 저장된 움직이는 PNG 이미지 프레임들을 움직이는 Gif 파일로 병합 후 files/temps 폴더 안에 저장\n\n" +

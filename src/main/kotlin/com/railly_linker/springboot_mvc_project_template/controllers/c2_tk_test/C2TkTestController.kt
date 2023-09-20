@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/tk/test APIs", description = "C2. 테스트 API 컨트롤러")
+@Tag(name = "/tk/test APIs", description = "C2 : 테스트 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/test")
 class C2TkTestController(

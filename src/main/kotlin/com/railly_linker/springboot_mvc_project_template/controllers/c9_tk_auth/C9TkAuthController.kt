@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/tk/auth APIs", description = "C9. 인증/인가 API 컨트롤러")
+@Tag(name = "/tk/auth APIs", description = "C9 : 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
 class C9TkAuthController(
