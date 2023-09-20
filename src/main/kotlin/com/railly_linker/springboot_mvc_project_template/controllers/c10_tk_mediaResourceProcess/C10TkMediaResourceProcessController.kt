@@ -297,6 +297,8 @@ class C10TkMediaResourceProcessController(
         val multipartGifFile: MultipartFile
     )
 
+    // todo 비디오 파일 리사이징
+
     // todo jpg to avif
     // todo png to avif
     // todo bmp to avif
