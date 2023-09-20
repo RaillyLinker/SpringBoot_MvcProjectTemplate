@@ -191,6 +191,43 @@ class C10TkMediaResourceProcessController(
     }
 
 
+    ////
+    @Operation(
+        summary = "N6 : 동적 GIF 이미지 파일을 업로드 하여 리사이징 후 다운",
+        description = "multipart File 로 받은 움직이는 GIF 이미지 파일을 업로드 하여 리사이징 후 다운\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 지원하는 파일이 아닙니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/resize-gif-image", consumes = ["multipart/form-data"])
+    fun api6(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api6InputVo
+    ): ResponseEntity<Resource>? {
+        return service.api6(inputVo, httpServletResponse)
+    }
+
+    data class Api6InputVo(
+        @Schema(description = "업로드 이미지 파일", required = true)
+        @JsonProperty("multipartImageFile")
+        val multipartImageFile: MultipartFile,
+        @Schema(description = "이미지 리사이징 너비", required = true, example = "300")
+        @JsonProperty("resizingWidth")
+        val resizingWidth: Int,
+        @Schema(description = "이미지 리사이징 높이", required = true, example = "400")
+        @JsonProperty("resizingHeight")
+        val resizingHeight: Int
+    )
+
+
     // todo resize animated gif
 
     // todo avif

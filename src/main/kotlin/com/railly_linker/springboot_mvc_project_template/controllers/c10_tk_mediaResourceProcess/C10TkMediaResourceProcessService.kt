@@ -9,6 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ByteArrayResource
+import org.springframework.core.io.InputStreamResource
 import org.springframework.core.io.Resource
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.awt.image.BufferedImage
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.charset.StandardCharsets
@@ -23,7 +25,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.ArrayList
 import javax.imageio.ImageIO
 
 @Service
@@ -275,6 +276,52 @@ class C10TkMediaResourceProcessService(
         )
 
         httpServletResponse.addHeader("api-error-codes", "0")
+    }
+
+
+    ////
+    fun api6(
+        inputVo: C10TkMediaResourceProcessController.Api6InputVo,
+        httpServletResponse: HttpServletResponse
+    ): ResponseEntity<Resource>? {
+        val contentType = inputVo.multipartImageFile.contentType
+
+        val allowedContentTypes = setOf(
+            "image/gif"
+        )
+
+        if (contentType !in allowedContentTypes) {
+            httpServletResponse.addHeader("api-error-codes", "1")
+            return null
+        }
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 결과 파일의 확장자 포함 파일명 생성
+        val resultFileName = "resized_${timeString}.gif"
+
+        // 리사이징
+        val resizedImageByteArray = ImageProcessUtilObject.resizeGifImage(
+            inputVo.multipartImageFile,
+            inputVo.resizingWidth,
+            inputVo.resizingHeight
+        )
+
+        httpServletResponse.addHeader("api-error-codes", "0")
+        return ResponseEntity<Resource>(
+            InputStreamResource(ByteArrayInputStream(resizedImageByteArray)),
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename(resultFileName, StandardCharsets.UTF_8)
+                    .build()
+                this.add(
+                    HttpHeaders.CONTENT_TYPE,
+                    "image/gif"
+                )
+            },
+            HttpStatus.OK
+        )
     }
 
 }
