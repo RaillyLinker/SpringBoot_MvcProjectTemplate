@@ -45,6 +45,7 @@ object ImageProcessUtilObject {
             )
         }
 
+        // todo File.createTempFile 사용하기
         val saveDirectoryPathString = "./temps"
         val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
         // 파일 저장 디렉토리 생성

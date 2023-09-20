@@ -328,6 +328,8 @@ class C10TkMediaResourceProcessService(
         inputVo: C10TkMediaResourceProcessController.Api7InputVo,
         httpServletResponse: HttpServletResponse
     ): ResponseEntity<Resource>? {
+        // todo 비디오 파일인지 확인하기
+
         val tempVideoFile = File.createTempFile("video", null)
         inputVo.multipartVideoFile.transferTo(tempVideoFile)
 
