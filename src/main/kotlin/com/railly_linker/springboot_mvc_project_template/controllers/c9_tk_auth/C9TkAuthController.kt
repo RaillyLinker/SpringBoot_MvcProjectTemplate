@@ -11,6 +11,7 @@ import org.springframework.core.io.Resource
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @Tag(name = "/tk/auth APIs", description = "C9. 인증/인가 API 컨트롤러")
 @RestController
@@ -749,8 +750,6 @@ class C9TkAuthController(
 
 
     ////
-    // todo 프로필 추가시 그 경로 저장을 위해서, 각 시스템 프로필별 접속 주소(ex : "http://127.0.0.1:8080") 를 준비하기
-    // todo 프로필 추가
     @Operation(
         summary = "N15 : 이메일 회원가입",
         description = "이메일 회원가입 처리\n\n" +
@@ -768,11 +767,11 @@ class C9TkAuthController(
             )
         ]
     )
-    @PostMapping("/register-with-email")
+    @PostMapping("/register-with-email", consumes = ["multipart/form-data"])
     fun api15(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
-        @RequestBody
+        @ModelAttribute
         inputVo: Api15InputVo
     ) {
         service.api15(httpServletResponse, inputVo)
@@ -817,7 +816,11 @@ class C9TkAuthController(
             example = "123456"
         )
         @JsonProperty("verificationCode")
-        val verificationCode: String
+        val verificationCode: String,
+
+        @Schema(description = "프로필 이미지 파일", required = false)
+        @JsonProperty("profileImageFile")
+        val profileImageFile: MultipartFile?
     )
 
     ////
@@ -916,7 +919,6 @@ class C9TkAuthController(
 
 
     ////
-    // todo 프로필 추가
     @Operation(
         summary = "N18 : 전화번호 회원가입",
         description = "전화번호 회원가입 처리\n\n" +
@@ -934,11 +936,11 @@ class C9TkAuthController(
             )
         ]
     )
-    @PostMapping("/register-with-phone-number")
+    @PostMapping("/register-with-phone-number", consumes = ["multipart/form-data"])
     fun api18(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
-        @RequestBody
+        @ModelAttribute
         inputVo: Api18InputVo
     ) {
         service.api18(httpServletResponse, inputVo)
@@ -983,7 +985,11 @@ class C9TkAuthController(
             example = "123456"
         )
         @JsonProperty("verificationCode")
-        val verificationCode: String
+        val verificationCode: String,
+
+        @Schema(description = "프로필 이미지 파일", required = false)
+        @JsonProperty("profileImageFile")
+        val profileImageFile: MultipartFile?
     )
 
 
@@ -1066,7 +1072,6 @@ class C9TkAuthController(
 
 
     ////
-    // todo 프로필 추가
     @Operation(
         summary = "N20 : OAuth2 회원가입",
         description = "OAuth2 회원가입 처리\n\n" +
@@ -1084,11 +1089,11 @@ class C9TkAuthController(
             )
         ]
     )
-    @PostMapping("/register-with-oauth2")
+    @PostMapping("/register-with-oauth2", consumes = ["multipart/form-data"])
     fun api20(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
-        @RequestBody
+        @ModelAttribute
         inputVo: Api20InputVo
     ) {
         service.api20(httpServletResponse, inputVo)
@@ -1133,7 +1138,11 @@ class C9TkAuthController(
             example = "123456"
         )
         @JsonProperty("verificationCode")
-        val verificationCode: String
+        val verificationCode: String,
+
+        @Schema(description = "프로필 이미지 파일", required = false)
+        @JsonProperty("profileImageFile")
+        val profileImageFile: MultipartFile?
     )
 
 

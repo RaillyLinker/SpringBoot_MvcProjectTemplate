@@ -60,8 +60,3 @@ datasource-redis: # Redis 추가 (하위 요소를 추가하고 RedisConfig 에 
   redis1:
     host: 127.0.0.1
     port: 6379
-
-# 내 커스텀 정보를 저장
-myCustomValues:
-  # !!!외부에서 현 프로젝트 서버에 접속할 때 사용하는 주소!!
-  externalAccessAddress : http://127.0.0.1:8080

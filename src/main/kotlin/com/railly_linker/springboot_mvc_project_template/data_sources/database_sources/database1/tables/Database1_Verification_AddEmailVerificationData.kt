@@ -7,9 +7,13 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "register_email_verification_data", catalog = "member")
-@Comment("이메일 회원가입 검증 테이블")
-class Database1_Member_RegisterEmailVerificationData(
+@Table(name = "add_email_verification_data", catalog = "verification")
+@Comment("이메일 추가하기 검증 테이블")
+class Database1_Verification_AddEmailVerificationData(
+    @Column(name = "member_uid", nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("멤버 고유값 (member.members.uid)")
+    var memberUid: Long,
+
     @Column(name = "email_address", nullable = false, columnDefinition = "VARCHAR(100)")
     @Comment("이메일 주소")
     var emailAddress: String,

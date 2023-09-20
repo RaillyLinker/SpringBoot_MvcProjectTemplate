@@ -7,9 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "register_phone_number_verification_data", catalog = "member")
+@Table(name = "register_phone_number_verification_data", catalog = "verification")
 @Comment("이메일 회원가입 검증 테이블")
-class Database1_Member_RegisterPhoneNumberVerificationData(
+class Database1_Verification_RegisterPhoneNumberVerificationData(
     @Column(name = "phone_number", nullable = false, columnDefinition = "VARCHAR(45)")
     @Comment("전화 번호")
     var phoneNumber: String,

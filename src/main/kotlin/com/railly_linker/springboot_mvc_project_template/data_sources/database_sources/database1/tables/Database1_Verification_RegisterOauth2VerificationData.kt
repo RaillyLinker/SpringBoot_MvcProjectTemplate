@@ -7,9 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "register_oauth2_verification_data", catalog = "member")
+@Table(name = "register_oauth2_verification_data", catalog = "verification")
 @Comment("OAuth2 회원가입 검증 테이블")
-class Database1_Member_RegisterOauth2VerificationData(
+class Database1_Verification_RegisterOauth2VerificationData(
     @Column(name = "oauth2_type_code", nullable = false, columnDefinition = "TINYINT UNSIGNED")
     @Comment("oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)")
     var oauth2TypeCode: Byte,

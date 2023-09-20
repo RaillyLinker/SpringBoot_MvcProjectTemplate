@@ -20,25 +20,26 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.InputStreamResource
+import org.springframework.core.io.Resource
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.util.Assert
+import org.springframework.util.StringUtils
+import java.io.File
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
-import org.springframework.core.io.Resource
-import org.springframework.http.ContentDisposition
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.util.Assert
-import java.io.File
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Paths
 
-// todo : 블로그 게시하면서 로직 / 주석 다시 확인 후 리펙토링
 @Service
 class C9TkAuthService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
@@ -53,13 +54,13 @@ class C9TkAuthService(
     private val database1MemberMemberEmailDataRepository: Database1_Member_MemberEmailDataRepository,
     private val database1MemberMemberPhoneDataRepository: Database1_Member_MemberPhoneDataRepository,
     private val database1MemberMemberOauth2LoginDataRepository: Database1_Member_MemberOauth2LoginDataRepository,
-    private val database1MemberRegisterEmailVerificationDataRepository: Database1_Member_RegisterEmailVerificationDataRepository,
-    private val database1MemberFindPasswordEmailVerificationDataRepository: Database1_Member_FindPasswordEmailVerificationDataRepository,
-    private val database1MemberAddEmailVerificationDataRepository: Database1_Member_AddEmailVerificationDataRepository,
-    private val database1MemberRegisterPhoneNumberVerificationDataRepository: Database1_Member_RegisterPhoneNumberVerificationDataRepository,
-    private val database1MemberFindPasswordPhoneNumberVerificationDataRepository: Database1_Member_FindPasswordPhoneNumberVerificationDataRepository,
-    private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Member_AddPhoneNumberVerificationDataRepository,
-    private val database1MemberRegisterOauth2VerificationDataRepository: Database1_Member_RegisterOauth2VerificationDataRepository,
+    private val database1MemberRegisterEmailVerificationDataRepository: Database1_Verification_RegisterEmailVerificationDataRepository,
+    private val database1MemberFindPasswordEmailVerificationDataRepository: Database1_Verification_FindPasswordEmailVerificationDataRepository,
+    private val database1MemberAddEmailVerificationDataRepository: Database1_Verification_AddEmailVerificationDataRepository,
+    private val database1MemberRegisterPhoneNumberVerificationDataRepository: Database1_Verification_RegisterPhoneNumberVerificationDataRepository,
+    private val database1MemberFindPasswordPhoneNumberVerificationDataRepository: Database1_Verification_FindPasswordPhoneNumberVerificationDataRepository,
+    private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Verification_AddPhoneNumberVerificationDataRepository,
+    private val database1MemberRegisterOauth2VerificationDataRepository: Database1_Verification_RegisterOauth2VerificationDataRepository,
     private val database1MemberMemberProfileDataRepository: Database1_Member_MemberProfileDataRepository,
 
     // (Redis1 Repository)
@@ -73,16 +74,32 @@ class C9TkAuthService(
     val networkRetrofit2: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
 
     // (현 프로젝트 동작 서버의 외부 접속 주소)
+    // 프로필 이미지 로컬 저장 및 다운로드 주소 지정을 위해 필요
+    // !!!프로필별 접속 주소 설정하기!!
     // ex : http://127.0.0.1:8080
-    @Value("\${myCustomValues.externalAccessAddress}")
-    private lateinit var externalAccessAddress: String
+    private val externalAccessAddress: String
+        get() {
+            return when (activeProfile) {
+                "prod80" -> {
+                    "http://127.0.0.1"
+                }
+
+                "dev8080" -> {
+                    "http://127.0.0.1:8080"
+                }
+
+                else -> {
+                    "http://127.0.0.1:8080"
+                }
+            }
+        }
 
 
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): Map<String, Any>? {
         val result: MutableMap<String, Any> = HashMap()
-        result["result"] = "connectTest OK!"
+        result["result"] = externalAccessAddress
         httpServletResponse.setHeader("api-result-code", "0")
         return result
     }
@@ -1169,7 +1186,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterEmailVerificationData =
             database1MemberRegisterEmailVerificationDataRepository.save(
-                Database1_Member_RegisterEmailVerificationData(
+                Database1_Verification_RegisterEmailVerificationData(
                     inputVo.email,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -1329,6 +1346,68 @@ class C9TkAuthService(
 //        )
             database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
 
+            if (inputVo.profileImageFile != null) {
+                // 저장된 프로필 이미지 파일을 다운로드 할 수 있는 URL
+                val savedProfileImageUrl: String
+
+                // 프로필 이미지 파일 저장
+
+                //----------------------------------------------------------------------------------------------------------
+                // 프로필 이미지를 서버 스토리지에 저장할 때 사용하는 방식
+                // 파일 저장 기본 디렉토리 경로
+                val saveDirectoryPath: Path = Paths.get("./files/member/profile").toAbsolutePath().normalize()
+
+                // 파일 저장 기본 디렉토리 생성
+                Files.createDirectories(saveDirectoryPath)
+
+                // 원본 파일명(with suffix)
+                val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
+
+                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
+                Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
+
+                // 파일 확장자 구분 위치
+                val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
+
+                // 확장자가 없는 파일명
+                val fileNameWithOutExtension: String
+                // 확장자
+                val fileExtension: String
+
+                if (fileExtensionSplitIdx == -1) {
+                    fileNameWithOutExtension = multiPartFileNameString
+                    fileExtension = ""
+                } else {
+                    fileNameWithOutExtension = multiPartFileNameString.substring(0, fileExtensionSplitIdx)
+                    fileExtension =
+                        multiPartFileNameString.substring(fileExtensionSplitIdx + 1, multiPartFileNameString.length)
+                }
+
+                val savedFileName = "${fileNameWithOutExtension}(${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm-ss-SSS")
+                    )
+                }).$fileExtension"
+
+                // multipartFile 을 targetPath 에 저장
+                inputVo.profileImageFile.transferTo(
+                    // 파일 저장 경로와 파일명(with index) 을 합친 path 객체
+                    saveDirectoryPath.resolve(savedFileName).normalize()
+                )
+
+                savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+                //----------------------------------------------------------------------------------------------------------
+
+                database1MemberMemberProfileDataRepository.save(
+                    Database1_Member_MemberProfileData(
+                        database1MemberUser.uid!!,
+                        savedProfileImageUrl,
+                        true,
+                        rowActivate = true
+                    )
+                )
+            }
+
             // 확인 완료된 검증 요청 정보 삭제
             emailVerification.rowActivate = false
             database1MemberRegisterEmailVerificationDataRepository.save(emailVerification)
@@ -1365,7 +1444,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterPhoneNumberVerificationData =
             database1MemberRegisterPhoneNumberVerificationDataRepository.save(
-                Database1_Member_RegisterPhoneNumberVerificationData(
+                Database1_Verification_RegisterPhoneNumberVerificationData(
                     inputVo.phoneNumber,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -1531,6 +1610,68 @@ class C9TkAuthService(
 //        )
             database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
 
+            if (inputVo.profileImageFile != null) {
+                // 저장된 프로필 이미지 파일을 다운로드 할 수 있는 URL
+                val savedProfileImageUrl: String
+
+                // 프로필 이미지 파일 저장
+
+                //----------------------------------------------------------------------------------------------------------
+                // 프로필 이미지를 서버 스토리지에 저장할 때 사용하는 방식
+                // 파일 저장 기본 디렉토리 경로
+                val saveDirectoryPath: Path = Paths.get("./files/member/profile").toAbsolutePath().normalize()
+
+                // 파일 저장 기본 디렉토리 생성
+                Files.createDirectories(saveDirectoryPath)
+
+                // 원본 파일명(with suffix)
+                val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
+
+                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
+                Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
+
+                // 파일 확장자 구분 위치
+                val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
+
+                // 확장자가 없는 파일명
+                val fileNameWithOutExtension: String
+                // 확장자
+                val fileExtension: String
+
+                if (fileExtensionSplitIdx == -1) {
+                    fileNameWithOutExtension = multiPartFileNameString
+                    fileExtension = ""
+                } else {
+                    fileNameWithOutExtension = multiPartFileNameString.substring(0, fileExtensionSplitIdx)
+                    fileExtension =
+                        multiPartFileNameString.substring(fileExtensionSplitIdx + 1, multiPartFileNameString.length)
+                }
+
+                val savedFileName = "${fileNameWithOutExtension}(${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm-ss-SSS")
+                    )
+                }).$fileExtension"
+
+                // multipartFile 을 targetPath 에 저장
+                inputVo.profileImageFile.transferTo(
+                    // 파일 저장 경로와 파일명(with index) 을 합친 path 객체
+                    saveDirectoryPath.resolve(savedFileName).normalize()
+                )
+
+                savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+                //----------------------------------------------------------------------------------------------------------
+
+                database1MemberMemberProfileDataRepository.save(
+                    Database1_Member_MemberProfileData(
+                        database1MemberUser.uid!!,
+                        savedProfileImageUrl,
+                        true,
+                        rowActivate = true
+                    )
+                )
+            }
+
             // 확인 완료된 검증 요청 정보 삭제
             phoneNumberVerification.rowActivate = false
             database1MemberRegisterPhoneNumberVerificationDataRepository.save(phoneNumberVerification)
@@ -1589,7 +1730,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Member_RegisterOauth2VerificationData(
+                        Database1_Verification_RegisterOauth2VerificationData(
                             1,
                             loginId,
                             verificationCode,
@@ -1636,7 +1777,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Member_RegisterOauth2VerificationData(
+                        Database1_Verification_RegisterOauth2VerificationData(
                             2,
                             loginId,
                             verificationCode,
@@ -1683,7 +1824,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Member_RegisterOauth2VerificationData(
+                        Database1_Verification_RegisterOauth2VerificationData(
                             3,
                             loginId,
                             verificationCode,
@@ -1816,6 +1957,68 @@ class C9TkAuthService(
 //        )
             database1MemberMemberRoleDataRepository.saveAll(database1MemberUserRoleList)
 
+            if (inputVo.profileImageFile != null) {
+                // 저장된 프로필 이미지 파일을 다운로드 할 수 있는 URL
+                val savedProfileImageUrl: String
+
+                // 프로필 이미지 파일 저장
+
+                //----------------------------------------------------------------------------------------------------------
+                // 프로필 이미지를 서버 스토리지에 저장할 때 사용하는 방식
+                // 파일 저장 기본 디렉토리 경로
+                val saveDirectoryPath: Path = Paths.get("./files/member/profile").toAbsolutePath().normalize()
+
+                // 파일 저장 기본 디렉토리 생성
+                Files.createDirectories(saveDirectoryPath)
+
+                // 원본 파일명(with suffix)
+                val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
+
+                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
+                Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
+
+                // 파일 확장자 구분 위치
+                val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
+
+                // 확장자가 없는 파일명
+                val fileNameWithOutExtension: String
+                // 확장자
+                val fileExtension: String
+
+                if (fileExtensionSplitIdx == -1) {
+                    fileNameWithOutExtension = multiPartFileNameString
+                    fileExtension = ""
+                } else {
+                    fileNameWithOutExtension = multiPartFileNameString.substring(0, fileExtensionSplitIdx)
+                    fileExtension =
+                        multiPartFileNameString.substring(fileExtensionSplitIdx + 1, multiPartFileNameString.length)
+                }
+
+                val savedFileName = "${fileNameWithOutExtension}(${
+                    LocalDateTime.now().format(
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd-HH_mm-ss-SSS")
+                    )
+                }).$fileExtension"
+
+                // multipartFile 을 targetPath 에 저장
+                inputVo.profileImageFile.transferTo(
+                    // 파일 저장 경로와 파일명(with index) 을 합친 path 객체
+                    saveDirectoryPath.resolve(savedFileName).normalize()
+                )
+
+                savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+                //----------------------------------------------------------------------------------------------------------
+
+                database1MemberMemberProfileDataRepository.save(
+                    Database1_Member_MemberProfileData(
+                        database1MemberUser.uid!!,
+                        savedProfileImageUrl,
+                        true,
+                        rowActivate = true
+                    )
+                )
+            }
+
             // 확인 완료된 검증 요청 정보 삭제
             oauth2Verification.rowActivate = false
             database1MemberRegisterOauth2VerificationDataRepository.save(oauth2Verification)
@@ -1905,7 +2108,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberFindPasswordEmailVerificationData =
             database1MemberFindPasswordEmailVerificationDataRepository.save(
-                Database1_Member_FindPasswordEmailVerificationData(
+                Database1_Verification_FindPasswordEmailVerificationData(
                     inputVo.email,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -2095,7 +2298,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberFindPasswordPhoneNumberVerificationData =
             database1MemberFindPasswordPhoneNumberVerificationDataRepository.save(
-                Database1_Member_FindPasswordPhoneNumberVerificationData(
+                Database1_Verification_FindPasswordPhoneNumberVerificationData(
                     inputVo.phoneNumber,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -2400,7 +2603,7 @@ class C9TkAuthService(
         val verificationTimeSec: Long = 60 * 10
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterEmailVerificationData = database1MemberAddEmailVerificationDataRepository.save(
-            Database1_Member_AddEmailVerificationData(
+            Database1_Verification_AddEmailVerificationData(
                 memberUid.toLong(),
                 inputVo.email,
                 verificationCode,
@@ -2652,7 +2855,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberAddPhoneNumberVerificationData =
             database1MemberAddPhoneNumberVerificationDataRepository.save(
-                Database1_Member_AddPhoneNumberVerificationData(
+                Database1_Verification_AddPhoneNumberVerificationData(
                     memberUid.toLong(),
                     inputVo.phoneNumber,
                     verificationCode,

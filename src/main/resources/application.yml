@@ -21,7 +21,8 @@ spring:
 springdoc: # swaggerdoc 설정
   model-and-view-allowed: true # ModelAndView 허용
   use-fqn: true # Schema 정보를 package 명까지 붙여서 보여주기
-  packages-to-scan: com.railly_linker.springboot_mvc_project_template.controllers # !!!프로젝트 패키지명에 따라 controllers 폴더 경로 지정!!
+  # !!!프로젝트 패키지명에 따라 controllers 폴더 경로 지정!!
+  packages-to-scan: com.railly_linker.springboot_mvc_project_template.controllers
   swagger-ui:
     path: /api-docs
     tags-sorter: alpha
