@@ -72,6 +72,11 @@ class C9TkAuthService(
     // Retrofit2 요청 객체
     val networkRetrofit2: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
 
+    // (현 프로젝트 동작 서버의 외부 접속 주소)
+    // ex : http://127.0.0.1:8080
+    @Value("\${myCustomValues.externalAccessAddress}")
+    private lateinit var externalAccessAddress: String
+
 
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
