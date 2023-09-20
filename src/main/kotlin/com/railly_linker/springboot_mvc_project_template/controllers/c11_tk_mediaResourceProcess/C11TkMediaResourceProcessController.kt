@@ -63,11 +63,93 @@ class C11TkMediaResourceProcessController(
     )
 
 
-    // todo split gif frame
-    // todo merge png and jpeg to gif
-    // todo resize gif
-    // todo png to jpeg
-    // todo jpeg to png
+    ////
+    @Operation(
+        summary = "N2 : 정적 이미지 파일(지원 타입은 description 에 후술)을 업로드 하여 파일 포멧 변경 후 다운",
+        description = "multipart File 로 받은 이미지 파일을 업로드 하여 포멧 변경 후 다운\n\n" +
+                "지원 타입 : jpg, jpeg, bmp, png, gif(움직이지 않는 타입)\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 지원하는 파일이 아닙니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/change-format-image", consumes = ["multipart/form-data"])
+    fun api2(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api2InputVo
+    ): ResponseEntity<Resource>? {
+        return service.api2(inputVo, httpServletResponse)
+    }
+
+    data class Api2InputVo(
+        @Schema(description = "업로드 이미지 파일", required = true)
+        @JsonProperty("multipartImageFile")
+        val multipartImageFile: MultipartFile,
+        @Schema(description = "변경하려는 이미지 파일 포멧", required = true, example = "JPG")
+        @JsonProperty("imageFileFormat")
+        val imageFileFormat: FileType
+    ) {
+        enum class FileType {
+            JPG, PNG, BMP, GIF
+        }
+    }
+
+
+    ////
+    @Operation(
+        summary = "N3 : 정적 이미지 파일(지원 타입은 description 에 후술)을 업로드 하여 파일 포멧, 사이즈 변경 후 다운",
+        description = "multipart File 로 받은 이미지 파일을 업로드 하여 포멧, 사이즈 변경 후 다운\n\n" +
+                "지원 타입 : jpg, jpeg, bmp, png, gif(움직이지 않는 타입)\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 지원하는 파일이 아닙니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/change-format-and-resize-image", consumes = ["multipart/form-data"])
+    fun api3(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api3InputVo
+    ): ResponseEntity<Resource>? {
+        return service.api3(inputVo, httpServletResponse)
+    }
+
+    data class Api3InputVo(
+        @Schema(description = "업로드 이미지 파일", required = true)
+        @JsonProperty("multipartImageFile")
+        val multipartImageFile: MultipartFile,
+        @Schema(description = "이미지 리사이징 너비", required = true, example = "300")
+        @JsonProperty("resizingWidth")
+        val resizingWidth: Int,
+        @Schema(description = "이미지 리사이징 높이", required = true, example = "400")
+        @JsonProperty("resizingHeight")
+        val resizingHeight: Int,
+        @Schema(description = "변경하려는 이미지 파일 포멧", required = true, example = "JPG")
+        @JsonProperty("imageFileFormat")
+        val imageFileFormat: FileType
+    ) {
+        enum class FileType {
+            JPG, PNG, BMP, GIF
+        }
+    }
+
+
+    // todo split animated gif frame
+    // todo merge png and jpeg to animated gif
+    // todo resize animated gif
 
     // todo avif
 }

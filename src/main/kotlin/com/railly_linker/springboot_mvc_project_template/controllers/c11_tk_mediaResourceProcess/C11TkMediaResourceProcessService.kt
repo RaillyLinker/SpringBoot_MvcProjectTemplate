@@ -81,4 +81,106 @@ class C11TkMediaResourceProcessService(
         )
     }
 
+    fun api2(
+        inputVo: C11TkMediaResourceProcessController.Api2InputVo,
+        httpServletResponse: HttpServletResponse
+    ): ResponseEntity<Resource>? {
+        val contentType = inputVo.multipartImageFile.contentType
+
+        val allowedContentTypes = setOf(
+            "image/jpeg",  // jpg and jpeg
+            "image/png",
+            "image/gif",
+            "image/bmp"
+        )
+
+        if (contentType !in allowedContentTypes) {
+            httpServletResponse.addHeader("api-error-codes", "1")
+            return null
+        }
+
+        val newFileFormat = inputVo.imageFileFormat.name.lowercase()
+
+        val outputStream = ByteArrayOutputStream()
+        Thumbnails
+            .of(inputVo.multipartImageFile.inputStream)
+            .outputFormat(newFileFormat)
+            .scale(1.0)
+            .toOutputStream(outputStream)
+
+        val resource = ByteArrayResource(outputStream.toByteArray())
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 결과 파일의 확장자 포함 파일명 생성
+        val resultFileName = "change_format_${timeString}.${newFileFormat}"
+
+        httpServletResponse.addHeader("api-error-codes", "0")
+        return ResponseEntity<Resource>(
+            resource,
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename(resultFileName, StandardCharsets.UTF_8)
+                    .build()
+                this.add(
+                    HttpHeaders.CONTENT_TYPE,
+                    contentType
+                )
+            },
+            HttpStatus.OK
+        )
+    }
+
+    fun api3(
+        inputVo: C11TkMediaResourceProcessController.Api3InputVo,
+        httpServletResponse: HttpServletResponse
+    ): ResponseEntity<Resource>? {
+        val contentType = inputVo.multipartImageFile.contentType
+
+        val allowedContentTypes = setOf(
+            "image/jpeg",  // jpg and jpeg
+            "image/png",
+            "image/gif",
+            "image/bmp"
+        )
+
+        if (contentType !in allowedContentTypes) {
+            httpServletResponse.addHeader("api-error-codes", "1")
+            return null
+        }
+
+        val newFileFormat = inputVo.imageFileFormat.name.lowercase()
+
+        val outputStream = ByteArrayOutputStream()
+        Thumbnails
+            .of(inputVo.multipartImageFile.inputStream)
+            .outputFormat(newFileFormat)
+            .size(inputVo.resizingWidth, inputVo.resizingHeight)
+            .toOutputStream(outputStream)
+
+        val resource = ByteArrayResource(outputStream.toByteArray())
+
+        // 요청 시간을 문자열로
+        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+        // 결과 파일의 확장자 포함 파일명 생성
+        val resultFileName = "change_format_and_resize_${timeString}.${newFileFormat}"
+
+        httpServletResponse.addHeader("api-error-codes", "0")
+        return ResponseEntity<Resource>(
+            resource,
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename(resultFileName, StandardCharsets.UTF_8)
+                    .build()
+                this.add(
+                    HttpHeaders.CONTENT_TYPE,
+                    contentType
+                )
+            },
+            HttpStatus.OK
+        )
+    }
+
 }
