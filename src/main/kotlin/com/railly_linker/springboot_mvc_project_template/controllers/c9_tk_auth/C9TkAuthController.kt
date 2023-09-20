@@ -1582,7 +1582,7 @@ class C9TkAuthController(
     }
 
     data class Api30OutputVo(
-        @Schema(description = "내가 등록한 전화번호 리스트", required = true, example = "true")
+        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
         @JsonProperty("myPhoneNumberList")
         val myPhoneNumberList: List<String>
     )
@@ -1614,7 +1614,7 @@ class C9TkAuthController(
     }
 
     data class Api31OutputVo(
-        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true, example = "true")
+        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
         val myOAuth2List: List<OAuth2Info>
     ) {
