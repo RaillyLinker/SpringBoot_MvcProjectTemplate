@@ -99,6 +99,7 @@ dependencies {
     // (Apache Common Codec)
     implementation("commons-codec:commons-codec:1.16.0")
 
+    // todo 제거 후 기본 라이브러리로 처리하기
     // (zip4j)
     // : File Zip / UnZip
     implementation("net.lingala.zip4j:zip4j:2.11.4")
