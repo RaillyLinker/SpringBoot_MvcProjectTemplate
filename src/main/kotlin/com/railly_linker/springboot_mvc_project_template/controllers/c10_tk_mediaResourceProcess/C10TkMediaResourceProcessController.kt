@@ -227,8 +227,5 @@ class C10TkMediaResourceProcessController(
         val resizingHeight: Int
     )
 
-
-    // todo resize animated gif
-
     // todo avif
 }
