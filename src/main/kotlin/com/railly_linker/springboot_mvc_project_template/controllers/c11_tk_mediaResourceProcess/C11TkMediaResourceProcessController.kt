@@ -148,12 +148,12 @@ class C11TkMediaResourceProcessController(
 
 
     ////
+    // todo : 기존 방식으로 변경 후 테스트
     @Operation(
         summary = "N4 : 서버에 저장된 움직이는 Gif 이미지 파일에서 프레임을 PNG 이미지 파일로 분리한 후 files/temps 폴더 안에 저장",
         description = "서버에 저장된 움직이는 Gif 이미지 파일에서 프레임을 PNG 이미지 파일로 분리한 후 files/temps 폴더 안에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
+                "0 : 정상 동작",
         responses = [
             ApiResponse(
                 responseCode = "200",
@@ -166,12 +166,33 @@ class C11TkMediaResourceProcessController(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ) {
-         service.api4(httpServletResponse)
+        service.api4(httpServletResponse)
     }
 
 
-    // todo split animated gif frame
-    // todo merge png and jpeg to animated gif
+    ////
+    // todo : 기존 방식으로 변경 후 테스트
+    @Operation(
+        summary = "N5 : 서버에 저장된 움직이는 PNG 이미지 프레임들을 움직이는 Gif 파일로 병합 후 files/temps 폴더 안에 저장",
+        description = "서버에 저장된 움직이는 PNG 이미지 프레임들을 움직이는 Gif 파일로 병합 후 files/temps 폴더 안에 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/merge-images-to-animated-gif")
+    fun api5(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api5(httpServletResponse)
+    }
+
+
     // todo resize animated gif
 
     // todo avif

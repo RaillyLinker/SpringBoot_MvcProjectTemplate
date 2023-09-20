@@ -13,16 +13,10 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.imageio.ImageIO
-import javax.imageio.stream.FileImageInputStream
 
 @Service
 class C11TkMediaResourceProcessService(
@@ -87,6 +81,8 @@ class C11TkMediaResourceProcessService(
         )
     }
 
+
+    ////
     fun api2(
         inputVo: C11TkMediaResourceProcessController.Api2InputVo,
         httpServletResponse: HttpServletResponse
@@ -138,6 +134,8 @@ class C11TkMediaResourceProcessService(
         )
     }
 
+
+    ////
     fun api3(
         inputVo: C11TkMediaResourceProcessController.Api3InputVo,
         httpServletResponse: HttpServletResponse
@@ -194,33 +192,14 @@ class C11TkMediaResourceProcessService(
     fun api4(
         httpServletResponse: HttpServletResponse
     ) {
-        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
-        val projectRootAbsolutePathString: String = File("").absolutePath
-        val gifFilePathObject =
-            Paths.get("$projectRootAbsolutePathString/src/main/resources/static/resource_c11_n4/test.gif")
+        // todo
+    }
 
-        // GIF 파일을 ImageReader를 사용하여 읽습니다.
-        val imageReader = ImageIO.getImageReaders(FileImageInputStream(gifFilePathObject.toFile())).next()
-        imageReader.input = FileImageInputStream(gifFilePathObject.toFile())
 
-        // 저장할 디렉토리를 생성합니다.
-        val saveDirectoryPath = Paths.get(
-            "./files/temp/${
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
-            }"
-        ).toAbsolutePath().normalize()
-        if (!Files.exists(saveDirectoryPath)) {
-            Files.createDirectories(saveDirectoryPath)
-        }
+    ////
+    fun api5(httpServletResponse: HttpServletResponse) {
+        // todo
 
-        val frameCount = imageReader.getNumImages(true)
-        for (i in 0 until frameCount) {
-            val frame: BufferedImage = imageReader.read(i)
-            val savePath = saveDirectoryPath.resolve("frame_$i.png").toFile()
-            ImageIO.write(frame, "PNG", savePath)
-        }
-        
-        httpServletResponse.addHeader("api-error-codes", "0")
     }
 
 }
