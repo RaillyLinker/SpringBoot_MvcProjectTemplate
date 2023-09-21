@@ -99,11 +99,6 @@ dependencies {
     // (Apache Common Codec)
     implementation("commons-codec:commons-codec:1.16.0")
 
-    // todo 제거 후 기본 라이브러리로 처리하기
-    // (zip4j)
-    // : File Zip / UnZip
-    implementation("net.lingala.zip4j:zip4j:2.11.4")
-
     // (Excel File Read Write)
     // : 액셀 파일 입출력 라이브러리
     implementation("org.apache.poi:poi:5.2.2")

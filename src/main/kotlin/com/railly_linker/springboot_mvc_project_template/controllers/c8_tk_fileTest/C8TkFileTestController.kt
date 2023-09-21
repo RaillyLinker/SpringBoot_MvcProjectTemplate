@@ -42,7 +42,7 @@ class C8TkFileTestController(
         httpServletResponse: HttpServletResponse,
         @ModelAttribute
         inputVo: Api1InputVo
-    ) : Api1OutputVo? {
+    ): Api1OutputVo? {
         return service.api1(httpServletResponse, inputVo)
     }
 
@@ -87,7 +87,7 @@ class C8TkFileTestController(
 
     ////
     @Operation(
-        summary = "N3 : 파일 zip 압축 테스트",
+        summary = "N3 : 파일 리스트 zip 압축 테스트",
         description = "파일들을 zip 타입으로 압축하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -104,6 +104,28 @@ class C8TkFileTestController(
         httpServletResponse: HttpServletResponse
     ) {
         service.api3(httpServletResponse)
+    }
+
+
+    ////
+    @Operation(
+        summary = "N3.1 : 폴더 zip 압축 테스트",
+        description = "폴더를 통째로 zip 타입으로 압축하여 files/temp 폴더에 저장\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/zip-folder")
+    fun api3Dot1(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api3Dot1(httpServletResponse)
     }
 
 

@@ -1,7 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c8_tk_fileTest
 
+import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
 import jakarta.servlet.http.HttpServletResponse
-import net.lingala.zip4j.ZipFile
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -15,12 +15,14 @@ import org.springframework.stereotype.Service
 import org.springframework.util.Assert
 import org.springframework.util.StringUtils
 import java.io.File
+import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.zip.ZipOutputStream
 
 @Service
 class C8TkFileTestService(
@@ -126,14 +128,14 @@ class C8TkFileTestService(
     fun api3(httpServletResponse: HttpServletResponse) {
         // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
         val projectRootAbsolutePathString: String = File("").absolutePath
-        val filePathString1 =
-            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/1.txt"
-        val filePathString2 =
-            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/2.xlsx"
-        val filePathString3 =
-            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/3.png"
-        val filePathString4 =
+
+        // 파일 경로 리스트
+        val filePathList = listOf(
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/1.txt",
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/2.xlsx",
+            "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/3.png",
             "$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3/4.mp4"
+        )
 
         // 파일 저장 디렉토리 경로
         val saveDirectoryPathString = "./files/temp"
@@ -141,27 +143,52 @@ class C8TkFileTestService(
         // 파일 저장 디렉토리 생성
         Files.createDirectories(saveDirectoryPath)
 
-        // 요청 시간을 문자열로
-        val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+        // 확장자 포함 파일명 생성
+        val fileTargetPath = saveDirectoryPath.resolve(
+            "zipped_${
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+            }.zip"
+        ).normalize()
+
+        // 압축 파일 생성
+        val zipOutputStream = ZipOutputStream(FileOutputStream(fileTargetPath.toFile()))
+
+        for (filePath in filePathList) {
+            val file = File(filePath)
+            if (file.exists()) {
+                CustomUtilObject.addToZip(file, file.name, zipOutputStream)
+            }
+        }
+
+        zipOutputStream.close()
+
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api3Dot1(httpServletResponse: HttpServletResponse) {
+        // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
+        val projectRootAbsolutePathString: String = File("").absolutePath
+
+        // 압축 대상 디렉토리
+        val sourceDir = File("$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3")
+
+        // 파일 저장 디렉토리 경로
+        val saveDirectoryPathString = "./files/temp"
+        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
+        // 파일 저장 디렉토리 생성
+        Files.createDirectories(saveDirectoryPath)
 
         // 확장자 포함 파일명 생성
-        val saveFileName = "zipped_${timeString}.zip"
+        val fileTargetPath = saveDirectoryPath.resolve(
+            "zipped_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))}.zip"
+        ).normalize()
 
-        val fileTargetPath = saveDirectoryPath.resolve(saveFileName).normalize()
-
-        // 압축 파일 저장 위치 지정
-        val zipFile = ZipFile(fileTargetPath.toFile().absoluteFile)
-        zipFile.addFiles( // 파일 리스트 단위 압축시
-            arrayListOf(
-                File(filePathString1),
-                File(filePathString2),
-                File(filePathString3),
-                File(filePathString4)
-            )
-        )
-//        zipFile.addFolder( // 폴더 단위 압축시
-//            File("$projectRootAbsolutePathString/src/main/resources/static/resource_c8_n3")
-//        )
+        // 압축 파일 생성
+        ZipOutputStream(FileOutputStream(fileTargetPath.toFile())).use { zipOutputStream ->
+            CustomUtilObject.compressDirectoryToZip(sourceDir, sourceDir.name, zipOutputStream)
+        }
 
         httpServletResponse.setHeader("api-result-code", "0")
     }
@@ -188,8 +215,7 @@ class C8TkFileTestService(
 
         val fileTargetPath = saveDirectoryPath.resolve(saveFileName).normalize()
 
-        val zipFile = ZipFile(filePathString)
-        zipFile.extractAll(fileTargetPath.toFile().absolutePath)
+        CustomUtilObject.unzipFile(filePathString, fileTargetPath)
 
         httpServletResponse.setHeader("api-result-code", "0")
     }
