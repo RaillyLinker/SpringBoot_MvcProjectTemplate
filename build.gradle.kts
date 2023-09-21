@@ -115,8 +115,6 @@ dependencies {
     // (WebSocket)
     // : 웹소켓
     implementation("org.springframework.boot:spring-boot-starter-websocket:3.0.4")
-    // : SockJs
-    implementation("org.webjars:sockjs-client:1.5.1")
 
 }
 

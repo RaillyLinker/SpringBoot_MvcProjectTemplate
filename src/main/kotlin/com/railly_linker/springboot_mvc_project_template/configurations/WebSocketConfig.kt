@@ -8,7 +8,6 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean
 
-
 // [WebSocket 연결 설정]
 // 순수 WebSocket 연결 설정.
 // WebSocketStompConfig 와 같은 주소 공간을 공유하므로 주의.
