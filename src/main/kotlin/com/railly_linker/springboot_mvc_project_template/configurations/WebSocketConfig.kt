@@ -27,13 +27,13 @@ class WebSocketConfig : WebSocketConfigurer {
 
         registry
             .addHandler(
-                // ws://localhost:8080/ws/test
+                // "ws://localhost:8080/ws/test" 로 접속
                 ServerClientTestWebSocketHandler(),
                 "/ws/test"
             )
             // webSocket 연결 CORS 는 WebConfig 가 아닌 여기서 설정
             .setAllowedOriginPatterns("*")
-            .withSockJS() // ws://localhost:8080/ws/test/websocket
+            .withSockJS() // 이것을 사용하면 "ws://localhost:8080/ws/test/websocket" 로 접속
             .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.js")
     }
 
