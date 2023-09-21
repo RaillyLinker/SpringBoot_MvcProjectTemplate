@@ -3,6 +3,8 @@ package com.railly_linker.springboot_mvc_project_template.util_objects
 import org.springframework.web.multipart.MultipartFile
 import java.awt.Image
 import java.awt.image.BufferedImage
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
@@ -45,21 +47,15 @@ object ImageProcessUtilObject {
             )
         }
 
-        // todo File.createTempFile 사용하기
-        val saveDirectoryPathString = "./temps"
-        val saveDirectoryPath = Paths.get(saveDirectoryPathString).toAbsolutePath().normalize()
-        // 파일 저장 디렉토리 생성
-        Files.createDirectories(saveDirectoryPath)
-        val resultFileName =
-            "${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))}.gif"
-        val fileTargetPath = saveDirectoryPath.resolve(resultFileName).normalize()
+        // 임시 파일 생성
+        val tempFile = File.createTempFile("resized_", ".gif")
 
-        val fileTargetOutputStream = fileTargetPath.toFile().outputStream()
-        GifUtilObject.encodeGif(resizedFrameList, fileTargetOutputStream, 2, false)
+        GifUtilObject.encodeGif(resizedFrameList, FileOutputStream(tempFile), 2, false)
 
-        val bytes: ByteArray = Files.readAllBytes(fileTargetPath)
+        val bytes: ByteArray = Files.readAllBytes(tempFile.toPath())
 
-        fileTargetPath.deleteIfExists()
+        // 임시 파일 삭제
+        tempFile.delete()
 
         return bytes
     }
