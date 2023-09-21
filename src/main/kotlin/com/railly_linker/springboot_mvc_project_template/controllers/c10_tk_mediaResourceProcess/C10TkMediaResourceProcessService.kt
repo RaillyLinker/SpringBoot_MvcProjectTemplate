@@ -23,6 +23,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.imageio.ImageIO
 
 @Service
@@ -328,14 +329,24 @@ class C10TkMediaResourceProcessService(
         inputVo: C10TkMediaResourceProcessController.Api7InputVo,
         httpServletResponse: HttpServletResponse
     ): ResponseEntity<Resource>? {
-        // todo 비디오 파일인지 확인하기
+        val fileExtension = inputVo.multipartVideoFile.originalFilename?.substringAfterLast(".", "").orEmpty()
+            .lowercase(Locale.getDefault())
+
+        val supportedExtensions = listOf("mp4", "avi", "mkv", "flv", "mov")
+        if (fileExtension !in supportedExtensions) {
+            httpServletResponse.setHeader("api-result-code", "1") // or any other error code
+            return null
+        }
 
         val tempVideoFile = File.createTempFile("video", null)
         inputVo.multipartVideoFile.transferTo(tempVideoFile)
 
         val gifFile = File.createTempFile("converted", ".gif")
 
-        // todo : OS 별 FFMPEG 사용 처리하기
+        // !!!아래는 Windows 환경에서 사용 가능한 방법입니다.
+        // 다른 OS 에서도 사용 가능하려면, command 를 ./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg 에서 ffmpeg 으로 바꾸고,
+        // OS 의 환경변수에 FFMPEG 을 등록하여 커맨드 라인으로 실행할수 있도록 환경을 세팅해야합니다.!!
+
         // FFMPEG 명령어 작성
         val command =
             "./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg -y -i ${tempVideoFile.absolutePath} -ss ${inputVo.startTime} -t ${inputVo.duration} -an ${gifFile.absolutePath}"
@@ -402,7 +413,10 @@ class C10TkMediaResourceProcessService(
 
         val videoFile = File.createTempFile("converted", ".mp4")
 
-        // todo : OS 별 FFMPEG 사용 처리하기
+        // !!!아래는 Windows 환경에서 사용 가능한 방법입니다.
+        // 다른 OS 에서도 사용 가능하려면, command 를 ./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg 에서 ffmpeg 으로 바꾸고,
+        // OS 의 환경변수에 FFMPEG 을 등록하여 커맨드 라인으로 실행할수 있도록 환경을 세팅해야합니다.!!
+
         val command =
             "./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg -y -i ${tempGifFile.absolutePath} ${videoFile.absolutePath}"
         val process = ProcessBuilder(*command.split(" ").toTypedArray())
