@@ -116,6 +116,10 @@ dependencies {
     // : 웹소켓
     implementation("org.springframework.boot:spring-boot-starter-websocket:3.0.4")
 
+    // (Spring Admin Client)
+    // : Spring Actuator 포함
+    implementation("de.codecentric:spring-boot-admin-starter-client:3.0.2")
+
 }
 
 tasks.withType<KotlinCompile> {

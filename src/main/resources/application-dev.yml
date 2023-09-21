@@ -6,6 +6,17 @@ spring:
     activate: # 프로필명 설정
       on-profile: dev
 
+  boot:
+    admin:
+      client:
+        # !!!Spring Admin 정보 설정!!
+        url: http://127.0.0.1:8081 # spring admin server url
+        username: adminId # spring admin server Security Id
+        password: adminPw # spring admin server Security Pw
+        instance:
+          name: Springboot Mvc Project Template (Dev) # spring admin UI 에서 보여질 이름 설정
+          service-url: http://127.0.0.1:8080 # 현 프로젝트가 실행될 위치의 URL
+
   servlet:
     multipart:
       # !!!multipart 데이터량 설정!!
@@ -60,3 +71,7 @@ datasource-redis: # Redis 추가 (하위 요소를 추가하고 RedisConfig 에 
   redis1:
     host: 127.0.0.1
     port: 6379
+
+logging:
+  file:
+    name: ./logs/currentLog_dev.log # !!!Spring Admin Server 에 전달할 로그 파일 경로!!

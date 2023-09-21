@@ -3,6 +3,7 @@ package com.railly_linker.springboot_mvc_project_template.filters
 import com.fasterxml.jackson.core.JacksonException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
+import jakarta.annotation.PostConstruct
 import jakarta.servlet.AsyncEvent
 import jakarta.servlet.AsyncListener
 import jakarta.servlet.FilterChain
@@ -10,6 +11,7 @@ import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -37,6 +39,21 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
 
     private val jacksonObjectMapper = jacksonObjectMapper()
 
+    // SpringAdmin(Server) 주소 (ex : "http://127.0.0.1:8081")
+    @Value("\${spring.boot.admin.client.url}")
+    private lateinit var springAdminServerFullUrlString: String
+
+    // SpringAdmin(Server) 주소 (ex : "127.0.0.1")
+    private lateinit var springAdminServerUrlString: String
+
+    @PostConstruct // 생성자 실행 및 의존성 주입이 끝난 후 실행되는 함수
+    fun initMemberValue() {
+        springAdminServerUrlString =
+            springAdminServerFullUrlString.substring(
+                springAdminServerFullUrlString.indexOfLast { it == '/' } + 1 until springAdminServerFullUrlString.indexOfLast { it == ':' } // "http://" 의 다음 인덱스부터 ":8080" 앞까지 자르기
+            )
+    }
+
 
     // ---------------------------------------------------------------------------------------------
     // <상속 메소드 공간>
@@ -46,6 +63,15 @@ class RequestAndResponseLoggingFilter : OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         val requestTime = LocalDateTime.now()
+
+        // (SpringAdmin 의 actuator 요청은 로깅에서 제외하기)
+        // 요청자 Ip (ex : 127.0.0.1)
+        val clientAddressIp = request.remoteAddr
+
+        if (clientAddressIp == springAdminServerUrlString) { // SpringAdmin Server 의 로깅 처리 무시하기
+            filterChain.doFilter(request, response)
+            return
+        }
 
         // (기본 로깅 설정)
         if (isAsyncDispatch(request)) {

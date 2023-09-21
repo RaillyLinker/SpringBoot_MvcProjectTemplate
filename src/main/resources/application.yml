@@ -37,3 +37,13 @@ springdoc: # swaggerdoc 설정
     disabled: true
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
+
+# spring admin 용 actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # open 할 actuator 경로 설정 (SecurityConfig 에선 actuator/** 허용, ActuatorEndpointFilter 에선 actuator/** IP 제한 설정)
+  endpoint:
+    health:
+      show-details: always # actuator/health 에 디테일 정보 반환
