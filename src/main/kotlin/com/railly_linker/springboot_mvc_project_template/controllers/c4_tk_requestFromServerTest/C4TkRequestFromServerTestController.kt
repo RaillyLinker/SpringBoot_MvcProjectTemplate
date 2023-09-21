@@ -646,4 +646,29 @@ class C4TkRequestFromServerTestController(
         @JsonProperty("resultMessage")
         val resultMessage: String
     )
+
+
+    ////
+    @Operation(
+        summary = "N17 : SSE 구독 테스트",
+        description = "SSE 구독 요청 테스트\n\n" +
+                "SSE 를 구독하여 백그라운드에서 실행합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/sse-subscribe")
+    fun api17(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api17(
+            httpServletResponse
+        )
+    }
 }

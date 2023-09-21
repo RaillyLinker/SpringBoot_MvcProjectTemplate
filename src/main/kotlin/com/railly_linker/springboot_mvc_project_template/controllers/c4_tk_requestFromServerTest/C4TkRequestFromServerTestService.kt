@@ -3,9 +3,11 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c4_tk_requ
 import com.google.gson.Gson
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.LocalHostRequestApi
+import com.railly_linker.springboot_mvc_project_template.util_classes.SseClient
 import jakarta.servlet.http.HttpServletResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -775,6 +777,55 @@ class C4TkRequestFromServerTestService(
         httpServletResponse.setHeader("api-result-code", "0")
         return C4TkRequestFromServerTestController.Api16OutputVo(
             response.body()!!.resultMessage
+        )
+    }
+
+
+    ////
+    fun api17(httpServletResponse: HttpServletResponse) {
+        // SSE Subscribe Url 연결 객체 생성
+        val serverSentEventObj =
+            SseClient("http://127.0.0.1:8080/tk/request-test/sse-test/subscribe")
+
+        // SSE 구독 연결
+        serverSentEventObj.connectAsync(
+            5000,
+            object : SseClient.ListenerCallback {
+                override fun onConnectRequestFirstTime(sse: SseClient, originalRequest: Request) {
+                    println("++++onConnectRequestFirstTime")
+                }
+
+                override fun onConnect(sse: SseClient, response: okhttp3.Response) {
+                    println("++++onOpen")
+                }
+
+                override fun onMessageReceive(
+                    sse: SseClient,
+                    eventId: String?,
+                    event: String,
+                    message: String
+                ) {
+                    println("++++onMessage : $event $message")
+                }
+
+                override fun onCommentReceive(sse: SseClient, comment: String) {
+                    println("++++onComment : $comment")
+                }
+
+                override fun onDisconnected(sse: SseClient) {
+                    println("++++onClosed")
+                }
+
+                override fun onPreRetry(
+                    sse: SseClient,
+                    originalRequest: Request,
+                    throwable: Throwable,
+                    response: okhttp3.Response?
+                ): Boolean {
+                    println("++++onPreRetry")
+                    return true
+                }
+            }
         )
     }
 }
