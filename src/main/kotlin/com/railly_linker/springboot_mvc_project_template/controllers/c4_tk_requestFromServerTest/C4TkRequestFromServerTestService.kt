@@ -750,6 +750,7 @@ class C4TkRequestFromServerTestService(
     fun api14(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api14OutputVo? {
         val response = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextString().execute()
 
+        httpServletResponse.setHeader("api-result-code", "0")
         return C4TkRequestFromServerTestController.Api14OutputVo(
             response.body()!!
         )
@@ -760,8 +761,20 @@ class C4TkRequestFromServerTestService(
     fun api15(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api15OutputVo? {
         val response = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextHtml().execute()
 
+        httpServletResponse.setHeader("api-result-code", "0")
         return C4TkRequestFromServerTestController.Api15OutputVo(
             response.body()!!
+        )
+    }
+
+
+    ////
+    fun api16(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api16OutputVo? {
+        val response = networkRetrofit2.localHostRequestApi.getTkRequestTestAsyncResult().execute()
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return C4TkRequestFromServerTestController.Api16OutputVo(
+            response.body()!!.resultMessage
         )
     }
 }

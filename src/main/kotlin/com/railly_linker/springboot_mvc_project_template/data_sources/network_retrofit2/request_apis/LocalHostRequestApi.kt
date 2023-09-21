@@ -480,4 +480,20 @@ interface LocalHostRequestApi {
     @GET("/tk/request-test/return-text-html")
     @Headers("Content-Type: text/html")
     fun getTkRequestTestReturnTextHtml(): Call<String>
+
+
+    ////
+    // [비동기 처리 결과 반환 샘플]
+    // API 호출시 함수 내에서 별도 스레드로 작업을 수행하고,
+    // 비동기 작업 완료 후 그 처리 결과가 반환됨
+    // (api-result-code)
+    // 0 : 정상 동작
+    @GET("/tk/request-test/async-result")
+    fun getTkRequestTestAsyncResult(): Call<GetTkRequestTestAsyncResultOutputVO>
+
+    data class GetTkRequestTestAsyncResultOutputVO(
+        @SerializedName("resultMessage")
+        @Expose
+        val resultMessage: String
+    )
 }

@@ -616,4 +616,34 @@ class C4TkRequestFromServerTestController(
         @JsonProperty("resultHtml")
         val resultHtml: String
     )
+
+
+    ////
+    @Operation(
+        summary = "N16 : DeferredResult Get 요청 테스트",
+        description = "결과 반환 지연 Get 메소드 요청 테스트\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/delayed-result-test")
+    fun api16(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): Api16OutputVo? {
+        return service.api16(
+            httpServletResponse
+        )
+    }
+
+    data class Api16OutputVo(
+        @Schema(description = "결과 메세지", required = true, example = "n 초 경과 후 반환했습니다.")
+        @JsonProperty("resultMessage")
+        val resultMessage: String
+    )
 }
