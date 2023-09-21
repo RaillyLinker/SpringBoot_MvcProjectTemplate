@@ -102,6 +102,16 @@ class RepositoryNetworkRetrofit2 private constructor() {
             false
         )).create(KapiKakaoComRequestApi::class.java)
 
+    // Apple OAuth2 IdToken 공개키 요청용
+    val appleIdAppleComRequestApi: AppleIdAppleComRequestApi =
+        (getRetrofitClient(
+            "https://appleid.apple.com",
+            7000L,
+            7000L,
+            7000L,
+            false
+        )).create(AppleIdAppleComRequestApi::class.java)
+
     // FCM 메세지 발송용
     val fcmGoogleapisComRequestApi: FcmGoogleapisComRequestApi =
         (getRetrofitClient(

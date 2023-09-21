@@ -239,7 +239,7 @@ class C9TkAuthController(
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
             @Schema(
-                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao)",
+                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
                 example = "1"
             )
@@ -410,7 +410,127 @@ class C9TkAuthController(
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
             @Schema(
-                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao)",
+                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
+                required = true,
+                example = "1"
+            )
+            @JsonProperty("oauth2TypeCode")
+            val oauth2TypeCode: Int,
+            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
+            @JsonProperty("oauth2Id")
+            val oauth2Id: String
+        )
+    }
+
+    ////
+    @Operation(
+        summary = "N7.1 : OAuth2 로그인 (ID Token)",
+        description = "OAuth2 ID Token 으로 로그인 요청\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 유효하지 않은 OAuth2 ID Token\n\n" +
+                "2 : 가입 되지 않은 회원\n\n" +
+                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/sign-in-with-oauth2-id-token")
+    fun api7Dot1(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api7Dot1InputVo
+    ): Api7Dot1OutputVo? {
+        return service.api7Dot1(httpServletResponse, inputVo)
+    }
+
+    data class Api7Dot1InputVo(
+        @Schema(
+            description = "OAuth2 종류 코드 (4 : Apple)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2TypeCode")
+        val oauth2TypeCode: Int,
+
+        @Schema(
+            description = "OAuth2 인증으로 받은 ID Token",
+            required = true,
+            example = "asdfeqwer1234"
+        )
+        @JsonProperty("oauth2IdToken")
+        val oauth2IdToken: String
+    )
+
+    data class Api7Dot1OutputVo(
+        @Schema(description = "멤버 고유값", required = true, example = "1")
+        @JsonProperty("memberUid")
+        val memberUid: String,
+
+        @Schema(description = "닉네임", required = true, example = "홍길동")
+        @JsonProperty("nickName")
+        val nickName: String,
+
+        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
+        @JsonProperty("profileImageFullUrl")
+        val profileImageFullUrl: String?,
+
+        @Schema(
+            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
+            required = true,
+            example = "[1, 2]"
+        )
+        @JsonProperty("roleCodeList")
+        val roleCodeList: List<Int>,
+
+        @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
+        @JsonProperty("tokenType")
+        val tokenType: String,
+
+        @Schema(description = "엑세스 토큰", required = true, example = "kljlkjkfsdlwejoe")
+        @JsonProperty("accessToken")
+        val accessToken: String,
+
+        @Schema(description = "리프레시 토큰", required = true, example = "cxfdsfpweiijewkrlerw")
+        @JsonProperty("refreshToken")
+        val refreshToken: String,
+
+        @Schema(
+            description = "엑세스 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("accessTokenExpireWhen")
+        val accessTokenExpireWhen: String,
+
+        @Schema(
+            description = "리프레시 토큰 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("refreshTokenExpireWhen")
+        val refreshTokenExpireWhen: String,
+
+        @Schema(description = "내가 등록한 이메일 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<String>,
+
+        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<String>,
+
+        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
+        @JsonProperty("myOAuth2List")
+        val myOAuth2List: List<OAuth2Info>
+    ) {
+        @Schema(description = "OAuth2 정보")
+        data class OAuth2Info(
+            @Schema(
+                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
                 example = "1"
             )
@@ -549,7 +669,7 @@ class C9TkAuthController(
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
             @Schema(
-                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao)",
+                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
                 example = "1"
             )
@@ -1073,6 +1193,84 @@ class C9TkAuthController(
 
     ////
     @Operation(
+        summary = "N19.1 : OAuth2 IdToken 으로 회원가입 검증",
+        description = "OAuth2 IdToken 으로 회원가입 검증\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 잘못된 OAuth2 IdToken\n\n" +
+                "2 : 기존 회원 존재",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/register-with-oauth2-id-token-verification")
+    fun api19Dot1(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @RequestBody
+        inputVo: Api19Dot1InputVo
+    ): Api19Dot1OutputVo? {
+        return service.api19Dot1(httpServletResponse, inputVo)
+    }
+
+    data class Api19Dot1InputVo(
+        @Schema(
+            description = "OAuth2 종류 코드 (4 : Apple)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2TypeCode")
+        val oauth2TypeCode: Int,
+
+        @Schema(
+            description = "OAuth2 인증으로 받은 OAuth2 IdToken",
+            required = true,
+            example = "asdfeqwer1234"
+        )
+        @JsonProperty("oauth2IdToken")
+        val oauth2IdToken: String
+    )
+
+    data class Api19Dot1OutputVo(
+        @Schema(
+            description = "검증 고유값",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("verificationUid")
+        val verificationUid: Long,
+
+        @Schema(
+            description = "OAuth2 가입시 검증에 사용할 코드",
+            required = true,
+            example = "123456"
+        )
+        @JsonProperty("oauth2VerificationCode")
+        val oauth2VerificationCode: String,
+
+        @Schema(
+            description = "가입에 사용할 OAuth2 고유 아이디",
+            required = true,
+            example = "abcd1234"
+        )
+        @JsonProperty("oauth2Id")
+        val oauth2Id: String,
+
+        @Schema(
+            description = "검증 만료 시간 (yyyy-MM-dd HH:mm:ss.SSS)",
+            required = true,
+            example = "2023-01-02 11:11:11.111"
+        )
+        @JsonProperty("expireWhen")
+        val expireWhen: String
+    )
+
+
+    ////
+    @Operation(
         summary = "N20 : OAuth2 회원가입",
         description = "OAuth2 회원가입 처리\n\n" +
                 "(api-result-code)\n\n" +
@@ -1117,7 +1315,7 @@ class C9TkAuthController(
         val oauth2Id: String,
 
         @Schema(
-            description = "OAuth2 종류 코드 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)",
+            description = "OAuth2 종류 코드 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
             required = true,
             example = "1"
         )
@@ -1520,7 +1718,7 @@ class C9TkAuthController(
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
             @Schema(
-                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao)",
+                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
                 example = "1"
             )
@@ -1630,7 +1828,7 @@ class C9TkAuthController(
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
             @Schema(
-                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao)",
+                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
                 example = "1"
             )
@@ -2077,6 +2275,55 @@ class C9TkAuthController(
 
     ////
     @Operation(
+        summary = "N40.1 : OAuth2 추가하기 (Id Token) <>",
+        description = "내 계정에 OAuth2 Id Token 으로 인증 추가\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : oAuth2 Id Token 정보 검증 불일치\n\n" +
+                "2 : 탈퇴된 회원\n\n" +
+                "3 : 이미 사용중인 인증",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/my-new-oauth2-id-token")
+    @PreAuthorize("isAuthenticated()")
+    fun api40Dot1(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @RequestBody
+        inputVo: Api40Dot1InputVo
+    ) {
+        service.api40Dot1(httpServletResponse, inputVo, authorization!!)
+    }
+
+    data class Api40Dot1InputVo(
+        @Schema(
+            description = "OAuth2 종류 코드 (4 : Apple)",
+            required = true,
+            example = "1"
+        )
+        @JsonProperty("oauth2TypeCode")
+        val oauth2TypeCode: Int,
+
+        @Schema(
+            description = "OAuth2 인증으로 받은 oauth2 IdToken",
+            required = true,
+            example = "asdfeqwer1234"
+        )
+        @JsonProperty("oauth2IdToken")
+        val oauth2IdToken: String
+    )
+
+
+    ////
+    @Operation(
         summary = "N41 : 내 OAuth2 제거하기 <>",
         description = "내 계정에서 OAuth2 제거\n\n" +
                 "(api-result-code)\n\n" +
@@ -2105,7 +2352,7 @@ class C9TkAuthController(
 
     data class Api41InputVo(
         @Schema(
-            description = "제거할 oAuth2 종류 (1 : Google, 2 : Naver, 3 : Kakao)",
+            description = "제거할 oAuth2 종류 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
             required = true,
             example = "1"
         )

@@ -15,7 +15,7 @@ class Database1_Member_MemberOauth2LoginData(
     var memberUid: Long,
 
     @Column(name = "oauth2_type_code", nullable = false, columnDefinition = "TINYINT UNSIGNED")
-    @Comment("oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)")
+    @Comment("oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO, 4 : APPLE)")
     var oauth2TypeCode: Byte,
 
     @Column(name = "oauth2_id", nullable = false, columnDefinition = "VARCHAR(50)")

@@ -12,6 +12,7 @@ import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sour
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RefreshTokenInfo
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_SignInAccessTokenInfo
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
+import com.railly_linker.springboot_mvc_project_template.util_objects.AppleOAuthHelperUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.AuthorizationTokenUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.JwtTokenUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.NaverSmsUtilObject
@@ -866,6 +867,288 @@ class C9TkAuthService(
 
         httpServletResponse.setHeader("api-result-code", "0")
         return C9TkAuthController.Api7OutputVo(
+            memberUidString,
+            member.nickName,
+            frontProfileFullUrl,
+            roleList,
+            "Bearer",
+            jwtAccessToken,
+            jwtRefreshToken,
+            accessTokenExpireWhen,
+            refreshTokenExpireWhen,
+            emailList,
+            phoneNumberList,
+            myOAuth2List
+        )
+    }
+
+
+    ////
+    @CustomRedisTransactional(
+        [
+            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
+            Redis1_RefreshTokenInfo.TRANSACTION_NAME
+        ]
+    )
+    fun api7Dot1(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C9TkAuthController.Api7Dot1InputVo
+    ): C9TkAuthController.Api7Dot1OutputVo? {
+        val snsOauth2: Database1_Member_MemberOauth2LoginData?
+
+        // (정보 검증 로직 수행)
+        when (inputVo.oauth2TypeCode) {
+            4 -> { // APPLE
+                val appleInfo = AppleOAuthHelperUtilObject.getAppleMemberData(inputVo.oauth2IdToken)
+
+                val loginId: String
+                if (appleInfo != null) {
+                    loginId = appleInfo.snsId
+                } else {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                snsOauth2 =
+                    database1MemberMemberOauth2LoginDataRepository.findByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                        4,
+                        loginId,
+                        true
+                    )
+            }
+
+            else -> {
+                classLogger.info("SNS Login Type ${inputVo.oauth2TypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return null
+            }
+        }
+
+        if (snsOauth2 == null) { // 가입된 회원이 없음
+            httpServletResponse.setHeader("api-result-code", "2")
+            return null
+        }
+
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            snsOauth2.memberUid,
+            true
+        )
+
+        if (member == null) { // 가입된 회원이 없음
+            httpServletResponse.setHeader("api-result-code", "2")
+            return null
+        }
+
+        // (토큰 생성 로직 수행)
+        // 멤버 고유번호로 엑세스 토큰 생성
+        val memberUidString: String = snsOauth2.memberUid.toString()
+
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString)
+
+        val accessTokenExpireWhen: String
+        @Suppress("KotlinConstantConditions")
+        if (SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT < 0) { // 동시 로그인 무제한으로 설정
+            // 로그인 허용 액세스 토큰에 입력
+            redis1SignInAccessTokenInfoRepository.saveKeyValue(
+                "Bearer $jwtAccessToken",
+                Redis1_SignInAccessTokenInfo(
+                    memberUidString,
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
+                ),
+                JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
+            )
+
+            accessTokenExpireWhen = SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss.SSS"
+            ).format(Calendar.getInstance().apply {
+                this.time = Date()
+                this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
+            }.time)
+        } else { // 동시 로그인 제한 설정
+            // loginAccessToken 의 Iterable 가져오기
+            val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
+
+            // Iterable 중 내 memberUid 와 동일한 정보를 가져와 리스트화
+            val loginAccessTokenArrayList: ArrayList<Redis1_SignInAccessTokenInfoRepository.KeyValueData> = ArrayList()
+            for (loginAccessToken in loginAccessTokenIterable) {
+                if (loginAccessToken.value.memberUid == memberUidString) {
+                    loginAccessTokenArrayList.add(loginAccessToken)
+                }
+            }
+
+            // 리스트 최신순 정렬
+            loginAccessTokenArrayList.sortWith { a, b ->
+                java.lang.Long.valueOf(
+                    LocalDateTime.parse(
+                        b.value.signInDateString,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    )
+                        .atZone(
+                            ZoneId.systemDefault()
+                        ).toInstant().toEpochMilli()
+                )
+                    .compareTo(
+                        LocalDateTime.parse(
+                            a.value.signInDateString,
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                        )
+                            .atZone(
+                                ZoneId.systemDefault()
+                            ).toInstant().toEpochMilli()
+                    )
+            }
+
+            // 로그인 허용 개수만큼 앞에서 자르기
+            val loginAccessTokenListTake = loginAccessTokenArrayList.take(SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT)
+
+            if (loginAccessTokenListTake.size < SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT) { // 현 로그인 개수가 허용치보다 작다면
+                // 로그인 허용 액세스 토큰에 입력
+                redis1SignInAccessTokenInfoRepository.saveKeyValue(
+                    "Bearer $jwtAccessToken",
+                    Redis1_SignInAccessTokenInfo(
+                        memberUidString,
+                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
+                    ),
+                    JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
+                )
+
+                accessTokenExpireWhen = SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.SSS"
+                ).format(Calendar.getInstance().apply {
+                    this.time = Date()
+                    this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
+                }.time)
+            } else { // 현 로그인 개수가 허용치 이상일 경우
+                if (SecurityConfig.SAME_MEMBER_SIGN_IN_OVER_POLICY == 0) { // 추가 로그인 금지 설정
+                    // 혹여 현 설정 로그인 개수를 초과했다면 맞춰주기
+                    for (loginAccessToken in loginAccessTokenArrayList) {
+                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+                    }
+                    for (loginAccessToken in loginAccessTokenListTake) {
+                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
+                            loginAccessToken.key,
+                            loginAccessToken.value,
+                            loginAccessToken.expireTimeMs
+                        )
+                    }
+
+                    httpServletResponse.setHeader("api-result-code", "3")
+                    return null
+                } else { // 기존 로그인 제거 설정
+                    // list to mutableList
+                    val newLoginAccessTokenArrayList = ArrayList(loginAccessTokenListTake)
+
+                    // 초과분 마지막(=오래된) 액세스 토큰 정보 제거
+                    newLoginAccessTokenArrayList.removeLast()
+                    // 새 액세스 토큰 정보를 앞에 추가
+                    newLoginAccessTokenArrayList.add(
+                        0,
+                        Redis1_SignInAccessTokenInfoRepository.KeyValueData(
+                            "Bearer $jwtAccessToken",
+                            Redis1_SignInAccessTokenInfo(
+                                memberUidString,
+                                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
+                            ),
+                            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
+                        )
+                    )
+
+                    accessTokenExpireWhen = SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss.SSS"
+                    ).format(Calendar.getInstance().apply {
+                        this.time = Date()
+                        this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
+                    }.time)
+
+                    // 새로 결정된 액세스 로그인 액세스 토큰 리스트를 반영
+                    for (loginAccessToken in loginAccessTokenArrayList) {
+                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+                    }
+                    for (loginAccessToken in newLoginAccessTokenArrayList) {
+                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
+                            loginAccessToken.key,
+                            loginAccessToken.value,
+                            loginAccessToken.expireTimeMs
+                        )
+                    }
+                }
+            }
+        }
+
+        // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
+        val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
+
+        redis1RefreshTokenInfoRepository.saveKeyValue(
+            "Bearer $jwtAccessToken",
+            Redis1_RefreshTokenInfo(
+                jwtRefreshToken
+            ),
+            JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS
+        )
+
+        val refreshTokenExpireWhen: String = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
+        }.time)
+
+        // 멤버의 권한 리스트를 조회 후 반환
+        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
+            snsOauth2.memberUid,
+            true
+        )
+
+        val roleList: MutableList<Int> = ArrayList()
+        for (userRole in memberRoleList) {
+            roleList.add(userRole.roleCode.toInt())
+        }
+
+        val emailEntityList =
+            database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
+        val emailList = ArrayList<String>()
+        for (emailEntity in emailEntityList) {
+            emailList.add(
+                emailEntity.emailAddress
+            )
+        }
+
+        val phoneEntityList =
+            database1MemberMemberPhoneDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
+        val phoneNumberList = ArrayList<String>()
+        for (emailEntity in phoneEntityList) {
+            phoneNumberList.add(
+                emailEntity.phoneNumber
+            )
+        }
+
+        val oAuth2EntityList =
+            database1MemberMemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
+        val myOAuth2List = ArrayList<C9TkAuthController.Api7Dot1OutputVo.OAuth2Info>()
+        for (oAuth2Entity in oAuth2EntityList) {
+            myOAuth2List.add(
+                C9TkAuthController.Api7Dot1OutputVo.OAuth2Info(
+                    oAuth2Entity.oauth2TypeCode.toInt(),
+                    oAuth2Entity.oauth2Id
+                )
+            )
+        }
+
+        val profileData = database1MemberMemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+            snsOauth2.memberUid,
+            true
+        )
+
+        var frontProfileFullUrl: String? = null
+        for (profile in profileData) {
+            if (profile.isSelected) {
+                frontProfileFullUrl = profile.imageFullUrl
+                break
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return C9TkAuthController.Api7Dot1OutputVo(
             memberUidString,
             member.nickName,
             frontProfileFullUrl,
@@ -1859,6 +2142,78 @@ class C9TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api19Dot1(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C9TkAuthController.Api19Dot1InputVo
+    ): C9TkAuthController.Api19Dot1OutputVo? {
+        val verificationUid: Long
+        val verificationCode: String
+        val expireWhen: String
+        val loginId: String
+
+        val verificationTimeSec: Long = 60 * 10
+        // (정보 검증 로직 수행)
+        when (inputVo.oauth2TypeCode) {
+            4 -> { // Apple
+                val appleInfo = AppleOAuthHelperUtilObject.getAppleMemberData(inputVo.oauth2IdToken)
+
+                if (appleInfo != null) {
+                    loginId = appleInfo.snsId
+                } else {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return null
+                }
+
+                val isDatabase1MemberUserExists =
+                    database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                        4,
+                        loginId,
+                        true
+                    )
+
+                if (isDatabase1MemberUserExists) { // 기존 회원 존재
+                    httpServletResponse.setHeader("api-result-code", "2")
+                    return null
+                }
+
+                verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
+                val database1MemberRegisterOauth2VerificationData =
+                    database1MemberRegisterOauth2VerificationDataRepository.save(
+                        Database1_Verification_RegisterOauth2VerificationData(
+                            4,
+                            loginId,
+                            verificationCode,
+                            LocalDateTime.now().plusSeconds(verificationTimeSec),
+                            true
+                        )
+                    )
+
+                verificationUid = database1MemberRegisterOauth2VerificationData.uid!!
+
+                expireWhen = database1MemberRegisterOauth2VerificationData.verificationExpireWhen.format(
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                )
+            }
+
+            else -> {
+                classLogger.info("SNS Login Type ${inputVo.oauth2TypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return null
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return C9TkAuthController.Api19Dot1OutputVo(
+            verificationUid,
+            verificationCode,
+            loginId,
+            expireWhen
+        )
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api20(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api20InputVo) {
         // oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)
         val oauth2TypeCode: Int
@@ -1874,6 +2229,10 @@ class C9TkAuthService(
 
             3 -> {
                 oauth2TypeCode = 3
+            }
+
+            4 -> {
+                oauth2TypeCode = 4
             }
 
             else -> {
@@ -3147,6 +3506,77 @@ class C9TkAuthService(
 
                 snsTypeCode = 3
                 snsId = response.body()!!.id.toString()
+            }
+
+            else -> {
+                classLogger.info("SNS Login Type ${inputVo.oauth2TypeCode} Not Supported")
+                httpServletResponse.status = 400
+                return
+            }
+        }
+
+        // 검증됨
+        val member = database1MemberMemberDataRepository.findByUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
+
+        if (member == null) {
+            httpServletResponse.setHeader("api-result-code", "2")
+            return
+        }
+
+        // 사용중인지 아닌지 검증
+        val isDatabase1MemberUserExists =
+            database1MemberMemberOauth2LoginDataRepository.existsByOauth2TypeCodeAndOauth2IdAndRowActivate(
+                snsTypeCode.toByte(),
+                snsId,
+                true
+            )
+
+        if (isDatabase1MemberUserExists) { // 이미 사용중인 SNS 인증
+            httpServletResponse.setHeader("api-result-code", "3")
+            return
+        }
+
+        // SNS 인증 추가
+        database1MemberMemberOauth2LoginDataRepository.save(
+            Database1_Member_MemberOauth2LoginData(
+                memberUid.toLong(),
+                snsTypeCode.toByte(),
+                snsId,
+                true
+            )
+        )
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api40Dot1(
+        httpServletResponse: HttpServletResponse,
+        inputVo: C9TkAuthController.Api40Dot1InputVo,
+        authorization: String
+    ) {
+        val memberUid: String = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
+
+        val snsTypeCode: Int
+        val snsId: String
+
+        // (정보 검증 로직 수행)
+        when (inputVo.oauth2TypeCode) {
+            4 -> { // Apple
+                val appleInfo = AppleOAuthHelperUtilObject.getAppleMemberData(inputVo.oauth2IdToken)
+
+                if (appleInfo != null) {
+                    snsId = appleInfo.snsId
+                } else {
+                    httpServletResponse.setHeader("api-result-code", "1")
+                    return
+                }
+
+                snsTypeCode = 4
             }
 
             else -> {
