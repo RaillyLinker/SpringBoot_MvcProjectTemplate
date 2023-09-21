@@ -468,4 +468,76 @@ class C10TkMediaResourceProcessService(
         }
     }
 
+
+    ////
+    fun api9(
+        inputVo: C10TkMediaResourceProcessController.Api9InputVo,
+        httpServletResponse: HttpServletResponse
+    ): ResponseEntity<Resource>? {
+        val fileExtension = inputVo.multipartVideoFile.originalFilename?.substringAfterLast(".", "").orEmpty()
+            .lowercase(Locale.getDefault())
+
+        val supportedExtensions = listOf("mp4", "avi", "mkv", "flv", "mov")
+        if (fileExtension !in supportedExtensions) {
+            httpServletResponse.setHeader("api-result-code", "1") // or any other error code
+            return null
+        }
+
+        val tempVideoFile = File.createTempFile("video", null)
+        val resultFile = File.createTempFile("output", ".$fileExtension")
+
+        try {
+            inputVo.multipartVideoFile.transferTo(tempVideoFile)
+            // !!!아래는 Windows 환경에서 사용 가능한 방법입니다.
+            // 다른 OS 에서도 사용 가능하려면, command 를 ./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg 에서 ffmpeg 으로 바꾸고,
+            // OS 의 환경변수에 FFMPEG 을 등록하여 커맨드 라인으로 실행할수 있도록 환경을 세팅해야합니다.!!
+
+            // FFMPEG 명령어 작성
+            val command =
+                "./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg -y -i ${tempVideoFile.absolutePath} -vf \"scale=${inputVo.width}:${inputVo.height}\" ${resultFile.absolutePath}"
+            val process = ProcessBuilder(*command.split(" ").toTypedArray())
+                .redirectErrorStream(true) // 오류 스트림을 표준 출력 스트림에 병합
+                .start()
+
+            // 로그에 프로세스의 출력 내용 출력
+            BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    classLogger.debug(line)
+                }
+            }
+
+            val exitCode = process.waitFor()
+            if (exitCode != 0) {
+                classLogger.error("FFmpeg process failed with exit code $exitCode")
+            }
+
+            val resource = InputStreamResource(FileInputStream(resultFile))
+
+            // 요청 시간을 문자열로
+            val timeString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH_mm_ss_SSS"))
+
+            // 결과 파일의 확장자 포함 파일명 생성
+            val resultFileName = "result_${timeString}.$fileExtension"
+
+            httpServletResponse.addHeader("api-error-codes", "0")
+            return ResponseEntity<Resource>(
+                resource,
+                HttpHeaders().apply {
+                    this.contentDisposition = ContentDisposition.builder("attachment")
+                        .filename(resultFileName, StandardCharsets.UTF_8)
+                        .build()
+                    this.add(
+                        HttpHeaders.CONTENT_TYPE,
+                        "video/$fileExtension"
+                    )
+                },
+                HttpStatus.OK
+            )
+        } finally {
+            tempVideoFile.delete()
+            resultFile.delete()
+        }
+    }
+
 }

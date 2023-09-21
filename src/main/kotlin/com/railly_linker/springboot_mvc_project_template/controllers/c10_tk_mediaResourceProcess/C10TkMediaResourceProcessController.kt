@@ -297,7 +297,43 @@ class C10TkMediaResourceProcessController(
         val multipartGifFile: MultipartFile
     )
 
-    // todo 비디오 파일 리사이징
+
+    ////
+    @Operation(
+        summary = "N9 : FFMPEG 을 이용하여 비디오 리사이징 후 반환",
+        description = "FFMPEG 을 이용하여 비디오 파일을 리사이징하여 반환합니다.\n\n" +
+                "ProcessBuilder 를 사용하므로 OS 에 FFMPEG 이 설치되어 있어야합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1 : 지원하는 파일이 아닙니다.",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @PostMapping("/ffmpeg-video-resizing", consumes = ["multipart/form-data"])
+    fun api9(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @ModelAttribute
+        inputVo: Api9InputVo
+    ): ResponseEntity<Resource>? {
+        return service.api9(inputVo, httpServletResponse)
+    }
+
+    data class Api9InputVo(
+        @Schema(description = "업로드 비디오 파일", required = true)
+        @JsonProperty("multipartVideoFile")
+        val multipartVideoFile: MultipartFile,
+        @Schema(description = "리사이징 width", required = true, example = "300")
+        @JsonProperty("width")
+        val width: Int,
+        @Schema(description = "리사이징 height", required = true, example = "200")
+        @JsonProperty("height")
+        val height: Int
+    )
 
     // todo jpg to avif
     // todo png to avif
