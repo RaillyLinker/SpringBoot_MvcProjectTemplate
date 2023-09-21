@@ -8,10 +8,6 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.file.Files
-import java.nio.file.Paths
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.io.path.deleteIfExists
 
 object ImageProcessUtilObject {
     // (Gif 를 이미지 리스트로 분리)
@@ -50,13 +46,12 @@ object ImageProcessUtilObject {
         // 임시 파일 생성
         val tempFile = File.createTempFile("resized_", ".gif")
 
-        GifUtilObject.encodeGif(resizedFrameList, FileOutputStream(tempFile), 2, false)
-
-        val bytes: ByteArray = Files.readAllBytes(tempFile.toPath())
-
-        // 임시 파일 삭제
-        tempFile.delete()
-
-        return bytes
+        try {
+            GifUtilObject.encodeGif(resizedFrameList, FileOutputStream(tempFile), 2, false)
+            return Files.readAllBytes(tempFile.toPath())
+        } finally {
+            // 임시 파일 삭제
+            tempFile.delete()
+        }
     }
 }
