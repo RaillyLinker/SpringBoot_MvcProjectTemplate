@@ -24,8 +24,8 @@ class C4TkRequestFromServerTestController(
     // ---------------------------------------------------------------------------------------------
     // <매핑 함수 공간>
     @Operation(
-        summary = "N1 : /tk/request-test 요청 테스트 API",
-        description = "/tk/request-test 로 요청을 보냅니다.\n\n" +
+        summary = "N1 : 기본 요청 테스트",
+        description = "기본적인 Get 메소드 요청 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -35,7 +35,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test")
+    @GetMapping("/request-test")
     fun api1(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -45,8 +45,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N2 : /tk/request-test/redirect-to-blank 요청 테스트 API",
-        description = "/tk/request-test/redirect-to-blank 로 요청을 보냅니다.\n\n" +
+        summary = "N2 : Redirect 테스트",
+        description = "Redirect 되었을 때의 응답 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -56,7 +56,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/redirect-to-blank")
+    @GetMapping("/redirect-to-blank")
     fun api2(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -66,8 +66,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N3 : /tk/request-test/forward-to-blank 요청 테스트 API",
-        description = "/tk/request-test/forward-to-blank 로 요청을 보냅니다.\n\n" +
+        summary = "N3 : Forward 테스트",
+        description = "Forward 되었을 때의 응답 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -77,7 +77,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/forward-to-blank")
+    @GetMapping("/forward-to-blank")
     fun api3(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -87,8 +87,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N4 : /tk/request-test/get-request 요청 테스트 API",
-        description = "/tk/request-test/get-request 로 요청을 보냅니다.\n\n" +
+        summary = "N4 : Get 요청 테스트 (Query Parameter)",
+        description = "Query 파라미터를 받는 Get 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -98,7 +98,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/get-request")
+    @GetMapping("/get-request")
     fun api4(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -149,8 +149,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N5 : /tk/request-test/get-request/{pathParamInt} 요청 테스트 API",
-        description = "/tk/request-test/get-request/{pathParamInt} 로 요청을 보냅니다.\n\n" +
+        summary = "N5 : Get 요청 테스트 (Path Parameter)",
+        description = "Path 파라미터를 받는 Get 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -160,7 +160,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/get-request-path-param")
+    @GetMapping("/get-request-path-param")
     fun api5(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -176,8 +176,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N6 : /tk/request-test/post-request-application-json 요청 테스트 API",
-        description = "/tk/request-test/post-request-application-json 로 요청을 보냅니다.\n\n" +
+        summary = "N6 : Post 요청 테스트 (Request Body, application/json)",
+        description = "application/json 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -187,7 +187,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/post-request-application-json")
+    @GetMapping("/post-request-application-json")
     fun api6(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -238,8 +238,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N7 : /tk/request-test/post-request-x-www-form-urlencoded 요청 테스트 API",
-        description = "/tk/request-test/post-request-x-www-form-urlencoded 로 요청을 보냅니다.\n\n" +
+        summary = "N7 : Post 요청 테스트 (Request Body, x-www-form-urlencoded)",
+        description = "x-www-form-urlencoded 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -249,7 +249,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/post-request-x-www-form-urlencoded")
+    @GetMapping("/post-request-x-www-form-urlencoded")
     fun api7(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -300,8 +300,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N8 : /tk/request-test/post-request-multipart-form-data 요청 테스트 API",
-        description = "/tk/request-test/post-request-multipart-form-data 로 요청을 보냅니다.\n\n" +
+        summary = "N8 : Post 요청 테스트 (Request Body, multipart/form-data)",
+        description = "multipart/form-data 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -311,7 +311,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/post-request-multipart-form-data")
+    @GetMapping("/post-request-multipart-form-data")
     fun api8(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -362,8 +362,9 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N9 : /tk/request-test/post-request-multipart-form-data2 요청 테스트 API",
-        description = "/tk/request-test/post-request-multipart-form-data2 로 요청을 보냅니다.\n\n" +
+        summary = "N9 : Post 요청 테스트 (Request Body, multipart/form-data, MultipartFile List)",
+        description = "multipart/form-data 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
+                "MultipartFile 파라미터를 List 로 받습니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -373,7 +374,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/post-request-multipart-form-data2")
+    @GetMapping("/post-request-multipart-form-data2")
     fun api9(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -424,8 +425,9 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N10 : /tk/request-test/post-request-multipart-form-data-json 요청 테스트 API",
-        description = "/tk/request-test/post-request-multipart-form-data-json 로 요청을 보냅니다.\n\n" +
+        summary = "N10 : Post 요청 테스트 (Request Body, multipart/form-data, with jsonString)",
+        description = "multipart/form-data 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
+                "파일 외의 파라미터를 JsonString 형식으로 받습니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
         responses = [
@@ -435,7 +437,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/post-request-multipart-form-data-json")
+    @GetMapping("/post-request-multipart-form-data-json")
     fun api10(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -486,8 +488,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N11 : /tk/request-test/generate-error 요청 테스트 API",
-        description = "/tk/request-test/generate-error 로 요청을 보냅니다.\n\n" +
+        summary = "N11 : 에러 발생 테스트",
+        description = "요청시 에러가 발생했을 때의 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : api-result-code 가 반환되지 않음",
@@ -498,7 +500,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/generate-error")
+    @GetMapping("/generate-error")
     fun api11(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -508,8 +510,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N12 : /tk/request-test/api-result-code-test 요청 테스트 API",
-        description = "/tk/request-test/api-result-code-test 로 요청을 보냅니다.\n\n" +
+        summary = "N12 : api-result-code 반환 테스트",
+        description = "api-result-code 가 Response Header 로 반환되는 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : errorType 을 A 로 보냈습니다.\n\n" +
@@ -522,7 +524,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/api-result-code-test")
+    @GetMapping("/api-result-code-test")
     fun api12(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -532,8 +534,8 @@ class C4TkRequestFromServerTestController(
 
     ////
     @Operation(
-        summary = "N13 : /tk/request-test/generate-time-out-error 요청 테스트 API",
-        description = "/tk/request-test/generate-time-out-error 로 요청을 보냅니다.\n\n" +
+        summary = "N13 : 타임아웃 발생 테스트",
+        description = "요청을 보내어 타임아웃이 발생했을 때를 테스트합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 타임아웃이 발생함",
@@ -544,7 +546,7 @@ class C4TkRequestFromServerTestController(
             )
         ]
     )
-    @GetMapping("/tk/request-test/generate-time-out-error")
+    @GetMapping("/generate-time-out-error")
     fun api13(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -554,4 +556,64 @@ class C4TkRequestFromServerTestController(
     ) {
         service.api13(httpServletResponse, delayTimeSec)
     }
+
+
+    ////
+    @Operation(
+        summary = "N14 : text/string 형식 Response 받아오기",
+        description = "text/string 형식 Response 를 받아옵니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/text-string-response")
+    fun api14(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): Api14OutputVo? {
+        return service.api14(
+            httpServletResponse
+        )
+    }
+
+    data class Api14OutputVo(
+        @Schema(description = "결과 String", required = true, example = "complete")
+        @JsonProperty("resultString")
+        val resultString: String
+    )
+
+
+    ////
+    @Operation(
+        summary = "N15 : text/html 형식 Response 받아오기",
+        description = "text/html 형식 Response 를 받아옵니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/text-html-response")
+    fun api15(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): Api15OutputVo? {
+        return service.api15(
+            httpServletResponse
+        )
+    }
+
+    data class Api15OutputVo(
+        @Schema(description = "결과 HTML", required = true, example = "complete")
+        @JsonProperty("resultHtml")
+        val resultHtml: String
+    )
 }

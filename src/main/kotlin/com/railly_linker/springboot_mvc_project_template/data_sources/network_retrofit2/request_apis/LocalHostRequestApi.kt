@@ -460,4 +460,24 @@ interface LocalHostRequestApi {
     fun postTkRequestTestGenerateTimeOutError(
         @Query("delayTimeSec") delayTimeSec: Int
     ): Call<Unit?>
+
+
+    ////
+    // [text/string 반환 샘플]
+    // text/string 형식의 Response Body 를 반환합니다.
+    // (api-result-code)
+    // 0 : 정상 동작
+    @GET("/tk/request-test/return-text-string")
+    @Headers("Content-Type: text/string")
+    fun getTkRequestTestReturnTextString(): Call<String>
+
+
+    ////
+    // [text/html 반환 샘플]
+    // text/html 형식의 Response Body 를 반환합니다.
+    // (api-result-code)
+    // 0 : 정상 동작
+    @GET("/tk/request-test/return-text-html")
+    @Headers("Content-Type: text/html")
+    fun getTkRequestTestReturnTextHtml(): Call<String>
 }

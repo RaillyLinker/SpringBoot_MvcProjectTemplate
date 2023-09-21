@@ -910,7 +910,55 @@ class C3TkRequestTestController(
 
     ////
     @Operation(
-        summary = "N14 : byte 반환 샘플",
+        summary = "N14 : text/string 반환 샘플",
+        description = "text/string 형식의 Response Body 를 반환합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/return-text-string")
+    fun api14(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): String? {
+        return service.api14(
+            httpServletResponse
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N15 : text/html 반환 샘플",
+        description = "text/html 형식의 Response Body 를 반환합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/return-text-html")
+    fun api15(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): ModelAndView? {
+        return service.api15(
+            httpServletResponse
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N16 : byte 반환 샘플",
         description = " byte array('a', .. , 'f') 에서 아래와 같은 요청으로 원하는 바이트를 요청 가능\n\n" +
                 "    >> curl http://localhost:8080/tk/advanced-request-test/byte -i -H \"Range: bytes=2-4\"\n\n" +
                 "(api-result-code)\n\n" +
@@ -923,7 +971,7 @@ class C3TkRequestTestController(
         ]
     )
     @GetMapping(path = ["/byte"])
-    fun api14(
+    fun api16(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
         @Parameter(
@@ -934,13 +982,13 @@ class C3TkRequestTestController(
         @RequestHeader("Range")
         range: String
     ): Resource? {
-        return service.api14(httpServletResponse)
+        return service.api16(httpServletResponse)
     }
 
 
     ////
     @Operation(
-        summary = "N15 : 비디오 스트리밍 샘플",
+        summary = "N17 : 비디오 스트리밍 샘플",
         description = "비디오 스트리밍 샘플\n\n" +
                 "테스트는 프로젝트 파일 경로의 samples/html_file_sample 안의 video-streaming.html 파일을 사용하세요.\n\n" +
                 "(api-result-code)\n\n" +
@@ -953,16 +1001,16 @@ class C3TkRequestTestController(
         ]
     )
     @GetMapping(path = ["/video-streaming"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun api15(
+    fun api17(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
         @RequestParam(value = "videoHeight")
-        videoHeight: Api15VideoHeight // 비디오 해상도 높이
+        videoHeight: Api17VideoHeight // 비디오 해상도 높이
     ): Resource? {
-        return service.api15(videoHeight, httpServletResponse)
+        return service.api17(videoHeight, httpServletResponse)
     }
 
-    enum class Api15VideoHeight {
+    enum class Api17VideoHeight {
         H240,
         H360,
         H480,
@@ -972,7 +1020,7 @@ class C3TkRequestTestController(
 
     ////
     @Operation(
-        summary = "N16 : 오디오 스트리밍 샘플",
+        summary = "N18 : 오디오 스트리밍 샘플",
         description = "오디오 스트리밍 샘플\n\n" +
                 "테스트는 프로젝트 파일 경로의 samples/html_file_sample 안의 audio-streaming.html 파일을 사용하세요.\n\n" +
                 "(api-result-code)\n\n" +
@@ -985,17 +1033,17 @@ class C3TkRequestTestController(
         ]
     )
     @GetMapping(path = ["/audio-streaming"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun api16(
+    fun api18(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
     ): Resource? {
-        return service.api16(httpServletResponse)
+        return service.api18(httpServletResponse)
     }
 
 
     ////
     @Operation(
-        summary = "N17 : 비동기 처리 결과 반환 샘플",
+        summary = "N19 : 비동기 처리 결과 반환 샘플",
         description = "API 호출시 함수 내에서 별도 스레드로 작업을 수행하고,\n\n" +
                 "비동기 작업 완료 후 그 처리 결과가 반환됨\n\n" +
                 "(api-result-code)\n\n" +
@@ -1008,13 +1056,13 @@ class C3TkRequestTestController(
         ]
     )
     @GetMapping("/async-result")
-    fun api17(
+    fun api19(
         httpServletResponse: HttpServletResponse
-    ): DeferredResult<Api17OutputVo>? {
-        return service.api17(httpServletResponse)
+    ): DeferredResult<Api19OutputVo>? {
+        return service.api19(httpServletResponse)
     }
 
-    data class Api17OutputVo(
+    data class Api19OutputVo(
         @Schema(description = "결과 메세지", required = true, example = "n 초 경과 후 반환했습니다.")
         @JsonProperty("resultMessage")
         val resultMessage: String
@@ -1023,7 +1071,7 @@ class C3TkRequestTestController(
 
     ////
     @Operation(
-        summary = "N18 : 클라이언트가 특정 SSE 이벤트를 구독",
+        summary = "N20 : 클라이언트가 특정 SSE 이벤트를 구독",
         description = "구독 수신 중 연결이 끊어질 경우, 클라이언트가 헤더에 Last-Event-ID 라는 값을 넣어서 다시 요청함\n\n" +
                 "!주의점! : 로깅 필터와 충돌되므로, 꼭 요청 헤더에는 Accept:text/event-stream 를 넣어서 요청을 해야함 (이것으로 SSE 요청임을 필터가 확인함)\n\n" +
                 "테스트는, CMD 를 열고, \n\n" +
@@ -1039,7 +1087,7 @@ class C3TkRequestTestController(
         ]
     )
     @GetMapping("/sse-test/subscribe", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun api18(
+    fun api20(
         httpServletResponse: HttpServletResponse,
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
@@ -1048,13 +1096,13 @@ class C3TkRequestTestController(
         @RequestHeader(value = "Last-Event-ID")
         lastSseEventId: String?
     ): SseEmitter? {
-        return service.api18(httpServletResponse, authorization, lastSseEventId)
+        return service.api20(httpServletResponse, authorization, lastSseEventId)
     }
 
 
     ////
     @Operation(
-        summary = "N19 : api1 에서 구독한 수신 객체에 대한 이벤트 전송 트리거 테스트",
+        summary = "N21 : SSE 이벤트 전송 트리거 테스트",
         description = "어떠한 사건이 일어나면 알림을 위하여 SSE 이벤트 전송을 한다고 가정\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작",
@@ -1066,9 +1114,9 @@ class C3TkRequestTestController(
         ]
     )
     @PostMapping("/sse-test/event-trigger")
-    fun api19(
+    fun api21(
         httpServletResponse: HttpServletResponse
     ) {
-        service.api19(httpServletResponse)
+        service.api21(httpServletResponse)
     }
 }

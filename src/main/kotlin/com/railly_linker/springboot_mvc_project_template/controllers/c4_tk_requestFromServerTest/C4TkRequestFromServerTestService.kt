@@ -744,4 +744,24 @@ class C4TkRequestFromServerTestService(
             httpServletResponse.setHeader("api-result-code", "1")
         }
     }
+
+
+    ////
+    fun api14(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api14OutputVo? {
+        val response = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextString().execute()
+
+        return C4TkRequestFromServerTestController.Api14OutputVo(
+            response.body()!!
+        )
+    }
+
+
+    ////
+    fun api15(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api15OutputVo? {
+        val response = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextHtml().execute()
+
+        return C4TkRequestFromServerTestController.Api15OutputVo(
+            response.body()!!
+        )
+    }
 }

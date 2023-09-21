@@ -513,7 +513,24 @@ class C3TkRequestTestService(
 
 
     ////
-    fun api14(httpServletResponse: HttpServletResponse): Resource? {
+    fun api14(httpServletResponse: HttpServletResponse): String? {
+        httpServletResponse.setHeader("api-result-code", "0")
+        return "test Complete!"
+    }
+
+
+    ////
+    fun api15(httpServletResponse: HttpServletResponse): ModelAndView? {
+        val modelAndView = ModelAndView()
+        modelAndView.viewName = "template_c3_n15/html_response_example"
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return modelAndView
+    }
+
+
+    ////
+    fun api16(httpServletResponse: HttpServletResponse): Resource? {
         httpServletResponse.setHeader("api-result-code", "0")
         return ByteArrayResource(
             byteArrayOf(
@@ -529,32 +546,32 @@ class C3TkRequestTestService(
 
 
     ////
-    fun api15(
-        videoHeight: C3TkRequestTestController.Api15VideoHeight,
+    fun api17(
+        videoHeight: C3TkRequestTestController.Api17VideoHeight,
         httpServletResponse: HttpServletResponse
     ): Resource? {
         // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
         val projectRootAbsolutePathString: String = File("").absolutePath
 
         // 파일 절대 경로 및 파일명
-        val serverFileAbsolutePathString = "$projectRootAbsolutePathString/src/main/resources/static/resource_c3_n15"
+        val serverFileAbsolutePathString = "$projectRootAbsolutePathString/src/main/resources/static/resource_c3_n17"
 
         // 멤버십 등의 정보로 해상도 제한을 걸 수도 있음
         val serverFileNameString =
             when (videoHeight) {
-                C3TkRequestTestController.Api15VideoHeight.H240 -> {
+                C3TkRequestTestController.Api17VideoHeight.H240 -> {
                     "test_240p.mp4"
                 }
 
-                C3TkRequestTestController.Api15VideoHeight.H360 -> {
+                C3TkRequestTestController.Api17VideoHeight.H360 -> {
                     "test_360p.mp4"
                 }
 
-                C3TkRequestTestController.Api15VideoHeight.H480 -> {
+                C3TkRequestTestController.Api17VideoHeight.H480 -> {
                     "test_480p.mp4"
                 }
 
-                C3TkRequestTestController.Api15VideoHeight.H720 -> {
+                C3TkRequestTestController.Api17VideoHeight.H720 -> {
                     "test_720p.mp4"
                 }
             }
@@ -568,12 +585,12 @@ class C3TkRequestTestService(
 
 
     ////
-    fun api16(httpServletResponse: HttpServletResponse): Resource? {
+    fun api18(httpServletResponse: HttpServletResponse): Resource? {
         // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
         val projectRootAbsolutePathString: String = File("").absolutePath
 
         // 파일 절대 경로 및 파일명
-        val serverFileAbsolutePathString = "$projectRootAbsolutePathString/src/main/resources/static/resource_c3_n16"
+        val serverFileAbsolutePathString = "$projectRootAbsolutePathString/src/main/resources/static/resource_c3_n18"
         val serverFileNameString = "test.mp3"
 
         // 반환값에 전해줄 FIS
@@ -585,10 +602,10 @@ class C3TkRequestTestService(
 
 
     ////
-    fun api17(httpServletResponse: HttpServletResponse): DeferredResult<C3TkRequestTestController.Api17OutputVo>? {
+    fun api19(httpServletResponse: HttpServletResponse): DeferredResult<C3TkRequestTestController.Api19OutputVo>? {
         // 연결 타임아웃 밀리초
         val deferredResultTimeoutMs = 1000L * 60
-        val deferredResult = DeferredResult<C3TkRequestTestController.Api17OutputVo>(deferredResultTimeoutMs)
+        val deferredResult = DeferredResult<C3TkRequestTestController.Api19OutputVo>(deferredResultTimeoutMs)
 
         // 비동기 처리
         executorService.execute {
@@ -597,7 +614,7 @@ class C3TkRequestTestService(
             Thread.sleep(delayMs)
 
             // 결과 반환
-            deferredResult.setResult(C3TkRequestTestController.Api17OutputVo("${delayMs / 1000} 초 경과 후 반환했습니다."))
+            deferredResult.setResult(C3TkRequestTestController.Api19OutputVo("${delayMs / 1000} 초 경과 후 반환했습니다."))
         }
 
         // 결과 대기 객체를 먼저 반환
@@ -607,11 +624,11 @@ class C3TkRequestTestService(
 
 
     ////
-    // api18 에서 발급한 Emitter 객체
-    private val api18SseEmitterWrapperMbr = SseEmitterWrapper(1000L * 10L)
-    fun api18(httpServletResponse: HttpServletResponse, authorization: String?, lastSseEventId: String?): SseEmitter? {
-        api18SseEmitterWrapperMbr.emitterMapSemaphore.acquire()
-        api18SseEmitterWrapperMbr.emitterEventMapSemaphore.acquire()
+    // api20 에서 발급한 Emitter 객체
+    private val api20SseEmitterWrapperMbr = SseEmitterWrapper(1000L * 10L)
+    fun api20(httpServletResponse: HttpServletResponse, authorization: String?, lastSseEventId: String?): SseEmitter? {
+        api20SseEmitterWrapperMbr.emitterMapSemaphore.acquire()
+        api20SseEmitterWrapperMbr.emitterEventMapSemaphore.acquire()
 
         // 수신 멤버 고유번호(비회원은 -1)
         val memberUid = if (authorization == null) {
@@ -620,17 +637,17 @@ class C3TkRequestTestService(
             AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
         }
 
-        val emitterPublishCount = api18SseEmitterWrapperMbr.emitterPublishSequence++
+        val emitterPublishCount = api20SseEmitterWrapperMbr.emitterPublishSequence++
 
         // 수신 객체 아이디 (발행총개수_발행일_멤버고유번호)
         val sseEmitterId =
             "${emitterPublishCount}_${SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(Date())}_${memberUid}"
 
         // 수신 객체
-        val sseEmitter = api18SseEmitterWrapperMbr.getSseEmitter(sseEmitterId, lastSseEventId)
+        val sseEmitter = api20SseEmitterWrapperMbr.getSseEmitter(sseEmitterId, lastSseEventId)
 
-        api18SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
-        api18SseEmitterWrapperMbr.emitterMapSemaphore.release()
+        api20SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
+        api20SseEmitterWrapperMbr.emitterMapSemaphore.release()
 
         httpServletResponse.setHeader("api-result-code", "0")
         return sseEmitter
@@ -638,14 +655,14 @@ class C3TkRequestTestService(
 
 
     ////
-    private var api19TriggerTestCountMbr = 0
-    fun api19(httpServletResponse: HttpServletResponse) {
+    private var api21TriggerTestCountMbr = 0
+    fun api21(httpServletResponse: HttpServletResponse) {
         // emitter 이벤트 전송
-        api18SseEmitterWrapperMbr.emitterMapSemaphore.acquire()
-        api18SseEmitterWrapperMbr.emitterEventMapSemaphore.acquire()
-        val nowTriggerTestCount = ++api19TriggerTestCountMbr
+        api20SseEmitterWrapperMbr.emitterMapSemaphore.acquire()
+        api20SseEmitterWrapperMbr.emitterEventMapSemaphore.acquire()
+        val nowTriggerTestCount = ++api21TriggerTestCountMbr
 
-        for (emitter in api18SseEmitterWrapperMbr.emitterMap) { // 저장된 모든 emitter 에 발송 (필터링 하려면 emitter.key 에 저장된 정보로 필터링 가능)
+        for (emitter in api20SseEmitterWrapperMbr.emitterMap) { // 저장된 모든 emitter 에 발송 (필터링 하려면 emitter.key 에 저장된 정보로 필터링 가능)
             // 발송 시간
             val dateString = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS").format(Date())
 
@@ -660,10 +677,10 @@ class C3TkRequestTestService(
             )
 
             // 이벤트 누락 방지 처리를 위하여 이벤트 빌더 기록
-            if (api18SseEmitterWrapperMbr.emitterEventMap.containsKey(emitter.key)) {
-                api18SseEmitterWrapperMbr.emitterEventMap[emitter.key]!!.add(Pair(dateString, sseEventBuilder))
+            if (api20SseEmitterWrapperMbr.emitterEventMap.containsKey(emitter.key)) {
+                api20SseEmitterWrapperMbr.emitterEventMap[emitter.key]!!.add(Pair(dateString, sseEventBuilder))
             } else {
-                api18SseEmitterWrapperMbr.emitterEventMap[emitter.key] = arrayListOf(Pair(dateString, sseEventBuilder))
+                api20SseEmitterWrapperMbr.emitterEventMap[emitter.key] = arrayListOf(Pair(dateString, sseEventBuilder))
             }
 
             // 이벤트 발송
@@ -673,8 +690,8 @@ class C3TkRequestTestService(
             )
         }
 
-        api18SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
-        api18SseEmitterWrapperMbr.emitterMapSemaphore.release()
+        api20SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
+        api20SseEmitterWrapperMbr.emitterMapSemaphore.release()
 
         httpServletResponse.setHeader("api-result-code", "0")
     }
