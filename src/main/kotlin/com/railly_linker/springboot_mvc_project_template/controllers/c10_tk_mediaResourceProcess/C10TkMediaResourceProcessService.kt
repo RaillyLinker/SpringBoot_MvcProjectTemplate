@@ -338,7 +338,7 @@ class C10TkMediaResourceProcessService(
         // todo : OS 별 FFMPEG 사용 처리하기
         // FFMPEG 명령어 작성
         val command =
-            "./external_dependencies/ffmpeg-win64/bin/ffmpeg -y -i ${tempVideoFile.absolutePath} -ss ${inputVo.startTime} -t ${inputVo.duration} -an ${gifFile.absolutePath}"
+            "./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg -y -i ${tempVideoFile.absolutePath} -ss ${inputVo.startTime} -t ${inputVo.duration} -an ${gifFile.absolutePath}"
         val process = ProcessBuilder(*command.split(" ").toTypedArray())
             .redirectErrorStream(true) // 오류 스트림을 표준 출력 스트림에 병합
             .start()
@@ -404,7 +404,7 @@ class C10TkMediaResourceProcessService(
 
         // todo : OS 별 FFMPEG 사용 처리하기
         val command =
-            "./external_dependencies/ffmpeg-win64/bin/ffmpeg -y -i ${tempGifFile.absolutePath} ${videoFile.absolutePath}"
+            "./external_dependencies/ffmpeg-win64-6.0/bin/ffmpeg -y -i ${tempGifFile.absolutePath} ${videoFile.absolutePath}"
         val process = ProcessBuilder(*command.split(" ").toTypedArray())
             .redirectErrorStream(true) // 오류 스트림을 표준 출력 스트림에 병합
             .start()
