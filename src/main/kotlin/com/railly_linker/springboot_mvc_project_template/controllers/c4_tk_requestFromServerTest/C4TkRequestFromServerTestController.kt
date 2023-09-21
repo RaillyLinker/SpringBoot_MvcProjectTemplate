@@ -671,4 +671,29 @@ class C4TkRequestFromServerTestController(
             httpServletResponse
         )
     }
+
+
+    ////
+    @Operation(
+        summary = "N18 : WebSocket 연결 테스트",
+        description = "WebSocket 연결 요청 테스트\n\n" +
+                "WebSocket 을 연결 하여 백그라운드에서 실행합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "OK"
+            )
+        ]
+    )
+    @GetMapping("/websocket-connect")
+    fun api18(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ) {
+        service.api18(
+            httpServletResponse
+        )
+    }
 }
