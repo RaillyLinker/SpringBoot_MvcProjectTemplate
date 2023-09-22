@@ -26,24 +26,24 @@ class WebConfig(
                 "dev8080" -> {
                     // 개발 프로필
                     listOf(
-                        "http://localhost:8081",
-                        "http://192.168.0.11:8081"
+                        "http://localhost:8082",
+                        "http://192.168.0.78:8082"
                     )
                 }
 
                 "prod80" -> {
                     // 배포 프로필
                     listOf(
-                        "http://localhost:8081",
-                        "http://192.168.0.11:8081"
+                        "http://localhost:8082",
+                        "http://192.168.0.78:8082"
                     )
                 }
 
                 else -> {
                     // local 혹은 다른 프로필
                     listOf(
-                        "http://localhost:8081",
-                        "http://192.168.0.11:8081"
+                        "http://localhost:8082",
+                        "http://192.168.0.78:8082"
                     )
                 }
             }
