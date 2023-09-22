@@ -21,6 +21,8 @@ class C1Service(
     fun api1(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
         mv.viewName = "forward:/home-page"
+
+        httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
 
@@ -37,6 +39,7 @@ class C1Service(
             )
         )
 
+        httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
 
