@@ -28,13 +28,7 @@ class C9TkAuthController(
         summary = "N1 : 비 로그인 접속 테스트",
         description = "비 로그인 접속 테스트용 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/for-no-signed-in")
     fun api1(
@@ -50,13 +44,7 @@ class C9TkAuthController(
         summary = "N2 : 로그인 진입 테스트 <>",
         description = "로그인 되어 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/for-signed-in")
     @PreAuthorize("isAuthenticated()")
@@ -76,13 +64,7 @@ class C9TkAuthController(
         summary = "N3 : ADMIN 권한 진입 테스트 <'ADMIN'>",
         description = "ADMIN 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/for-admin")
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
@@ -102,13 +84,7 @@ class C9TkAuthController(
         summary = "N4 : Developer 권한 진입 테스트 <'ADMIN' or 'Developer'>",
         description = "Developer 권한이 있어야 진입 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/for-developer")
     @PreAuthorize("isAuthenticated() and (hasRole('ROLE_DEVELOPER') or hasRole('ROLE_ADMIN'))")
@@ -131,13 +107,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 가입 되지 않은 회원\n\n" +
                 "2 : 패스워드 불일치\n\n" +
-                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)"
     )
     @PostMapping("/sign-in-with-password")
     fun api5(
@@ -257,13 +227,7 @@ class C9TkAuthController(
         description = "OAuth2 Code 를 사용하여 얻은 OAuth2 AccessToken 발급\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 유효하지 않은 OAuth2 인증 정보",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 유효하지 않은 OAuth2 인증 정보"
     )
     @GetMapping("/oauth2-access-token")
     fun api6(
@@ -310,13 +274,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 유효하지 않은 OAuth2 Access Token\n\n" +
                 "2 : 가입 되지 않은 회원\n\n" +
-                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)"
     )
     @PostMapping("/sign-in-with-oauth2-access-token")
     fun api7(
@@ -430,13 +388,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 유효하지 않은 OAuth2 ID Token\n\n" +
                 "2 : 가입 되지 않은 회원\n\n" +
-                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)"
     )
     @PostMapping("/sign-in-with-oauth2-id-token")
     fun api7Dot1(
@@ -548,13 +500,7 @@ class C9TkAuthController(
         summary = "N8 : 로그아웃 처리 <>",
         description = "로그아웃 처리\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/sign-out")
     @PreAuthorize("isAuthenticated()")
@@ -577,13 +523,7 @@ class C9TkAuthController(
                 "1 : 가입되지 않은 회원\n\n" +
                 "2 : 유효하지 않은 리프레시 토큰\n\n" +
                 "3 : 리프레시 토큰 만료\n\n" +
-                "4 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "4 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음"
     )
     @PostMapping("/reissue")
     @PreAuthorize("isAuthenticated()")
@@ -687,13 +627,7 @@ class C9TkAuthController(
         summary = "N10 : 멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
         description = "멤버의 현재 발행된 모든 액세스 토큰, 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @DeleteMapping("/all-authorization-token")
     @PreAuthorize("isAuthenticated()")
@@ -713,13 +647,7 @@ class C9TkAuthController(
         summary = "N11 : 닉네임 중복 검사",
         description = "닉네임 중복 여부 반환\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/nickname-duplicate-check")
     fun api11(
@@ -748,13 +676,7 @@ class C9TkAuthController(
         description = "닉네임 수정하기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1. 중복된 닉네임 : 중복검사를 했음에도 그 사이에 동일 닉네임이 등록되었을 수 있음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1. 중복된 닉네임 : 중복검사를 했음에도 그 사이에 동일 닉네임이 등록되었을 수 있음"
     )
     @PatchMapping("/my/profile/nickname")
     @PreAuthorize("isAuthenticated()")
@@ -782,13 +704,7 @@ class C9TkAuthController(
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 기존 회원 존재",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 기존 회원 존재"
     )
     @PostMapping("/register-with-email-verification")
     fun api13(
@@ -833,13 +749,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
-                "3 : verificationCode 가 일치하지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : verificationCode 가 일치하지 않음"
     )
     @GetMapping("/register-with-email-verification-check")
     fun api14(
@@ -879,13 +789,7 @@ class C9TkAuthController(
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
                 "4 : 이미 가입된 회원이 있습니다.\n\n" +
-                "5 : 이미 사용중인 닉네임",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "5 : 이미 사용중인 닉네임"
     )
     @PostMapping("/register-with-email", consumes = ["multipart/form-data"])
     fun api15(
@@ -950,13 +854,7 @@ class C9TkAuthController(
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 기존 회원 존재",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 기존 회원 존재"
     )
     @PostMapping("/register-with-phone-number-verification")
     fun api16(
@@ -1002,13 +900,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
-                "3 : verificationCode 가 일치하지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : verificationCode 가 일치하지 않음"
     )
     @GetMapping("/register-with-phone-number-verification-check")
     fun api17(
@@ -1048,13 +940,7 @@ class C9TkAuthController(
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
                 "4 : 이미 가입된 회원이 있습니다.\n\n" +
-                "5 : 이미 사용중인 닉네임",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "5 : 이미 사용중인 닉네임"
     )
     @PostMapping("/register-with-phone-number", consumes = ["multipart/form-data"])
     fun api18(
@@ -1120,13 +1006,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 잘못된 OAuth2 AccessToken\n\n" +
-                "2 : 기존 회원 존재",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "2 : 기존 회원 존재"
     )
     @PostMapping("/register-with-oauth2-access-token-verification")
     fun api19(
@@ -1198,13 +1078,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 잘못된 OAuth2 IdToken\n\n" +
-                "2 : 기존 회원 존재",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "2 : 기존 회원 존재"
     )
     @PostMapping("/register-with-oauth2-id-token-verification")
     fun api19Dot1(
@@ -1279,13 +1153,7 @@ class C9TkAuthController(
                 "2 : OAuth2 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
                 "4 : 이미 가입된 회원이 있습니다.\n\n" +
-                "5 : 이미 사용중인 닉네임",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "5 : 이미 사용중인 닉네임"
     )
     @PostMapping("/register-with-oauth2", consumes = ["multipart/form-data"])
     fun api20(
@@ -1353,13 +1221,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 탈퇴된 회원\n\n" +
                 "2 : 기존 비밀번호가 일치하지 않음\n\n" +
-                "3 : 비번을 null 로 만들려고 할 때 account 외의 OAuth2 인증이 없기에 비번 제거 불가\n\n",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : 비번을 null 로 만들려고 할 때 account 외의 OAuth2 인증이 없기에 비번 제거 불가\n\n"
     )
     @PutMapping("/change-account-password")
     @PreAuthorize("isAuthenticated()")
@@ -1393,13 +1255,7 @@ class C9TkAuthController(
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 가입되지 않은 회원",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 가입되지 않은 회원"
     )
     @PostMapping("/find-password-with-email-verification")
     fun api22(
@@ -1444,13 +1300,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
-                "3 : verificationCode 가 일치하지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : verificationCode 가 일치하지 않음"
     )
     @GetMapping("/find-password-with-email-verification-check")
     fun api23(
@@ -1490,13 +1340,7 @@ class C9TkAuthController(
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
-                "4 : 탈퇴한 회원입니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "4 : 탈퇴한 회원입니다."
     )
     @PostMapping("/find-password-with-email")
     fun api24(
@@ -1538,13 +1382,7 @@ class C9TkAuthController(
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 가입되지 않은 회원",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 가입되지 않은 회원"
     )
     @PostMapping("/find-password-with-phone-number-verification")
     fun api25(
@@ -1590,13 +1428,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
-                "3 : verificationCode 가 일치하지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : verificationCode 가 일치하지 않음"
     )
     @GetMapping("/find-password-with-phone-number-verification-check")
     fun api26(
@@ -1636,13 +1468,7 @@ class C9TkAuthController(
                 "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
-                "4 : 탈퇴된 회원",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "4 : 탈퇴된 회원"
     )
     @PostMapping("/find-password-with-phone-number")
     fun api27(
@@ -1682,13 +1508,7 @@ class C9TkAuthController(
         summary = "N28 : 내 로그인 관련 정보 리스트 가져오기 <>",
         description = "내 계정에 연결된 로그인 수단 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/my-auth-list")
     @PreAuthorize("isAuthenticated()")
@@ -1736,13 +1556,7 @@ class C9TkAuthController(
         summary = "N29 : 내 이메일 리스트 가져오기 <>",
         description = "내 이메일 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/my-email-addresses")
     @PreAuthorize("isAuthenticated()")
@@ -1768,13 +1582,7 @@ class C9TkAuthController(
         summary = "N30 : 내 전화번호 리스트 가져오기 <>",
         description = "내 전화번호 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/my-phone-numbers")
     @PreAuthorize("isAuthenticated()")
@@ -1800,13 +1608,7 @@ class C9TkAuthController(
         summary = "N31 : 내 OAuth2 로그인 리스트 가져오기 <>",
         description = "내 OAuth2 로그인 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/my-oauth2-list")
     @PreAuthorize("isAuthenticated()")
@@ -1848,13 +1650,7 @@ class C9TkAuthController(
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 이미 사용중인 이메일",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 이미 사용중인 이메일"
     )
     @PostMapping("/add-email-verification")
     @PreAuthorize("isAuthenticated()")
@@ -1904,13 +1700,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
-                "3 : verificationCode 가 일치하지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : verificationCode 가 일치하지 않음"
     )
     @GetMapping("/add-email-verification-check")
     @PreAuthorize("isAuthenticated()")
@@ -1953,13 +1743,7 @@ class C9TkAuthController(
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
-                "4 : 이미 사용중인 이메일",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "4 : 이미 사용중인 이메일"
     )
     @PostMapping("/my-new-email")
     @PreAuthorize("isAuthenticated()")
@@ -2004,13 +1788,7 @@ class C9TkAuthController(
         description = "내 계정에서 이메일 제거\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)"
     )
     @DeleteMapping("/my-email")
     @PreAuthorize("isAuthenticated()")
@@ -2040,13 +1818,7 @@ class C9TkAuthController(
                 "발송 후 10분 후 만료됨\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 이미 사용중인 전화번호",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 이미 사용중인 전화번호"
     )
     @PostMapping("/add-phone-number-verification")
     @PreAuthorize("isAuthenticated()")
@@ -2096,13 +1868,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 전화번호 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
-                "3 : verificationCode 가 일치하지 않음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : verificationCode 가 일치하지 않음"
     )
     @GetMapping("/add-phone-number-verification-check")
     @PreAuthorize("isAuthenticated()")
@@ -2144,13 +1910,7 @@ class C9TkAuthController(
                 "1 : 이메일 검증 요청을 보낸 적 없음\n\n" +
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음\n\n" +
-                "4 : 이미 사용중인 전화번호",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "4 : 이미 사용중인 전화번호"
     )
     @PostMapping("/my-new-phone-number")
     @PreAuthorize("isAuthenticated()")
@@ -2195,13 +1955,7 @@ class C9TkAuthController(
         description = "내 계정에서 전화번호 제거\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)"
     )
     @DeleteMapping("/my-phone-number")
     @PreAuthorize("isAuthenticated()")
@@ -2232,13 +1986,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : oAuth2 Access Token 정보 검증 불일치\n\n" +
                 "2 : 탈퇴된 회원\n\n" +
-                "3 : 이미 사용중인 인증",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : 이미 사용중인 인증"
     )
     @PostMapping("/my-new-oauth2-token")
     @PreAuthorize("isAuthenticated()")
@@ -2281,13 +2029,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : oAuth2 Id Token 정보 검증 불일치\n\n" +
                 "2 : 탈퇴된 회원\n\n" +
-                "3 : 이미 사용중인 인증",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : 이미 사용중인 인증"
     )
     @PostMapping("/my-new-oauth2-id-token")
     @PreAuthorize("isAuthenticated()")
@@ -2328,13 +2070,7 @@ class C9TkAuthController(
         description = "내 계정에서 OAuth2 제거\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 제거할 수 없습니다. (이외에 로그인 할 방법이 없음)"
     )
     @DeleteMapping("/my-oauth2")
     @PreAuthorize("isAuthenticated()")
@@ -2369,13 +2105,7 @@ class C9TkAuthController(
         summary = "N42 : 회원탈퇴 <>",
         description = "회원탈퇴 요청\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @DeleteMapping("/withdrawal")
     @PreAuthorize("isAuthenticated()")
@@ -2395,13 +2125,7 @@ class C9TkAuthController(
         summary = "N43 : 내 Profile 이미지 정보 리스트 가져오기 <>",
         description = "내 Profile 이미지 정보 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/my-profile-list")
     @PreAuthorize("isAuthenticated()")
@@ -2440,13 +2164,7 @@ class C9TkAuthController(
         summary = "N44 : 내 대표 Profile 이미지 정보 가져오기 <>",
         description = "내 대표 Profile 이미지 정보 가져오기\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/my-front-profile")
     @PreAuthorize("isAuthenticated()")
@@ -2486,13 +2204,7 @@ class C9TkAuthController(
         description = "내가 등록한 프로필들 중 대표 프로필 설정하기\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1. 선택한 profileUid 가 없습니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1. 선택한 profileUid 가 없습니다."
     )
     @PatchMapping("/my-front-profile")
     @PreAuthorize("isAuthenticated()")
@@ -2519,13 +2231,7 @@ class C9TkAuthController(
         summary = "N46 : 내 프로필 삭제 <>",
         description = "내가 등록한 프로필들 중 하나를 삭제합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @DeleteMapping("/my-profile/{profileUid}")
     @PreAuthorize("isAuthenticated()")
@@ -2548,13 +2254,7 @@ class C9TkAuthController(
         summary = "N47 : 내 프로필 이미지 추가",
         description = "내 프로필 이미지 추가 (대표 이미지 설정은 다른 API 로 해야합니다.)\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/my-profile", consumes = ["multipart/form-data"])
     @PreAuthorize("isAuthenticated()")
@@ -2593,13 +2293,7 @@ class C9TkAuthController(
                 "AWS 나 다른 Storage 서비스를 사용해도 좋습니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 파일이 존재하지 않습니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 파일이 존재하지 않습니다."
     )
     @GetMapping("/member-profile/{fileName}")
     fun api48(

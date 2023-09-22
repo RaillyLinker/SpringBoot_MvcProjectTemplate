@@ -25,13 +25,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N0 : 테스트용 기본 좌표 리스트를 DB에 저장",
         description = "테스트용 기본 좌표 리스트를 DB에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/default-coordinate")
     fun api0(
@@ -47,13 +41,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N1 : 두 좌표 사이의 거리를 반환",
         description = "함수를 사용하여 두 좌표 사이의 거리를 meter 단위로 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/distance-meter-between-two-coordinate")
     fun api1(
@@ -87,13 +75,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N2 : 좌표들 사이의 중심 좌표를 반환",
         description = "함수를 사용하여 좌표들 사이의 중심 좌표를 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/for-center-coordinate")
     fun api2(
@@ -136,13 +118,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N3 : DB 의 좌표 테이블에 좌표 정보를 저장",
         description = "DB 의 좌표 테이블에 좌표 정보를 저장하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/test-map/coordinate")
     fun api3(
@@ -188,13 +164,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N4 : DB 의 좌표 테이블의 모든 데이터 삭제",
         description = "DB 의 좌표 테이블의 모든 데이터 삭제 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @DeleteMapping("/test-map/coordinate/all")
     fun api4(
@@ -210,13 +180,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N5 : DB 에 저장된 좌표들을 SQL 을 사용하여, 기준 좌표의 N Km 내의 결과만 필터",
         description = "기준 좌표를 입력하면 DB 에 저장된 좌표들과의 거리를 SQL 로 계산하여 N Km 내의 결과만 필터링 하여 리스트로 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/test-map/coordinate-in-round")
     fun api5(
@@ -267,13 +231,7 @@ class C7TkMapCoordinateCalculationController(
         summary = "N6 : DB 에 저장된 좌표들을 SQL 을 사용하여, 북서 좌표에서 남동 좌표까지의 사각 영역 안에 들어오는 좌표들만 필터링하여 반환",
         description = "북, 서, 남, 동 좌표를 입력하면 DB 에 저장된 좌표들 중 좌표 사각 영역 안에 들어오는 좌표를 필터링 하여 리스트로 반환하는 API\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/test-map/coordinate-in-box")
     fun api6(

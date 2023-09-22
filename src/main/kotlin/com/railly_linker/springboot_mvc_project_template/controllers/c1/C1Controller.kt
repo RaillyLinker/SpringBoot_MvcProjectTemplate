@@ -25,13 +25,7 @@ class C1Controller(
         summary = "N1 : 서버 Root 경로의 URL 로 포워딩",
         description = "서버 Root 경로의 URL 로 포워딩 합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("", "/")
     fun api1(
@@ -48,13 +42,7 @@ class C1Controller(
         summary = "N2 : 홈페이지",
         description = "홈페이지를 반환합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/home-page")
     fun api2(

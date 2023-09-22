@@ -32,13 +32,7 @@ class C10TkMediaResourceProcessController(
                 "지원 타입 : jpg, jpeg, bmp, png, gif(움직이지 않는 타입)\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/resize-image", consumes = ["multipart/form-data"])
     fun api1(
@@ -70,13 +64,7 @@ class C10TkMediaResourceProcessController(
                 "지원 타입 : jpg, jpeg, bmp, png, gif(움직이지 않는 타입)\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/change-format-image", consumes = ["multipart/form-data"])
     fun api2(
@@ -109,13 +97,7 @@ class C10TkMediaResourceProcessController(
                 "지원 타입 : jpg, jpeg, bmp, png, gif(움직이지 않는 타입)\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/change-format-and-resize-image", consumes = ["multipart/form-data"])
     fun api3(
@@ -152,13 +134,7 @@ class C10TkMediaResourceProcessController(
         summary = "N4 : 서버에 저장된 움직이는 Gif 이미지 파일에서 프레임을 PNG 이미지 파일로 분리한 후 files/temps 폴더 안에 저장",
         description = "서버에 저장된 움직이는 Gif 이미지 파일에서 프레임을 PNG 이미지 파일로 분리한 후 files/temps 폴더 안에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/split-animated-gif")
     fun api4(
@@ -174,13 +150,7 @@ class C10TkMediaResourceProcessController(
         summary = "N5 : 서버에 저장된 움직이는 PNG 이미지 프레임들을 움직이는 Gif 파일로 병합 후 files/temps 폴더 안에 저장",
         description = "서버에 저장된 움직이는 PNG 이미지 프레임들을 움직이는 Gif 파일로 병합 후 files/temps 폴더 안에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/merge-images-to-animated-gif")
     fun api5(
@@ -197,13 +167,7 @@ class C10TkMediaResourceProcessController(
         description = "multipart File 로 받은 움직이는 GIF 이미지 파일을 업로드 하여 리사이징 후 다운\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/resize-gif-image", consumes = ["multipart/form-data"])
     fun api6(
@@ -235,13 +199,7 @@ class C10TkMediaResourceProcessController(
                 "ProcessBuilder 를 사용하므로 OS 에 FFMPEG 이 설치되어 있어야합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/ffmpeg-video-to-gif", consumes = ["multipart/form-data"])
     fun api7(
@@ -273,13 +231,7 @@ class C10TkMediaResourceProcessController(
                 "ProcessBuilder 를 사용하므로 OS 에 FFMPEG 이 설치되어 있어야합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/ffmpeg-gif-to-video", consumes = ["multipart/form-data"])
     fun api8(
@@ -305,13 +257,7 @@ class C10TkMediaResourceProcessController(
                 "ProcessBuilder 를 사용하므로 OS 에 FFMPEG 이 설치되어 있어야합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 지원하는 파일이 아닙니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 지원하는 파일이 아닙니다."
     )
     @PostMapping("/ffmpeg-video-resizing", consumes = ["multipart/form-data"])
     fun api9(

@@ -25,13 +25,7 @@ class C2TkTestController(
         summary = "N1 : 이메일 발송 테스트",
         description = "이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/send-email", consumes = ["multipart/form-data"])
     fun api1(
@@ -70,13 +64,7 @@ class C2TkTestController(
         summary = "N2 : HTML 이메일 발송 테스트",
         description = "HTML 로 이루어진 이메일 발송 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/send-html-email", consumes = ["multipart/form-data"])
     fun api2(
@@ -116,13 +104,7 @@ class C2TkTestController(
         description = "Naver API 를 사용한 SMS 발송 샘플\n\n" +
                 "Service 에서 사용하는 Naver SMS 발송 유틸 내의 개인정보를 변경해야 사용 가능\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/naver-sms-sample")
     fun api3(
@@ -149,13 +131,7 @@ class C2TkTestController(
         summary = "N4 : FCM Push 테스트",
         description = "FCM Push 메세지 발신\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/fcm-push/push-message")
     fun api4(
@@ -204,13 +180,7 @@ class C2TkTestController(
         summary = "N5 : 액셀 파일을 받아서 해석 후 데이터 반환",
         description = "액셀 파일을 받아서 해석 후 데이터 반환\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/read-excel", consumes = ["multipart/form-data"])
     fun api5(
@@ -258,13 +228,7 @@ class C2TkTestController(
         summary = "N6 : 액셀 파일 쓰기",
         description = "받은 데이터를 기반으로 액셀 파일을 만들어 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/write-excel")
     fun api6(
@@ -302,13 +266,7 @@ class C2TkTestController(
         summary = "N7 : HTML 을 기반으로 PDF 를 생성",
         description = "준비된 HTML 1.0(strict), CSS 2.1 을 기반으로 PDF 를 생성 후 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping(
         "/html-to-pdf"

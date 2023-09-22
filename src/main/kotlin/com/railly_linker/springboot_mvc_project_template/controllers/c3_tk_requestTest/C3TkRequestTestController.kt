@@ -31,13 +31,7 @@ class C3TkRequestTestController(
         summary = "N1 : 기본 요청 테스트 API",
         description = "이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("", "/")
     fun api1(
@@ -52,13 +46,7 @@ class C3TkRequestTestController(
         summary = "N2 : 요청 Redirect 테스트 API",
         description = "이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/redirect-to-blank")
     fun api2(
@@ -73,13 +61,7 @@ class C3TkRequestTestController(
         summary = "N3 : 요청 Forward 테스트 API",
         description = "이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/forward-to-blank")
     fun api3(
@@ -94,13 +76,7 @@ class C3TkRequestTestController(
         summary = "N4 : Get 요청 테스트 (Query Parameter)",
         description = "Query Parameter 를 받는 Get 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/get-request")
     fun api4(
@@ -209,13 +185,7 @@ class C3TkRequestTestController(
         summary = "N5 : Get 요청 테스트 (Path Parameter)",
         description = "Path Parameter 를 받는 Get 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/get-request/{pathParamInt}")
     fun api5(
@@ -243,13 +213,7 @@ class C3TkRequestTestController(
         summary = "N6 : Post 요청 테스트 (application-json)",
         description = "application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/post-request-application-json")
     fun api6(
@@ -348,13 +312,7 @@ class C3TkRequestTestController(
         summary = "N7 : Post 요청 테스트 (x-www-form-urlencoded)",
         description = "x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/post-request-x-www-form-urlencoded", consumes = ["application/x-www-form-urlencoded"])
     fun api7(
@@ -447,13 +405,7 @@ class C3TkRequestTestController(
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트\n\n" +
                 "MultipartFile 파라미터가 null 이 아니라면 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/post-request-multipart-form-data", consumes = ["multipart/form-data"])
     fun api8(
@@ -552,13 +504,7 @@ class C3TkRequestTestController(
         description = "multipart/form-data 형태의 Request Body 를 받는 Post 메소드 요청 테스트(Multipart File List)\n\n" +
                 "파일 리스트가 null 이 아니라면 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/post-request-multipart-form-data2", consumes = ["multipart/form-data"])
     fun api9(
@@ -659,13 +605,7 @@ class C3TkRequestTestController(
                 "Object 리스트 타입을 사용한다면, Json String 타입으로 객체를 받아서 파싱하여 사용하는 방식을 사용합니다.\n\n" +
                 "아래 예시에서는 모두 JsonString 형식으로 만들었지만, ObjectList 타입만 이런식으로 처리하세요.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/post-request-multipart-form-data-json", consumes = ["multipart/form-data"])
     fun api10(
@@ -832,13 +772,7 @@ class C3TkRequestTestController(
         summary = "N11 : 인위적 에러 발생 테스트",
         description = "요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/generate-error")
     fun api11(
@@ -857,13 +791,7 @@ class C3TkRequestTestController(
                 "0 : 정상 동작\n\n" +
                 "1 : errorType 을 A 로 보냈습니다.\n\n" +
                 "2 : errorType 을 B 로 보냈습니다.\n\n" +
-                "3 : errorType 을 C 로 보냈습니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "3 : errorType 을 C 로 보냈습니다."
     )
     @PostMapping("/api-result-code-test")
     fun api12(
@@ -888,13 +816,7 @@ class C3TkRequestTestController(
         summary = "N13 : 인위적 타임아웃 에러 발생 테스트",
         description = "타임아웃 에러를 발생시키기 위해 임의로 응답 시간을 지연시킵니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/generate-time-out-error")
     fun api13(
@@ -913,13 +835,7 @@ class C3TkRequestTestController(
         summary = "N14 : text/string 반환 샘플",
         description = "text/string 형식의 Response Body 를 반환합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/return-text-string")
     fun api14(
@@ -937,13 +853,7 @@ class C3TkRequestTestController(
         summary = "N15 : text/html 반환 샘플",
         description = "text/html 형식의 Response Body 를 반환합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/return-text-html")
     fun api15(
@@ -962,13 +872,7 @@ class C3TkRequestTestController(
         description = " byte array('a', .. , 'f') 에서 아래와 같은 요청으로 원하는 바이트를 요청 가능\n\n" +
                 "    >> curl http://localhost:8080/tk/advanced-request-test/byte -i -H \"Range: bytes=2-4\"\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping(path = ["/byte"])
     fun api16(
@@ -992,13 +896,7 @@ class C3TkRequestTestController(
         description = "비디오 스트리밍 샘플\n\n" +
                 "테스트는 프로젝트 파일 경로의 samples/html_file_sample 안의 video-streaming.html 파일을 사용하세요.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping(path = ["/video-streaming"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun api17(
@@ -1024,13 +922,7 @@ class C3TkRequestTestController(
         description = "오디오 스트리밍 샘플\n\n" +
                 "테스트는 프로젝트 파일 경로의 samples/html_file_sample 안의 audio-streaming.html 파일을 사용하세요.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping(path = ["/audio-streaming"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun api18(
@@ -1047,13 +939,7 @@ class C3TkRequestTestController(
         description = "API 호출시 함수 내에서 별도 스레드로 작업을 수행하고,\n\n" +
                 "비동기 작업 완료 후 그 처리 결과가 반환됨\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/async-result")
     fun api19(
@@ -1078,13 +964,7 @@ class C3TkRequestTestController(
                 "    >>> curl -N --http2 -H \"Accept:text/event-stream\" http://127.0.0.1:8080/tk/advanced-request-test/sse-test/subscribe\n\n" +
                 "혹은, 프로젝트 파일 경로의 samples/html_file_sample 안의 sse-test.html 파일을 사용하세요. (cors 설정 필요)\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/sse-test/subscribe", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun api20(
@@ -1105,13 +985,7 @@ class C3TkRequestTestController(
         summary = "N21 : SSE 이벤트 전송 트리거 테스트",
         description = "어떠한 사건이 일어나면 알림을 위하여 SSE 이벤트 전송을 한다고 가정\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/sse-test/event-trigger")
     fun api21(

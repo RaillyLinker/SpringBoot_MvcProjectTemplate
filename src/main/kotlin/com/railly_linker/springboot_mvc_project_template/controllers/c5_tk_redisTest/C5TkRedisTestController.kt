@@ -24,13 +24,7 @@ class C5TkRedisTestController(
         summary = "N1 : Redis Key-Value 입력 테스트",
         description = "Redis 테이블에 Key-Value 를 입력합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/test")
     fun api1(
@@ -60,13 +54,7 @@ class C5TkRedisTestController(
         description = "Redis Table 에 저장된 Key-Value 를 조회합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : key 에 저장된 데이터가 없음",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : key 에 저장된 데이터가 없음"
     )
     @GetMapping("/test")
     fun api2(
@@ -100,13 +88,7 @@ class C5TkRedisTestController(
         summary = "N3 : Redis Key-Value 모두 조회 테스트",
         description = "Redis Table 에 저장된 모든 Key-Value 를 조회합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @GetMapping("/tests")
     fun api3(
@@ -147,13 +129,7 @@ class C5TkRedisTestController(
         summary = "N4 : Redis Key-Value 삭제 테스트",
         description = "Redis Table 에 저장된 Key 를 삭제합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @DeleteMapping("/test")
     fun api4(
@@ -172,13 +148,7 @@ class C5TkRedisTestController(
         summary = "N5 : Redis Key-Value 모두 삭제 테스트",
         description = "Redis Table 에 저장된 모든 Key 를 삭제합니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @DeleteMapping("/test-all")
     fun api5(
@@ -196,13 +166,7 @@ class C5TkRedisTestController(
                 "Redis 에 데이터 저장 직후 바로 Exception 을 발생시킵니다.\n\n" +
                 "이 API 를 사용하고 바로 데이터 조회를 했을 때, 데이터가 없다고 나오면 Rollback 이 동작한 것입니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/test-transaction")
     fun api6(
@@ -233,13 +197,7 @@ class C5TkRedisTestController(
                 "Redis 에 데이터 저장 직후 바로 Exception 을 발생시킵니다.\n\n" +
                 "트랜젝션을 적용하지 않았으니 데이터는 저장될 것입니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/test-no-transaction")
     fun api7(

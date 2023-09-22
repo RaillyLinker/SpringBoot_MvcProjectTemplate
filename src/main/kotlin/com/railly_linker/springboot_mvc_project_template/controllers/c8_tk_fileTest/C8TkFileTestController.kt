@@ -28,13 +28,7 @@ class C8TkFileTestController(
         summary = "N1 : files/temp 폴더로 파일 업로드",
         description = "multipart File 을 하나 업로드하여 서버의 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/upload-to-temp", consumes = ["multipart/form-data"])
     fun api1(
@@ -65,13 +59,7 @@ class C8TkFileTestController(
         description = "업로드 API 를 사용하여 files/temp 로 업로드한 파일을 다운로드\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 파일이 존재하지 않습니다.",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "1 : 파일이 존재하지 않습니다."
     )
     @GetMapping("/download-from-temp/{fileName}")
     fun api2(
@@ -90,13 +78,7 @@ class C8TkFileTestController(
         summary = "N3 : 파일 리스트 zip 압축 테스트",
         description = "파일들을 zip 타입으로 압축하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/zip-files")
     fun api3(
@@ -112,13 +94,7 @@ class C8TkFileTestController(
         summary = "N3.1 : 폴더 zip 압축 테스트",
         description = "폴더를 통째로 zip 타입으로 압축하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/zip-folder")
     fun api3Dot1(
@@ -134,13 +110,7 @@ class C8TkFileTestController(
         summary = "N4 : zip 압축 파일 해제 테스트",
         description = "zip 압축 파일을 해제하여 files/temp 폴더에 저장\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "OK"
-            )
-        ]
+                "0 : 정상 동작"
     )
     @PostMapping("/unzip-file")
     fun api4(
