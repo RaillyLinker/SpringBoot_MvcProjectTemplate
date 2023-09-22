@@ -10,7 +10,7 @@ spring:
     admin:
       client:
         # !!!Spring Admin 정보 설정!!
-        url: http://127.0.0.1:8081 # spring admin server url
+        url: http://127.0.0.2:8081 # spring admin server url
         username: adminId # spring admin server Security Id
         password: adminPw # spring admin server Security Pw
         instance:
