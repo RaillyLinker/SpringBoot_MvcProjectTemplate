@@ -17,6 +17,7 @@ import java.io.File
 import java.net.SocketTimeoutException
 import java.nio.file.Paths
 
+// todo : 타임아웃 1, 서버 에러 2 로 처리하기
 @Service
 class C4TkRequestFromServerTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
