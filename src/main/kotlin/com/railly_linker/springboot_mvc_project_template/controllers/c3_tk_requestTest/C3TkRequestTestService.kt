@@ -170,9 +170,6 @@ class C3TkRequestTestService(
         // 원본 파일명(with suffix)
         val multiPartFileNameString = StringUtils.cleanPath(inputVo.multipartFile.originalFilename!!)
 
-        // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-        Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
-
         // 파일 확장자 구분 위치
         val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
 
@@ -206,9 +203,6 @@ class C3TkRequestTestService(
             // 원본 파일명(with suffix)
             val multiPartFileNullableNameString =
                 StringUtils.cleanPath(inputVo.multipartFileNullable.originalFilename!!)
-
-            // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-            Assert.state(!multiPartFileNullableNameString.contains(".."), "Name of file cannot contain '..'")
 
             // 파일 확장자 구분 위치
             val nullableFileExtensionSplitIdx = multiPartFileNullableNameString.lastIndexOf('.')
@@ -276,9 +270,6 @@ class C3TkRequestTestService(
             // 원본 파일명(with suffix)
             val multiPartFileNameString = StringUtils.cleanPath(multipartFile.originalFilename!!)
 
-            // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-            Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
-
             // 파일 확장자 구분 위치
             val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
 
@@ -314,9 +305,6 @@ class C3TkRequestTestService(
                 // 원본 파일명(with suffix)
                 val multiPartFileNullableNameString =
                     StringUtils.cleanPath(multipartFileNullable.originalFilename!!)
-
-                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-                Assert.state(!multiPartFileNullableNameString.contains(".."), "Name of file cannot contain '..'")
 
                 // 파일 확장자 구분 위치
                 val nullableFileExtensionSplitIdx = multiPartFileNullableNameString.lastIndexOf('.')
@@ -390,9 +378,6 @@ class C3TkRequestTestService(
         // 원본 파일명(with suffix)
         val multiPartFileNameString = StringUtils.cleanPath(inputVo.multipartFile.originalFilename!!)
 
-        // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-        Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
-
         // 파일 확장자 구분 위치
         val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
 
@@ -426,9 +411,6 @@ class C3TkRequestTestService(
             // 원본 파일명(with suffix)
             val multiPartFileNullableNameString =
                 StringUtils.cleanPath(inputVo.multipartFileNullable.originalFilename!!)
-
-            // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-            Assert.state(!multiPartFileNullableNameString.contains(".."), "Name of file cannot contain '..'")
 
             // 파일 확장자 구분 위치
             val nullableFileExtensionSplitIdx = multiPartFileNullableNameString.lastIndexOf('.')

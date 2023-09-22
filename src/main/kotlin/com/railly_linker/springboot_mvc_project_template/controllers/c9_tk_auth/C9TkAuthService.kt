@@ -1701,9 +1701,6 @@ class C9TkAuthService(
                 // 원본 파일명(with suffix)
                 val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
 
-                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-                Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
-
                 // 파일 확장자 구분 위치
                 val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
 
@@ -1978,9 +1975,6 @@ class C9TkAuthService(
 
                 // 원본 파일명(with suffix)
                 val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
-
-                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-                Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
 
                 // 파일 확장자 구분 위치
                 val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
@@ -2418,9 +2412,6 @@ class C9TkAuthService(
 
                 // 원본 파일명(with suffix)
                 val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
-
-                // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-                Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
 
                 // 파일 확장자 구분 위치
                 val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
@@ -4106,9 +4097,6 @@ class C9TkAuthService(
         // 원본 파일명(with suffix)
         val multiPartFileNameString = StringUtils.cleanPath(inputVo.profileImageFile.originalFilename!!)
 
-        // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-        Assert.state(!multiPartFileNameString.contains(".."), "Name of file cannot contain '..'")
-
         // 파일 확장자 구분 위치
         val fileExtensionSplitIdx = multiPartFileNameString.lastIndexOf('.')
 
@@ -4162,9 +4150,6 @@ class C9TkAuthService(
 
     ////
     fun api48(httpServletResponse: HttpServletResponse, fileName: String): ResponseEntity<Resource>? {
-        // 파일명에 '..' 문자가 들어 있다면 오류를 발생하고 아니라면 진행(해킹및 오류방지)
-        Assert.state(!fileName.contains(".."), "Name of file cannot contain '..'")
-
         // 프로젝트 루트 경로 (프로젝트 settings.gradle 이 있는 경로)
         val projectRootAbsolutePathString: String = File("").absolutePath
 
