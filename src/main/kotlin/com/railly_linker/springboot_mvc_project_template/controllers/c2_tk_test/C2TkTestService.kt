@@ -40,7 +40,6 @@ class C2TkTestService(
             inputVo.multipartFileList
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -64,7 +63,6 @@ class C2TkTestService(
             inputVo.multipartFileList
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -88,7 +86,6 @@ class C2TkTestService(
             )
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -111,7 +108,6 @@ class C2TkTestService(
             )
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -130,7 +126,6 @@ class C2TkTestService(
             inputVo.minColumnLength
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C2TkTestController.Api5OutputVo(
             excelData?.size ?: 0,
@@ -163,8 +158,6 @@ class C2TkTestService(
         }
 
         ExcelFileUtilObject.writeExcel(file.outputStream(), inputExcelSheetDataMap)
-
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -199,7 +192,6 @@ class C2TkTestService(
             )
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 }

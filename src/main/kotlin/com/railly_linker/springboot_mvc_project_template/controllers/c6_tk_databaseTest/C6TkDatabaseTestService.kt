@@ -38,8 +38,8 @@ class C6TkDatabaseTestService(
             Database1_Template_TestData(inputVo.content, (0..99999999).random(), true)
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
+
         return C6TkDatabaseTestController.Api1OutputVo(
             result.uid!!,
             result.content,
@@ -55,7 +55,6 @@ class C6TkDatabaseTestService(
     fun api2(httpServletResponse: HttpServletResponse) {
         database1TemplateTestRepository.deleteAll()
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -65,7 +64,6 @@ class C6TkDatabaseTestService(
     fun api3(httpServletResponse: HttpServletResponse, index: Long) {
         database1TemplateTestRepository.deleteById(index)
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -87,7 +85,6 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api4OutputVo(
             testEntityVoList
@@ -118,7 +115,6 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api5OutputVo(
             testEntityVoList
@@ -149,7 +145,6 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api6OutputVo(
             testEntityVoList
@@ -182,7 +177,6 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api7OutputVo(
             entityList.totalElements,
@@ -218,7 +212,6 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api8OutputVo(
             voList.totalElements,
@@ -237,7 +230,6 @@ class C6TkDatabaseTestService(
         val oldEntity = database1TemplateTestRepository.findById(testTableUid)
 
         if (oldEntity.isEmpty || !oldEntity.get().rowActivate) {
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -249,7 +241,6 @@ class C6TkDatabaseTestService(
             testObject
         )
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api9OutputVo(
             result.uid!!,
@@ -274,15 +265,12 @@ class C6TkDatabaseTestService(
         val testEntity = database1TemplateTestRepository.findById(testTableUid)
 
         if (testEntity.isEmpty || !testEntity.get().rowActivate) {
-            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             // 트랜젝션 커밋
             return
         }
 
         database1NativeRepository.updateForC6N10(testTableUid, inputVo.content)
-
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -313,7 +301,6 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C6TkDatabaseTestController.Api11OutputVo(
             voList.totalElements,
@@ -332,8 +319,6 @@ class C6TkDatabaseTestService(
         )
 
         throw Exception("Transaction Rollback Test!")
-
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -345,8 +330,6 @@ class C6TkDatabaseTestService(
         )
 
         throw Exception("No Transaction Exception Test!")
-
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -380,8 +363,8 @@ class C6TkDatabaseTestService(
             )
         }
 
-        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
+
         return C6TkDatabaseTestController.Api14OutputVo(count, testEntityVoList)
     }
 }

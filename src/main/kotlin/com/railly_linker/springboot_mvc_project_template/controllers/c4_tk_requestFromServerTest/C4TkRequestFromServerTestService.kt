@@ -17,9 +17,6 @@ import java.io.File
 import java.net.SocketTimeoutException
 import java.nio.file.Paths
 
-// todo : 전역의 Assert.state 사용 부분에서 굳이 Exception 을 일으키지 않도록 처리 (파일명 전부 적절히 처리하기)
-// todo : 여기서 네트워크 요청시 에러가 발생 했을 때 api-result-code 처리 및 테스트
-// todo : SecurityConfig 에서 setHeader 부분에 에러 Http Status Code 처리 및 테스트
 @Service
 class C4TkRequestFromServerTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
