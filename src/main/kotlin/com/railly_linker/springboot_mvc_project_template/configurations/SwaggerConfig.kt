@@ -245,19 +245,17 @@ class SwaggerConfig {
             api-result-code 0 이외에는 401, 402, 400 과 같이 상황에 맞는 Http Status Code 를 내려줄 것이며,
             
             상황에 맞는 코드가 없다면 500 을 내려줄 것입니다.
-        - 클라이언트에서의 api-result-code 처리 방식의 알고리즘은 아래와 같이 처리하면 됩니다.
+        - 본 서버에 대한 클라이언트에서의 요청 처리 방식의 알고리즘은 아래와 같이 처리하면 편합니다.
         
             1. 본 서버의 API 에 네트워크 요청을 보내기
             
             2. 사용중인 네트워크 라이브러리가 반환하는 에러 확인(타임아웃, 서버접근 불가, Cors 에러 등) 및 에러 처리
             
-            3. 네트워크 라이브러리 에러가 없다면 Http Status Code 가 200 인지 확인하고, 200 이라면 정상 동작에 대한 처리
+            3. Response Header 안에 api-result-code 가 있는지 확인
             
-            4. Http Status Code 가 200 이 아니라면 Response Header 안에 api-result-code 가 있는지 확인
+            4. api-result-code 가 있다면, 코드 종류에 따라 스웨거 문서를 확인하여 적절한 처리를 해주기
             
-            5. api-result-code 가 있다면, 코드 종류에 따라 스웨거 문서를 확인하여 적절한 처리를 해주기
-            
-            6. api-result-code 가 없다면, 서버 개발자에게 문의하기
+            5. api-result-code 가 없다면, 서버 개발자에게 문의하기
         - api-result-code 의 발생 순서는 먼저 알파벳 타입의 순서로 검사 되며, 다음으로 숫자 타입의 숫자가 작을 수록 먼저 검사를 합니다.
             
             예를들어 알파벳 타입으로, api-result-code 가 a 가 반환될 때가 "만료된 AccessToken" 이라는 신호라면,
