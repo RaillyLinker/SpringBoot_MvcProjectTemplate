@@ -51,7 +51,7 @@ class C10TkMediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
-            httpServletResponse.addHeader("api-error-codes", "1")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -73,7 +73,7 @@ class C10TkMediaResourceProcessService(
         // 결과 파일의 확장자 포함 파일명 생성
         val resultFileName = "resized_${timeString}.${originFileFormat}"
 
-        httpServletResponse.addHeader("api-error-codes", "0")
+        httpServletResponse.setHeader("api-result-code", "0")
         return ResponseEntity<Resource>(
             resource,
             HttpHeaders().apply {
@@ -105,7 +105,7 @@ class C10TkMediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
-            httpServletResponse.addHeader("api-error-codes", "1")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -126,7 +126,7 @@ class C10TkMediaResourceProcessService(
         // 결과 파일의 확장자 포함 파일명 생성
         val resultFileName = "change_format_${timeString}.${newFileFormat}"
 
-        httpServletResponse.addHeader("api-error-codes", "0")
+        httpServletResponse.setHeader("api-result-code", "0")
         return ResponseEntity<Resource>(
             resource,
             HttpHeaders().apply {
@@ -158,7 +158,7 @@ class C10TkMediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
-            httpServletResponse.addHeader("api-error-codes", "1")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -179,7 +179,7 @@ class C10TkMediaResourceProcessService(
         // 결과 파일의 확장자 포함 파일명 생성
         val resultFileName = "change_format_and_resize_${timeString}.${newFileFormat}"
 
-        httpServletResponse.addHeader("api-error-codes", "0")
+        httpServletResponse.setHeader("api-result-code", "0")
         return ResponseEntity<Resource>(
             resource,
             HttpHeaders().apply {
@@ -231,7 +231,7 @@ class C10TkMediaResourceProcessService(
             ImageIO.write(bufferedImage.frameBufferedImage, "png", fileTargetPath.toFile())
         }
 
-        httpServletResponse.addHeader("api-error-codes", "0")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -274,7 +274,7 @@ class C10TkMediaResourceProcessService(
             fileTargetPath.toFile().outputStream()
         )
 
-        httpServletResponse.addHeader("api-error-codes", "0")
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
@@ -290,7 +290,7 @@ class C10TkMediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
-            httpServletResponse.addHeader("api-error-codes", "1")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -307,7 +307,7 @@ class C10TkMediaResourceProcessService(
             inputVo.resizingHeight
         )
 
-        httpServletResponse.addHeader("api-error-codes", "0")
+        httpServletResponse.setHeader("api-result-code", "0")
         return ResponseEntity<Resource>(
             InputStreamResource(ByteArrayInputStream(resizedImageByteArray)),
             HttpHeaders().apply {
@@ -375,7 +375,7 @@ class C10TkMediaResourceProcessService(
             // 결과 파일의 확장자 포함 파일명 생성
             val resultFileName = "result_${timeString}.gif"
 
-            httpServletResponse.addHeader("api-error-codes", "0")
+            httpServletResponse.setHeader("api-result-code", "0")
             return ResponseEntity<Resource>(
                 resource,
                 HttpHeaders().apply {
@@ -408,7 +408,7 @@ class C10TkMediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
-            httpServletResponse.addHeader("api-error-codes", "1")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
@@ -448,7 +448,7 @@ class C10TkMediaResourceProcessService(
             // 결과 파일의 확장자 포함 파일명 생성
             val resultFileName = "result_${timeString}.mp4"
 
-            httpServletResponse.addHeader("api-error-codes", "0")
+            httpServletResponse.setHeader("api-result-code", "0")
             return ResponseEntity<Resource>(
                 resource,
                 HttpHeaders().apply {
@@ -520,7 +520,7 @@ class C10TkMediaResourceProcessService(
             // 결과 파일의 확장자 포함 파일명 생성
             val resultFileName = "result_${timeString}.$fileExtension"
 
-            httpServletResponse.addHeader("api-error-codes", "0")
+            httpServletResponse.setHeader("api-result-code", "0")
             return ResponseEntity<Resource>(
                 resource,
                 HttpHeaders().apply {
