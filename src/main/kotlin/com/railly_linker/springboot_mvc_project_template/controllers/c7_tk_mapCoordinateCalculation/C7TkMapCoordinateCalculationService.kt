@@ -63,6 +63,8 @@ class C7TkMapCoordinateCalculationService(
                 )
             )
         }
+
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -75,6 +77,7 @@ class C7TkMapCoordinateCalculationService(
         latitude2: Double,
         longitude2: Double
     ): C7TkMapCoordinateCalculationController.Api1OutputVo? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkMapCoordinateCalculationController.Api1OutputVo(
             MapCoordinateUtilObject.getDistanceMeterBetweenTwoLatLngCoordinate(
@@ -102,6 +105,7 @@ class C7TkMapCoordinateCalculationService(
             latLngCoordinate
         )
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkMapCoordinateCalculationController.Api2OutputVo(
             centerCoordinate.first,
@@ -144,6 +148,7 @@ class C7TkMapCoordinateCalculationService(
             latLngCoordinate
         )
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkMapCoordinateCalculationController.Api3OutputVo(
             coordinateList,
@@ -159,6 +164,8 @@ class C7TkMapCoordinateCalculationService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api4(httpServletResponse: HttpServletResponse) {
         database1TemplateTestMapRepository.deleteAll()
+
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -189,6 +196,7 @@ class C7TkMapCoordinateCalculationService(
             )
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkMapCoordinateCalculationController.Api5OutputVo(
             coordinateCalcResultList
@@ -223,6 +231,7 @@ class C7TkMapCoordinateCalculationService(
             )
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C7TkMapCoordinateCalculationController.Api6OutputVo(
             coordinateCalcResultList

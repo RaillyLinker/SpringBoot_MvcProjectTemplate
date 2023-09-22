@@ -22,6 +22,7 @@ class C1Service(
         val mv = ModelAndView()
         mv.viewName = "forward:/home-page"
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
@@ -39,6 +40,7 @@ class C1Service(
             )
         )
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }

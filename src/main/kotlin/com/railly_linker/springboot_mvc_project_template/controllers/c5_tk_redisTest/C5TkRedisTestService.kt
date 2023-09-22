@@ -38,6 +38,8 @@ class C5TkRedisTestService(
             ),
             inputVo.expirationMs
         )
+
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -48,10 +50,12 @@ class C5TkRedisTestService(
         val keyValue = redis1TestRepository.findKeyValue(key)
 
         if (keyValue == null) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C5TkRedisTestController.Api2OutputVo(
             Redis1_Test.TABLE_NAME,
@@ -78,6 +82,7 @@ class C5TkRedisTestService(
             )
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C5TkRedisTestController.Api3OutputVo(
             Redis1_Test.TABLE_NAME,
@@ -89,6 +94,7 @@ class C5TkRedisTestService(
     ////
     fun api4(httpServletResponse: HttpServletResponse, key: String) {
         redis1TestRepository.deleteKeyValue(key)
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -96,6 +102,7 @@ class C5TkRedisTestService(
     ////
     fun api5(httpServletResponse: HttpServletResponse) {
         redis1TestRepository.deleteAllKeyValues()
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -116,6 +123,8 @@ class C5TkRedisTestService(
             inputVo.expirationMs
         )
         throw RuntimeException("Test Exception for Redis Transaction Test")
+
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -135,6 +144,8 @@ class C5TkRedisTestService(
             inputVo.expirationMs
         )
         throw RuntimeException("Test Exception for Redis Non Transaction Test")
+
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 }

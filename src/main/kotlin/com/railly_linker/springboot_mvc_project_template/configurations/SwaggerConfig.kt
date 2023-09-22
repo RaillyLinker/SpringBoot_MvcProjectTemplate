@@ -240,9 +240,7 @@ class SwaggerConfig {
             위와 같은 에러가 아닌 성공시에도 무조건 api-result-code 를 "0" 으로 보내줄 것이며,
             
             각 API 사용별 반환될 수 있는 "api-result-code" 는 Swagger 문서에 기록할 것입니다.
-        - Http Status Code 200 은 api-result-code "0" 과 동일하다고 생각하고 처리하면 됩니다.
-        
-            즉, api-result-code 가 0 이 반환되면, 무조건 Http Status Code 는 200 이 반환됩니다.
+        - api-result-code 가 0 이 반환되면, 무조건 Http Status Code 는 200 이 반환됩니다.
             
             api-result-code 0 이외에는 401, 402, 400 과 같이 상황에 맞는 Http Status Code 를 내려줄 것이며,
             

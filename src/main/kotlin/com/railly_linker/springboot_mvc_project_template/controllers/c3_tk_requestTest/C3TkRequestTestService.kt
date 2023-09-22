@@ -45,6 +45,7 @@ class C3TkRequestTestService(
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): String? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return activeProfile
     }
@@ -55,6 +56,7 @@ class C3TkRequestTestService(
         val mv = ModelAndView()
         mv.viewName = "redirect:/tk/request-test"
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
@@ -65,6 +67,7 @@ class C3TkRequestTestService(
         val mv = ModelAndView()
         mv.viewName = "forward:/tk/request-test"
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
@@ -84,6 +87,7 @@ class C3TkRequestTestService(
         queryParamStringList: List<String>,
         queryParamStringListNullable: List<String>?
     ): C3TkRequestTestController.Api4OutputVo? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api4OutputVo(
             queryParamString,
@@ -102,6 +106,7 @@ class C3TkRequestTestService(
 
     ////
     fun api5(httpServletResponse: HttpServletResponse, pathParamInt: Int): C3TkRequestTestController.Api5OutputVo? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api5OutputVo(pathParamInt)
     }
@@ -112,6 +117,7 @@ class C3TkRequestTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: C3TkRequestTestController.Api6InputVo
     ): C3TkRequestTestController.Api6OutputVo? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api6OutputVo(
             inputVo.requestBodyString,
@@ -133,6 +139,7 @@ class C3TkRequestTestService(
         httpServletResponse: HttpServletResponse,
         inputVo: C3TkRequestTestController.Api7InputVo
     ): C3TkRequestTestController.Api7OutputVo? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api7OutputVo(
             inputVo.requestFormString,
@@ -237,6 +244,7 @@ class C3TkRequestTestService(
             )
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api8OutputVo(
             inputVo.requestFormString,
@@ -345,6 +353,7 @@ class C3TkRequestTestService(
             }
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api9OutputVo(
             inputVo.requestFormString,
@@ -455,6 +464,7 @@ class C3TkRequestTestService(
             )
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return C3TkRequestTestController.Api10OutputVo(
             inputJsonObject.requestFormString,
@@ -474,24 +484,30 @@ class C3TkRequestTestService(
     ////
     fun api11(httpServletResponse: HttpServletResponse) {
         throw RuntimeException("Test Error")
+
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
     ////
     fun api12(httpServletResponse: HttpServletResponse, errorType: C3TkRequestTestController.Api12ErrorTypeEnum?) {
         if (errorType == null) {
+            httpServletResponse.status = 200
             httpServletResponse.setHeader("api-result-code", "0")
         } else {
             when (errorType) {
                 C3TkRequestTestController.Api12ErrorTypeEnum.A -> {
+                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "1")
                 }
 
                 C3TkRequestTestController.Api12ErrorTypeEnum.B -> {
+                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "2")
                 }
 
                 C3TkRequestTestController.Api12ErrorTypeEnum.C -> {
+                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "3")
                 }
             }
@@ -508,12 +524,14 @@ class C3TkRequestTestService(
             Thread.sleep(100)  // 100ms마다 스레드를 잠들게 하여 CPU 사용률을 줄임
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
     ////
     fun api14(httpServletResponse: HttpServletResponse): String? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return "test Complete!"
     }
@@ -524,6 +542,7 @@ class C3TkRequestTestService(
         val modelAndView = ModelAndView()
         modelAndView.viewName = "template_c3_n15/html_response_example"
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return modelAndView
     }
@@ -531,6 +550,7 @@ class C3TkRequestTestService(
 
     ////
     fun api16(httpServletResponse: HttpServletResponse): Resource? {
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return ByteArrayResource(
             byteArrayOf(
@@ -579,6 +599,7 @@ class C3TkRequestTestService(
         // 반환값에 전해줄 FIS
         val fileInputStream = FileInputStream("$serverFileAbsolutePathString/$serverFileNameString")
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return ByteArrayResource(FileCopyUtils.copyToByteArray(fileInputStream))
     }
@@ -596,6 +617,7 @@ class C3TkRequestTestService(
         // 반환값에 전해줄 FIS
         val fileInputStream = FileInputStream("$serverFileAbsolutePathString/$serverFileNameString")
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return ByteArrayResource(FileCopyUtils.copyToByteArray(fileInputStream))
     }
@@ -618,6 +640,7 @@ class C3TkRequestTestService(
         }
 
         // 결과 대기 객체를 먼저 반환
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return deferredResult
     }
@@ -649,6 +672,7 @@ class C3TkRequestTestService(
         api20SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
         api20SseEmitterWrapperMbr.emitterMapSemaphore.release()
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return sseEmitter
     }
@@ -693,6 +717,7 @@ class C3TkRequestTestService(
         api20SseEmitterWrapperMbr.emitterEventMapSemaphore.release()
         api20SseEmitterWrapperMbr.emitterMapSemaphore.release()
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 }

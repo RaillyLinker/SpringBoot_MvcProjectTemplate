@@ -17,6 +17,8 @@ import java.io.File
 import java.net.SocketTimeoutException
 import java.nio.file.Paths
 
+// todo : 전역의 Assert.state 사용 부분에서 굳이 에러를 일으키지 않도록 처리
+// todo : 여기서 HttpStatusCode 추가 처리, 네트워크 처리 부분 리펙토링
 @Service
 class C4TkRequestFromServerTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))

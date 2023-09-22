@@ -80,8 +80,8 @@ class C8TkFileTestService(
             saveDirectoryPath.resolve(savedFileName).normalize()
         )
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
-
         return C8TkFileTestController.Api1OutputVo("http://127.0.0.1:8080/tk/file-test/download-from-temp/$savedFileName")
     }
 
@@ -99,17 +99,20 @@ class C8TkFileTestService(
         when {
             Files.isDirectory(serverFilePathObject) -> {
                 // 파일이 디렉토리일때
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "1")
                 return null
             }
 
             Files.notExists(serverFilePathObject) -> {
                 // 파일이 없을 때
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "1")
                 return null
             }
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
         return ResponseEntity<Resource>(
             InputStreamResource(Files.newInputStream(serverFilePathObject)),
@@ -162,6 +165,7 @@ class C8TkFileTestService(
 
         zipOutputStream.close()
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -190,6 +194,7 @@ class C8TkFileTestService(
             CustomUtilObject.compressDirectoryToZip(sourceDir, sourceDir.name, zipOutputStream)
         }
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -217,6 +222,7 @@ class C8TkFileTestService(
 
         CustomUtilObject.unzipFile(filePathString, fileTargetPath)
 
+        httpServletResponse.status = 200
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
