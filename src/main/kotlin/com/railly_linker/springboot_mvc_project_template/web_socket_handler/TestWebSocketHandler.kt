@@ -15,7 +15,7 @@ import java.util.concurrent.Semaphore
 // [1대1 웹 소켓 테스팅 핸들러]
 // WebSocketConfig 에서 설정에 사용됨
 // 텍스트 데이터 양방향 연결
-class ServerClientTestWebSocketHandler : TextWebSocketHandler() {
+class TestWebSocketHandler : TextWebSocketHandler() {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 

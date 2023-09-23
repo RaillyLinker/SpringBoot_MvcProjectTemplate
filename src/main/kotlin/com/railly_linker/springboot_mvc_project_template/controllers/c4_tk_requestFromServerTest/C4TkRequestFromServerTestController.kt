@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,7 +26,9 @@ class C4TkRequestFromServerTestController(
         summary = "N1 : 기본 요청 테스트",
         description = "기본적인 Get 메소드 요청 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/request-test")
     fun api1(
@@ -42,7 +43,9 @@ class C4TkRequestFromServerTestController(
         summary = "N2 : Redirect 테스트",
         description = "Redirect 되었을 때의 응답 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/redirect-to-blank")
     fun api2(
@@ -57,7 +60,9 @@ class C4TkRequestFromServerTestController(
         summary = "N3 : Forward 테스트",
         description = "Forward 되었을 때의 응답 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/forward-to-blank")
     fun api3(
@@ -72,7 +77,9 @@ class C4TkRequestFromServerTestController(
         summary = "N4 : Get 요청 테스트 (Query Parameter)",
         description = "Query 파라미터를 받는 Get 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/get-request")
     fun api4(
@@ -128,7 +135,9 @@ class C4TkRequestFromServerTestController(
         summary = "N5 : Get 요청 테스트 (Path Parameter)",
         description = "Path 파라미터를 받는 Get 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/get-request-path-param")
     fun api5(
@@ -149,7 +158,9 @@ class C4TkRequestFromServerTestController(
         summary = "N6 : Post 요청 테스트 (Request Body, application/json)",
         description = "application/json 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/post-request-application-json")
     fun api6(
@@ -205,7 +216,9 @@ class C4TkRequestFromServerTestController(
         summary = "N7 : Post 요청 테스트 (Request Body, x-www-form-urlencoded)",
         description = "x-www-form-urlencoded 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/post-request-x-www-form-urlencoded")
     fun api7(
@@ -261,7 +274,9 @@ class C4TkRequestFromServerTestController(
         summary = "N8 : Post 요청 테스트 (Request Body, multipart/form-data)",
         description = "multipart/form-data 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/post-request-multipart-form-data")
     fun api8(
@@ -318,7 +333,9 @@ class C4TkRequestFromServerTestController(
         description = "multipart/form-data 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "MultipartFile 파라미터를 List 로 받습니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/post-request-multipart-form-data2")
     fun api9(
@@ -375,7 +392,9 @@ class C4TkRequestFromServerTestController(
         description = "multipart/form-data 형식의 Request Body 를 받는 Post 요청 테스트\n\n" +
                 "파일 외의 파라미터를 JsonString 형식으로 받습니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/post-request-multipart-form-data-json")
     fun api10(
@@ -432,7 +451,8 @@ class C4TkRequestFromServerTestController(
         description = "요청시 에러가 발생했을 때의 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : api-result-code 가 반환되지 않음"
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/generate-error")
     fun api11(
@@ -448,9 +468,11 @@ class C4TkRequestFromServerTestController(
         description = "api-result-code 가 Response Header 로 반환되는 테스트입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : errorType 을 A 로 보냈습니다.\n\n" +
-                "2 : errorType 을 B 로 보냈습니다.\n\n" +
-                "3 : errorType 을 C 로 보냈습니다."
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러\n\n" +
+                "3 : errorType 을 A 로 보냈습니다.\n\n" +
+                "4 : errorType 을 B 로 보냈습니다.\n\n" +
+                "5 : errorType 을 C 로 보냈습니다."
     )
     @GetMapping("/api-result-code-test")
     fun api12(
@@ -466,7 +488,8 @@ class C4TkRequestFromServerTestController(
         description = "요청을 보내어 타임아웃이 발생했을 때를 테스트합니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 타임아웃이 발생함"
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/generate-time-out-error")
     fun api13(
@@ -485,7 +508,9 @@ class C4TkRequestFromServerTestController(
         summary = "N14 : text/string 형식 Response 받아오기",
         description = "text/string 형식 Response 를 받아옵니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/text-string-response")
     fun api14(
@@ -509,7 +534,9 @@ class C4TkRequestFromServerTestController(
         summary = "N15 : text/html 형식 Response 받아오기",
         description = "text/html 형식 Response 를 받아옵니다.\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/text-html-response")
     fun api15(
@@ -533,7 +560,9 @@ class C4TkRequestFromServerTestController(
         summary = "N16 : DeferredResult Get 요청 테스트",
         description = "결과 반환 지연 Get 메소드 요청 테스트\n\n" +
                 "(api-result-code)\n\n" +
-                "0 : 정상 동작"
+                "0 : 정상 동작\n\n" +
+                "1 : 타임아웃\n\n" +
+                "2 : 서버 에러"
     )
     @GetMapping("/delayed-result-test")
     fun api16(

@@ -27,7 +27,7 @@ class SwaggerConfig {
       **[읽어주세요]**
       
       **(공지)**
-        - 적극적인 오류 제보, 요청 사항 환영 합니다.
+        - 오류 제보, 요청 사항 환영 합니다.
           
       **(일반 규칙)**
         - Swagger 문서의 대분류는 컨트롤러라고 합니다.
@@ -235,7 +235,9 @@ class SwaggerConfig {
             
             원하는 정보인 생성 문서 파일의 경로는 있을 수 없기에 결과값을 null 로 반환을 할 수밖에 없는데,
             
-            클라이언트 측의 입장에선 무슨 이유로 결과값을 받아올 수 없는지를 알아야 하기에 서버에선 각 원인을 "api-result-code" 에 담아 주는 것입니다.
+            클라이언트 측의 입장에선 무슨 이유로 결과값을 받아올 수 없는지를 알아야 하기에 서버에선 각 원인을 
+            
+            Response Header 의 "api-result-code" 에 담아 주는 것입니다.
             
             위와 같은 에러가 아닌 성공시에도 무조건 api-result-code 를 "0" 으로 보내줄 것이며,
             
@@ -288,7 +290,7 @@ class SwaggerConfig {
             
             c : 올바르지 않은 AccessToken
             
-            d : 로그인 계정에 API 호출 권한이 없습니다. (Http Status Code 403)
+            d : 로그인 계정에 API 호출 권한이 없습니다. (Http Status Code 403 과 동일한 의미)
     """.trimIndent()
 
 

@@ -17,7 +17,6 @@ import java.io.File
 import java.net.SocketTimeoutException
 import java.nio.file.Paths
 
-// todo : 타임아웃 1, 서버 에러 2 로 처리하기
 @Service
 class C4TkRequestFromServerTestService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
@@ -51,18 +50,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -88,18 +87,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -125,18 +124,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -185,18 +184,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -227,18 +226,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -289,18 +288,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -349,18 +348,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -435,18 +434,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -536,18 +535,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -616,18 +615,18 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
     }
@@ -641,7 +640,7 @@ class C4TkRequestFromServerTestService(
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
-            return if (responseHeaders.names().contains("api-result-code")) {
+            if (responseHeaders.names().contains("api-result-code")) {
                 val apiResultCode = responseHeaders["api-result-code"]
 
                 // api-result-code 분기
@@ -652,17 +651,16 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
-                httpServletResponse.setHeader("api-result-code", "1")
+                httpServletResponse.setHeader("api-result-code", "2")
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
         }
     }
 
@@ -677,7 +675,7 @@ class C4TkRequestFromServerTestService(
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
-            return if (responseHeaders.names().contains("api-result-code")) {
+            if (responseHeaders.names().contains("api-result-code")) {
                 val apiResultCode = responseHeaders["api-result-code"]
 
                 // api-result-code 분기
@@ -687,29 +685,29 @@ class C4TkRequestFromServerTestService(
                     }
 
                     "1" -> {
-                        httpServletResponse.setHeader("api-result-code", "1")
+                        httpServletResponse.setHeader("api-result-code", "3")
                     }
 
                     "2" -> {
-                        httpServletResponse.setHeader("api-result-code", "2")
+                        httpServletResponse.setHeader("api-result-code", "4")
                     }
 
                     "3" -> {
-                        httpServletResponse.setHeader("api-result-code", "3")
+                        httpServletResponse.setHeader("api-result-code", "5")
                     }
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
+            httpServletResponse.setHeader("api-result-code", "1")
         }
     }
 
@@ -723,7 +721,7 @@ class C4TkRequestFromServerTestService(
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
-            return if (responseHeaders.names().contains("api-result-code")) {
+            if (responseHeaders.names().contains("api-result-code")) {
                 val apiResultCode = responseHeaders["api-result-code"]
 
                 // api-result-code 분기
@@ -734,16 +732,15 @@ class C4TkRequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
-                        classLogger.info("Undefined ApiResultCode")
+                        httpServletResponse.setHeader("api-result-code", "2")
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
-                classLogger.info("ApiResultCode Not Exists")
+                httpServletResponse.setHeader("api-result-code", "2")
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
-            classLogger.info("SocketTimeoutException")
             httpServletResponse.setHeader("api-result-code", "1")
         }
     }
@@ -751,53 +748,143 @@ class C4TkRequestFromServerTestService(
 
     ////
     fun api14(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api14OutputVo? {
-        val response = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextString().execute()
+        try {
+            // 네트워크 요청
+            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextString().execute()
 
-        httpServletResponse.setHeader("api-result-code", "0")
-        return C4TkRequestFromServerTestController.Api14OutputVo(
-            response.body()!!
-        )
+            // api-result-code 확인
+            val responseHeaders = responseObj.headers()
+            return if (responseHeaders.names().contains("api-result-code")) {
+                val apiResultCode = responseHeaders["api-result-code"]
+
+                // api-result-code 분기
+                when (apiResultCode) {
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
+                        val responseBody = responseObj.body()!!
+                        C4TkRequestFromServerTestController.Api14OutputVo(
+                            responseBody
+                        )
+                    }
+
+                    else -> {
+                        // 알수없는 api-result-code
+                        httpServletResponse.setHeader("api-result-code", "2")
+                        return null
+                    }
+                }
+            } else {
+                // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.setHeader("api-result-code", "2")
+                return null
+            }
+        } catch (e: SocketTimeoutException) {
+            // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
     }
 
 
     ////
     fun api15(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api15OutputVo? {
-        val response = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextHtml().execute()
+        try {
+            // 네트워크 요청
+            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextHtml().execute()
 
-        httpServletResponse.setHeader("api-result-code", "0")
-        return C4TkRequestFromServerTestController.Api15OutputVo(
-            response.body()!!
-        )
+            // api-result-code 확인
+            val responseHeaders = responseObj.headers()
+            return if (responseHeaders.names().contains("api-result-code")) {
+                val apiResultCode = responseHeaders["api-result-code"]
+
+                // api-result-code 분기
+                when (apiResultCode) {
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
+                        val responseBody = responseObj.body()!!
+                        C4TkRequestFromServerTestController.Api15OutputVo(
+                            responseBody
+                        )
+                    }
+
+                    else -> {
+                        // 알수없는 api-result-code
+                        httpServletResponse.setHeader("api-result-code", "2")
+                        return null
+                    }
+                }
+            } else {
+                // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.setHeader("api-result-code", "2")
+                return null
+            }
+        } catch (e: SocketTimeoutException) {
+            // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
     }
 
 
     ////
     fun api16(httpServletResponse: HttpServletResponse): C4TkRequestFromServerTestController.Api16OutputVo? {
-        val response = networkRetrofit2.localHostRequestApi.getTkRequestTestAsyncResult().execute()
+        try {
+            // 네트워크 요청
+            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestAsyncResult().execute()
 
-        httpServletResponse.setHeader("api-result-code", "0")
-        return C4TkRequestFromServerTestController.Api16OutputVo(
-            response.body()!!.resultMessage
-        )
+            // api-result-code 확인
+            val responseHeaders = responseObj.headers()
+            return if (responseHeaders.names().contains("api-result-code")) {
+                val apiResultCode = responseHeaders["api-result-code"]
+
+                // api-result-code 분기
+                when (apiResultCode) {
+                    "0" -> {
+                        httpServletResponse.setHeader("api-result-code", "0")
+                        val responseBody = responseObj.body()!!
+                        C4TkRequestFromServerTestController.Api16OutputVo(
+                            responseBody.resultMessage
+                        )
+                    }
+
+                    else -> {
+                        // 알수없는 api-result-code
+                        httpServletResponse.setHeader("api-result-code", "2")
+                        return null
+                    }
+                }
+            } else {
+                // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.setHeader("api-result-code", "2")
+                return null
+            }
+        } catch (e: SocketTimeoutException) {
+            // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.setHeader("api-result-code", "1")
+            return null
+        }
     }
 
 
     ////
     fun api17(httpServletResponse: HttpServletResponse) {
         // SSE Subscribe Url 연결 객체 생성
-        val serverSentEventObj =
+        val sseClient =
             SseClient("http://127.0.0.1:8080/tk/request-test/sse-test/subscribe")
 
+        val maxCount = 10
+        var count = 0
+
         // SSE 구독 연결
-        serverSentEventObj.connectAsync(
+        sseClient.connectAsync(
             5000,
             object : SseClient.ListenerCallback {
                 override fun onConnectRequestFirstTime(sse: SseClient, originalRequest: Request) {
-                    classLogger.info("++++onConnectRequestFirstTime")
+                    classLogger.info("++++ api17 : onConnectRequestFirstTime")
                 }
 
                 override fun onConnect(sse: SseClient, response: Response) {
-                    classLogger.info("++++onOpen")
+                    classLogger.info("++++ api17 : onOpen")
                 }
 
                 override fun onMessageReceive(
@@ -806,15 +893,20 @@ class C4TkRequestFromServerTestService(
                     event: String,
                     message: String
                 ) {
-                    classLogger.info("++++onMessage : $event $message")
+                    classLogger.info("++++ api17 : onMessage : $event $message")
+
+                    // maxCount 만큼 반복했다면 연결 끊기
+                    if (maxCount == count++) {
+                        sseClient.disconnect()
+                    }
                 }
 
                 override fun onCommentReceive(sse: SseClient, comment: String) {
-                    classLogger.info("++++onComment : $comment")
+                    classLogger.info("++++ api17 : onComment : $comment")
                 }
 
                 override fun onDisconnected(sse: SseClient) {
-                    classLogger.info("++++onClosed")
+                    classLogger.info("++++ api17 : onClosed")
                 }
 
                 override fun onPreRetry(
@@ -823,7 +915,7 @@ class C4TkRequestFromServerTestService(
                     throwable: Throwable,
                     response: Response?
                 ): Boolean {
-                    classLogger.info("++++onPreRetry")
+                    classLogger.info("++++ api17 : onPreRetry")
                     return true
                 }
             }
@@ -837,17 +929,20 @@ class C4TkRequestFromServerTestService(
     fun api18(httpServletResponse: HttpServletResponse) {
         val client = OkHttpClient()
 
+        val maxCount = 10
+        var count = 0
+
         val webSocket = client.newWebSocket(
             Request.Builder()
                 .url("ws://localhost:8080/ws/test/websocket")
                 .build(),
             object : WebSocketListener() {
                 override fun onOpen(webSocket: WebSocket, response: Response) {
-                    classLogger.info("api18 : onOpen")
+                    classLogger.info("++++ api18 : onOpen")
                     webSocket.send(
                         Gson().toJson(
                             Api18MessagePayloadVo(
-                                "api18 Client",
+                                "++++ api18 Client",
                                 "i am open!"
                             )
                         )
@@ -855,13 +950,18 @@ class C4TkRequestFromServerTestService(
                 }
 
                 override fun onMessage(webSocket: WebSocket, text: String) {
-                    classLogger.info("api18 : onMessage : $text")
+                    // maxCount 만큼 반복했다면 연결 끊기
+                    if (maxCount == count++) {
+                        webSocket.close(1000, null)
+                    }
+
+                    classLogger.info("++++ api18 : onMessage : $text")
 
                     // 메세지를 받으면 바로 메세지를 보내기
                     webSocket.send(
                         Gson().toJson(
                             Api18MessagePayloadVo(
-                                "api18 Client",
+                                "++++ api18 Client",
                                 "reply!"
                             )
                         )
@@ -872,15 +972,15 @@ class C4TkRequestFromServerTestService(
                 }
 
                 override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
-                    classLogger.info("api18 : onMessage : $bytes")
+                    classLogger.info("++++ api18 : onMessage : $bytes")
                 }
 
                 override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                    classLogger.info("api18 : onClosing")
+                    classLogger.info("++++ api18 : onClosing")
                 }
 
                 override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                    classLogger.info("api18 : onFailure")
+                    classLogger.info("vapi18 : onFailure")
                     t.printStackTrace()
                 }
             }

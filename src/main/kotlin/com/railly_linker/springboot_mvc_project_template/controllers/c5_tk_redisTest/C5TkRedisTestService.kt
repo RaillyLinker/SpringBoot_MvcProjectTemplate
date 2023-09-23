@@ -38,6 +38,7 @@ class C5TkRedisTestService(
             ),
             inputVo.expirationMs
         )
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -89,6 +90,7 @@ class C5TkRedisTestService(
     ////
     fun api4(httpServletResponse: HttpServletResponse, key: String) {
         redis1TestRepository.deleteKeyValue(key)
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -96,6 +98,7 @@ class C5TkRedisTestService(
     ////
     fun api5(httpServletResponse: HttpServletResponse) {
         redis1TestRepository.deleteAllKeyValues()
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -116,6 +119,7 @@ class C5TkRedisTestService(
             inputVo.expirationMs
         )
         throw RuntimeException("Test Exception for Redis Transaction Test")
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -135,6 +139,7 @@ class C5TkRedisTestService(
             inputVo.expirationMs
         )
         throw RuntimeException("Test Exception for Redis Non Transaction Test")
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 }

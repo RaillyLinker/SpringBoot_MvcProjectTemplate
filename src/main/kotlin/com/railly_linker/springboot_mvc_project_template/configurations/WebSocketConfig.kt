@@ -1,6 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template.configurations
 
-import com.railly_linker.springboot_mvc_project_template.web_socket_handler.ServerClientTestWebSocketHandler
+import com.railly_linker.springboot_mvc_project_template.web_socket_handler.TestWebSocketHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
@@ -26,8 +26,9 @@ class WebSocketConfig : WebSocketConfigurer {
 
         registry
             .addHandler(
+                // 아래 주소로 접속하면 실행될 핸들러
+                TestWebSocketHandler(),
                 // "ws://localhost:8080/ws/test" 로 접속
-                ServerClientTestWebSocketHandler(),
                 "/ws/test"
             )
             // webSocket 연결 CORS 는 WebConfig 가 아닌 여기서 설정

@@ -456,6 +456,7 @@ class C3TkRequestTestService(
     ////
     fun api11(httpServletResponse: HttpServletResponse) {
         throw RuntimeException("Test Error")
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
