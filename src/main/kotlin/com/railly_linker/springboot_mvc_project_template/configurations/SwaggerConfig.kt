@@ -250,6 +250,10 @@ class SwaggerConfig {
             
             4. api-result-code 가 있다면, 코드 종류에 따라 스웨거 문서를 확인하여 적절한 처리를 해주기 (에러가 아닌 성공시에도 무조건 반환됩니다.)
             
+                Response Body 를 반환하는 API 의 경우, api-result-code 가 "0" 으로 반환되면 Response Body 가 Null 이 아니며,
+                
+                그 외의 api-result-code 가 반환되면 Response Body 가 Null 입니다.
+            
             5. api-result-code 가 없다면, 서버 개발자에게 문의하기
         - api-result-code 의 발생 순서는 먼저 알파벳 타입의 순서로 검사 되며, 다음으로 숫자 타입의 숫자가 작을 수록 먼저 검사를 합니다.
             
