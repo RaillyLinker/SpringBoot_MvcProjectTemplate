@@ -95,7 +95,8 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
         countQuery = """
             select 
             count(*) 
-            from test 
+            from 
+            template.test_data 
             where 
             row_activate = b'1'
             """

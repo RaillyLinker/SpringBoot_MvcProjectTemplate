@@ -39,7 +39,6 @@ class C6TkDatabaseTestService(
         )
 
         httpServletResponse.setHeader("api-result-code", "0")
-
         return C6TkDatabaseTestController.Api1OutputVo(
             result.uid!!,
             result.content,
@@ -319,6 +318,7 @@ class C6TkDatabaseTestService(
         )
 
         throw Exception("Transaction Rollback Test!")
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -330,6 +330,7 @@ class C6TkDatabaseTestService(
         )
 
         throw Exception("No Transaction Exception Test!")
+
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
@@ -364,7 +365,6 @@ class C6TkDatabaseTestService(
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
-
         return C6TkDatabaseTestController.Api14OutputVo(count, testEntityVoList)
     }
 }
