@@ -4,7 +4,7 @@ body {
     box-sizing: border-box;
     height: 100%;
     min-height: 100vh;
-    font-family: 'Open Sans', sans-serif;
+    font-family: MaruBuri;
     font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
@@ -40,7 +40,6 @@ hr{
     font-size:20px;
     margin-left: 30px;
     vertical-align:middle;
-    font-family: NanumGothic;
 }
 
 /* [Name] */

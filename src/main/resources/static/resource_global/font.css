@@ -1,9 +1,51 @@
 @font-face {
-    src : url("fonts/NanumGothic.ttf");
-    font-family: "NanumGothic"
+    font-family: "NanumGothic";
+    src : url("fonts/NanumGothic.ttf") format('truetype');
 }
 
 @font-face {
-    src : url("fonts/NanumMyeongjo.ttf");
-    font-family: "NanumMyeongjo"
+    font-family: "NanumMyeongjo";
+    src : url("fonts/NanumMyeongjo.ttf") format('truetype');
+}
+
+/* [MaruBuri] */
+/* ExtraLight */
+@font-face {
+    font-family: 'MaruBuri';
+    src: url('fonts/maru_buri/MaruBuri-ExtraLight.ttf') format('truetype'),
+         url('fonts/maru_buri/MaruBuri-ExtraLight.otf') format('opentype');
+    font-weight: 200;
+    font-style: normal;
+}
+/* Light */
+@font-face {
+    font-family: 'MaruBuri';
+    src: url('fonts/maru_buri/MaruBuri-Light.ttf') format('truetype'),
+         url('fonts/maru_buri/MaruBuri-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+/* Regular */
+@font-face {
+    font-family: 'MaruBuri';
+    src: url('fonts/maru_buri/MaruBuri-Regular.ttf') format('truetype'),
+         url('fonts/maru_buri/MaruBuri-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+/* SemiBold */
+@font-face {
+    font-family: 'MaruBuri';
+    src: url('fonts/maru_buri/MaruBuri-SemiBold.ttf') format('truetype'),
+         url('fonts/maru_buri/MaruBuri-SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+/* Bold */
+@font-face {
+    font-family: 'MaruBuri';
+    src: url('fonts/maru_buri/MaruBuri-Bold.ttf') format('truetype'),
+         url('fonts/maru_buri/MaruBuri-Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
 }
