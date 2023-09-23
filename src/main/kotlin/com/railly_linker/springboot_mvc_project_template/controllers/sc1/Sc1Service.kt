@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.c1
+package com.railly_linker.springboot_mvc_project_template.controllers.sc1
 
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.servlet.ModelAndView
 
 @Service
-class C1Service(
+class Sc1Service(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfile: String
 ) {
@@ -20,9 +20,20 @@ class C1Service(
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
-        mv.viewName = "forward:/sc/home-page"
+        mv.viewName = "template_sc1_n1/home_page"
+
+        mv.addObject(
+            "mvVo",
+            Api2MvVo(
+                activeProfile
+            )
+        )
 
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
     }
+
+    data class Api2MvVo(
+        val env: String
+    )
 }
