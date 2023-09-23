@@ -3485,7 +3485,7 @@ class C9TkAuthService(
                 snsId = response.body()!!.response.id
             }
 
-            3 -> { // KAKAO
+            3 -> { // KAKAO TALK
                 // 클라이언트에서 받은 access 토큰으로 멤버 정보 요청
                 val response = networkRetrofit2.kapiKakaoComRequestApi.getV2UserMe(
                     inputVo.oauth2AccessToken
