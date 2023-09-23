@@ -134,6 +134,10 @@ class SwaggerConfig {
             로그인이 붙지 않은 API 에서 인증/인가 코드를 입력한 경우, 
             
             액세스 토큰 형식이 잘못 되었건, 만료되었건 상관없이 API 로직이 정상 실행됩니다.
+            
+            다만, Authorization Request Header 가 보내졌다면 서버에선 이에 대한 검증을 자동으로 진행하게 되므로 필요치 않은 작업을 하는 것이 되므로,
+            
+            요청하지 않은 Header 정보는 보내주지 않는 것을 추천합니다.
         - tk/** 에서 사용하는 RefreshToken 은 AccessToken 발급(SignIn, Reissue api 사용)시마다 재발행됩니다.
       
             AccessToken 보다 더 길게 설정된 RefreshToken 의 만료시간 동안 토큰 재발급을 전혀 하지 않아 RefreshToken 마저 만료된 경우, 

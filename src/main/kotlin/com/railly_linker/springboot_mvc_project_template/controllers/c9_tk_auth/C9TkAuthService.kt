@@ -101,6 +101,7 @@ class C9TkAuthService(
     fun api1(httpServletResponse: HttpServletResponse): Map<String, Any>? {
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = externalAccessAddress
+
         httpServletResponse.setHeader("api-result-code", "0")
         return result
     }
@@ -112,6 +113,7 @@ class C9TkAuthService(
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
+
         httpServletResponse.setHeader("api-result-code", "0")
         return result
 
@@ -123,6 +125,7 @@ class C9TkAuthService(
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
+
         httpServletResponse.setHeader("api-result-code", "0")
         return result
 
@@ -134,6 +137,7 @@ class C9TkAuthService(
 
         val result: MutableMap<String, Any> = HashMap()
         result["result"] = "Member No.$memberUid : Test Success"
+
         httpServletResponse.setHeader("api-result-code", "0")
         return result
 

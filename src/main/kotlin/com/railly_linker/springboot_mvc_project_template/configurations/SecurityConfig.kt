@@ -202,13 +202,11 @@ class SecurityConfig(
                                     } else { // 액세스 토큰 만료
                                         response.setHeader("api-result-code", "a")
                                     }
-
                                 }
                             } else {
                                 response.setHeader("api-result-code", "c")
                             }
                         }
-
                         else -> {
                             response.setHeader("api-result-code", "c")
                         }
@@ -226,12 +224,12 @@ class SecurityConfig(
 
         // ---------------------------------------------------------------------------------------------
         // <비공개 메소드 공간>
+        // (JWT 검증 완료 -> 회원 정보 확인)
         private fun jwtAllGreen(
             jwtAccessToken: String,
             request: HttpServletRequest,
             response: HttpServletResponse
         ) {
-
             // (검증 통과 -> 서버 내 해당 멤버 정보 가져오기)
             val memberUid = JwtTokenUtilObject.getMemberUid(jwtAccessToken).toLong()
 
