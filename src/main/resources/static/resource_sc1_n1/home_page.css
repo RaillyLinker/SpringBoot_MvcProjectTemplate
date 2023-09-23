@@ -13,21 +13,6 @@ body {
     flex-direction: column;
 }
 
-input {
-    background-image: none;
-    border: 0;
-    color: inherit;
-    font: inherit;
-    margin: 0;
-    outline: 0;
-    padding: 0;
-    transition: background-color 0.3s;
-}
-
-input[type='submit'] {
-    cursor: pointer;
-}
-
 hr{
     width: 100%;
 }
@@ -40,6 +25,7 @@ hr{
     color: #eee;
     border-radius: 0.25rem;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 /* [Id] */
@@ -47,6 +33,7 @@ hr{
     width : 30px;
     height : 30px;
     vertical-align:middle;
+    cursor: pointer;
 }
 
 #title_txt{
