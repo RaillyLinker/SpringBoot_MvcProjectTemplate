@@ -23,8 +23,8 @@ class Sc1Service(
         mv.viewName = "template_sc1_n1/home_page"
 
         mv.addObject(
-            "mvVo",
-            Api2MvVo(
+            "viewModel",
+            Api1ViewModel(
                 activeProfile
             )
         )
@@ -33,7 +33,7 @@ class Sc1Service(
         return mv
     }
 
-    data class Api2MvVo(
+    data class Api1ViewModel(
         val env: String
     )
 }

@@ -18,11 +18,11 @@
 <hr/>
 
 <h3>시스템 정보</h3>
-<span>구동 환경 프로필 : [[${mvVo.env}]]</span>
+<span>구동 환경 프로필 : [[${viewModel.env}]]</span>
 <br/>
 
-<h3 th:if="${mvVo.env != 'prod80'}">Swagger 문서</h3>
-<form method="get" th:action="@{/swagger-ui/index.html}" th:if="${mvVo.env != 'prod80'}">
+<h3 th:if="${viewModel.env != 'prod80'}">Swagger 문서</h3>
+<form method="get" th:action="@{/swagger-ui/index.html}" th:if="${viewModel.env != 'prod80'}">
     <input class="main_btn" type="submit" value="Swagger"/>
 </form>
 
