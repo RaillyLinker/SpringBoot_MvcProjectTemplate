@@ -1,15 +1,124 @@
+/* [SeoulNamsan] */
 @font-face {
-    font-family: "NanumGothic";
-    src : url("fonts/NanumGothic.ttf") format('truetype');
+    font-family: 'SeoulNamsan';
+    src: url('fonts/seoul_namsan/SeoulNamsanB.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsan';
+    src: url('fonts/seoul_namsan/SeoulNamsanEB.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsan';
+    src: url('fonts/seoul_namsan/SeoulNamsanL.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsan';
+    src: url('fonts/seoul_namsan/SeoulNamsanM.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* [SeoulNamsanZang] */
 @font-face {
-    font-family: "NanumMyeongjo";
-    src : url("fonts/NanumMyeongjo.ttf") format('truetype');
+    font-family: 'SeoulNamsanZang';
+    src: url('fonts/seoul_namsan_zang/SeoulNamsanZangB.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsanZang';
+    src: url('fonts/seoul_namsan_zang/SeoulNamsanZangBL.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsanZang';
+    src: url('fonts/seoul_namsan_zang/SeoulNamsanZangEB.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsanZang';
+    src: url('fonts/seoul_namsan_zang/SeoulNamsanZangL.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulNamsanZang';
+    src: url('fonts/seoul_namsan_zang/SeoulNamsanZangM.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
 }
 
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* [SeoulHangang] */
+@font-face {
+    font-family: 'SeoulHangang';
+    src: url('fonts/seoul_hangang/SeoulHangangB.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangang';
+    src: url('fonts/seoul_hangang/SeoulHangangEB.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangang';
+    src: url('fonts/seoul_hangang/SeoulHangangL.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangang';
+    src: url('fonts/seoul_hangang/SeoulHangangM.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* [SeoulHangangZang] */
+@font-face {
+    font-family: 'SeoulHangangZang';
+    src: url('fonts/seoul_hangang_zang/SeoulHangangZangB.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangangZang';
+    src: url('fonts/seoul_hangang_zang/SeoulHangangZangBL.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangangZang';
+    src: url('fonts/seoul_hangang_zang/SeoulHangangZangEB.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangangZang';
+    src: url('fonts/seoul_hangang_zang/SeoulHangangZangL.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'SeoulHangangZang';
+    src: url('fonts/seoul_hangang_zang/SeoulHangangZangM.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
 /* [MaruBuri] */
-/* ExtraLight */
 @font-face {
     font-family: 'MaruBuri';
     src: url('fonts/maru_buri/MaruBuri-ExtraLight.ttf') format('truetype'),
@@ -17,7 +126,6 @@
     font-weight: 200;
     font-style: normal;
 }
-/* Light */
 @font-face {
     font-family: 'MaruBuri';
     src: url('fonts/maru_buri/MaruBuri-Light.ttf') format('truetype'),
@@ -25,7 +133,6 @@
     font-weight: 300;
     font-style: normal;
 }
-/* Regular */
 @font-face {
     font-family: 'MaruBuri';
     src: url('fonts/maru_buri/MaruBuri-Regular.ttf') format('truetype'),
@@ -33,7 +140,6 @@
     font-weight: normal;
     font-style: normal;
 }
-/* SemiBold */
 @font-face {
     font-family: 'MaruBuri';
     src: url('fonts/maru_buri/MaruBuri-SemiBold.ttf') format('truetype'),
@@ -41,7 +147,6 @@
     font-weight: 600;
     font-style: normal;
 }
-/* Bold */
 @font-face {
     font-family: 'MaruBuri';
     src: url('fonts/maru_buri/MaruBuri-Bold.ttf') format('truetype'),

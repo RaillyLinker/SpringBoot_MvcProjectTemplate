@@ -46,6 +46,8 @@ class C2TkTestService(
 
     ////
     fun api2(httpServletResponse: HttpServletResponse, inputVo: C2TkTestController.Api2InputVo) {
+        // CID 는 첨부파일을 보내는 것과 동일한 의미입니다.
+        // 고로 전송시 서버 성능에 악영향을 끼칠 가능성이 크고, CID 처리도 번거로우므로, CDN 을 사용하고, CID 는 되도록 사용하지 마세요.
         emailSenderUtilDi.sendThymeLeafHtmlMail(
             inputVo.senderName,
             inputVo.receiverEmailAddressList.toTypedArray(),
@@ -57,6 +59,7 @@ class C2TkTestService(
             ),
             null,
             hashMapOf(
+                "html_email_sample_css" to ClassPathResource("static/resource_c2_n2/html_email_sample.css"),
                 "image_sample" to ClassPathResource("static/resource_c2_n2/image_sample.jpg")
             ),
             null,
@@ -178,7 +181,7 @@ class C2TkTestService(
 
         // htmlString 을 PDF 로 변환하여 저장
         // XHTML 1.0(strict), CSS 2.1 (@page 의 size 는 가능)
-        val pdfFileObject = PdfGenerator.createPdfFileFromHtmlString(
+        PdfGenerator.createPdfFileFromHtmlString(
             "./files/temp",
             "temp(${
                 LocalDateTime.now().format(
@@ -187,8 +190,8 @@ class C2TkTestService(
             }).pdf",
             htmlString,
             arrayListOf(
-                "/static/resource_global/fonts/NanumGothic.ttf",
-                "/static/resource_global/fonts/NanumMyeongjo.ttf"
+                "/static/resource_global/fonts/for_itext/NanumGothic.ttf",
+                "/static/resource_global/fonts/for_itext/NanumMyeongjo.ttf"
             )
         )
 

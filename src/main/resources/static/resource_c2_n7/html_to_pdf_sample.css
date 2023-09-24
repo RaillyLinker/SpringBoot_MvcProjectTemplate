@@ -1,0 +1,32 @@
+/* [Tag] */
+body {
+    padding: 10px 20px;
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 100vh;
+    font-family: NanumGothic;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+hr{
+    width: 100%;
+}
+
+img{
+    width: 50%;
+    height: auto;
+}
+
+/* [Class] */
+.other_font{
+    font-family: NanumMyeongjo;
+}
+
+/* [Id] */
+
+/* [Name] */
