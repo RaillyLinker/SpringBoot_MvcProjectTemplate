@@ -14,7 +14,7 @@
 <body>
 
 <div>
-    <img id="title_icon" src="/resource_sc1_n1/title_icon.png" alt="타이틀 아이콘 이미지" onclick="location.href='/'"/>
+    <img id="title_icon" src="/resource_sc1_n1/title_icon.png" alt="타이틀 아이콘 이미지"/>
     <span id="title_txt">
         Home
     </span>
@@ -34,7 +34,7 @@
     Swagger 문서
 </h3>
 
-<button class="main_btn" onclick="location.href='/swagger-ui/index.html'" th:if="${viewModel.env != 'prod80'}">
+<button id="go_to_swagger_btn" class="main_btn" th:if="${viewModel.env != 'prod80'}">
     Swagger
 </button>
 
