@@ -18,16 +18,7 @@ hr{
 }
 
 /* [Class] */
-.main_btn{
-    width: 200px;
-    height: 30px;
-    background-color: #277cea;
-    color: #eee;
-    border: 0;
-    border-radius: 0.25rem;
-    margin-bottom: 10px;
-    cursor: pointer;
-}
+
 
 /* [Id] */
 #title_icon{
@@ -41,6 +32,10 @@ hr{
     font-size:20px;
     margin-left: 30px;
     vertical-align:middle;
+}
+
+#go_to_swagger_btn{
+    width: 200px;
 }
 
 /* [Name] */
