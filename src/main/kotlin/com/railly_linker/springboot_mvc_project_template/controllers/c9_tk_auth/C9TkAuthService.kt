@@ -1,15 +1,10 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c9_tk_auth
 
-import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_RefreshTokenInfoRepository
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_SignInAccessTokenInfoRepository
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_RefreshTokenInfo
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.tables.Redis1_SignInAccessTokenInfo
 import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
 import com.railly_linker.springboot_mvc_project_template.util_objects.AppleOAuthHelperUtilObject
 import com.railly_linker.springboot_mvc_project_template.util_objects.AuthorizationTokenUtilObject
@@ -60,10 +55,7 @@ class C9TkAuthService(
     private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Verification_AddPhoneNumberVerificationDataRepository,
     private val database1MemberRegisterOauth2VerificationDataRepository: Database1_Verification_RegisterOauth2VerificationDataRepository,
     private val database1MemberMemberProfileDataRepository: Database1_Member_MemberProfileDataRepository,
-
-    // (Redis1 Repository)
-    private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository,
-    private val redis1RefreshTokenInfoRepository: Redis1_RefreshTokenInfoRepository
+    private val database1MemberSignInTokenInfoRepository: Database1_Member_SignInTokenInfoRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -141,12 +133,6 @@ class C9TkAuthService(
     }
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api5(
         httpServletResponse: HttpServletResponse,
         inputVo: C9TkAuthController.Api5InputVo
@@ -246,16 +232,6 @@ class C9TkAuthService(
         // 멤버 고유번호로 엑세스 토큰 생성
         val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
 
-        // 로그인 허용 액세스 토큰에 입력
-        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-            "Bearer $jwtAccessToken",
-            Redis1_SignInAccessTokenInfo(
-                memberUidString,
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-            ),
-            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-        )
-
         val accessTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
@@ -266,20 +242,33 @@ class C9TkAuthService(
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
 
-        redis1RefreshTokenInfoRepository.saveKeyValue(
-            "Bearer $jwtAccessToken",
-            Redis1_RefreshTokenInfo(
-                jwtRefreshToken
-            ),
-            JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS
-        )
-
         val refreshTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
+
+        database1MemberSignInTokenInfoRepository.save(
+            Database1_Member_SignInTokenInfo(
+                memberUid,
+                "Bearer",
+                LocalDateTime.now(),
+                jwtAccessToken,
+                LocalDateTime
+                    .parse(
+                        accessTokenExpireWhen,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    ),
+                jwtRefreshToken,
+                LocalDateTime
+                    .parse(
+                        refreshTokenExpireWhen,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    ),
+                true
+            )
+        )
 
         val emailEntityList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid, true)
         val emailList = ArrayList<String>()
@@ -449,12 +438,6 @@ class C9TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api7(
         httpServletResponse: HttpServletResponse,
         inputVo: C9TkAuthController.Api7InputVo
@@ -577,16 +560,6 @@ class C9TkAuthService(
 
         val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
 
-        // 로그인 허용 액세스 토큰에 입력
-        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-            "Bearer $jwtAccessToken",
-            Redis1_SignInAccessTokenInfo(
-                memberUidString,
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-            ),
-            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-        )
-
         val accessTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
@@ -597,20 +570,33 @@ class C9TkAuthService(
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
 
-        redis1RefreshTokenInfoRepository.saveKeyValue(
-            "Bearer $jwtAccessToken",
-            Redis1_RefreshTokenInfo(
-                jwtRefreshToken
-            ),
-            JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS
-        )
-
         val refreshTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
+
+        database1MemberSignInTokenInfoRepository.save(
+            Database1_Member_SignInTokenInfo(
+                snsOauth2.memberUid,
+                "Bearer",
+                LocalDateTime.now(),
+                jwtAccessToken,
+                LocalDateTime
+                    .parse(
+                        accessTokenExpireWhen,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    ),
+                jwtRefreshToken,
+                LocalDateTime
+                    .parse(
+                        refreshTokenExpireWhen,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    ),
+                true
+            )
+        )
 
         val emailEntityList =
             database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
@@ -674,12 +660,6 @@ class C9TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api7Dot1(
         httpServletResponse: HttpServletResponse,
         inputVo: C9TkAuthController.Api7Dot1InputVo
@@ -755,16 +735,6 @@ class C9TkAuthService(
 
         val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
 
-        // 로그인 허용 액세스 토큰에 입력
-        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-            "Bearer $jwtAccessToken",
-            Redis1_SignInAccessTokenInfo(
-                memberUidString,
-                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-            ),
-            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-        )
-
         val accessTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
@@ -775,20 +745,33 @@ class C9TkAuthService(
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
 
-        redis1RefreshTokenInfoRepository.saveKeyValue(
-            "Bearer $jwtAccessToken",
-            Redis1_RefreshTokenInfo(
-                jwtRefreshToken
-            ),
-            JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS
-        )
-
         val refreshTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
         ).format(Calendar.getInstance().apply {
             this.time = Date()
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
+
+        database1MemberSignInTokenInfoRepository.save(
+            Database1_Member_SignInTokenInfo(
+                snsOauth2.memberUid,
+                "Bearer",
+                LocalDateTime.now(),
+                jwtAccessToken,
+                LocalDateTime
+                    .parse(
+                        accessTokenExpireWhen,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    ),
+                jwtRefreshToken,
+                LocalDateTime
+                    .parse(
+                        refreshTokenExpireWhen,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                    ),
+                true
+            )
+        )
 
         val emailEntityList =
             database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
@@ -853,30 +836,28 @@ class C9TkAuthService(
 
     ////
     // 주의점 : 클라이언트 입장에선 강제종료 등의 이유로 항상 로그인과 로그아웃이 쌍을 이루는 것은 아니기에 이점을 유의
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api8(authorization: String, httpServletResponse: HttpServletResponse) {
-        // 해당 멤버의 리프레시 토큰 정보 삭제
-        redis1RefreshTokenInfoRepository.deleteKeyValue(authorization)
+        // 해당 멤버의 토큰 발행 정보 삭제
+        val authorizationSplit = authorization.split(" ") // ex : ["Bearer", "qwer1234"]
+        val tokenType = authorizationSplit[0].trim().lowercase() // (ex : "bearer")
+        val token = authorizationSplit[1].trim() // (ex : "abcd1234")
 
-        // 로그인 가능 액세스 토큰 정보 삭제
-        redis1SignInAccessTokenInfoRepository.deleteKeyValue(authorization)
+        val tokenInfo = database1MemberSignInTokenInfoRepository.findByTokenTypeAndAccessTokenAndRowActivate(
+            tokenType,
+            token,
+            true
+        )
+
+        if (tokenInfo != null) {
+            tokenInfo.rowActivate = false
+            database1MemberSignInTokenInfoRepository.save(tokenInfo)
+        }
 
         httpServletResponse.setHeader("api-result-code", "0")
     }
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api9(
         authorization: String,
         inputVo: C9TkAuthController.Api9InputVo,
@@ -925,27 +906,33 @@ class C9TkAuthService(
                     }
 
                     // 저장된 현재 인증된 멤버의 리프레시 토큰 가져오기
-                    val refreshTokenInfoOptional = redis1RefreshTokenInfoRepository.findKeyValue(authorization)
+                    val authorizationSplit = authorization.split(" ") // ex : ["Bearer", "qwer1234"]
+                    val tokenType1 = authorizationSplit[0].trim().lowercase() // (ex : "bearer")
+                    val token = authorizationSplit[1].trim() // (ex : "abcd1234")
+
+                    val tokenInfo =
+                        database1MemberSignInTokenInfoRepository.findByTokenTypeAndAccessTokenAndRowActivate(
+                            tokenType1,
+                            token,
+                            true
+                        )
 
                     if (JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) == 0L || // 만료시간 지남
-                        refreshTokenInfoOptional == null // jwtAccessToken 의 리프레시 토큰이 저장소에 없음
+                        tokenInfo == null // jwtAccessToken 의 리프레시 토큰이 저장소에 없음
                     ) {
                         httpServletResponse.setHeader("api-result-code", "3")
                         return null
                     }
 
-                    if (jwtRefreshToken != refreshTokenInfoOptional.value.refreshToken) {
+                    if (jwtRefreshToken != tokenInfo.refreshToken) {
                         // 건내받은 토큰이 해당 액세스 토큰의 가용 토큰과 맞지 않음
                         httpServletResponse.setHeader("api-result-code", "4")
                         return null
                     }
 
                     // 먼저 로그아웃 처리
-                    // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-                    redis1RefreshTokenInfoRepository.deleteKeyValue(authorization)
-
-                    // 로그인 가능 액세스 토큰 정보 삭제
-                    redis1SignInAccessTokenInfoRepository.deleteKeyValue(authorization)
+                    tokenInfo.rowActivate = false
+                    database1MemberSignInTokenInfoRepository.save(tokenInfo)
 
                     // 멤버의 권한 리스트를 조회 후 반환
                     val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
@@ -970,16 +957,6 @@ class C9TkAuthService(
                     // 새 토큰 생성 및 로그인 처리
                     val newJwtAccessToken = JwtTokenUtilObject.generateAccessToken(accessTokenMemberUid, atRoleList)
 
-                    // 로그인 허용 액세스 토큰에 입력
-                    redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                        "Bearer $newJwtAccessToken",
-                        Redis1_SignInAccessTokenInfo(
-                            accessTokenMemberUid,
-                            SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                        ),
-                        JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                    )
-
                     val accessTokenExpireWhen: String = SimpleDateFormat(
                         "yyyy-MM-dd HH:mm:ss.SSS"
                     ).format(Calendar.getInstance().apply {
@@ -988,13 +965,6 @@ class C9TkAuthService(
                     }.time)
 
                     val newRefreshToken = JwtTokenUtilObject.generateRefreshToken(accessTokenMemberUid)
-                    redis1RefreshTokenInfoRepository.saveKeyValue(
-                        "Bearer $newJwtAccessToken",
-                        Redis1_RefreshTokenInfo(
-                            newRefreshToken
-                        ),
-                        JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS
-                    )
 
                     val refreshTokenExpireWhen: String = SimpleDateFormat(
                         "yyyy-MM-dd HH:mm:ss.SSS"
@@ -1002,6 +972,27 @@ class C9TkAuthService(
                         this.time = Date()
                         this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
                     }.time)
+
+                    database1MemberSignInTokenInfoRepository.save(
+                        Database1_Member_SignInTokenInfo(
+                            accessTokenMemberUid.toLong(),
+                            "Bearer",
+                            LocalDateTime.now(),
+                            newJwtAccessToken,
+                            LocalDateTime
+                                .parse(
+                                    accessTokenExpireWhen,
+                                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                                ),
+                            newRefreshToken,
+                            LocalDateTime
+                                .parse(
+                                    refreshTokenExpireWhen,
+                                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+                                ),
+                            true
+                        )
+                    )
 
                     val emailEntityList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(
                         accessTokenMemberUid.toLong(),
@@ -1085,27 +1076,20 @@ class C9TkAuthService(
 
 
     ////
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api10(authorization: String, httpServletResponse: HttpServletResponse) {
         val memberUid = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         // loginAccessToken 의 Iterable 가져오기
-        val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
+        val tokenInfoList = database1MemberSignInTokenInfoRepository.findAllByMemberUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
 
         // 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-        for (loginAccessToken in loginAccessTokenIterable) {
-            if (loginAccessToken.value.memberUid == memberUid) {
-                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-                redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+        for (tokenInfo in tokenInfoList) {
+            tokenInfo.rowActivate = false
 
-                // 로그인 가능 액세스 토큰 정보 삭제
-                redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-            }
+            database1MemberSignInTokenInfoRepository.save(tokenInfo)
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
@@ -3379,12 +3363,6 @@ class C9TkAuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    @CustomRedisTransactional(
-        [
-            Redis1_SignInAccessTokenInfo.TRANSACTION_NAME,
-            Redis1_RefreshTokenInfo.TRANSACTION_NAME
-        ]
-    )
     fun api42(
         httpServletResponse: HttpServletResponse,
         authorization: String
@@ -3442,17 +3420,17 @@ class C9TkAuthService(
         // !!!회원과 관계된 처리!!
 
         // loginAccessToken 의 Iterable 가져오기
-        val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
+        // loginAccessToken 의 Iterable 가져오기
+        val tokenInfoList = database1MemberSignInTokenInfoRepository.findAllByMemberUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )
 
         // 발행되었던 모든 액세스 토큰 무효화 (다른 디바이스에선 사용중 로그아웃된 것과 동일한 효과)
-        for (loginAccessToken in loginAccessTokenIterable) {
-            if (loginAccessToken.value.memberUid == memberUid) {
-                // DB 내 해당 멤버의 리프레시 토큰 정보 삭제
-                redis1RefreshTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
+        for (tokenInfo in tokenInfoList) {
+            tokenInfo.rowActivate = false
 
-                // 로그인 가능 액세스 토큰 정보 삭제
-                redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-            }
+            database1MemberSignInTokenInfoRepository.save(tokenInfo)
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
