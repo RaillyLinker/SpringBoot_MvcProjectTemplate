@@ -212,25 +212,16 @@ class C9TkAuthService(
             true
         )
 
-        val atRoleList: ArrayList<String> = arrayListOf()
-        val roleList: MutableList<Int> = ArrayList()
+        val roleList: ArrayList<String> = arrayListOf()
         for (userRole in memberRoleList) {
-            roleList.add(userRole.roleCode.toInt())
-
-            atRoleList.add(
-                when (userRole.roleCode) {
-                    1.toByte() -> "ROLE_ADMIN"
-                    2.toByte() -> "ROLE_DEVELOPER"
-                    else -> throw Exception()
-                }
-            )
+            roleList.add(userRole.role)
         }
 
         // (토큰 생성 로직 수행)
         val memberUidString: String = memberUid.toString()
 
         // 멤버 고유번호로 엑세스 토큰 생성
-        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, roleList)
 
         val accessTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
@@ -540,25 +531,16 @@ class C9TkAuthService(
             true
         )
 
-        val atRoleList: ArrayList<String> = arrayListOf()
-        val roleList: MutableList<Int> = ArrayList()
+        val roleList: ArrayList<String> = arrayListOf()
         for (userRole in memberRoleList) {
-            roleList.add(userRole.roleCode.toInt())
-
-            atRoleList.add(
-                when (userRole.roleCode) {
-                    1.toByte() -> "ROLE_ADMIN"
-                    2.toByte() -> "ROLE_DEVELOPER"
-                    else -> throw Exception()
-                }
-            )
+            roleList.add(userRole.role)
         }
 
         // (토큰 생성 로직 수행)
         // 멤버 고유번호로 엑세스 토큰 생성
         val memberUidString: String = snsOauth2.memberUid.toString()
 
-        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, roleList)
 
         val accessTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
@@ -715,25 +697,16 @@ class C9TkAuthService(
             true
         )
 
-        val atRoleList: ArrayList<String> = arrayListOf()
-        val roleList: MutableList<Int> = ArrayList()
+        val roleList: ArrayList<String> = arrayListOf()
         for (userRole in memberRoleList) {
-            roleList.add(userRole.roleCode.toInt())
-
-            atRoleList.add(
-                when (userRole.roleCode) {
-                    1.toByte() -> "ROLE_ADMIN"
-                    2.toByte() -> "ROLE_DEVELOPER"
-                    else -> throw Exception()
-                }
-            )
+            roleList.add(userRole.role)
         }
 
         // (토큰 생성 로직 수행)
         // 멤버 고유번호로 엑세스 토큰 생성
         val memberUidString: String = snsOauth2.memberUid.toString()
 
-        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, roleList)
 
         val accessTokenExpireWhen: String = SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS"
@@ -940,22 +913,13 @@ class C9TkAuthService(
                         true
                     )
 
-                    val atRoleList: ArrayList<String> = arrayListOf()
-                    val roleList: MutableList<Int> = ArrayList()
+                    val roleList: ArrayList<String> = arrayListOf()
                     for (userRole in memberRoleList) {
-                        roleList.add(userRole.roleCode.toInt())
-
-                        atRoleList.add(
-                            when (userRole.roleCode) {
-                                1.toByte() -> "ROLE_ADMIN"
-                                2.toByte() -> "ROLE_DEVELOPER"
-                                else -> throw Exception()
-                            }
-                        )
+                        roleList.add(userRole.role)
                     }
 
                     // 새 토큰 생성 및 로그인 처리
-                    val newJwtAccessToken = JwtTokenUtilObject.generateAccessToken(accessTokenMemberUid, atRoleList)
+                    val newJwtAccessToken = JwtTokenUtilObject.generateAccessToken(accessTokenMemberUid, roleList)
 
                     val accessTokenExpireWhen: String = SimpleDateFormat(
                         "yyyy-MM-dd HH:mm:ss.SSS"

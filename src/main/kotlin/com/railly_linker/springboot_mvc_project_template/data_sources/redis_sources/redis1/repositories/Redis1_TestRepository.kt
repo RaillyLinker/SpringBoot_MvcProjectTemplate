@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 
 @Component
 class Redis1_TestRepository(
+    // !!!RedisTemplate 설정!!
     @Qualifier(RedisConfig.TN_REDIS1) private val redisTemplate: RedisTemplate<String, Any>
 ) {
     // <멤버 변수 공간>
@@ -21,6 +22,7 @@ class Redis1_TestRepository(
     // (Redis Table 에 Key-Value 저장)
     fun saveKeyValue(
         key: String,
+        // !!!value Type 를 모두 변경!!
         value: Redis1_Test,
         expireTimeMs: Long
     ) {

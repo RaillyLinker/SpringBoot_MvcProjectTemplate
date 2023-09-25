@@ -93,11 +93,12 @@ class SecurityConfig(
             .exceptionHandling { exceptionHandlingCustomizer ->
                 // 비인증(Security Context 에 멤버 정보가 없음) 처리
                 exceptionHandlingCustomizer.authenticationEntryPoint { _, response, _ -> // Http Status 401
+                    response.setHeader("api-result-code", "a")
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: UnAuthorized")
                 }
                 // 비인가(멤버 권한이 충족되지 않음) 처리
                 exceptionHandlingCustomizer.accessDeniedHandler { _, response, _ -> // Http Status 403
-                    response.setHeader("api-result-code", "c")
+                    response.setHeader("api-result-code", "b")
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Error: Forbidden")
                 }
             }
@@ -203,22 +204,22 @@ class SecurityConfig(
                                                 WebAuthenticationDetailsSource().buildDetails(request)
                                         }
                                 } else { // 액세스 토큰 만료
-                                    response.setHeader("api-result-code", "b")
+                                    response.setHeader("api-result-code", "d")
                                 }
                             } else {
                                 // 올바르지 않은 Authorization Token
-                                response.setHeader("api-result-code", "a")
+                                response.setHeader("api-result-code", "c")
                             }
                         }
 
                         else -> {
                             // 올바르지 않은 Authorization Token
-                            response.setHeader("api-result-code", "a")
+                            response.setHeader("api-result-code", "c")
                         }
                     }
                 } else {
                     // 올바르지 않은 Authorization Token
-                    response.setHeader("api-result-code", "a")
+                    response.setHeader("api-result-code", "c")
                 }
             }
 

@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-// todo : 검증 및 테스트
 @Tag(name = "/tk/auth APIs", description = "C9 : 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
@@ -106,8 +105,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 가입 되지 않은 회원\n\n" +
-                "2 : 패스워드 불일치\n\n" +
-                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)"
+                "2 : 패스워드 불일치"
     )
     @PostMapping("/sign-in-with-password")
     fun api5(
@@ -159,12 +157,12 @@ class C9TkAuthController(
         val profileImageFullUrl: String?,
 
         @Schema(
-            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
+            description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
-            example = "[1, 2]"
+            example = "[\"ROLE_ADMIN\", \"ROLE_DEVELOPER\"]"
         )
-        @JsonProperty("roleCodeList")
-        val roleCodeList: List<Int>,
+        @JsonProperty("roleList")
+        val roleList: List<String>,
 
         @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
         @JsonProperty("tokenType")
@@ -273,8 +271,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 유효하지 않은 OAuth2 Access Token\n\n" +
-                "2 : 가입 되지 않은 회원\n\n" +
-                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)"
+                "2 : 가입 되지 않은 회원"
     )
     @PostMapping("/sign-in-with-oauth2-access-token")
     fun api7(
@@ -318,12 +315,12 @@ class C9TkAuthController(
         val profileImageFullUrl: String?,
 
         @Schema(
-            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
+            description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
-            example = "[1, 2]"
+            example = "[\"ROLE_ADMIN\", \"ROLE_DEVELOPER\"]"
         )
-        @JsonProperty("roleCodeList")
-        val roleCodeList: List<Int>,
+        @JsonProperty("roleList")
+        val roleList: List<String>,
 
         @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
         @JsonProperty("tokenType")
@@ -387,8 +384,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
                 "1 : 유효하지 않은 OAuth2 ID Token\n\n" +
-                "2 : 가입 되지 않은 회원\n\n" +
-                "3 : 추가 로그인 금지됨(동시 로그인 제한시 추가 로그인을 금지한 상황일 때)"
+                "2 : 가입 되지 않은 회원"
     )
     @PostMapping("/sign-in-with-oauth2-id-token")
     fun api7Dot1(
@@ -432,12 +428,12 @@ class C9TkAuthController(
         val profileImageFullUrl: String?,
 
         @Schema(
-            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
+            description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
-            example = "[1, 2]"
+            example = "[\"ROLE_ADMIN\", \"ROLE_DEVELOPER\"]"
         )
-        @JsonProperty("roleCodeList")
-        val roleCodeList: List<Int>,
+        @JsonProperty("roleList")
+        val roleList: List<String>,
 
         @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
         @JsonProperty("tokenType")
@@ -522,7 +518,7 @@ class C9TkAuthController(
         description = "엑세스 토큰 및 리프레시 토큰 재발행\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작\n\n" +
-                "1 : 가입되지 않은 회원\n\n" +
+                "1 : 탈퇴된 회원\n\n" +
                 "2 : 유효하지 않은 리프레시 토큰\n\n" +
                 "3 : 리프레시 토큰 만료\n\n" +
                 "4 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음"
@@ -561,12 +557,12 @@ class C9TkAuthController(
         val profileImageFullUrl: String?,
 
         @Schema(
-            description = "권한 코드 리스트 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))",
+            description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
-            example = "[1, 2]"
+            example = "[\"ROLE_ADMIN\", \"ROLE_DEVELOPER\"]"
         )
-        @JsonProperty("roleCodeList")
-        val roleCodeList: List<Int>,
+        @JsonProperty("roleList")
+        val roleList: List<String>,
 
         @Schema(description = "인증 토큰 타입", required = true, example = "Bearer")
         @JsonProperty("tokenType")

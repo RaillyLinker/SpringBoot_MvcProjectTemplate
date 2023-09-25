@@ -14,9 +14,9 @@ class Database1_Member_MemberRoleData(
     @Comment("멤버 고유값 (member.members.uid)")
     var memberUid: Long,
 
-    @Column(name = "role_code", nullable = false, columnDefinition = "TINYINT UNSIGNED")
-    @Comment("권한 코드 (1 : 관리자(ROLE_ADMIN), 2 : 개발자(ROLE_DEVELOPER))")
-    var roleCode: Byte,
+    @Column(name = "role", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Comment("권한 코드 (ROLE_{권한} 형식으로 저장합니다.) (ex : (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER))")
+    var role: String,
 
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")
