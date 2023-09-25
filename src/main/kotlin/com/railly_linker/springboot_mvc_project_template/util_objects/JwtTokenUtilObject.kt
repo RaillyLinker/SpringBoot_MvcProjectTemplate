@@ -1,5 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.util_objects
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.railly_linker.springboot_mvc_project_template.ApplicationConstants
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -40,13 +42,14 @@ object JwtTokenUtilObject {
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     // (액세스 토큰 발행)
-    fun generateAccessToken(username: String): String {
-        return doGenerateToken(username, "access", ACCESS_TOKEN_EXPIRATION_TIME_MS)
+    // memberRoleList : 멤버 권한 리스트 (ex : ["ROLE_ADMIN", "ROLE_DEVELOPER"])
+    fun generateAccessToken(memberUid: String, memberRoleList: List<String>): String {
+        return doGenerateToken(memberUid, memberRoleList, "access", ACCESS_TOKEN_EXPIRATION_TIME_MS)
     }
 
     // (리프레시 토큰 발행)
-    fun generateRefreshToken(username: String): String {
-        return doGenerateToken(username, "refresh", REFRESH_TOKEN_EXPIRATION_TIME_MS)
+    fun generateRefreshToken(memberUid: String): String {
+        return doGenerateToken(memberUid, null, "refresh", REFRESH_TOKEN_EXPIRATION_TIME_MS)
     }
 
     // (JWT Secret 확인)
@@ -86,6 +89,19 @@ object JwtTokenUtilObject {
         )
     }
 
+    // 멤버 권한 리스트 (ex : ["ROLE_ADMIN", "ROLE_DEVELOPER"])
+    fun getMemberRoleList(token: String): List<String> {
+        return Gson().fromJson(
+            CryptoUtilObject.decryptAES256(
+                parseJwtForPayload(token)["mrl"].toString(),
+                "AES/CBC/PKCS5Padding",
+                JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            ), // 해석하려는 json 형식의 String
+            object : TypeToken<List<String>>() {}.type // 파싱할 데이터 스키마 객체 타입
+        )
+    }
+
     // 발행자
     fun getIssuer(token: String): String {
         return parseJwtForPayload(token)["iss"].toString()
@@ -115,12 +131,17 @@ object JwtTokenUtilObject {
     // ---------------------------------------------------------------------------------------------
     // <비공개 메소드 공간>
     // (JWT 토큰 생성)
-    private fun doGenerateToken(userUid: String, tokenUsage: String, expireTimeMs: Long): String {
+    private fun doGenerateToken(
+        memberUid: String,
+        memberRoleList: List<String>?,
+        tokenUsage: String,
+        expireTimeMs: Long
+    ): String {
         val claims: Claims = Jwts.claims()
 
         // JWT 내부에 정보 입력
         claims["mu"] = CryptoUtilObject.encryptAES256(
-            userUid,
+            memberUid,
             "AES/CBC/PKCS5Padding",
             JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
             JWT_CLAIMS_AES256_ENCRYPTION_KEY
@@ -131,6 +152,16 @@ object JwtTokenUtilObject {
             JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
             JWT_CLAIMS_AES256_ENCRYPTION_KEY
         ) // token usage
+        if (memberRoleList != null) {
+            claims["mrl"] = CryptoUtilObject.encryptAES256(
+                Gson().toJson(
+                    memberRoleList
+                ),
+                "AES/CBC/PKCS5Padding",
+                JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            ) // member role list
+        }
         return Jwts.builder()
             .setHeader(
                 mapOf(

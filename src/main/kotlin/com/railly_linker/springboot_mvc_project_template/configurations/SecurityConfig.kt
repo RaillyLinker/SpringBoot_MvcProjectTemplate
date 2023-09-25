@@ -1,7 +1,5 @@
 package com.railly_linker.springboot_mvc_project_template.configurations
 
-import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.Database1_Member_MemberRoleDataRepository
-import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_SignInAccessTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.util_objects.JwtTokenUtilObject
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -36,17 +34,6 @@ class SecurityConfig(
     // todo
 //    private val customDefaultOauth2MemberService: CustomDefaultOauth2MemberService
 ) {
-    companion object {
-        // !!!아래의 동시 접속 관련 설정하기!!
-
-        // 같은 멤버가 동시 로그인을 할 수 있는 개수 (0 보다 작으면 무제한)
-        const val SAME_MEMBER_SIGN_IN_COUNT: Int = -1
-
-        // 동시 로그인 개수를 초과 했을 때의 동작 (SAME_MEMBER_SIGN_IN_COUNT 가 0 이상일 때 유의미)
-        // (0 : 로그인 API 에서 로그인 금지 처리, 1 : 기존 로그인 중 가장 오래된 토큰을 로그아웃 처리하고 현 로그인 토큰이 추가됨)
-        const val SAME_MEMBER_SIGN_IN_OVER_POLICY: Int = 1
-    }
-
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
@@ -128,11 +115,16 @@ class SecurityConfig(
 
     // (인증 토큰 검증 필터)
     // API 요청마다 검증 실행
+    // 주의 :
+    // 본 프로젝트의 JWT 인증 / 인가 시스템은 세션 인증과 대비되는 토큰 인증의 장점을 최대한 살리기 위하여,
+    // 검증 시점에 데이터베이스 접근을 하지 않으며, 검증 정보를 메모리에 저장하지 않습니다.
+    // 즉, 토큰 검증은 발행 된 시점에 토큰 안에 넣어준 바로 그 정보만을 기준으로 하여 판단됩니다.
+    // 예를들어 토큰 발행 시점에 Admin 권한이 있었는데, 서버측에서 이 권한을 취소하여도 토큰만 정상적이라면 여전히 Admin 권한을 가집니다.
+    // 이에 대해 서버측에서 할 수 있는 것은, 액세스 토큰이 만료된 이후에 재발급 시점에 이를 판단하여 처리하는 방법,
+    // 혹은 SSE 등으로 클라이언트에 신호를 보내어 해당 위치에서 처리를 하도록 하는 방법 밖에는 없습니다.
+    // 되도록 액세스 토큰 만료시간을 짧게 잡고(15분 ~ 1시간), 클라이언트 측에서 판단하여 처리할 수 있는 부분은 클라이언트에서 처리하도록 합니다.
     @Component
-    class AuthenticationTokenFilter(
-        private val database1MemberMemberRoleDataRepository: Database1_Member_MemberRoleDataRepository,
-        private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository
-    ) : OncePerRequestFilter() {
+    class AuthenticationTokenFilter : OncePerRequestFilter() {
         // <멤버 변수 공간>
 
 
@@ -179,27 +171,36 @@ class SecurityConfig(
                                 // 요청 재구성 (ex : post_/tk/ra/test)
                                 val requestFrom = "${request.method.lowercase()}_${request.requestURI}"
 
-                                // 특정 request 에는 만료 필터링을 적용시키지 않음 (토큰 유효성 검증은 통과된 상황)
-                                // !!!토큰이 만료된 상황에서 접근 가능한 Path 허용하기!!
-                                if (requestFrom == "post_/tk/auth/reissue" || // reissue : 만료된 토큰을 기반으로 재발급
-                                    requestFrom == "post_/tk/auth/sign-out" // logout : 만료된 토큰도 그냥 로그아웃 처리
-                                ) {
-                                    jwtAllGreen(jwtAccessToken, request)
-                                } else {
-                                    if (jwtRemainSeconds > 0L
-                                    ) { // 만료 검증 통과
-                                        val accessTokenActivate = redis1SignInAccessTokenInfoRepository
-                                            .findKeyValue(authorization) != null
+                                if (jwtRemainSeconds > 0L ||
+                                    // 특정 request 에는 만료 필터링을 적용시키지 않음 (토큰 유효성 검증은 통과된 상황)
 
-                                        if (accessTokenActivate // 사용 가능한 액세스 토큰
-                                        ) { // 로그아웃 여부 검증 통과
-                                            jwtAllGreen(jwtAccessToken, request)
-                                        } else { // 로그아웃 처리된 액세스 토큰 = 만료와 동일시
-                                            response.setHeader("api-result-code", "b")
-                                        }
-                                    } else { // 액세스 토큰 만료
-                                        response.setHeader("api-result-code", "b")
+                                    // !!!토큰이 만료된 상황에서 접근 가능한 Path 허용하기!!
+                                    requestFrom == "post_/tk/auth/reissue" || // reissue : 만료된 토큰을 기반으로 재발급
+                                    requestFrom == "post_/tk/auth/sign-out" // logout : 만료된 토큰도 그냥 로그아웃 처리
+                                ) { // 만료 검증 통과
+                                    val memberRoleList = JwtTokenUtilObject.getMemberRoleList(jwtAccessToken)
+
+                                    // 회원 권한 형식 변경
+                                    val authorities: ArrayList<GrantedAuthority> = ArrayList()
+                                    for (role in memberRoleList) {
+                                        authorities.add(
+                                            SimpleGrantedAuthority(role)
+                                        )
                                     }
+
+                                    // (검증된 멤버 정보와 권한 정보를 Security Context 에 입력)
+                                    // authentication 정보가 context 에 존재하는지 여부로 로그인 여부를 확인
+                                    SecurityContextHolder.getContext().authentication =
+                                        UsernamePasswordAuthenticationToken(
+                                            null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
+                                            null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
+                                            authorities // 멤버 권한 리스트만 입력해주어 권한 확인에 사용
+                                        ).apply {
+                                            this.details =
+                                                WebAuthenticationDetailsSource().buildDetails(request)
+                                        }
+                                } else { // 액세스 토큰 만료
+                                    response.setHeader("api-result-code", "b")
                                 }
                             } else {
                                 // 올바르지 않은 Authorization Token
@@ -226,48 +227,6 @@ class SecurityConfig(
 
         // ---------------------------------------------------------------------------------------------
         // <비공개 메소드 공간>
-        // (JWT 검증 완료 -> 회원 정보 확인)
-        private fun jwtAllGreen(
-            jwtAccessToken: String,
-            request: HttpServletRequest
-        ) {
-            // (검증 통과 -> 서버 내 해당 멤버 정보 가져오기)
-            val memberUid = JwtTokenUtilObject.getMemberUid(jwtAccessToken).toLong()
-
-            // !!!이외의 조건을 검증 (ex : 기간제 계정 정지 등)!!
-
-            // 회원 권한 가져오기
-            val memberRole =
-                database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-                    memberUid, true
-                )
-            // 회원 권한 형식 변경
-            val authorities: ArrayList<GrantedAuthority> = ArrayList()
-            for (roleInfo in memberRole) {
-                authorities.add(
-                    SimpleGrantedAuthority(
-                        // !!!Role 코드 형식 변경 (ROLE_XXX 형식의 String)!!
-                        when (roleInfo.roleCode) {
-                            1.toByte() -> "ROLE_ADMIN"
-                            2.toByte() -> "ROLE_DEVELOPER"
-                            else -> throw Exception()
-                        }
-                    )
-                )
-            }
-
-            // (검증된 멤버 정보와 권한 정보를 Security Context 에 입력)
-            // authentication 정보가 context 에 존재하는지 여부로 로그인 여부를 확인
-            SecurityContextHolder.getContext().authentication =
-                UsernamePasswordAuthenticationToken(
-                    null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
-                    null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
-                    authorities // 멤버 권한 리스트만 입력해주어 권한 확인에 사용
-                ).apply {
-                    this.details =
-                        WebAuthenticationDetailsSource().buildDetails(request)
-                }
-        }
 
 
         // ---------------------------------------------------------------------------------------------

@@ -2,7 +2,6 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c9_tk_auth
 
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomRedisTransactional
 import com.railly_linker.springboot_mvc_project_template.annotations.CustomTransactional
-import com.railly_linker.springboot_mvc_project_template.configurations.SecurityConfig
 import com.railly_linker.springboot_mvc_project_template.configurations.database_configs.Database1Config
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.*
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.*
@@ -28,7 +27,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.util.Assert
 import org.springframework.util.StringUtils
 import java.io.File
 import java.nio.charset.StandardCharsets
@@ -37,7 +35,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -223,144 +220,48 @@ class C9TkAuthService(
             return null
         }
 
+        // 멤버의 권한 리스트를 조회 후 반환
+        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
+            memberUid,
+            true
+        )
+
+        val atRoleList: ArrayList<String> = arrayListOf()
+        val roleList: MutableList<Int> = ArrayList()
+        for (userRole in memberRoleList) {
+            roleList.add(userRole.roleCode.toInt())
+
+            atRoleList.add(
+                when (userRole.roleCode) {
+                    1.toByte() -> "ROLE_ADMIN"
+                    2.toByte() -> "ROLE_DEVELOPER"
+                    else -> throw Exception()
+                }
+            )
+        }
+
         // (토큰 생성 로직 수행)
         val memberUidString: String = memberUid.toString()
 
         // 멤버 고유번호로 엑세스 토큰 생성
-        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString)
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
 
-        val accessTokenExpireWhen: String
-        @Suppress("KotlinConstantConditions")
-        if (SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT < 0) { // 동시 로그인 무제한으로 설정
-            // 로그인 허용 액세스 토큰에 입력
-            redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                "Bearer $jwtAccessToken",
-                Redis1_SignInAccessTokenInfo(
-                    memberUidString,
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                ),
-                JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-            )
+        // 로그인 허용 액세스 토큰에 입력
+        redis1SignInAccessTokenInfoRepository.saveKeyValue(
+            "Bearer $jwtAccessToken",
+            Redis1_SignInAccessTokenInfo(
+                memberUidString,
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
+            ),
+            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
+        )
 
-            accessTokenExpireWhen = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
-            ).format(Calendar.getInstance().apply {
-                this.time = Date()
-                this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-            }.time)
-        } else { // 동시 로그인 제한 설정
-            // loginAccessToken 의 Iterable 가져오기
-            val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
-
-            // Iterable 중 내 memberUid 와 동일한 정보를 가져와 리스트화
-            val loginAccessTokenArrayList: ArrayList<Redis1_SignInAccessTokenInfoRepository.KeyValueData> = ArrayList()
-            for (loginAccessToken in loginAccessTokenIterable) {
-                if (loginAccessToken.value.memberUid == memberUidString) {
-                    loginAccessTokenArrayList.add(loginAccessToken)
-                }
-            }
-
-            // 리스트 최신순 정렬
-            loginAccessTokenArrayList.sortWith { a, b ->
-                java.lang.Long.valueOf(
-                    LocalDateTime.parse(
-                        b.value.signInDateString,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                    )
-                        .atZone(
-                            ZoneId.systemDefault()
-                        ).toInstant().toEpochMilli()
-                )
-                    .compareTo(
-                        LocalDateTime.parse(
-                            a.value.signInDateString,
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                        )
-                            .atZone(
-                                ZoneId.systemDefault()
-                            ).toInstant().toEpochMilli()
-                    )
-            }
-
-            // 로그인 허용 개수만큼 앞에서 자르기
-            val loginAccessTokenListTake = loginAccessTokenArrayList.take(SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT)
-
-            if (loginAccessTokenListTake.size < SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT) { // 현 로그인 개수가 허용치보다 작다면
-                // 로그인 허용 액세스 토큰에 입력
-                redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                    "Bearer $jwtAccessToken",
-                    Redis1_SignInAccessTokenInfo(
-                        memberUidString,
-                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                    ),
-                    JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                )
-
-                accessTokenExpireWhen = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss.SSS"
-                ).format(Calendar.getInstance().apply {
-                    this.time = Date()
-                    this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-                }.time)
-            } else { // 현 로그인 개수가 허용치 이상일 경우
-                if (SecurityConfig.SAME_MEMBER_SIGN_IN_OVER_POLICY == 0) { // 추가 로그인 금지 설정
-                    // 혹여 현 설정 로그인 개수를 초과했다면 맞춰주기
-                    for (loginAccessToken in loginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                    }
-                    for (loginAccessToken in loginAccessTokenListTake) {
-                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                            loginAccessToken.key,
-                            loginAccessToken.value,
-                            loginAccessToken.expireTimeMs
-                        )
-                    }
-
-                    httpServletResponse.setHeader("api-result-code", "3")
-                    return null
-                } else { // 기존 로그인 제거 설정
-                    // list to mutableList
-                    val newLoginAccessTokenArrayList = ArrayList(loginAccessTokenListTake)
-
-                    // 초과분 마지막(=오래된) 액세스 토큰 정보 제거
-                    newLoginAccessTokenArrayList.removeLast()
-                    // 새 액세스 토큰 정보를 앞에 추가
-                    newLoginAccessTokenArrayList.add(
-                        0,
-                        Redis1_SignInAccessTokenInfoRepository.KeyValueData(
-                            "Bearer $jwtAccessToken",
-                            Redis1_SignInAccessTokenInfo(
-                                memberUidString,
-                                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                            ),
-                            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                        )
-                    )
-
-                    accessTokenExpireWhen = SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss.SSS"
-                    ).format(Calendar.getInstance().apply {
-                        this.time = Date()
-                        this.add(
-                            Calendar.MILLISECOND,
-                            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
-                        )
-                    }.time)
-
-                    // 새로 결정된 액세스 로그인 액세스 토큰 리스트를 반영
-                    for (loginAccessToken in loginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                    }
-                    for (loginAccessToken in newLoginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                            loginAccessToken.key,
-                            loginAccessToken.value,
-                            loginAccessToken.expireTimeMs
-                        )
-                    }
-                }
-            }
-        }
+        val accessTokenExpireWhen: String = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
+        }.time)
 
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
@@ -379,17 +280,6 @@ class C9TkAuthService(
             this.time = Date()
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
-
-        // 멤버의 권한 리스트를 조회 후 반환
-        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-            memberUid,
-            true
-        )
-
-        val roleList: MutableList<Int> = ArrayList()
-        for (userRole in memberRoleList) {
-            roleList.add(userRole.roleCode.toInt())
-        }
 
         val emailEntityList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid, true)
         val emailList = ArrayList<String>()
@@ -661,141 +551,48 @@ class C9TkAuthService(
             return null
         }
 
+        // 멤버의 권한 리스트를 조회 후 반환
+        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
+            snsOauth2.memberUid,
+            true
+        )
+
+        val atRoleList: ArrayList<String> = arrayListOf()
+        val roleList: MutableList<Int> = ArrayList()
+        for (userRole in memberRoleList) {
+            roleList.add(userRole.roleCode.toInt())
+
+            atRoleList.add(
+                when (userRole.roleCode) {
+                    1.toByte() -> "ROLE_ADMIN"
+                    2.toByte() -> "ROLE_DEVELOPER"
+                    else -> throw Exception()
+                }
+            )
+        }
+
         // (토큰 생성 로직 수행)
         // 멤버 고유번호로 엑세스 토큰 생성
         val memberUidString: String = snsOauth2.memberUid.toString()
 
-        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString)
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
 
-        val accessTokenExpireWhen: String
-        @Suppress("KotlinConstantConditions")
-        if (SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT < 0) { // 동시 로그인 무제한으로 설정
-            // 로그인 허용 액세스 토큰에 입력
-            redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                "Bearer $jwtAccessToken",
-                Redis1_SignInAccessTokenInfo(
-                    memberUidString,
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                ),
-                JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-            )
+        // 로그인 허용 액세스 토큰에 입력
+        redis1SignInAccessTokenInfoRepository.saveKeyValue(
+            "Bearer $jwtAccessToken",
+            Redis1_SignInAccessTokenInfo(
+                memberUidString,
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
+            ),
+            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
+        )
 
-            accessTokenExpireWhen = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
-            ).format(Calendar.getInstance().apply {
-                this.time = Date()
-                this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-            }.time)
-        } else { // 동시 로그인 제한 설정
-            // loginAccessToken 의 Iterable 가져오기
-            val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
-
-            // Iterable 중 내 memberUid 와 동일한 정보를 가져와 리스트화
-            val loginAccessTokenArrayList: ArrayList<Redis1_SignInAccessTokenInfoRepository.KeyValueData> = ArrayList()
-            for (loginAccessToken in loginAccessTokenIterable) {
-                if (loginAccessToken.value.memberUid == memberUidString) {
-                    loginAccessTokenArrayList.add(loginAccessToken)
-                }
-            }
-
-            // 리스트 최신순 정렬
-            loginAccessTokenArrayList.sortWith { a, b ->
-                java.lang.Long.valueOf(
-                    LocalDateTime.parse(
-                        b.value.signInDateString,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                    )
-                        .atZone(
-                            ZoneId.systemDefault()
-                        ).toInstant().toEpochMilli()
-                )
-                    .compareTo(
-                        LocalDateTime.parse(
-                            a.value.signInDateString,
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                        )
-                            .atZone(
-                                ZoneId.systemDefault()
-                            ).toInstant().toEpochMilli()
-                    )
-            }
-
-            // 로그인 허용 개수만큼 앞에서 자르기
-            val loginAccessTokenListTake = loginAccessTokenArrayList.take(SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT)
-
-            if (loginAccessTokenListTake.size < SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT) { // 현 로그인 개수가 허용치보다 작다면
-                // 로그인 허용 액세스 토큰에 입력
-                redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                    "Bearer $jwtAccessToken",
-                    Redis1_SignInAccessTokenInfo(
-                        memberUidString,
-                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                    ),
-                    JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                )
-
-                accessTokenExpireWhen = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss.SSS"
-                ).format(Calendar.getInstance().apply {
-                    this.time = Date()
-                    this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-                }.time)
-            } else { // 현 로그인 개수가 허용치 이상일 경우
-                if (SecurityConfig.SAME_MEMBER_SIGN_IN_OVER_POLICY == 0) { // 추가 로그인 금지 설정
-                    // 혹여 현 설정 로그인 개수를 초과했다면 맞춰주기
-                    for (loginAccessToken in loginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                    }
-                    for (loginAccessToken in loginAccessTokenListTake) {
-                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                            loginAccessToken.key,
-                            loginAccessToken.value,
-                            loginAccessToken.expireTimeMs
-                        )
-                    }
-
-                    httpServletResponse.setHeader("api-result-code", "3")
-                    return null
-                } else { // 기존 로그인 제거 설정
-                    // list to mutableList
-                    val newLoginAccessTokenArrayList = ArrayList(loginAccessTokenListTake)
-
-                    // 초과분 마지막(=오래된) 액세스 토큰 정보 제거
-                    newLoginAccessTokenArrayList.removeLast()
-                    // 새 액세스 토큰 정보를 앞에 추가
-                    newLoginAccessTokenArrayList.add(
-                        0,
-                        Redis1_SignInAccessTokenInfoRepository.KeyValueData(
-                            "Bearer $jwtAccessToken",
-                            Redis1_SignInAccessTokenInfo(
-                                memberUidString,
-                                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                            ),
-                            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                        )
-                    )
-
-                    accessTokenExpireWhen = SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss.SSS"
-                    ).format(Calendar.getInstance().apply {
-                        this.time = Date()
-                        this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-                    }.time)
-
-                    // 새로 결정된 액세스 로그인 액세스 토큰 리스트를 반영
-                    for (loginAccessToken in loginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                    }
-                    for (loginAccessToken in newLoginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                            loginAccessToken.key,
-                            loginAccessToken.value,
-                            loginAccessToken.expireTimeMs
-                        )
-                    }
-                }
-            }
-        }
+        val accessTokenExpireWhen: String = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
+        }.time)
 
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
@@ -814,17 +611,6 @@ class C9TkAuthService(
             this.time = Date()
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
-
-        // 멤버의 권한 리스트를 조회 후 반환
-        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-            snsOauth2.memberUid,
-            true
-        )
-
-        val roleList: MutableList<Int> = ArrayList()
-        for (userRole in memberRoleList) {
-            roleList.add(userRole.roleCode.toInt())
-        }
 
         val emailEntityList =
             database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
@@ -943,141 +729,48 @@ class C9TkAuthService(
             return null
         }
 
+        // 멤버의 권한 리스트를 조회 후 반환
+        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
+            snsOauth2.memberUid,
+            true
+        )
+
+        val atRoleList: ArrayList<String> = arrayListOf()
+        val roleList: MutableList<Int> = ArrayList()
+        for (userRole in memberRoleList) {
+            roleList.add(userRole.roleCode.toInt())
+
+            atRoleList.add(
+                when (userRole.roleCode) {
+                    1.toByte() -> "ROLE_ADMIN"
+                    2.toByte() -> "ROLE_DEVELOPER"
+                    else -> throw Exception()
+                }
+            )
+        }
+
         // (토큰 생성 로직 수행)
         // 멤버 고유번호로 엑세스 토큰 생성
         val memberUidString: String = snsOauth2.memberUid.toString()
 
-        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString)
+        val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(memberUidString, atRoleList)
 
-        val accessTokenExpireWhen: String
-        @Suppress("KotlinConstantConditions")
-        if (SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT < 0) { // 동시 로그인 무제한으로 설정
-            // 로그인 허용 액세스 토큰에 입력
-            redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                "Bearer $jwtAccessToken",
-                Redis1_SignInAccessTokenInfo(
-                    memberUidString,
-                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                ),
-                JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-            )
+        // 로그인 허용 액세스 토큰에 입력
+        redis1SignInAccessTokenInfoRepository.saveKeyValue(
+            "Bearer $jwtAccessToken",
+            Redis1_SignInAccessTokenInfo(
+                memberUidString,
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
+            ),
+            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
+        )
 
-            accessTokenExpireWhen = SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss.SSS"
-            ).format(Calendar.getInstance().apply {
-                this.time = Date()
-                this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-            }.time)
-        } else { // 동시 로그인 제한 설정
-            // loginAccessToken 의 Iterable 가져오기
-            val loginAccessTokenIterable = redis1SignInAccessTokenInfoRepository.findAllKeyValues()
-
-            // Iterable 중 내 memberUid 와 동일한 정보를 가져와 리스트화
-            val loginAccessTokenArrayList: ArrayList<Redis1_SignInAccessTokenInfoRepository.KeyValueData> = ArrayList()
-            for (loginAccessToken in loginAccessTokenIterable) {
-                if (loginAccessToken.value.memberUid == memberUidString) {
-                    loginAccessTokenArrayList.add(loginAccessToken)
-                }
-            }
-
-            // 리스트 최신순 정렬
-            loginAccessTokenArrayList.sortWith { a, b ->
-                java.lang.Long.valueOf(
-                    LocalDateTime.parse(
-                        b.value.signInDateString,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                    )
-                        .atZone(
-                            ZoneId.systemDefault()
-                        ).toInstant().toEpochMilli()
-                )
-                    .compareTo(
-                        LocalDateTime.parse(
-                            a.value.signInDateString,
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-                        )
-                            .atZone(
-                                ZoneId.systemDefault()
-                            ).toInstant().toEpochMilli()
-                    )
-            }
-
-            // 로그인 허용 개수만큼 앞에서 자르기
-            val loginAccessTokenListTake = loginAccessTokenArrayList.take(SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT)
-
-            if (loginAccessTokenListTake.size < SecurityConfig.SAME_MEMBER_SIGN_IN_COUNT) { // 현 로그인 개수가 허용치보다 작다면
-                // 로그인 허용 액세스 토큰에 입력
-                redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                    "Bearer $jwtAccessToken",
-                    Redis1_SignInAccessTokenInfo(
-                        memberUidString,
-                        SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                    ),
-                    JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                )
-
-                accessTokenExpireWhen = SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss.SSS"
-                ).format(Calendar.getInstance().apply {
-                    this.time = Date()
-                    this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-                }.time)
-            } else { // 현 로그인 개수가 허용치 이상일 경우
-                if (SecurityConfig.SAME_MEMBER_SIGN_IN_OVER_POLICY == 0) { // 추가 로그인 금지 설정
-                    // 혹여 현 설정 로그인 개수를 초과했다면 맞춰주기
-                    for (loginAccessToken in loginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                    }
-                    for (loginAccessToken in loginAccessTokenListTake) {
-                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                            loginAccessToken.key,
-                            loginAccessToken.value,
-                            loginAccessToken.expireTimeMs
-                        )
-                    }
-
-                    httpServletResponse.setHeader("api-result-code", "3")
-                    return null
-                } else { // 기존 로그인 제거 설정
-                    // list to mutableList
-                    val newLoginAccessTokenArrayList = ArrayList(loginAccessTokenListTake)
-
-                    // 초과분 마지막(=오래된) 액세스 토큰 정보 제거
-                    newLoginAccessTokenArrayList.removeLast()
-                    // 새 액세스 토큰 정보를 앞에 추가
-                    newLoginAccessTokenArrayList.add(
-                        0,
-                        Redis1_SignInAccessTokenInfoRepository.KeyValueData(
-                            "Bearer $jwtAccessToken",
-                            Redis1_SignInAccessTokenInfo(
-                                memberUidString,
-                                SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(Date())
-                            ),
-                            JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS
-                        )
-                    )
-
-                    accessTokenExpireWhen = SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss.SSS"
-                    ).format(Calendar.getInstance().apply {
-                        this.time = Date()
-                        this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
-                    }.time)
-
-                    // 새로 결정된 액세스 로그인 액세스 토큰 리스트를 반영
-                    for (loginAccessToken in loginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.deleteKeyValue(loginAccessToken.key)
-                    }
-                    for (loginAccessToken in newLoginAccessTokenArrayList) {
-                        redis1SignInAccessTokenInfoRepository.saveKeyValue(
-                            loginAccessToken.key,
-                            loginAccessToken.value,
-                            loginAccessToken.expireTimeMs
-                        )
-                    }
-                }
-            }
-        }
+        val accessTokenExpireWhen: String = SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss.SSS"
+        ).format(Calendar.getInstance().apply {
+            this.time = Date()
+            this.add(Calendar.MILLISECOND, JwtTokenUtilObject.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt())
+        }.time)
 
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(memberUidString)
@@ -1096,17 +789,6 @@ class C9TkAuthService(
             this.time = Date()
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
-
-        // 멤버의 권한 리스트를 조회 후 반환
-        val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-            snsOauth2.memberUid,
-            true
-        )
-
-        val roleList: MutableList<Int> = ArrayList()
-        for (userRole in memberRoleList) {
-            roleList.add(userRole.roleCode.toInt())
-        }
 
         val emailEntityList =
             database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
@@ -1265,8 +947,28 @@ class C9TkAuthService(
                     // 로그인 가능 액세스 토큰 정보 삭제
                     redis1SignInAccessTokenInfoRepository.deleteKeyValue(authorization)
 
+                    // 멤버의 권한 리스트를 조회 후 반환
+                    val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
+                        accessTokenMemberUid.toLong(),
+                        true
+                    )
+
+                    val atRoleList: ArrayList<String> = arrayListOf()
+                    val roleList: MutableList<Int> = ArrayList()
+                    for (userRole in memberRoleList) {
+                        roleList.add(userRole.roleCode.toInt())
+
+                        atRoleList.add(
+                            when (userRole.roleCode) {
+                                1.toByte() -> "ROLE_ADMIN"
+                                2.toByte() -> "ROLE_DEVELOPER"
+                                else -> throw Exception()
+                            }
+                        )
+                    }
+
                     // 새 토큰 생성 및 로그인 처리
-                    val newJwtAccessToken = JwtTokenUtilObject.generateAccessToken(accessTokenMemberUid)
+                    val newJwtAccessToken = JwtTokenUtilObject.generateAccessToken(accessTokenMemberUid, atRoleList)
 
                     // 로그인 허용 액세스 토큰에 입력
                     redis1SignInAccessTokenInfoRepository.saveKeyValue(
@@ -1300,17 +1002,6 @@ class C9TkAuthService(
                         this.time = Date()
                         this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
                     }.time)
-
-                    // 멤버의 권한 리스트를 조회 후 반환
-                    val userRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-                        accessTokenMemberUid.toLong(),
-                        true
-                    )
-
-                    val roleList: MutableList<Int> = ArrayList()
-                    for (userRole in userRoleList) {
-                        roleList.add(userRole.roleCode.toInt())
-                    }
 
                     val emailEntityList = database1MemberMemberEmailDataRepository.findAllByMemberUidAndRowActivate(
                         accessTokenMemberUid.toLong(),
