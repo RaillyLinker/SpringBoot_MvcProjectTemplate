@@ -499,6 +499,8 @@ class C9TkAuthController(
     @Operation(
         summary = "N8 : 로그아웃 처리 <>",
         description = "로그아웃 처리\n\n" +
+                "Jwt 에서 로그아웃의 의미는, 지금 당장 해당 액세스 토큰을 못쓰도록 만드는 것이 아니라,\n\n" +
+                "액세스 토큰이 만료되어 리플레시 토큰으로 재발급을 시도 할 때 막는 기능입니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
@@ -626,6 +628,7 @@ class C9TkAuthController(
     @Operation(
         summary = "N10 : 멤버의 현재 발행된 모든 리프레시 토큰 비활성화 (= 모든 기기에서 로그아웃) <>",
         description = "멤버의 현재 발행된 모든 리프레시 토큰을 비활성화 (= 모든 기기에서 로그아웃) 하는 API\n\n" +
+                "한번 발행된 액세스 토큰을 강제로 못쓰게 만들 수는 없지만, 현재 발행된 모든 리플래시 토큰을 사용할 수 없도록 만듭니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
