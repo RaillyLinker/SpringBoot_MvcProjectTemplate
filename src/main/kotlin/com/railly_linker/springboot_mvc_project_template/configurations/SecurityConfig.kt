@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 // (서비스 보안 시큐리티 설정)
-// 본 템플릿에선 Token 인증도, Session / Cookie 인증도 모두 가능 하도록 준비 되어 있습니다.
-// 실제 적용시 뚜렷한 이유가 없다면 둘 중 하나를 사용 하도록 권장 합니다. (SecurityFilterChain 중 하나를 삭제하기)
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
