@@ -288,13 +288,11 @@ class SwaggerConfig {
         
         - Request Header 에 Authorization 입력시
         
-            a : 만료된 AccessToken. (reissue, sign-out API 는 제외)
+            a : 올바르지 않은 Authorization Token
             
-            b : 토큰 발급시엔 존재했지만, 이제는 존재하지 않는 멤버
+            b : 만료된 AccessToken. (reissue, sign-out API 는 제외)
             
-            c : 올바르지 않은 AccessToken
-            
-            d : 로그인 계정에 API 호출 권한이 없습니다. (Http Status Code 403 과 동일한 의미)
+            c : 로그인 계정에 API 호출 권한이 없습니다. (Http Status Code 403 과 동일한 의미)
     """.trimIndent()
 
 

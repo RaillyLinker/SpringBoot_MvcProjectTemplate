@@ -1,6 +1,5 @@
 package com.railly_linker.springboot_mvc_project_template.configurations
 
-import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.Database1_Member_MemberDataRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories.Database1_Member_MemberRoleDataRepository
 import com.railly_linker.springboot_mvc_project_template.data_sources.redis_sources.redis1.repositories.Redis1_SignInAccessTokenInfoRepository
 import com.railly_linker.springboot_mvc_project_template.util_objects.JwtTokenUtilObject
@@ -109,7 +108,7 @@ class SecurityConfig(
                 }
                 // 비인가(멤버 권한이 충족되지 않음) 처리
                 exceptionHandlingCustomizer.accessDeniedHandler { _, response, _ -> // Http Status 403
-                    response.setHeader("api-result-code", "d")
+                    response.setHeader("api-result-code", "c")
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Error: Forbidden")
                 }
             }
@@ -131,7 +130,6 @@ class SecurityConfig(
     // API 요청마다 검증 실행
     @Component
     class AuthenticationTokenFilter(
-        private val database1MemberMemberDataRepository: Database1_Member_MemberDataRepository,
         private val database1MemberMemberRoleDataRepository: Database1_Member_MemberRoleDataRepository,
         private val redis1SignInAccessTokenInfoRepository: Redis1_SignInAccessTokenInfoRepository
     ) : OncePerRequestFilter() {
@@ -186,7 +184,7 @@ class SecurityConfig(
                                 if (requestFrom == "post_/tk/auth/reissue" || // reissue : 만료된 토큰을 기반으로 재발급
                                     requestFrom == "post_/tk/auth/sign-out" // logout : 만료된 토큰도 그냥 로그아웃 처리
                                 ) {
-                                    jwtAllGreen(jwtAccessToken, request, response)
+                                    jwtAllGreen(jwtAccessToken, request)
                                 } else {
                                     if (jwtRemainSeconds > 0L
                                     ) { // 만료 검증 통과
@@ -195,24 +193,28 @@ class SecurityConfig(
 
                                         if (accessTokenActivate // 사용 가능한 액세스 토큰
                                         ) { // 로그아웃 여부 검증 통과
-                                            jwtAllGreen(jwtAccessToken, request, response)
+                                            jwtAllGreen(jwtAccessToken, request)
                                         } else { // 로그아웃 처리된 액세스 토큰 = 만료와 동일시
-                                            response.setHeader("api-result-code", "a")
+                                            response.setHeader("api-result-code", "b")
                                         }
                                     } else { // 액세스 토큰 만료
-                                        response.setHeader("api-result-code", "a")
+                                        response.setHeader("api-result-code", "b")
                                     }
                                 }
                             } else {
-                                response.setHeader("api-result-code", "c")
+                                // 올바르지 않은 Authorization Token
+                                response.setHeader("api-result-code", "a")
                             }
                         }
+
                         else -> {
-                            response.setHeader("api-result-code", "c")
+                            // 올바르지 않은 Authorization Token
+                            response.setHeader("api-result-code", "a")
                         }
                     }
                 } else {
-                    response.setHeader("api-result-code", "c")
+                    // 올바르지 않은 Authorization Token
+                    response.setHeader("api-result-code", "a")
                 }
             }
 
@@ -227,57 +229,44 @@ class SecurityConfig(
         // (JWT 검증 완료 -> 회원 정보 확인)
         private fun jwtAllGreen(
             jwtAccessToken: String,
-            request: HttpServletRequest,
-            response: HttpServletResponse
+            request: HttpServletRequest
         ) {
             // (검증 통과 -> 서버 내 해당 멤버 정보 가져오기)
             val memberUid = JwtTokenUtilObject.getMemberUid(jwtAccessToken).toLong()
 
-            // 토큰에서 추출한 멤버 고유값으로 멤버 정보 가져오기
-            // DB 접근을 최대한 줄였지만, 현시점 회원인지를 알기위하여 DB 접근 자체는 막을 수 없음.
-            val memberInfo =
-                database1MemberMemberDataRepository.findByUidAndRowActivate(
-                    memberUid,
-                    true
+            // !!!이외의 조건을 검증 (ex : 기간제 계정 정지 등)!!
+
+            // 회원 권한 가져오기
+            val memberRole =
+                database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
+                    memberUid, true
                 )
-
-            if (memberInfo != null) {
-                // !!!이외의 조건을 검증 (ex : 기간제 계정 정지 등)!!
-
-                // 회원 권한 가져오기
-                val memberRole =
-                    database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-                        memberInfo.uid!!, true
+            // 회원 권한 형식 변경
+            val authorities: ArrayList<GrantedAuthority> = ArrayList()
+            for (roleInfo in memberRole) {
+                authorities.add(
+                    SimpleGrantedAuthority(
+                        // !!!Role 코드 형식 변경 (ROLE_XXX 형식의 String)!!
+                        when (roleInfo.roleCode) {
+                            1.toByte() -> "ROLE_ADMIN"
+                            2.toByte() -> "ROLE_DEVELOPER"
+                            else -> throw Exception()
+                        }
                     )
-                // 회원 권한 형식 변경
-                val authorities: ArrayList<GrantedAuthority> = ArrayList()
-                for (roleInfo in memberRole) {
-                    authorities.add(
-                        SimpleGrantedAuthority(
-                            // !!!Role 코드 형식 변경 (ROLE_XXX 형식의 String)!!
-                            when (roleInfo.roleCode) {
-                                1.toByte() -> "ROLE_ADMIN"
-                                2.toByte() -> "ROLE_DEVELOPER"
-                                else -> throw Exception()
-                            }
-                        )
-                    )
-                }
-
-                // (검증된 멤버 정보와 권한 정보를 Security Context 에 입력)
-                // authentication 정보가 context 에 존재하는지 여부로 로그인 여부를 확인
-                SecurityContextHolder.getContext().authentication =
-                    UsernamePasswordAuthenticationToken(
-                        null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
-                        null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
-                        authorities // 멤버 권한 리스트만 입력해주어 권한 확인에 사용
-                    ).apply {
-                        this.details =
-                            WebAuthenticationDetailsSource().buildDetails(request)
-                    }
-            } else { // 회원 정보가 없음
-                response.setHeader("api-result-code", "b")
+                )
             }
+
+            // (검증된 멤버 정보와 권한 정보를 Security Context 에 입력)
+            // authentication 정보가 context 에 존재하는지 여부로 로그인 여부를 확인
+            SecurityContextHolder.getContext().authentication =
+                UsernamePasswordAuthenticationToken(
+                    null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
+                    null, // 세션을 유지하지 않으니 굳이 입력할 필요가 없음
+                    authorities // 멤버 권한 리스트만 입력해주어 권한 확인에 사용
+                ).apply {
+                    this.details =
+                        WebAuthenticationDetailsSource().buildDetails(request)
+                }
         }
 
 

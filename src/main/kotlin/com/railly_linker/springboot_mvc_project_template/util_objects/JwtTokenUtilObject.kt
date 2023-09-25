@@ -124,7 +124,7 @@ object JwtTokenUtilObject {
             "AES/CBC/PKCS5Padding",
             JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
             JWT_CLAIMS_AES256_ENCRYPTION_KEY
-        ) // user uid
+        ) // member uid
         claims["tu"] = CryptoUtilObject.encryptAES256(
             tokenUsage,
             "AES/CBC/PKCS5Padding",
