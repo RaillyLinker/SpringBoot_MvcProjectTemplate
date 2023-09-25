@@ -3420,7 +3420,6 @@ class C9TkAuthService(
         // !!!회원과 관계된 처리!!
 
         // loginAccessToken 의 Iterable 가져오기
-        // loginAccessToken 의 Iterable 가져오기
         val tokenInfoList = database1MemberSignInTokenInfoRepository.findAllByMemberUidAndRowActivate(
             memberUid.toLong(),
             true

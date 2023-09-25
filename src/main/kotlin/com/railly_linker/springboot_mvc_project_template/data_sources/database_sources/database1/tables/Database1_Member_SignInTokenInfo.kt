@@ -22,7 +22,7 @@ class Database1_Member_SignInTokenInfo(
     @Comment("로그인 시간")
     var signInDate: LocalDateTime,
 
-    @Column(name = "access_token", nullable = false, columnDefinition = "VARCHAR(300)")
+    @Column(name = "access_token", nullable = false, columnDefinition = "VARCHAR(500)")
     @Comment("발행된 액세스 토큰")
     var accessToken: String,
 
@@ -30,7 +30,7 @@ class Database1_Member_SignInTokenInfo(
     @Comment("액세스 토큰 만료 일시")
     var accessTokenExpireWhen: LocalDateTime,
 
-    @Column(name = "refresh_token", nullable = false, columnDefinition = "VARCHAR(300)")
+    @Column(name = "refresh_token", nullable = false, columnDefinition = "VARCHAR(500)")
     @Comment("발행된 리플레시 토큰")
     var refreshToken: String,
 

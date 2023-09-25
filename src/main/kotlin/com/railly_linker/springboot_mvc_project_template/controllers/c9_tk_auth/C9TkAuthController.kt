@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
-import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.core.io.Resource
@@ -13,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
+// todo : 검증 및 테스트
 @Tag(name = "/tk/auth APIs", description = "C9 : 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
