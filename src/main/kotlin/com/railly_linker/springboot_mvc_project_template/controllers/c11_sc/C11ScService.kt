@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.controllers.sc1
+package com.railly_linker.springboot_mvc_project_template.controllers.c11_sc
 
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.servlet.ModelAndView
 
 @Service
-class Sc1Service(
+class C11ScService(
     // (프로젝트 실행시 사용 설정한 프로필명 (ex : dev8080, prod80, local8080, 설정 안하면 default 반환))
     @Value("\${spring.profiles.active:default}") private var activeProfile: String
 ) {
