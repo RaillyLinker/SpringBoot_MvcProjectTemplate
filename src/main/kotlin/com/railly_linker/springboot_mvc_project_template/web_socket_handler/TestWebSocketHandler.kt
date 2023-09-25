@@ -8,6 +8,7 @@ import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Semaphore
@@ -20,8 +21,7 @@ class TestWebSocketHandler : TextWebSocketHandler() {
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
 
     // (현재 웹 소켓에 연결된 세션 리스트)
-    private val webSocketSessionHashMap: HashMap<String, WebSocketSession> = HashMap()
-    private val webSocketSessionArrayListSemaphore: Semaphore = Semaphore(1)
+    private val webSocketSessionHashMap: ConcurrentHashMap<String, WebSocketSession> = ConcurrentHashMap()
 
     // (스레드 풀)
     private val executorService: ExecutorService = Executors.newCachedThreadPool()
@@ -30,16 +30,12 @@ class TestWebSocketHandler : TextWebSocketHandler() {
     // ---------------------------------------------------------------------------------------------
     // <공개 메소드 공간>
     // (Client 연결 콜백)
-    @Throws(Exception::class)
     override fun afterConnectionEstablished(
         // 연결된 클라이언트 세션
         webSocketSession: WebSocketSession
     ) {
-        // 세션을 리스트에 추가
-        webSocketSessionArrayListSemaphore.acquire()
-        // session id 가 각 세션을 구분하는 고유값
+        // 웹 소켓 세션을 추가
         webSocketSessionHashMap[webSocketSession.id] = webSocketSession
-        webSocketSessionArrayListSemaphore.release()
     }
 
     // (Client 해제 콜백)
@@ -50,9 +46,7 @@ class TestWebSocketHandler : TextWebSocketHandler() {
         status: CloseStatus
     ) {
         // 세션을 리스트에서 제거
-        webSocketSessionArrayListSemaphore.acquire()
         webSocketSessionHashMap.remove(webSocketSession.id)
-        webSocketSessionArrayListSemaphore.release()
     }
 
     // (메세지 수신 콜백)
@@ -63,11 +57,9 @@ class TestWebSocketHandler : TextWebSocketHandler() {
         // 수신된 메세지
         message: TextMessage
     ) {
-        val payload = message.payload
-
         // 보내온 String 메세지를 객체로 해석
         val messagePayloadVo = Gson().fromJson<MessagePayloadVo>(
-            payload, // 해석하려는 json 형식의 String
+            message.payload, // 해석하려는 json 형식의 String
             object : TypeToken<MessagePayloadVo>() {}.type // 파싱할 데이터 스키마 객체 타입
         )
 
