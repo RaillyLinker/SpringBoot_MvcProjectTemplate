@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
-// 주소의 sc 는, tk 의 반대대는 개념으로, 해당 주소 체계가 Session / Cookie 인증 / 인가 방식을 따른다는 뜻입니다.
 @Tag(name = "/sc APIs", description = "C11 : /sc 경로에 대한 API 컨트롤러")
 @Controller
 @RequestMapping("/sc")
