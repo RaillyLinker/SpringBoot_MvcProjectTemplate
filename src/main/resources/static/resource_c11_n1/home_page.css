@@ -32,6 +32,7 @@ hr{
     font-size:20px;
     margin-left: 30px;
     vertical-align:middle;
+    display: inline;
 }
 
 #go_to_swagger_btn{
@@ -43,6 +44,30 @@ hr{
     border-radius: 0.25rem;
     margin-bottom: 10px;
     border: 0px;
+}
+
+#login_btn{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #277cea;
+    color: #eee;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+    border: 0px;
+    float: right;
+}
+
+#logout_btn{
+    width: 100px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #277cea;
+    color: #eee;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+    border: 0px;
+    float: right;
 }
 
 /* [Name] */

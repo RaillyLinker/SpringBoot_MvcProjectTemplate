@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,9 +19,14 @@
 <div>
     <img id="title_icon" src="../../static/resource_c11_n1/title_icon.png" th:src="@{/resource_c11_n1/title_icon.png}"
          alt="타이틀 아이콘 이미지" onclick="location.href='home_page.html'" th:onclick="location.href='/'"/>
-    <span id="title_txt">
+    <h1 id="title_txt">
         Home
-    </span>
+    </h1>
+
+    <input id="login_btn" type="submit" value="로그인" style="display:block" th:style="display:block"
+           sec:authorize="!isAuthenticated()"/>
+    <input id="logout_btn" type="submit" value="로그아웃" style="display:none" th:style="display:block"
+           sec:authorize="isAuthenticated()"/>
 </div>
 
 <hr/>
