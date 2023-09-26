@@ -20,7 +20,7 @@ class C11ScService(
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
-        mv.viewName = "template_sc1_n1/home_page"
+        mv.viewName = "template_c11_n1/home_page"
 
         mv.addObject(
             "viewModel",
