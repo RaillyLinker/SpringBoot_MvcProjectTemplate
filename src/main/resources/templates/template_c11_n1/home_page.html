@@ -5,10 +5,9 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link href="../../static/resource_global/font.css" th:href="@{/resource_global/font.css}" rel="stylesheet"/>
-    <link href="../../static/resource_c11_n1/home_page.css" th:href="@{/resource_c11_n1/home_page.css}" rel="stylesheet"/>
+    <link href="../../static/resource_c11_n1/home_page.css" th:href="@{/resource_c11_n1/home_page.css}"
+          rel="stylesheet"/>
 
     <title>
         Home
@@ -18,7 +17,8 @@
 <!-- 본문 작성 -->
 
 <div>
-    <img id="title_icon" src="../../static/resource_c11_n1/title_icon.png" th:src="@{/resource_c11_n1/title_icon.png}" alt="타이틀 아이콘 이미지"/>
+    <img id="title_icon" src="../../static/resource_c11_n1/title_icon.png" th:src="@{/resource_c11_n1/title_icon.png}"
+         alt="타이틀 아이콘 이미지" onclick="location.href='home_page.html'" th:onclick="location.href='/'"/>
     <span id="title_txt">
         Home
     </span>
@@ -31,21 +31,19 @@
 </h2>
 
 <span>
-    구동 환경 프로필 : [[${viewModel.env}]]
+    구동 환경 프로필 : <span th:text="${viewModel.env}">dev</span>
 </span>
 
 <h2 th:if="${viewModel.env != 'prod80'}">
     Swagger 문서
 </h2>
 
-<button id="go_to_swagger_btn" type="button" class="btn btn-primary" th:if="${viewModel.env != 'prod80'}">
+<button id="go_to_swagger_btn" type="submit" th:if="${viewModel.env != 'prod80'}"
+        th:onclick="location.href='/swagger-ui/index.html'">
     Swagger
 </button>
 
 <!-- Script 선언 -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-<script th:src="@{/resource_c11_n1/home_page.js}" defer></script>
+<script src="../../static/resource_c11_n1/home_page.js" th:src="@{/resource_c11_n1/home_page.js}"></script>
 </body>
 </html>

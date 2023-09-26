@@ -36,6 +36,13 @@ hr{
 
 #go_to_swagger_btn{
     width: 200px;
+    height: 30px;
+    cursor: pointer;
+    background-color: #277cea;
+    color: #eee;
+    border-radius: 0.25rem;
+    margin-bottom: 10px;
+    border: 0px;
 }
 
 /* [Name] */
