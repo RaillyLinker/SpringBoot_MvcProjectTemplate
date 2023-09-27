@@ -7,12 +7,12 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "join_the_membership_with_email_verification_data", catalog = "verification")
+@Table(name = "join_the_membership_with_phone_number_verification_data", catalog = "member")
 @Comment("이메일 회원가입 검증 테이블")
-class Database1_Verification_JoinTheMembershipWithEmailVerificationData(
-    @Column(name = "email_address", nullable = false, columnDefinition = "VARCHAR(100)")
-    @Comment("이메일 주소")
-    var emailAddress: String,
+class Database1_Member_JoinTheMembershipWithPhoneNumberVerificationData(
+    @Column(name = "phone_number", nullable = false, columnDefinition = "VARCHAR(45)")
+    @Comment("전화 번호")
+    var phoneNumber: String,
 
     @Column(name = "verification_secret", nullable = false, columnDefinition = "VARCHAR(20)")
     @Comment("검증 비문")

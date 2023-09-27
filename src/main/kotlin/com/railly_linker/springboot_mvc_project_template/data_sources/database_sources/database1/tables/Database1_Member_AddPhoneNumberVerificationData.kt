@@ -7,16 +7,16 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "join_the_membership_with_oauth2_verification_data", catalog = "verification")
-@Comment("OAuth2 회원가입 검증 테이블")
-class Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
-    @Column(name = "oauth2_type_code", nullable = false, columnDefinition = "TINYINT UNSIGNED")
-    @Comment("oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)")
-    var oauth2TypeCode: Byte,
+@Table(name = "add_phone_number_verification_data", catalog = "member")
+@Comment("이메일 추가하기 검증 테이블")
+class Database1_Member_AddPhoneNumberVerificationData(
+    @Column(name = "member_uid", nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("멤버 고유값 (member.members.uid)")
+    var memberUid: Long,
 
-    @Column(name = "oauth2_id", nullable = false, columnDefinition = "VARCHAR(50)")
-    @Comment("OAuth2 로그인으로 얻어온 고유값")
-    var oauth2Id: String,
+    @Column(name = "phone_number", nullable = false, columnDefinition = "VARCHAR(45)")
+    @Comment("전화 번호")
+    var phoneNumber: String,
 
     @Column(name = "verification_secret", nullable = false, columnDefinition = "VARCHAR(20)")
     @Comment("검증 비문")

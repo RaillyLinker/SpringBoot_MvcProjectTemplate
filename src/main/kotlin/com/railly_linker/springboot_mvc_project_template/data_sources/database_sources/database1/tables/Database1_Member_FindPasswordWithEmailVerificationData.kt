@@ -7,9 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "find_password_with_email_verification_data", catalog = "verification")
+@Table(name = "find_password_with_email_verification_data", catalog = "member")
 @Comment("이메일로 비밀번호 찾기 검증 테이블")
-class Database1_Verification_FindPasswordWithEmailVerificationData(
+class Database1_Member_FindPasswordWithEmailVerificationData(
     @Column(name = "email_address", nullable = false, columnDefinition = "VARCHAR(100)")
     @Comment("이메일 주소")
     var emailAddress: String,

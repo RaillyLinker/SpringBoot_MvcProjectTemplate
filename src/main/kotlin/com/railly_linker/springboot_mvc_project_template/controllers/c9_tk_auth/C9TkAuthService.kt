@@ -47,13 +47,13 @@ class C9TkAuthService(
     private val database1MemberMemberEmailDataRepository: Database1_Member_MemberEmailDataRepository,
     private val database1MemberMemberPhoneDataRepository: Database1_Member_MemberPhoneDataRepository,
     private val database1MemberMemberOauth2LoginDataRepository: Database1_Member_MemberOauth2LoginDataRepository,
-    private val database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository: Database1_Verification_JoinTheMembershipWithPhoneNumberVerificationDataRepository,
-    private val database1MemberJoinTheMembershipWithEmailVerificationDataRepository: Database1_Verification_JoinTheMembershipWithEmailVerificationDataRepository,
-    private val database1MemberJoinTheMembershipWithOauth2VerificationDataRepository: Database1_Verification_JoinTheMembershipWithOauth2VerificationDataRepository,
-    private val database1MemberFindPasswordWithPhoneNumberVerificationDataRepository: Database1_Verification_FindPasswordWithPhoneNumberVerificationDataRepository,
-    private val database1MemberFindPasswordWithEmailVerificationDataRepository: Database1_Verification_FindPasswordWithEmailVerificationDataRepository,
-    private val database1MemberAddEmailVerificationDataRepository: Database1_Verification_AddEmailVerificationDataRepository,
-    private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Verification_AddPhoneNumberVerificationDataRepository,
+    private val database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository: Database1_Member_JoinTheMembershipWithPhoneNumberVerificationDataRepository,
+    private val database1MemberJoinTheMembershipWithEmailVerificationDataRepository: Database1_Member_JoinTheMembershipWithEmailVerificationDataRepository,
+    private val database1MemberJoinTheMembershipWithOauth2VerificationDataRepository: Database1_Member_JoinTheMembershipWithOauth2VerificationDataRepository,
+    private val database1MemberFindPasswordWithPhoneNumberVerificationDataRepository: Database1_Member_FindPasswordWithPhoneNumberVerificationDataRepository,
+    private val database1MemberFindPasswordWithEmailVerificationDataRepository: Database1_Member_FindPasswordWithEmailVerificationDataRepository,
+    private val database1MemberAddEmailVerificationDataRepository: Database1_Member_AddEmailVerificationDataRepository,
+    private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Member_AddPhoneNumberVerificationDataRepository,
     private val database1MemberMemberProfileDataRepository: Database1_Member_MemberProfileDataRepository,
     private val database1MemberLogInTokenInfoRepository: Database1_Member_LogInTokenInfoRepository
 ) {
@@ -1112,7 +1112,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterEmailVerificationData =
             database1MemberJoinTheMembershipWithEmailVerificationDataRepository.save(
-                Database1_Verification_JoinTheMembershipWithEmailVerificationData(
+                Database1_Member_JoinTheMembershipWithEmailVerificationData(
                     inputVo.email,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -1367,7 +1367,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterPhoneNumberVerificationData =
             database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository.save(
-                Database1_Verification_JoinTheMembershipWithPhoneNumberVerificationData(
+                Database1_Member_JoinTheMembershipWithPhoneNumberVerificationData(
                     inputVo.phoneNumber,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -1650,7 +1650,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
-                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
+                        Database1_Member_JoinTheMembershipWithOauth2VerificationData(
                             1,
                             loginId,
                             verificationCode,
@@ -1697,7 +1697,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
-                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
+                        Database1_Member_JoinTheMembershipWithOauth2VerificationData(
                             2,
                             loginId,
                             verificationCode,
@@ -1744,7 +1744,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
-                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
+                        Database1_Member_JoinTheMembershipWithOauth2VerificationData(
                             3,
                             loginId,
                             verificationCode,
@@ -1816,7 +1816,7 @@ class C9TkAuthService(
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
                     database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
-                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
+                        Database1_Member_JoinTheMembershipWithOauth2VerificationData(
                             4,
                             loginId,
                             verificationCode,
@@ -2101,7 +2101,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberFindPasswordEmailVerificationData =
             database1MemberFindPasswordWithEmailVerificationDataRepository.save(
-                Database1_Verification_FindPasswordWithEmailVerificationData(
+                Database1_Member_FindPasswordWithEmailVerificationData(
                     inputVo.email,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -2291,7 +2291,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberFindPasswordPhoneNumberVerificationData =
             database1MemberFindPasswordWithPhoneNumberVerificationDataRepository.save(
-                Database1_Verification_FindPasswordWithPhoneNumberVerificationData(
+                Database1_Member_FindPasswordWithPhoneNumberVerificationData(
                     inputVo.phoneNumber,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -2596,7 +2596,7 @@ class C9TkAuthService(
         val verificationTimeSec: Long = 60 * 10
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterEmailVerificationData = database1MemberAddEmailVerificationDataRepository.save(
-            Database1_Verification_AddEmailVerificationData(
+            Database1_Member_AddEmailVerificationData(
                 memberUid.toLong(),
                 inputVo.email,
                 verificationCode,
@@ -2848,7 +2848,7 @@ class C9TkAuthService(
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberAddPhoneNumberVerificationData =
             database1MemberAddPhoneNumberVerificationDataRepository.save(
-                Database1_Verification_AddPhoneNumberVerificationData(
+                Database1_Member_AddPhoneNumberVerificationData(
                     memberUid.toLong(),
                     inputVo.phoneNumber,
                     verificationCode,
