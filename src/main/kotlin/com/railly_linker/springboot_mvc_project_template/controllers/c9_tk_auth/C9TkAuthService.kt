@@ -47,15 +47,15 @@ class C9TkAuthService(
     private val database1MemberMemberEmailDataRepository: Database1_Member_MemberEmailDataRepository,
     private val database1MemberMemberPhoneDataRepository: Database1_Member_MemberPhoneDataRepository,
     private val database1MemberMemberOauth2LoginDataRepository: Database1_Member_MemberOauth2LoginDataRepository,
-    private val database1MemberRegisterEmailVerificationDataRepository: Database1_Verification_RegisterEmailVerificationDataRepository,
-    private val database1MemberFindPasswordEmailVerificationDataRepository: Database1_Verification_FindPasswordEmailVerificationDataRepository,
+    private val database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository: Database1_Verification_JoinTheMembershipWithPhoneNumberVerificationDataRepository,
+    private val database1MemberJoinTheMembershipWithEmailVerificationDataRepository: Database1_Verification_JoinTheMembershipWithEmailVerificationDataRepository,
+    private val database1MemberJoinTheMembershipWithOauth2VerificationDataRepository: Database1_Verification_JoinTheMembershipWithOauth2VerificationDataRepository,
+    private val database1MemberFindPasswordWithPhoneNumberVerificationDataRepository: Database1_Verification_FindPasswordWithPhoneNumberVerificationDataRepository,
+    private val database1MemberFindPasswordWithEmailVerificationDataRepository: Database1_Verification_FindPasswordWithEmailVerificationDataRepository,
     private val database1MemberAddEmailVerificationDataRepository: Database1_Verification_AddEmailVerificationDataRepository,
-    private val database1MemberRegisterPhoneNumberVerificationDataRepository: Database1_Verification_RegisterPhoneNumberVerificationDataRepository,
-    private val database1MemberFindPasswordPhoneNumberVerificationDataRepository: Database1_Verification_FindPasswordPhoneNumberVerificationDataRepository,
     private val database1MemberAddPhoneNumberVerificationDataRepository: Database1_Verification_AddPhoneNumberVerificationDataRepository,
-    private val database1MemberRegisterOauth2VerificationDataRepository: Database1_Verification_RegisterOauth2VerificationDataRepository,
     private val database1MemberMemberProfileDataRepository: Database1_Member_MemberProfileDataRepository,
-    private val database1MemberSignInTokenInfoRepository: Database1_Member_SignInTokenInfoRepository
+    private val database1MemberLogInTokenInfoRepository: Database1_Member_LogInTokenInfoRepository
 ) {
     // <멤버 변수 공간>
     private val classLogger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -138,7 +138,7 @@ class C9TkAuthService(
         inputVo: C9TkAuthController.Api5InputVo
     ): C9TkAuthController.Api5OutputVo? {
         val memberUid: Long
-        when (inputVo.signInTypeCode) {
+        when (inputVo.loginTypeCode) {
             0 -> { // 닉네임
                 // (정보 검증 로직 수행)
                 val member = database1MemberMemberDataRepository.findByNickNameAndRowActivate(
@@ -182,7 +182,7 @@ class C9TkAuthService(
             }
 
             else -> {
-                classLogger.info("signInType ${inputVo.signInTypeCode} Not Supported")
+                classLogger.info("loginTypeCode ${inputVo.loginTypeCode} Not Supported")
                 httpServletResponse.status = 400
                 return null
             }
@@ -240,8 +240,8 @@ class C9TkAuthService(
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
 
-        database1MemberSignInTokenInfoRepository.save(
-            Database1_Member_SignInTokenInfo(
+        database1MemberLogInTokenInfoRepository.save(
+            Database1_Member_LogInTokenInfo(
                 memberUid,
                 "Bearer",
                 LocalDateTime.now(),
@@ -559,8 +559,8 @@ class C9TkAuthService(
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
 
-        database1MemberSignInTokenInfoRepository.save(
-            Database1_Member_SignInTokenInfo(
+        database1MemberLogInTokenInfoRepository.save(
+            Database1_Member_LogInTokenInfo(
                 snsOauth2.memberUid,
                 "Bearer",
                 LocalDateTime.now(),
@@ -725,8 +725,8 @@ class C9TkAuthService(
             this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
         }.time)
 
-        database1MemberSignInTokenInfoRepository.save(
-            Database1_Member_SignInTokenInfo(
+        database1MemberLogInTokenInfoRepository.save(
+            Database1_Member_LogInTokenInfo(
                 snsOauth2.memberUid,
                 "Bearer",
                 LocalDateTime.now(),
@@ -815,7 +815,7 @@ class C9TkAuthService(
         val tokenType = authorizationSplit[0].trim().lowercase() // (ex : "bearer")
         val token = authorizationSplit[1].trim() // (ex : "abcd1234")
 
-        val tokenInfo = database1MemberSignInTokenInfoRepository.findByTokenTypeAndAccessTokenAndRowActivate(
+        val tokenInfo = database1MemberLogInTokenInfoRepository.findByTokenTypeAndAccessTokenAndRowActivate(
             tokenType,
             token,
             true
@@ -823,7 +823,7 @@ class C9TkAuthService(
 
         if (tokenInfo != null) {
             tokenInfo.rowActivate = false
-            database1MemberSignInTokenInfoRepository.save(tokenInfo)
+            database1MemberLogInTokenInfoRepository.save(tokenInfo)
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
@@ -884,7 +884,7 @@ class C9TkAuthService(
                     val token = authorizationSplit[1].trim() // (ex : "abcd1234")
 
                     val tokenInfo =
-                        database1MemberSignInTokenInfoRepository.findByTokenTypeAndAccessTokenAndRowActivate(
+                        database1MemberLogInTokenInfoRepository.findByTokenTypeAndAccessTokenAndRowActivate(
                             tokenType1,
                             token,
                             true
@@ -905,7 +905,7 @@ class C9TkAuthService(
 
                     // 먼저 로그아웃 처리
                     tokenInfo.rowActivate = false
-                    database1MemberSignInTokenInfoRepository.save(tokenInfo)
+                    database1MemberLogInTokenInfoRepository.save(tokenInfo)
 
                     // 멤버의 권한 리스트를 조회 후 반환
                     val memberRoleList = database1MemberMemberRoleDataRepository.findAllByMemberUidAndRowActivate(
@@ -937,8 +937,8 @@ class C9TkAuthService(
                         this.add(Calendar.MILLISECOND, JwtTokenUtilObject.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt())
                     }.time)
 
-                    database1MemberSignInTokenInfoRepository.save(
-                        Database1_Member_SignInTokenInfo(
+                    database1MemberLogInTokenInfoRepository.save(
+                        Database1_Member_LogInTokenInfo(
                             accessTokenMemberUid.toLong(),
                             "Bearer",
                             LocalDateTime.now(),
@@ -1044,7 +1044,7 @@ class C9TkAuthService(
         val memberUid = AuthorizationTokenUtilObject.getTokenMemberUid(authorization)
 
         // loginAccessToken 의 Iterable 가져오기
-        val tokenInfoList = database1MemberSignInTokenInfoRepository.findAllByMemberUidAndRowActivate(
+        val tokenInfoList = database1MemberLogInTokenInfoRepository.findAllByMemberUidAndRowActivate(
             memberUid.toLong(),
             true
         )
@@ -1053,7 +1053,7 @@ class C9TkAuthService(
         for (tokenInfo in tokenInfoList) {
             tokenInfo.rowActivate = false
 
-            database1MemberSignInTokenInfoRepository.save(tokenInfo)
+            database1MemberLogInTokenInfoRepository.save(tokenInfo)
         }
 
         httpServletResponse.setHeader("api-result-code", "0")
@@ -1111,8 +1111,8 @@ class C9TkAuthService(
         val verificationTimeSec: Long = 60 * 10
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterEmailVerificationData =
-            database1MemberRegisterEmailVerificationDataRepository.save(
-                Database1_Verification_RegisterEmailVerificationData(
+            database1MemberJoinTheMembershipWithEmailVerificationDataRepository.save(
+                Database1_Verification_JoinTheMembershipWithEmailVerificationData(
                     inputVo.email,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -1151,7 +1151,7 @@ class C9TkAuthService(
         email: String,
         verificationCode: String
     ): C9TkAuthController.Api14OutputVo? {
-        val emailVerificationOpt = database1MemberRegisterEmailVerificationDataRepository.findById(verificationUid)
+        val emailVerificationOpt = database1MemberJoinTheMembershipWithEmailVerificationDataRepository.findById(verificationUid)
 
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -1180,7 +1180,7 @@ class C9TkAuthService(
             val verificationTimeSec: Long = 60 * 10
             emailVerification.verificationExpireWhen =
                 LocalDateTime.now().plusSeconds(verificationTimeSec)
-            database1MemberRegisterEmailVerificationDataRepository.save(
+            database1MemberJoinTheMembershipWithEmailVerificationDataRepository.save(
                 emailVerification
             )
 
@@ -1199,7 +1199,7 @@ class C9TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api15(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api15InputVo) {
         val emailVerificationOpt =
-            database1MemberRegisterEmailVerificationDataRepository.findById(inputVo.verificationUid)
+            database1MemberJoinTheMembershipWithEmailVerificationDataRepository.findById(inputVo.verificationUid)
 
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -1333,7 +1333,7 @@ class C9TkAuthService(
 
             // 확인 완료된 검증 요청 정보 삭제
             emailVerification.rowActivate = false
-            database1MemberRegisterEmailVerificationDataRepository.save(emailVerification)
+            database1MemberJoinTheMembershipWithEmailVerificationDataRepository.save(emailVerification)
 
             httpServletResponse.setHeader("api-result-code", "0")
             return
@@ -1366,8 +1366,8 @@ class C9TkAuthService(
         val verificationTimeSec: Long = 60 * 10
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberRegisterPhoneNumberVerificationData =
-            database1MemberRegisterPhoneNumberVerificationDataRepository.save(
-                Database1_Verification_RegisterPhoneNumberVerificationData(
+            database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository.save(
+                Database1_Verification_JoinTheMembershipWithPhoneNumberVerificationData(
                     inputVo.phoneNumber,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -1412,7 +1412,7 @@ class C9TkAuthService(
         verificationCode: String
     ): C9TkAuthController.Api17OutputVo? {
         val phoneNumberVerificationOpt =
-            database1MemberRegisterPhoneNumberVerificationDataRepository.findById(verificationUid)
+            database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository.findById(verificationUid)
 
         if (phoneNumberVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -1441,7 +1441,7 @@ class C9TkAuthService(
             val verificationTimeSec: Long = 60 * 10
             phoneNumberVerification.verificationExpireWhen =
                 LocalDateTime.now().plusSeconds(verificationTimeSec)
-            database1MemberRegisterPhoneNumberVerificationDataRepository.save(
+            database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository.save(
                 phoneNumberVerification
             )
 
@@ -1460,7 +1460,7 @@ class C9TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api18(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api18InputVo) {
         val phoneNumberVerificationOpt =
-            database1MemberRegisterPhoneNumberVerificationDataRepository.findById(inputVo.verificationUid)
+            database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository.findById(inputVo.verificationUid)
 
         if (phoneNumberVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -1594,7 +1594,7 @@ class C9TkAuthService(
 
             // 확인 완료된 검증 요청 정보 삭제
             phoneNumberVerification.rowActivate = false
-            database1MemberRegisterPhoneNumberVerificationDataRepository.save(phoneNumberVerification)
+            database1MemberJoinTheMembershipWithPhoneNumberVerificationDataRepository.save(phoneNumberVerification)
 
             httpServletResponse.setHeader("api-result-code", "0")
             return
@@ -1649,8 +1649,8 @@ class C9TkAuthService(
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
-                    database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Verification_RegisterOauth2VerificationData(
+                    database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
+                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
                             1,
                             loginId,
                             verificationCode,
@@ -1696,8 +1696,8 @@ class C9TkAuthService(
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
-                    database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Verification_RegisterOauth2VerificationData(
+                    database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
+                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
                             2,
                             loginId,
                             verificationCode,
@@ -1743,8 +1743,8 @@ class C9TkAuthService(
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
-                    database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Verification_RegisterOauth2VerificationData(
+                    database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
+                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
                             3,
                             loginId,
                             verificationCode,
@@ -1815,8 +1815,8 @@ class C9TkAuthService(
 
                 verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
                 val database1MemberRegisterOauth2VerificationData =
-                    database1MemberRegisterOauth2VerificationDataRepository.save(
-                        Database1_Verification_RegisterOauth2VerificationData(
+                    database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(
+                        Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
                             4,
                             loginId,
                             verificationCode,
@@ -1879,7 +1879,7 @@ class C9TkAuthService(
         }
 
         val oauth2VerificationOpt =
-            database1MemberRegisterOauth2VerificationDataRepository.findById(inputVo.verificationUid)
+            database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.findById(inputVo.verificationUid)
 
         if (oauth2VerificationOpt.isEmpty) { // 해당 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -2014,7 +2014,7 @@ class C9TkAuthService(
 
             // 확인 완료된 검증 요청 정보 삭제
             oauth2Verification.rowActivate = false
-            database1MemberRegisterOauth2VerificationDataRepository.save(oauth2Verification)
+            database1MemberJoinTheMembershipWithOauth2VerificationDataRepository.save(oauth2Verification)
 
             httpServletResponse.setHeader("api-result-code", "0")
             return
@@ -2100,8 +2100,8 @@ class C9TkAuthService(
         val verificationTimeSec: Long = 60 * 10
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberFindPasswordEmailVerificationData =
-            database1MemberFindPasswordEmailVerificationDataRepository.save(
-                Database1_Verification_FindPasswordEmailVerificationData(
+            database1MemberFindPasswordWithEmailVerificationDataRepository.save(
+                Database1_Verification_FindPasswordWithEmailVerificationData(
                     inputVo.email,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -2139,7 +2139,7 @@ class C9TkAuthService(
         email: String,
         verificationCode: String
     ): C9TkAuthController.Api23OutputVo? {
-        val emailVerificationOpt = database1MemberFindPasswordEmailVerificationDataRepository.findById(verificationUid)
+        val emailVerificationOpt = database1MemberFindPasswordWithEmailVerificationDataRepository.findById(verificationUid)
 
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -2168,7 +2168,7 @@ class C9TkAuthService(
             val verificationTimeSec: Long = 60 * 10
             emailVerification.verificationExpireWhen =
                 LocalDateTime.now().plusSeconds(verificationTimeSec)
-            database1MemberFindPasswordEmailVerificationDataRepository.save(
+            database1MemberFindPasswordWithEmailVerificationDataRepository.save(
                 emailVerification
             )
 
@@ -2187,7 +2187,7 @@ class C9TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api24(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api24InputVo) {
         val emailVerificationOpt =
-            database1MemberFindPasswordEmailVerificationDataRepository.findById(inputVo.verificationUid)
+            database1MemberFindPasswordWithEmailVerificationDataRepository.findById(inputVo.verificationUid)
 
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -2258,7 +2258,7 @@ class C9TkAuthService(
 
             // 확인 완료된 검증 요청 정보 삭제
             emailVerification.rowActivate = false
-            database1MemberFindPasswordEmailVerificationDataRepository.save(emailVerification)
+            database1MemberFindPasswordWithEmailVerificationDataRepository.save(emailVerification)
 
             httpServletResponse.setHeader("api-result-code", "0")
             return
@@ -2290,8 +2290,8 @@ class C9TkAuthService(
         val verificationTimeSec: Long = 60 * 10
         val verificationCode = String.format("%06d", Random().nextInt(999999)) // 랜덤 6자리 숫자
         val database1MemberFindPasswordPhoneNumberVerificationData =
-            database1MemberFindPasswordPhoneNumberVerificationDataRepository.save(
-                Database1_Verification_FindPasswordPhoneNumberVerificationData(
+            database1MemberFindPasswordWithPhoneNumberVerificationDataRepository.save(
+                Database1_Verification_FindPasswordWithPhoneNumberVerificationData(
                     inputVo.phoneNumber,
                     verificationCode,
                     LocalDateTime.now().plusSeconds(verificationTimeSec),
@@ -2335,7 +2335,7 @@ class C9TkAuthService(
         verificationCode: String
     ): C9TkAuthController.Api26OutputVo? {
         val phoneNumberVerificationOpt =
-            database1MemberFindPasswordPhoneNumberVerificationDataRepository.findById(verificationUid)
+            database1MemberFindPasswordWithPhoneNumberVerificationDataRepository.findById(verificationUid)
 
         if (phoneNumberVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -2364,7 +2364,7 @@ class C9TkAuthService(
             val verificationTimeSec: Long = 60 * 10
             phoneNumberVerification.verificationExpireWhen =
                 LocalDateTime.now().plusSeconds(verificationTimeSec)
-            database1MemberFindPasswordPhoneNumberVerificationDataRepository.save(
+            database1MemberFindPasswordWithPhoneNumberVerificationDataRepository.save(
                 phoneNumberVerification
             )
 
@@ -2383,7 +2383,7 @@ class C9TkAuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api27(httpServletResponse: HttpServletResponse, inputVo: C9TkAuthController.Api27InputVo) {
         val phoneNumberVerificationOpt =
-            database1MemberFindPasswordPhoneNumberVerificationDataRepository.findById(inputVo.verificationUid)
+            database1MemberFindPasswordWithPhoneNumberVerificationDataRepository.findById(inputVo.verificationUid)
 
         if (phoneNumberVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.setHeader("api-result-code", "1")
@@ -2454,7 +2454,7 @@ class C9TkAuthService(
 
             // 확인 완료된 검증 요청 정보 삭제
             phoneNumberVerification.rowActivate = false
-            database1MemberFindPasswordPhoneNumberVerificationDataRepository.save(phoneNumberVerification)
+            database1MemberFindPasswordWithPhoneNumberVerificationDataRepository.save(phoneNumberVerification)
 
             httpServletResponse.setHeader("api-result-code", "0")
             return
@@ -3384,7 +3384,7 @@ class C9TkAuthService(
         // !!!회원과 관계된 처리!!
 
         // loginAccessToken 의 Iterable 가져오기
-        val tokenInfoList = database1MemberSignInTokenInfoRepository.findAllByMemberUidAndRowActivate(
+        val tokenInfoList = database1MemberLogInTokenInfoRepository.findAllByMemberUidAndRowActivate(
             memberUid.toLong(),
             true
         )
@@ -3393,7 +3393,7 @@ class C9TkAuthService(
         for (tokenInfo in tokenInfoList) {
             tokenInfo.rowActivate = false
 
-            database1MemberSignInTokenInfoRepository.save(tokenInfo)
+            database1MemberLogInTokenInfoRepository.save(tokenInfo)
         }
 
         httpServletResponse.setHeader("api-result-code", "0")

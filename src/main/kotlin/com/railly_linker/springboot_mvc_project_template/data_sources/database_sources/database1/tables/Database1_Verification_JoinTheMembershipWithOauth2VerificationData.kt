@@ -7,12 +7,16 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "find_password_email_verification_data", catalog = "verification")
-@Comment("이메일로 비밀번호 찾기 검증 테이블")
-class Database1_Verification_FindPasswordEmailVerificationData(
-    @Column(name = "email_address", nullable = false, columnDefinition = "VARCHAR(100)")
-    @Comment("이메일 주소")
-    var emailAddress: String,
+@Table(name = "join_the_membership_with_oauth2_verification_data", catalog = "verification")
+@Comment("OAuth2 회원가입 검증 테이블")
+class Database1_Verification_JoinTheMembershipWithOauth2VerificationData(
+    @Column(name = "oauth2_type_code", nullable = false, columnDefinition = "TINYINT UNSIGNED")
+    @Comment("oauth2 종류 (1 : GOOGLE, 2 : NAVER, 3 : KAKAO)")
+    var oauth2TypeCode: Byte,
+
+    @Column(name = "oauth2_id", nullable = false, columnDefinition = "VARCHAR(50)")
+    @Comment("OAuth2 로그인으로 얻어온 고유값")
+    var oauth2Id: String,
 
     @Column(name = "verification_secret", nullable = false, columnDefinition = "VARCHAR(20)")
     @Comment("검증 비문")

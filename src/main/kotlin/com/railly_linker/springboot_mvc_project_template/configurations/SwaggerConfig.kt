@@ -138,7 +138,7 @@ class SwaggerConfig {
             다만, Authorization Request Header 가 보내졌다면 서버에선 이에 대한 검증을 자동으로 진행하게 되므로 필요치 않은 작업을 하는 것이 되므로,
             
             요청하지 않은 Header 정보는 보내주지 않는 것을 추천합니다.
-        - tk/** 에서 사용하는 RefreshToken 은 AccessToken 발급(SignIn, Reissue api 사용)시마다 재발행됩니다.
+        - tk/** 에서 사용하는 RefreshToken 은 AccessToken 발급(Login, Reissue api 사용)시마다 재발행됩니다.
       
             AccessToken 보다 더 길게 설정된 RefreshToken 의 만료시간 동안 토큰 재발급을 전혀 하지 않아 RefreshToken 마저 만료된 경우, 
       
@@ -147,7 +147,7 @@ class SwaggerConfig {
         
             1. 클라이언트 비휘발성 저장소 안에,
                 
-                    class SignInInfoVo {
+                    class LoginInfoVo {
                       String memberUid; // 멤버 고유값
                       String nickName; // 닉네임
                       String tokenType; // 발급받은 토큰 타입(ex : "Bearer")
@@ -294,7 +294,7 @@ class SwaggerConfig {
         
             c : 올바르지 않은 Authorization Token
             
-            d : 만료된 AccessToken. (reissue, sign-out API 는 제외)
+            d : 만료된 AccessToken. (reissue, logout API 는 제외)
     """.trimIndent()
 
 

@@ -12,6 +12,14 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
+// [용어정리]
+// login : 로그인
+// logout : 로그아웃
+// join the membership : 회원가입
+// withdrawal : 회원탈퇴
+// member : 회원
+// non member : 비회원
+// user : 서비스 이용자 (비회원 포함)
 @Tag(name = "/tk/auth APIs", description = "C9 : 인증/인가 API 컨트롤러")
 @RestController
 @RequestMapping("/tk/auth")
@@ -29,7 +37,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
-    @GetMapping("/for-no-signed-in")
+    @GetMapping("/for-no-logged-in")
     fun api1(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse
@@ -45,7 +53,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
-    @GetMapping("/for-signed-in")
+    @GetMapping("/for-logged-in")
     @PreAuthorize("isAuthenticated()")
     fun api2(
         @Parameter(hidden = true)
@@ -107,7 +115,7 @@ class C9TkAuthController(
                 "1 : 가입 되지 않은 회원\n\n" +
                 "2 : 패스워드 불일치"
     )
-    @PostMapping("/sign-in-with-password")
+    @PostMapping("/login-with-password")
     fun api5(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -123,8 +131,8 @@ class C9TkAuthController(
             required = true,
             example = "1"
         )
-        @JsonProperty("signInTypeCode")
-        val signInTypeCode: Int,
+        @JsonProperty("loginTypeCode")
+        val loginTypeCode: Int,
 
         @Schema(
             description = "아이디 (0 : 홍길동, 1 : test@gmail.com, 2 : 82)000-0000-0000)",
@@ -273,7 +281,7 @@ class C9TkAuthController(
                 "1 : 유효하지 않은 OAuth2 Access Token\n\n" +
                 "2 : 가입 되지 않은 회원"
     )
-    @PostMapping("/sign-in-with-oauth2-access-token")
+    @PostMapping("/login-with-oauth2-access-token")
     fun api7(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -386,7 +394,7 @@ class C9TkAuthController(
                 "1 : 유효하지 않은 OAuth2 ID Token\n\n" +
                 "2 : 가입 되지 않은 회원"
     )
-    @PostMapping("/sign-in-with-oauth2-id-token")
+    @PostMapping("/login-with-oauth2-id-token")
     fun api7Dot1(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -500,7 +508,7 @@ class C9TkAuthController(
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
-    @PostMapping("/sign-out")
+    @PostMapping("/logout")
     @PreAuthorize("isAuthenticated()")
     fun api8(
         @Parameter(hidden = true)
@@ -705,7 +713,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 기존 회원 존재"
     )
-    @PostMapping("/register-with-email-verification")
+    @PostMapping("/join-the-membership-email-verification")
     fun api13(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -750,7 +758,7 @@ class C9TkAuthController(
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음"
     )
-    @GetMapping("/register-with-email-verification-check")
+    @GetMapping("/join-the-membership-email-verification-check")
     fun api14(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -790,7 +798,7 @@ class C9TkAuthController(
                 "4 : 이미 가입된 회원이 있습니다.\n\n" +
                 "5 : 이미 사용중인 닉네임"
     )
-    @PostMapping("/register-with-email", consumes = ["multipart/form-data"])
+    @PostMapping("/join-the-membership-with-email", consumes = ["multipart/form-data"])
     fun api15(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -855,7 +863,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 기존 회원 존재"
     )
-    @PostMapping("/register-with-phone-number-verification")
+    @PostMapping("/join-the-membership-phone-number-verification")
     fun api16(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -901,7 +909,7 @@ class C9TkAuthController(
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음"
     )
-    @GetMapping("/register-with-phone-number-verification-check")
+    @GetMapping("/join-the-membership-phone-number-verification-check")
     fun api17(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -941,7 +949,7 @@ class C9TkAuthController(
                 "4 : 이미 가입된 회원이 있습니다.\n\n" +
                 "5 : 이미 사용중인 닉네임"
     )
-    @PostMapping("/register-with-phone-number", consumes = ["multipart/form-data"])
+    @PostMapping("/join-the-membership-with-phone-number", consumes = ["multipart/form-data"])
     fun api18(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1007,7 +1015,7 @@ class C9TkAuthController(
                 "1 : 잘못된 OAuth2 AccessToken\n\n" +
                 "2 : 기존 회원 존재"
     )
-    @PostMapping("/register-with-oauth2-access-token-verification")
+    @PostMapping("/join-the-membership-oauth2-access-token-verification")
     fun api19(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1079,7 +1087,7 @@ class C9TkAuthController(
                 "1 : 잘못된 OAuth2 IdToken\n\n" +
                 "2 : 기존 회원 존재"
     )
-    @PostMapping("/register-with-oauth2-id-token-verification")
+    @PostMapping("/join-the-membership-oauth2-id-token-verification")
     fun api19Dot1(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1154,7 +1162,7 @@ class C9TkAuthController(
                 "4 : 이미 가입된 회원이 있습니다.\n\n" +
                 "5 : 이미 사용중인 닉네임"
     )
-    @PostMapping("/register-with-oauth2", consumes = ["multipart/form-data"])
+    @PostMapping("/join-the-membership-with-oauth2", consumes = ["multipart/form-data"])
     fun api20(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1256,7 +1264,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 가입되지 않은 회원"
     )
-    @PostMapping("/find-password-with-email-verification")
+    @PostMapping("/find-password-email-verification")
     fun api22(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1301,7 +1309,7 @@ class C9TkAuthController(
                 "2 : 이메일 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음"
     )
-    @GetMapping("/find-password-with-email-verification-check")
+    @GetMapping("/find-password-email-verification-check")
     fun api23(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1383,7 +1391,7 @@ class C9TkAuthController(
                 "0 : 정상 동작\n\n" +
                 "1 : 가입되지 않은 회원"
     )
-    @PostMapping("/find-password-with-phone-number-verification")
+    @PostMapping("/find-password-phone-number-verification")
     fun api25(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -1429,7 +1437,7 @@ class C9TkAuthController(
                 "2 : 전화번호 검증 요청이 만료됨\n\n" +
                 "3 : verificationCode 가 일치하지 않음"
     )
-    @GetMapping("/find-password-with-phone-number-verification-check")
+    @GetMapping("/find-password-phone-number-verification-check")
     fun api26(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,

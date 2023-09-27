@@ -1,22 +1,22 @@
 package com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.repositories
 
-import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_SignInTokenInfo
+import com.railly_linker.springboot_mvc_project_template.data_sources.database_sources.database1.tables.Database1_Member_LogInTokenInfo
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 // (JPA 레포지토리)
 // : 함수 작성 명명법에 따라 데이터베이스 SQL 동작을 자동지원
 @Repository
-interface Database1_Member_SignInTokenInfoRepository :
-    JpaRepository<Database1_Member_SignInTokenInfo, Long> {
+interface Database1_Member_LogInTokenInfoRepository :
+    JpaRepository<Database1_Member_LogInTokenInfo, Long> {
     fun findByTokenTypeAndAccessTokenAndRowActivate(
         tokenType: String,
         accessToken: String,
         rowActivate: Boolean
-    ): Database1_Member_SignInTokenInfo?
+    ): Database1_Member_LogInTokenInfo?
 
     fun findAllByMemberUidAndRowActivate(
         memberUid: Long,
         rowActivate: Boolean
-    ): List<Database1_Member_SignInTokenInfo>
+    ): List<Database1_Member_LogInTokenInfo>
 }

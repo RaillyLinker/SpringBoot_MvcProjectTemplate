@@ -178,7 +178,7 @@ class SecurityConfig(
 
                                     // !!!토큰이 만료된 상황에서 접근 가능한 Path 허용하기!!
                                     requestFrom == "post_/tk/auth/reissue" || // reissue : 만료된 토큰을 기반으로 재발급
-                                    requestFrom == "post_/tk/auth/sign-out" // logout : 만료된 토큰도 그냥 로그아웃 처리
+                                    requestFrom == "post_/tk/auth/logout" // logout : 만료된 토큰도 그냥 로그아웃 처리
                                 ) { // 만료 검증 통과
                                     val memberRoleList = JwtTokenUtilObject.getMemberRoleList(jwtAccessToken)
 
