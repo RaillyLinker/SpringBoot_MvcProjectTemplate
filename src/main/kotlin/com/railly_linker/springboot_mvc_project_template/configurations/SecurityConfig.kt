@@ -170,16 +170,8 @@ class SecurityConfig(
                                 // 토큰 만료 검증
                                 val jwtRemainSeconds = JwtTokenUtilObject.getRemainSeconds(jwtAccessToken)
 
-                                // 요청 재구성 (ex : post_/tk/ra/test)
-                                val requestFrom = "${request.method.lowercase()}_${request.requestURI}"
-
-                                if (jwtRemainSeconds > 0L ||
-                                    // 특정 request 에는 만료 필터링을 적용시키지 않음 (토큰 유효성 검증은 통과된 상황)
-
-                                    // !!!토큰이 만료된 상황에서 접근 가능한 Path 허용하기!!
-                                    requestFrom == "post_/tk/auth/reissue" || // reissue : 만료된 토큰을 기반으로 재발급
-                                    requestFrom == "post_/tk/auth/logout" // logout : 만료된 토큰도 그냥 로그아웃 처리
-                                ) { // 만료 검증 통과
+                                // 특정 request 에는 만료 필터링을 적용시키지 않음 (토큰 유효성 검증은 통과된 상황)
+                                if (jwtRemainSeconds > 0L) { // 만료 검증 통과
                                     val memberRoleList = JwtTokenUtilObject.getMemberRoleList(jwtAccessToken)
 
                                     // 회원 권한 형식 변경

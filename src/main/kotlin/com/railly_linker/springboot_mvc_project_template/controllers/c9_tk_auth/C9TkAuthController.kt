@@ -509,7 +509,6 @@ class C9TkAuthController(
                 "0 : 정상 동작"
     )
     @PostMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
     fun api8(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
@@ -532,7 +531,6 @@ class C9TkAuthController(
                 "4 : 리프레시 토큰이 액세스 토큰과 매칭되지 않음"
     )
     @PostMapping("/reissue")
-    @PreAuthorize("isAuthenticated()")
     fun api9(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
