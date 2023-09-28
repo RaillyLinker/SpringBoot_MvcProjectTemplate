@@ -1,5 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template.configurations
 
+import com.railly_linker.springboot_mvc_project_template.ApplicationConstants
 import com.railly_linker.springboot_mvc_project_template.util_objects.JwtTokenUtilObject
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -30,7 +31,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 class SecurityConfig(
-    private val authenticationTokenFilter: AuthenticationTokenFilter,
+    private val authenticationTokenFilterService1Tk: AuthenticationTokenFilterService1Tk,
     // todo
 //    private val customDefaultOauth2MemberService: CustomDefaultOauth2MemberService
 ) {
@@ -46,48 +47,48 @@ class SecurityConfig(
         return BCryptPasswordEncoder()
     }
 
-    // [/tk 로 시작되는 리퀘스트의 시큐리티 설정 = Token 인증 사용]
+    // [/service1/tk 로 시작되는 리퀘스트의 시큐리티 설정 = Token 인증 사용]
     @Bean
     @Order(1)
-    fun securityFilterChainTk(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChainService1Tk(http: HttpSecurity): SecurityFilterChain {
         // (사이즈간 위조 요청(Cross site Request forgery) 방지 설정)
         // csrf 설정시 POST, PUT, DELETE 요청으로부터 보호하며 csrf 토큰이 포함되어야 요청을 받아들이게 됨
         // Rest API 에선 Token 이 요청의 위조 방지 역할을 하기에 비활성화
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .csrf { csrfCustomizer ->
                 csrfCustomizer.disable()
             }
 
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .httpBasic { httpBasicCustomizer ->
                 httpBasicCustomizer.disable()
             }
 
         // Token 인증을 위한 세션 비활성화
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .sessionManagement { sessionManagementCustomizer ->
                 sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
 
         // (Token 인증 검증 필터 연결)
         // API 요청마다 헤더로 들어오는 인증 토큰 유효성을 검증
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
-            .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+            .addFilterBefore(authenticationTokenFilterService1Tk, UsernamePasswordAuthenticationFilter::class.java)
 
         // 스프링 시큐리티 기본 로그인 화면 비활성화
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .formLogin { formLoginCustomizer ->
                 formLoginCustomizer.disable()
             }
 
         // 스프링 시큐리티 기본 로그아웃 비활성화
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .logout { logoutCustomizer ->
                 logoutCustomizer.disable()
             }
 
         // 예외처리
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .exceptionHandling { exceptionHandlingCustomizer ->
                 // 비인증(Security Context 에 멤버 정보가 없음) 처리
                 exceptionHandlingCustomizer.authenticationEntryPoint { _, response, _ -> // Http Status 401
@@ -103,7 +104,7 @@ class SecurityConfig(
 
         // (API 요청 제한)
         // 기본적으로 모두 Open
-        http.securityMatcher("/tk/**") // /tk/** 의 모든 경로에 적용
+        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
             .authorizeHttpRequests { authorizeHttpRequestsCustomizer ->
                 authorizeHttpRequestsCustomizer.anyRequest().permitAll()
                 // !!!접근 보안 블랙 리스트 방식
@@ -125,9 +126,29 @@ class SecurityConfig(
     // 혹은 SSE 등으로 클라이언트에 신호를 보내어 해당 위치에서 처리를 하도록 하는 방법 밖에는 없습니다.
     // 되도록 액세스 토큰 만료시간을 짧게 잡고(15분 ~ 1시간), 클라이언트 측에서 판단하여 처리할 수 있는 부분은 클라이언트에서 처리하도록 합니다.
     @Component
-    class AuthenticationTokenFilter : OncePerRequestFilter() {
+    class AuthenticationTokenFilterService1Tk : OncePerRequestFilter() {
         // <멤버 변수 공간>
+        companion object {
+            // (JWT signature 비밀키)
+            // !!!비밀키 변경!!
+            const val JWT_SECRET_KEY_STRING = "123456789abcdefghijklmnopqrstuvw"
 
+            // (액세스 토큰 유효시간)
+            // !!!유효시간 변경!!
+            const val ACCESS_TOKEN_EXPIRATION_TIME_MS = 1000L * 60L * 30L // 30분
+
+            // (리프레시 토큰 유효시간)
+            // !!!유효시간 변경!!
+            const val REFRESH_TOKEN_EXPIRATION_TIME_MS = 1000L * 60L * 60L * 24L * 7L // 7일
+
+            // (JWT Claims 암호화 AES 키)
+            // !!!암호키 변경!!
+            const val JWT_CLAIMS_AES256_INITIALIZATION_VECTOR: String = "odkejduc726dj48d" // 16자
+            const val JWT_CLAIMS_AES256_ENCRYPTION_KEY: String = "8fu3jd0ciiu3384hfucy36dye9sjv7b3" // 32자
+
+            // (JWT 발행자)
+            const val ISSUER = "${ApplicationConstants.PACKAGE_NAME}.service1"
+        }
 
         // ---------------------------------------------------------------------------------------------
         // <공개 메소드 공간>
@@ -163,16 +184,27 @@ class SecurityConfig(
                             if (tokenType != null && // 해석 가능한 JWT 토큰이라는 뜻
                                 jwtAccessToken != "" && // 액세스 토큰이 비어있지 않음
                                 tokenType.lowercase() == "jwt" && // 토큰 타입 JWT
-                                JwtTokenUtilObject.getTokenUsage(jwtAccessToken).lowercase() == "access" && // 토큰 용도 확인
-                                JwtTokenUtilObject.getIssuer(jwtAccessToken) == JwtTokenUtilObject.ISSUER && // 발행인 동일
-                                JwtTokenUtilObject.validateSignature(jwtAccessToken) // 시크릿 검증이 유효 = 위변조 되지 않은 토큰
+                                JwtTokenUtilObject.getTokenUsage(
+                                    jwtAccessToken,
+                                    JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                                    JWT_CLAIMS_AES256_ENCRYPTION_KEY
+                                ).lowercase() == "access" && // 토큰 용도 확인
+                                JwtTokenUtilObject.getIssuer(jwtAccessToken) == ISSUER && // 발행인 동일
+                                JwtTokenUtilObject.validateSignature(
+                                    jwtAccessToken,
+                                    JWT_SECRET_KEY_STRING
+                                ) // 시크릿 검증이 유효 = 위변조 되지 않은 토큰
                             ) {
                                 // 토큰 만료 검증
                                 val jwtRemainSeconds = JwtTokenUtilObject.getRemainSeconds(jwtAccessToken)
 
                                 // 특정 request 에는 만료 필터링을 적용시키지 않음 (토큰 유효성 검증은 통과된 상황)
                                 if (jwtRemainSeconds > 0L) { // 만료 검증 통과
-                                    val memberRoleList = JwtTokenUtilObject.getMemberRoleList(jwtAccessToken)
+                                    val memberRoleList = JwtTokenUtilObject.getMemberRoleList(
+                                        jwtAccessToken,
+                                        JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                                        JWT_CLAIMS_AES256_ENCRYPTION_KEY
+                                    )
 
                                     // 회원 권한 형식 변경
                                     val authorities: ArrayList<GrantedAuthority> = ArrayList()
@@ -251,7 +283,7 @@ class SecurityConfig(
 //        //  }
 //        // });
 //
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .csrf()
 //            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //            .ignoringRequestMatchers( // CSRF 필터링 무시 목록 적용
@@ -274,11 +306,11 @@ class SecurityConfig(
 //                }
 //            )
 //
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .cors() // cors 설정 : authorizeRequests, corsConfigurationSource Bean과 연관
 //
 //        // (email form 로그인)
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .formLogin()
 //            // !!!Session Login Path 설정!!
 //            .loginPage("/sc/wp/auth/login") // 인증이 필요한 URL 에 접근시 이동할 위치
@@ -312,7 +344,7 @@ class SecurityConfig(
 //            }
 //
 //        // (OAuth2 로그인)
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .oauth2Login()
 //            // todo : 위에서 설정했으니 여기선 삭제해보기
 //            // !!!Session Login Path 설정!!
@@ -346,7 +378,7 @@ class SecurityConfig(
 //            .userService(customDefaultOauth2MemberService)
 //
 //        // (로그아웃)
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .logout()
 //            // !!!Session Logout Path 설정!!
 //            .logoutUrl("/sc/wp/auth/logout-process") // 로그아웃 처리 위치
@@ -358,7 +390,7 @@ class SecurityConfig(
 //            }
 //
 //        // 예외처리
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .exceptionHandling()
 //            .authenticationEntryPoint { _, response, _ ->
 //                // !!!Http Status 401 일때의 처리!!
@@ -374,7 +406,7 @@ class SecurityConfig(
 //            }
 //
 //        // (세션 최대 접속수 제한 설정)
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .sessionManagement()
 //            .maximumSessions(SAME_MEMBER_SIGN_IN_COUNT) // 최대 접속수를 1개로 제한한다.
 //            .maxSessionsPreventsLogin(SAME_MEMBER_SIGN_IN_OVER_POLICY == 0) // true : 새로운 로그인 금지, false : 기존 로그인 만료시키기
@@ -383,12 +415,12 @@ class SecurityConfig(
 //            .sessionRegistry(sessionRegistry())
 //
 //        // (동일 origin 내에서는 내 웹페이지가 iframe 내에 표시 가능하도록 처리)
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .headers().frameOptions().sameOrigin()
 //
 //        // (API 요청 제한)
 //        // 기본적으로 모두 Open
-//        http.securityMatcher("/**") // /tk/** 외 모든 경로에 적용
+//        http.securityMatcher("/**") // /service1/tk/** 외 모든 경로에 적용
 //            .authorizeHttpRequests { authorizeHttpRequestsCustomizer ->
 //                // 인증 및 인가 조건 설정
 //                authorizeHttpRequestsCustomizer.anyRequest().permitAll()
