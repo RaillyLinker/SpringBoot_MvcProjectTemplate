@@ -15,9 +15,9 @@ import org.springframework.web.servlet.ModelAndView
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 
-@Tag(name = "/service1/tk/request-test/v1 APIs", description = "C3 : 요청 / 응답에 대한 테스트 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/request-test APIs", description = "C3 : 요청 / 응답에 대한 테스트 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/request-test/v1")
+@RequestMapping("/service1/tk/v1/request-test")
 class C3Service1TkV1RequestTestController(
     private val service: C3Service1TkV1RequestTestService
 ) {

@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/service1/tk/media-resource-process/v1 APIs", description = "C10 : 미디어 리소스(이미지, 비디오, 오디오 등...) 처리 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/media-resource-process APIs", description = "C10 : 미디어 리소스(이미지, 비디오, 오디오 등...) 처리 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/media-resource-process/v1")
+@RequestMapping("/service1/tk/v1/media-resource-process")
 class C10Service1TkV1MediaResourceProcessController(
     private val service: C10Service1TkV1MediaResourceProcessService
 ) {

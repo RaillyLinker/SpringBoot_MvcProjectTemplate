@@ -13,10 +13,10 @@ object NaverSmsUtilObject {
     private val NETWORK_RETROFIT2: RepositoryNetworkRetrofit2 = RepositoryNetworkRetrofit2.getInstance()
 
     // !!!아래는 Naver Cloud (https://auth.ncloud.com/login) 의 Simple & Easy Notification Service 에서 받아온 개인정보를 입력할것.!!
-    private const val ACCESS_KEY = "TODO" // 인증키 관리에서 얻은 액세스 키
-    private const val SECRET_KEY = "TODO" // 인증키 관리에서 얻은 시크릿 키
-    private const val SERVICE_ID = "TODO" // 네이버 클라우드 콘솔 SMS 서비스 프로젝트를 만들때 발급된 서비스 키
-    private const val PHONE_NUMBER = "TODO" // SMS > CallingNumber 에서 등록한 발신번호("-" 는 제외)
+    private const val ACCESS_KEY = "ziKws7nWm9qe5SVJ8sbf" // 인증키 관리에서 얻은 액세스 키
+    private const val SECRET_KEY = "E1GPppqPxwpBH3vkh2te5pFDJyXRah8blwvsxkT2" // 인증키 관리에서 얻은 시크릿 키
+    private const val SERVICE_ID = "ncp:sms:kr:253830666250:petlink_message" // 네이버 클라우드 콘솔 SMS 서비스 프로젝트를 만들때 발급된 서비스 키
+    private const val PHONE_NUMBER = "07049191248" // SMS > CallingNumber 에서 등록한 발신번호("-" 는 제외)
 
 
     // ---------------------------------------------------------------------------------------------

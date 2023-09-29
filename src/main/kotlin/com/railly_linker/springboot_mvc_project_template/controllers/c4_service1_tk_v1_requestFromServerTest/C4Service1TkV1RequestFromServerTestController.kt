@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@Tag(name = "/service1/tk/request-from-server-test/v1 APIs", description = "C4 : 서버에서 요청을 보내는 테스트 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/request-from-server-test APIs", description = "C4 : 서버에서 요청을 보내는 테스트 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/request-from-server-test/v1")
+@RequestMapping("/service1/tk/v1/request-from-server-test")
 class C4Service1TkV1RequestFromServerTestController(
     private val service: C4Service1TkV1RequestFromServerTestService
 ) {

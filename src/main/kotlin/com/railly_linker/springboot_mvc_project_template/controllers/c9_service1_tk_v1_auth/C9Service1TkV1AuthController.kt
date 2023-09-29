@@ -20,9 +20,9 @@ import org.springframework.web.multipart.MultipartFile
 // member : 회원
 // non member : 비회원
 // user : 서비스 이용자 (비회원 포함)
-@Tag(name = "/service1/tk/auth/v1 APIs", description = "C9 : 인증/인가 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/auth APIs", description = "C9 : 인증/인가 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/auth/v1")
+@RequestMapping("/service1/tk/v1/auth")
 class C9Service1TkV1AuthController(
     private val service: C9Service1TkV1AuthService
 ) {

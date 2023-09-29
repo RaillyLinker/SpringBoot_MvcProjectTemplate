@@ -14,8 +14,8 @@ interface LocalHostRequestApi {
     // 이 API 를 요청하면 현재 실행중인 프로필 이름을 반환합니다.
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test")
-    fun getTkRequestTest(): Call<String?>
+    @GET("/service1/tk/v1/request-test")
+    fun getService1TkV1RequestTest(): Call<String?>
 
 
     ////
@@ -23,8 +23,8 @@ interface LocalHostRequestApi {
     // 이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/redirect-to-blank")
-    fun getTkRequestTestRedirectToBlank(): Call<String?>
+    @GET("/service1/tk/v1/request-test/redirect-to-blank")
+    fun getService1TkV1RequestTestRedirectToBlank(): Call<String?>
 
 
     ////
@@ -32,8 +32,8 @@ interface LocalHostRequestApi {
     // 이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/forward-to-blank")
-    fun getTkRequestTestForwardToBlank(): Call<String?>
+    @GET("/service1/tk/v1/request-test/forward-to-blank")
+    fun getService1TkV1RequestTestForwardToBlank(): Call<String?>
 
 
     ////
@@ -41,8 +41,8 @@ interface LocalHostRequestApi {
     // Query Parameter 를 받는 Get 메소드 요청 테스트
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/get-request")
-    fun getTkRequestTestGetRequest(
+    @GET("/service1/tk/v1/request-test/get-request")
+    fun getService1TkV1RequestTestGetRequest(
         @Query("queryParamString") queryParamString: String,
         @Query("queryParamStringNullable") queryParamStringNullable: String?,
         @Query("queryParamInt") queryParamInt: Int,
@@ -53,9 +53,9 @@ interface LocalHostRequestApi {
         @Query("queryParamBooleanNullable") queryParamBooleanNullable: Boolean?,
         @Query("queryParamStringList") queryParamStringList: List<String>,
         @Query("queryParamStringListNullable") queryParamStringListNullable: List<String>?
-    ): Call<GetTkRequestTestGetRequestOutputVO?>
+    ): Call<GetService1TkV1RequestTestGetRequestOutputVO?>
 
-    data class GetTkRequestTestGetRequestOutputVO(
+    data class GetService1TkV1RequestTestGetRequestOutputVO(
         @SerializedName("queryParamString")
         @Expose
         val queryParamString: String,
@@ -94,12 +94,12 @@ interface LocalHostRequestApi {
     // Path Parameter 를 받는 Get 메소드 요청 테스트
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/get-request/{pathParamInt}")
-    fun getTkRequestTestGetRequestPathParamInt(
+    @GET("/service1/tk/v1/request-test/get-request/{pathParamInt}")
+    fun getService1TkV1RequestTestGetRequestPathParamInt(
         @Path("pathParamInt") pathParamInt: Int
-    ): Call<GetTkRequestTestGetRequestPathParamIntOutputVO?>
+    ): Call<GetService1TkV1RequestTestGetRequestPathParamIntOutputVO?>
 
-    data class GetTkRequestTestGetRequestPathParamIntOutputVO(
+    data class GetService1TkV1RequestTestGetRequestPathParamIntOutputVO(
         @SerializedName("pathParamInt")
         @Expose
         val pathParamInt: Int
@@ -111,12 +111,12 @@ interface LocalHostRequestApi {
     // application-json 형태의 Request Body 를 받는 Post 메소드 요청 테스트
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/post-request-application-json")
-    fun postTkRequestTestPostRequestApplicationJson(
-        @Body inputVo: PostTkRequestTestPostRequestApplicationJsonInputVO
-    ): Call<PostTkRequestTestPostRequestApplicationJsonOutputVO?>
+    @POST("/service1/tk/v1/request-test/post-request-application-json")
+    fun postService1TkV1RequestTestPostRequestApplicationJson(
+        @Body inputVo: PostService1TkV1RequestTestPostRequestApplicationJsonInputVO
+    ): Call<PostService1TkV1RequestTestPostRequestApplicationJsonOutputVO?>
 
-    data class PostTkRequestTestPostRequestApplicationJsonInputVO(
+    data class PostService1TkV1RequestTestPostRequestApplicationJsonInputVO(
         @SerializedName("requestBodyString")
         @Expose
         val requestBodyString: String,
@@ -149,7 +149,7 @@ interface LocalHostRequestApi {
         val requestBodyStringListNullable: List<String>?
     )
 
-    data class PostTkRequestTestPostRequestApplicationJsonOutputVO(
+    data class PostService1TkV1RequestTestPostRequestApplicationJsonOutputVO(
         @SerializedName("requestBodyString")
         @Expose
         val requestBodyString: String,
@@ -188,9 +188,9 @@ interface LocalHostRequestApi {
     // x-www-form-urlencoded 형태의 Request Body 를 받는 Post 메소드 요청 테스트
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/post-request-x-www-form-urlencoded")
+    @POST("service1/tk/v1/request-test/post-request-x-www-form-urlencoded")
     @FormUrlEncoded
-    fun postTkRequestTestPostRequestXWwwFormUrlencoded(
+    fun postService1TkV1RequestTestPostRequestXWwwFormUrlencoded(
         @Field("requestFormString") requestFormString: String,
         @Field("requestFormStringNullable") requestFormStringNullable: String?,
         @Field("requestFormInt") requestFormInt: Int,
@@ -201,9 +201,9 @@ interface LocalHostRequestApi {
         @Field("requestFormBooleanNullable") requestFormBooleanNullable: Boolean?,
         @Field("requestFormStringList") requestFormStringList: List<String>,
         @Field("requestFormStringListNullable") requestFormStringListNullable: List<String>?
-    ): Call<PostTkRequestTestPostRequestXWwwFormUrlencodedOutputVO?>
+    ): Call<PostService1TkV1RequestTestPostRequestXWwwFormUrlencodedOutputVO?>
 
-    data class PostTkRequestTestPostRequestXWwwFormUrlencodedOutputVO(
+    data class PostService1TkV1RequestTestPostRequestXWwwFormUrlencodedOutputVO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -243,9 +243,9 @@ interface LocalHostRequestApi {
     // MultipartFile 파라미터가 null 이 아니라면 저장
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/post-request-multipart-form-data")
+    @POST("/service1/tk/v1/request-test/post-request-multipart-form-data")
     @Multipart
-    fun postTkRequestTestPostRequestMultipartFormData(
+    fun postService1TkV1RequestTestPostRequestMultipartFormData(
         @Part requestFormString: MultipartBody.Part,
         @Part requestFormStringNullable: MultipartBody.Part?,
         @Part requestFormInt: MultipartBody.Part,
@@ -258,9 +258,9 @@ interface LocalHostRequestApi {
         @Part requestFormStringListNullable: List<MultipartBody.Part>?,
         @Part multipartFile: MultipartBody.Part,
         @Part multipartFileNullable: MultipartBody.Part?
-    ): Call<PostTkRequestTestPostRequestMultipartFormDataOutputVO?>
+    ): Call<PostService1TkV1RequestTestPostRequestMultipartFormDataOutputVO?>
 
-    data class PostTkRequestTestPostRequestMultipartFormDataOutputVO(
+    data class PostService1TkV1RequestTestPostRequestMultipartFormDataOutputVO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -300,9 +300,9 @@ interface LocalHostRequestApi {
     // 파일 리스트가 null 이 아니라면 저장
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/post-request-multipart-form-data2")
+    @POST("/service1/tk/v1/request-test/post-request-multipart-form-data2")
     @Multipart
-    fun postTkRequestTestPostRequestMultipartFormData2(
+    fun postService1TkV1RequestTestPostRequestMultipartFormData2(
         @Part requestFormString: MultipartBody.Part,
         @Part requestFormStringNullable: MultipartBody.Part?,
         @Part requestFormInt: MultipartBody.Part,
@@ -315,9 +315,9 @@ interface LocalHostRequestApi {
         @Part requestFormStringListNullable: List<MultipartBody.Part>?,
         @Part multipartFileList: List<MultipartBody.Part>,
         @Part multipartFileNullableList: List<MultipartBody.Part>?
-    ): Call<PostTkRequestTestPostRequestMultipartFormData2VO?>
+    ): Call<PostService1TkV1RequestTestPostRequestMultipartFormData2VO?>
 
-    data class PostTkRequestTestPostRequestMultipartFormData2VO(
+    data class PostService1TkV1RequestTestPostRequestMultipartFormData2VO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -357,15 +357,15 @@ interface LocalHostRequestApi {
     // 파일 리스트가 null 이 아니라면 저장
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/post-request-multipart-form-data-json")
+    @POST("/service1/tk/v1/request-test/post-request-multipart-form-data-json")
     @Multipart
-    fun postTkRequestTestPostRequestMultipartFormDataJson(
+    fun postService1TkV1RequestTestPostRequestMultipartFormDataJson(
         @Part jsonString: MultipartBody.Part,
         @Part multipartFile: MultipartBody.Part,
         @Part multipartFileNullable: MultipartBody.Part?
-    ): Call<PostTkRequestTestPostRequestMultipartFormDataJsonOutputVO?>
+    ): Call<PostService1TkV1RequestTestPostRequestMultipartFormDataJsonOutputVO?>
 
-    data class PostTkRequestTestPostRequestMultipartFormDataJsonJsonStringVo(
+    data class PostService1TkV1RequestTestPostRequestMultipartFormDataJsonJsonStringVo(
         @JsonProperty("requestFormString")
         val requestFormString: String,
         @JsonProperty("requestFormStringNullable")
@@ -388,7 +388,7 @@ interface LocalHostRequestApi {
         val requestFormStringListNullable: List<String>?
     )
 
-    data class PostTkRequestTestPostRequestMultipartFormDataJsonOutputVO(
+    data class PostService1TkV1RequestTestPostRequestMultipartFormDataJsonOutputVO(
         @SerializedName("requestFormString")
         @Expose
         val requestFormString: String,
@@ -427,8 +427,8 @@ interface LocalHostRequestApi {
     // 요청 받으면 인위적인 서버 에러를 발생시킵니다.(Http Response Status 500)
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/generate-error")
-    fun postTkRequestTestGenerateError(): Call<Unit?>
+    @POST("service1/tk/v1/request-test/generate-error")
+    fun postService1TkV1RequestTestGenerateError(): Call<Unit?>
 
 
     ////
@@ -439,12 +439,12 @@ interface LocalHostRequestApi {
     //1 : errorType 을 A 로 보냈습니다.
     //2 : errorType 을 B 로 보냈습니다.
     //3 : errorType 을 C 로 보냈습니다.
-    @POST("/tk/request-test/api-result-code-test")
-    fun postTkRequestTestApiResultCodeTest(
-        @Query("errorType") errorType: PostTkRequestTestApiResultCodeTestErrorTypeEnum
+    @POST("/service1/tk/v1/request-test/api-result-code-test")
+    fun postService1TkV1RequestTestApiResultCodeTest(
+        @Query("errorType") errorType: PostService1TkV1RequestTestApiResultCodeTestErrorTypeEnum
     ): Call<Unit?>
 
-    enum class PostTkRequestTestApiResultCodeTestErrorTypeEnum {
+    enum class PostService1TkV1RequestTestApiResultCodeTestErrorTypeEnum {
         A,
         B,
         C
@@ -456,8 +456,8 @@ interface LocalHostRequestApi {
     // 타임아웃 에러를 발생시키기 위해 임의로 응답 시간을 지연시킵니다.
     // (api-result-code)
     // 0 : 정상 동작
-    @POST("/tk/request-test/generate-time-out-error")
-    fun postTkRequestTestGenerateTimeOutError(
+    @POST("/service1/tk/v1/request-test/generate-time-out-error")
+    fun postService1TkV1RequestTestGenerateTimeOutError(
         @Query("delayTimeSec") delayTimeSec: Int
     ): Call<Unit?>
 
@@ -467,9 +467,9 @@ interface LocalHostRequestApi {
     // text/string 형식의 Response Body 를 반환합니다.
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/return-text-string")
+    @GET("/service1/tk/v1/request-test/return-text-string")
     @Headers("Content-Type: text/string")
-    fun getTkRequestTestReturnTextString(): Call<String>
+    fun getService1TkV1RequestTestReturnTextString(): Call<String>
 
 
     ////
@@ -477,9 +477,9 @@ interface LocalHostRequestApi {
     // text/html 형식의 Response Body 를 반환합니다.
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/return-text-html")
+    @GET("/service1/tk/v1/request-test/return-text-html")
     @Headers("Content-Type: text/html")
-    fun getTkRequestTestReturnTextHtml(): Call<String>
+    fun getService1TkV1RequestTestReturnTextHtml(): Call<String>
 
 
     ////
@@ -488,10 +488,10 @@ interface LocalHostRequestApi {
     // 비동기 작업 완료 후 그 처리 결과가 반환됨
     // (api-result-code)
     // 0 : 정상 동작
-    @GET("/tk/request-test/async-result")
-    fun getTkRequestTestAsyncResult(): Call<GetTkRequestTestAsyncResultOutputVO>
+    @GET("/service1/tk/v1/request-test/async-result")
+    fun getService1TkV1RequestTestAsyncResult(): Call<GetService1TkV1RequestTestAsyncResultOutputVO>
 
-    data class GetTkRequestTestAsyncResultOutputVO(
+    data class GetService1TkV1RequestTestAsyncResultOutputVO(
         @SerializedName("resultMessage")
         @Expose
         val resultMessage: String

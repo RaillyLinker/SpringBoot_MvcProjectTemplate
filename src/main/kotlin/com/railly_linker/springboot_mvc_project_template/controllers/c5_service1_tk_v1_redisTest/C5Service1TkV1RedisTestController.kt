@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "/service1/tk/redis-test/v1 APIs", description = "C5 : Redis 에 대한 테스트 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/redis-test APIs", description = "C5 : Redis 에 대한 테스트 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/redis-test/v1")
+@RequestMapping("/service1/tk/v1/redis-test")
 class C5Service1TkV1RedisTestController(
     private val service: C5Service1TkV1RedisTestService
 ) {

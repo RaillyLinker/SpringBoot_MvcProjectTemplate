@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.servlet.ModelAndView
 
-@Tag(name = "/service1/sc/member/v1 APIs", description = "C12 : 회원 관련 화면에 대한 API 컨트롤러")
+@Tag(name = "/service1/sc/v1/member APIs", description = "C12 : 회원 관련 화면에 대한 API 컨트롤러")
 @Controller
-@RequestMapping("/service1/sc/member/v1")
+@RequestMapping("/service1/sc/v1/member")
 class C12Service1ScV1MemberController(
     private val service: C12Service1ScV1MemberService
 ) {

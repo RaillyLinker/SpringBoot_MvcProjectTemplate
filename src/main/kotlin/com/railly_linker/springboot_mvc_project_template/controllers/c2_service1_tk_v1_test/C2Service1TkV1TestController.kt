@@ -9,9 +9,9 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
-@Tag(name = "/service1/tk/test/v1 APIs", description = "C2 : 테스트 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/test APIs", description = "C2 : 테스트 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/test/v1")
+@RequestMapping("/service1/tk/v1/test")
 class C2Service1TkV1TestController(
     private val service: C2Service1TkV1TestService
 ) {

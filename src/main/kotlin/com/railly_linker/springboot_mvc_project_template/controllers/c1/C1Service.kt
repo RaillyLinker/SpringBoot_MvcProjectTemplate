@@ -20,7 +20,7 @@ class C1Service(
     // <공개 메소드 공간>
     fun api1(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
-        mv.viewName = "forward:/sc/home-page"
+        mv.viewName = "forward:/service1/sc/v1/home-page"
 
         httpServletResponse.setHeader("api-result-code", "0")
         return mv

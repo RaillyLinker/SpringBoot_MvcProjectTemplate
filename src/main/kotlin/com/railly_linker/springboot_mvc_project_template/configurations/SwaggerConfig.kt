@@ -39,11 +39,6 @@ class SwaggerConfig {
             API 관련 요청을 할때는, "/tk/request-test/get-request" 이렇게 주소로 표현하거나 혹은, 
           
             "C2-N4 API", 혹은 "2-4 API" 와 같은 일련번호로 표현하여도 좋습니다.
-        - 리스트를 반환하는 Rest API 의 경우, 기획상 반환 수량의 한계가 정해져있다면 통째로 반환해주고,
-      
-            그외에 수량이 무한히 추가될 가능성이 있다면(논리적 가능성을 우선) 페이징을 하여 반환 하도록 설계할 것입니다.
-      
-            위 규칙을 준수하되, 서버 개발자 판단 및 논의에 따라 예외가 적용될 수 있습니다.
         - Input Json String 표기법
       
             multipart/form-data 형식에서 Object List 타입의 데이터를 수집할 때나 RequestBody 를 사용 불가능한 Get Method 에서 복잡한 input 을 받을 때에는,
@@ -54,7 +49,7 @@ class SwaggerConfig {
       
             json String 을 입력할 때에 지켜야할 데이터 형식을 API 의 jsonString 파라미터 설명에 적을 것입니다.
       
-            표기법은 kotlin 의 data class 를 사용할 것이기에 클라이언트 개발자 분들의 양해 부탁드립니다.
+            표기법은 kotlin 의 data class 를 사용할 것입니다.
       
             표기 예시로,
       
@@ -243,7 +238,7 @@ class SwaggerConfig {
             
             Response Header 의 "api-result-code" 에 담아 주는 것입니다.
             
-            위와 같은 에러가 아닌 성공시에도 무조건 api-result-code 를 "0" 으로 보내줄 것이며,
+            위와 같은 에러가 아닌 성공시에도 무조건 api-result-code 를 보내줄 것이며,
             
             각 API 사용별 반환될 수 있는 "api-result-code" 는 Swagger 문서에 기록할 것입니다.
         - 클라이언트에서의 api-result-code 처리 방식의 알고리즘은 아래와 같이 처리하면 됩니다.
@@ -256,7 +251,7 @@ class SwaggerConfig {
             
             4. api-result-code 가 있다면, 코드 종류에 따라 스웨거 문서를 확인하여 적절한 처리를 해주기 (에러가 아닌 성공시에도 무조건 반환됩니다.)
             
-                Response Body 를 반환하는 API 의 경우, api-result-code 가 "0" 으로 반환되면 Response Body 가 Null 이 아니며,
+                Response Body 를 반환하는 API 의 경우, api-result-code 가 성공을 뜻하는 코드로 반환되면 Response Body 가 Null 이 아니며,
                 
                 그 외의 api-result-code 가 반환되면 Response Body 가 Null 입니다.
             

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 
-@Tag(name = "/service1/tk/file-test/v1 APIs", description = "C8 : 파일을 다루는 테스트 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/file-test APIs", description = "C8 : 파일을 다루는 테스트 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/file-test/v1")
+@RequestMapping("/service1/tk/v1/file-test")
 class C8Service1TkV1FileTestController(
     private val service: C8Service1TkV1FileTestService
 ) {

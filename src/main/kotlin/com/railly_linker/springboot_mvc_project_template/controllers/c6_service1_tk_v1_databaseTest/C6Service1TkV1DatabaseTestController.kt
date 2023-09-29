@@ -8,9 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.bind.annotation.*
 
-@Tag(name = "/service1/tk/database-test/v1 APIs", description = "C6 : Database 에 대한 테스트 API 컨트롤러")
+@Tag(name = "/service1/tk/v1/database-test APIs", description = "C6 : Database 에 대한 테스트 API 컨트롤러")
 @RestController
-@RequestMapping("/service1/tk/database-test/v1")
+@RequestMapping("/service1/tk/v1/database-test")
 class C6Service1TkV1DatabaseTestController(
     private val service: C6Service1TkV1DatabaseTestService
 ) {

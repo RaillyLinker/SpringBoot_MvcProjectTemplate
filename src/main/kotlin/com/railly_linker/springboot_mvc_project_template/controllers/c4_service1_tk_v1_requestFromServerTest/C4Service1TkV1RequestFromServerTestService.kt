@@ -34,7 +34,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api1(httpServletResponse: HttpServletResponse): String? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTest().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTest().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -71,7 +71,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api2(httpServletResponse: HttpServletResponse): String? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestRedirectToBlank().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestRedirectToBlank().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -108,7 +108,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api3(httpServletResponse: HttpServletResponse): String? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestForwardToBlank().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestForwardToBlank().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -145,7 +145,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api4(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api4OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestGetRequest(
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestGetRequest(
                 "paramFromServer",
                 null,
                 1,
@@ -205,7 +205,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api5(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api5OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestGetRequestPathParamInt(
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestGetRequestPathParamInt(
                 1234
             ).execute()
 
@@ -247,8 +247,8 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api6(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api6OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestPostRequestApplicationJson(
-                LocalHostRequestApi.PostTkRequestTestPostRequestApplicationJsonInputVO(
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestPostRequestApplicationJson(
+                LocalHostRequestApi.PostService1TkV1RequestTestPostRequestApplicationJsonInputVO(
                     "paramFromServer",
                     null,
                     1,
@@ -309,7 +309,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api7(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api7OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestPostRequestXWwwFormUrlencoded(
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestPostRequestXWwwFormUrlencoded(
                 "paramFromServer",
                 null,
                 1,
@@ -393,7 +393,7 @@ class C4Service1TkV1RequestFromServerTestService(
                 serverFile.asRequestBody(serverFile.toURI().toURL().openConnection().contentType.toMediaTypeOrNull())
             )
 
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestPostRequestMultipartFormData(
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestPostRequestMultipartFormData(
                 requestFormString,
                 null,
                 requestFormInt,
@@ -494,7 +494,7 @@ class C4Service1TkV1RequestFromServerTestService(
                 )
             )
 
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestPostRequestMultipartFormData2(
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestPostRequestMultipartFormData2(
                 requestFormString,
                 null,
                 requestFormInt,
@@ -558,7 +558,7 @@ class C4Service1TkV1RequestFromServerTestService(
             // 네트워크 요청
             val jsonStringFormData = MultipartBody.Part.createFormData(
                 "jsonString", Gson().toJson(
-                    LocalHostRequestApi.PostTkRequestTestPostRequestMultipartFormDataJsonJsonStringVo(
+                    LocalHostRequestApi.PostService1TkV1RequestTestPostRequestMultipartFormDataJsonJsonStringVo(
                         "paramFromServer",
                         null,
                         1,
@@ -583,7 +583,7 @@ class C4Service1TkV1RequestFromServerTestService(
                 serverFile.asRequestBody(serverFile.toURI().toURL().openConnection().contentType.toMediaTypeOrNull())
             )
 
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestPostRequestMultipartFormDataJson(
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestPostRequestMultipartFormDataJson(
                 jsonStringFormData,
                 multipartFileFormData,
                 null
@@ -636,7 +636,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api11(httpServletResponse: HttpServletResponse) {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestGenerateError().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestGenerateError().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -669,8 +669,8 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api12(httpServletResponse: HttpServletResponse) {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.postTkRequestTestApiResultCodeTest(
-                LocalHostRequestApi.PostTkRequestTestApiResultCodeTestErrorTypeEnum.A
+            val responseObj = networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestApiResultCodeTest(
+                LocalHostRequestApi.PostService1TkV1RequestTestApiResultCodeTestErrorTypeEnum.A
             ).execute()
 
             // api-result-code 확인
@@ -717,7 +717,7 @@ class C4Service1TkV1RequestFromServerTestService(
         try {
             // 네트워크 요청
             val responseObj =
-                networkRetrofit2.localHostRequestApi.postTkRequestTestGenerateTimeOutError(delayTimeSec).execute()
+                networkRetrofit2.localHostRequestApi.postService1TkV1RequestTestGenerateTimeOutError(delayTimeSec).execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -750,7 +750,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api14(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api14OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextString().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestReturnTextString().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -790,7 +790,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api15(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api15OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestReturnTextHtml().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestReturnTextHtml().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -830,7 +830,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api16(httpServletResponse: HttpServletResponse): C4Service1TkV1RequestFromServerTestController.Api16OutputVo? {
         try {
             // 네트워크 요청
-            val responseObj = networkRetrofit2.localHostRequestApi.getTkRequestTestAsyncResult().execute()
+            val responseObj = networkRetrofit2.localHostRequestApi.getService1TkV1RequestTestAsyncResult().execute()
 
             // api-result-code 확인
             val responseHeaders = responseObj.headers()
@@ -870,9 +870,9 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api17(httpServletResponse: HttpServletResponse) {
         // SSE Subscribe Url 연결 객체 생성
         val sseClient =
-            SseClient("http://127.0.0.1:8080/tk/request-test/sse-test/subscribe")
+            SseClient("http://127.0.0.1:8080/service1/tk/v1/request-test/sse-test/subscribe")
 
-        val maxCount = 10
+        val maxCount = 5
         var count = 0
 
         // SSE 구독 연결
@@ -929,7 +929,7 @@ class C4Service1TkV1RequestFromServerTestService(
     fun api18(httpServletResponse: HttpServletResponse) {
         val client = OkHttpClient()
 
-        val maxCount = 10
+        val maxCount = 5
         var count = 0
 
         val webSocket = client.newWebSocket(

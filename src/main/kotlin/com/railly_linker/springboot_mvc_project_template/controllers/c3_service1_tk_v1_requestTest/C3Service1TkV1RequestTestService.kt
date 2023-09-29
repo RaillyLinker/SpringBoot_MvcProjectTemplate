@@ -51,7 +51,7 @@ class C3Service1TkV1RequestTestService(
     ////
     fun api2(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
-        mv.viewName = "redirect:/tk/request-test"
+        mv.viewName = "redirect:/service1/tk/v1/request-test"
 
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
@@ -61,7 +61,7 @@ class C3Service1TkV1RequestTestService(
     ////
     fun api3(httpServletResponse: HttpServletResponse): ModelAndView? {
         val mv = ModelAndView()
-        mv.viewName = "forward:/tk/request-test"
+        mv.viewName = "forward:/service1/tk/v1/request-test"
 
         httpServletResponse.setHeader("api-result-code", "0")
         return mv
