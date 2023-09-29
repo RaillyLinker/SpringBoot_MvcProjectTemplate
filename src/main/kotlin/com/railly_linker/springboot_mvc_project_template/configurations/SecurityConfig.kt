@@ -51,44 +51,47 @@ class SecurityConfig(
     @Bean
     @Order(1)
     fun securityFilterChainService1Tk(http: HttpSecurity): SecurityFilterChain {
+        // 본 시큐리티 필터가 관리할 주소 체계
+        val securityUrl = "/service1/tk/**" // /service1/tk/** 의 모든 경로에 적용
+
         // (사이즈간 위조 요청(Cross site Request forgery) 방지 설정)
         // csrf 설정시 POST, PUT, DELETE 요청으로부터 보호하며 csrf 토큰이 포함되어야 요청을 받아들이게 됨
         // Rest API 에선 Token 이 요청의 위조 방지 역할을 하기에 비활성화
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .csrf { csrfCustomizer ->
                 csrfCustomizer.disable()
             }
 
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .httpBasic { httpBasicCustomizer ->
                 httpBasicCustomizer.disable()
             }
 
         // Token 인증을 위한 세션 비활성화
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .sessionManagement { sessionManagementCustomizer ->
                 sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
 
         // (Token 인증 검증 필터 연결)
         // API 요청마다 헤더로 들어오는 인증 토큰 유효성을 검증
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .addFilterBefore(authenticationTokenFilterService1Tk, UsernamePasswordAuthenticationFilter::class.java)
 
         // 스프링 시큐리티 기본 로그인 화면 비활성화
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .formLogin { formLoginCustomizer ->
                 formLoginCustomizer.disable()
             }
 
         // 스프링 시큐리티 기본 로그아웃 비활성화
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .logout { logoutCustomizer ->
                 logoutCustomizer.disable()
             }
 
         // 예외처리
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .exceptionHandling { exceptionHandlingCustomizer ->
                 // 비인증(Security Context 에 멤버 정보가 없음) 처리
                 exceptionHandlingCustomizer.authenticationEntryPoint { _, response, _ -> // Http Status 401
@@ -104,7 +107,7 @@ class SecurityConfig(
 
         // (API 요청 제한)
         // 기본적으로 모두 Open
-        http.securityMatcher("/service1/tk/**") // /service1/tk/** 의 모든 경로에 적용
+        http.securityMatcher(securityUrl)
             .authorizeHttpRequests { authorizeHttpRequestsCustomizer ->
                 authorizeHttpRequestsCustomizer.anyRequest().permitAll()
                 // !!!접근 보안 블랙 리스트 방식
