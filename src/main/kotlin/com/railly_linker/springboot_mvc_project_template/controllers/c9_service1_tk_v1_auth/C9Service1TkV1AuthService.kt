@@ -100,8 +100,8 @@ class C9Service1TkV1AuthService(
     fun api2(httpServletResponse: HttpServletResponse, authorization: String): Map<String, Any>? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val result: MutableMap<String, Any> = HashMap()
@@ -116,8 +116,8 @@ class C9Service1TkV1AuthService(
     fun api3(httpServletResponse: HttpServletResponse, authorization: String): Map<String, Any>? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val result: MutableMap<String, Any> = HashMap()
@@ -132,8 +132,8 @@ class C9Service1TkV1AuthService(
     fun api4(httpServletResponse: HttpServletResponse, authorization: String): Map<String, Any>? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val result: MutableMap<String, Any> = HashMap()
@@ -236,11 +236,11 @@ class C9Service1TkV1AuthService(
         val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(
             memberUidString,
             roleList,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+            SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+            SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
         )
 
         val accessTokenExpireWhen: String = SimpleDateFormat(
@@ -249,18 +249,18 @@ class C9Service1TkV1AuthService(
             this.time = Date()
             this.add(
                 Calendar.MILLISECOND,
-                SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
+                SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
             )
         }.time)
 
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(
             memberUidString,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+            SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+            SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
         )
 
         val refreshTokenExpireWhen: String = SimpleDateFormat(
@@ -269,7 +269,7 @@ class C9Service1TkV1AuthService(
             this.time = Date()
             this.add(
                 Calendar.MILLISECOND,
-                SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
+                SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
             )
         }.time)
 
@@ -577,11 +577,11 @@ class C9Service1TkV1AuthService(
 
         val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(
             memberUidString, roleList,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+            SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+            SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
         )
 
         val accessTokenExpireWhen: String = SimpleDateFormat(
@@ -590,18 +590,18 @@ class C9Service1TkV1AuthService(
             this.time = Date()
             this.add(
                 Calendar.MILLISECOND,
-                SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
+                SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
             )
         }.time)
 
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(
             memberUidString,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+            SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+            SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
         )
 
         val refreshTokenExpireWhen: String = SimpleDateFormat(
@@ -610,7 +610,7 @@ class C9Service1TkV1AuthService(
             this.time = Date()
             this.add(
                 Calendar.MILLISECOND,
-                SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
+                SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
             )
         }.time)
 
@@ -763,11 +763,11 @@ class C9Service1TkV1AuthService(
 
         val jwtAccessToken = JwtTokenUtilObject.generateAccessToken(
             memberUidString, roleList,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+            SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+            SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
         )
 
         val accessTokenExpireWhen: String = SimpleDateFormat(
@@ -776,18 +776,18 @@ class C9Service1TkV1AuthService(
             this.time = Date()
             this.add(
                 Calendar.MILLISECOND,
-                SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
+                SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
             )
         }.time)
 
         // 액세스 토큰의 리프레시 토큰 생성 및 DB 저장 = 액세스 토큰에 대한 리프레시 토큰은 1개 혹은 0개
         val jwtRefreshToken = JwtTokenUtilObject.generateRefreshToken(
             memberUidString,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+            SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+            SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
         )
 
         val refreshTokenExpireWhen: String = SimpleDateFormat(
@@ -796,7 +796,7 @@ class C9Service1TkV1AuthService(
             this.time = Date()
             this.add(
                 Calendar.MILLISECOND,
-                SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
+                SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
             )
         }.time)
 
@@ -913,8 +913,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api9OutputVo? {
         val accessTokenMemberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val memberInfo =
@@ -947,21 +947,21 @@ class C9Service1TkV1AuthService(
                     if (refreshTokenType == null || // 해석 불가능한 리프레시 토큰
                         !JwtTokenUtilObject.validateSignature(
                             jwtRefreshToken,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+                            SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
                         ) || // 시크릿 검증이 유효하지 않을 때 = 시크릿 검증시 정보가 틀림 = 위변조된 토큰
                         JwtTokenUtilObject.getTokenUsage(
                             jwtRefreshToken,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+                            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
                         )
                             .lowercase() != "refresh" || // 토큰 타입이 Refresh 토큰이 아닐 때
-                        JwtTokenUtilObject.getIssuer(jwtRefreshToken) != SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER || // 발행인이 다를 때
+                        JwtTokenUtilObject.getIssuer(jwtRefreshToken) != SecurityConfig.AuthTokenFilterService1Tk.ISSUER || // 발행인이 다를 때
                         refreshTokenType.lowercase() != "jwt" || // 토큰 타입이 JWT 가 아닐 때
-                        JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) * 1000 > SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS || // 최대 만료시간을 초과
+                        JwtTokenUtilObject.getRemainSeconds(jwtRefreshToken) * 1000 > SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS || // 최대 만료시간을 초과
                         JwtTokenUtilObject.getMemberUid(
                             jwtRefreshToken,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+                            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
                         ) != accessTokenMemberUid // 리프레시 토큰의 멤버 고유번호와 액세스 토큰 멤버 고유번호가 다를시
                     ) {
                         httpServletResponse.setHeader("api-result-code", "2")
@@ -1011,11 +1011,11 @@ class C9Service1TkV1AuthService(
                     // 새 토큰 생성 및 로그인 처리
                     val newJwtAccessToken = JwtTokenUtilObject.generateAccessToken(
                         accessTokenMemberUid, roleList,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+                        SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS,
+                        SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                        SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+                        SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+                        SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
                     )
 
                     val accessTokenExpireWhen: String = SimpleDateFormat(
@@ -1024,17 +1024,17 @@ class C9Service1TkV1AuthService(
                         this.time = Date()
                         this.add(
                             Calendar.MILLISECOND,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
+                            SecurityConfig.AuthTokenFilterService1Tk.ACCESS_TOKEN_EXPIRATION_TIME_MS.toInt()
                         )
                     }.time)
 
                     val newRefreshToken = JwtTokenUtilObject.generateRefreshToken(
                         accessTokenMemberUid,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.ISSUER,
-                        SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_SECRET_KEY_STRING
+                        SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS,
+                        SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+                        SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY,
+                        SecurityConfig.AuthTokenFilterService1Tk.ISSUER,
+                        SecurityConfig.AuthTokenFilterService1Tk.JWT_SECRET_KEY_STRING
                     )
 
                     val refreshTokenExpireWhen: String = SimpleDateFormat(
@@ -1043,7 +1043,7 @@ class C9Service1TkV1AuthService(
                         this.time = Date()
                         this.add(
                             Calendar.MILLISECOND,
-                            SecurityConfig.AuthenticationTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
+                            SecurityConfig.AuthTokenFilterService1Tk.REFRESH_TOKEN_EXPIRATION_TIME_MS.toInt()
                         )
                     }.time)
 
@@ -1153,8 +1153,8 @@ class C9Service1TkV1AuthService(
     fun api10(authorization: String, httpServletResponse: HttpServletResponse) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         // loginAccessToken 의 Iterable 가져오기
@@ -1188,8 +1188,8 @@ class C9Service1TkV1AuthService(
     fun api12(httpServletResponse: HttpServletResponse, authorization: String, nickName: String) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
         val userInfo = database1Service1MemberDataRepository.findById(memberUid.toLong()).get()
 
@@ -1437,7 +1437,7 @@ class C9Service1TkV1AuthService(
                     saveDirectoryPath.resolve(savedFileName).normalize()
                 )
 
-                savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+                savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
                 //----------------------------------------------------------------------------------------------------------
 
                 database1Service1MemberProfileDataRepository.save(
@@ -1698,7 +1698,7 @@ class C9Service1TkV1AuthService(
                     saveDirectoryPath.resolve(savedFileName).normalize()
                 )
 
-                savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+                savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
                 //----------------------------------------------------------------------------------------------------------
 
                 database1Service1MemberProfileDataRepository.save(
@@ -2118,7 +2118,7 @@ class C9Service1TkV1AuthService(
                     saveDirectoryPath.resolve(savedFileName).normalize()
                 )
 
-                savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+                savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
                 //----------------------------------------------------------------------------------------------------------
 
                 database1Service1MemberProfileDataRepository.save(
@@ -2153,8 +2153,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
         val member = database1Service1MemberDataRepository.findByUidAndRowActivate(memberUid.toLong(), true)
 
@@ -2596,8 +2596,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api28OutputVo {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val emailEntityList =
@@ -2646,8 +2646,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api29OutputVo {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val emailEntityList =
@@ -2673,8 +2673,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api30OutputVo {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val phoneEntityList =
@@ -2700,8 +2700,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api31OutputVo {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val oAuth2EntityList =
@@ -2732,8 +2732,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api32OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         // 입력 데이터 검증
@@ -2795,8 +2795,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api33OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val emailVerificationOpt = database1Service1AddEmailVerificationDataRepository.findById(verificationUid)
@@ -2853,8 +2853,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val emailVerificationOpt =
@@ -2926,8 +2926,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
         val memberUidLong = memberUid.toLong()
 
@@ -2999,8 +2999,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api36OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         // 입력 데이터 검증
@@ -3064,8 +3064,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api37OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val phoneNumberVerificationOpt =
@@ -3123,8 +3123,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val phoneNumberVerificationOpt =
@@ -3196,8 +3196,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
         val memberUidLong = memberUid.toLong()
 
@@ -3268,8 +3268,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val snsTypeCode: Int
@@ -3383,8 +3383,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val snsTypeCode: Int
@@ -3458,8 +3458,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
         val memberUidLong = memberUid.toLong()
 
@@ -3529,8 +3529,8 @@ class C9Service1TkV1AuthService(
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
         val memberUidLong = memberUid.toLong()
 
@@ -3607,8 +3607,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api43OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
@@ -3641,8 +3641,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api44OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
@@ -3671,11 +3671,11 @@ class C9Service1TkV1AuthService(
 
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
-    fun api45(httpServletResponse: HttpServletResponse, authorization: String, profileUid: Long) {
+    fun api45(httpServletResponse: HttpServletResponse, authorization: String, profileUid: Long?) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         // 내 프로필 리스트 가져오기
@@ -3689,6 +3689,17 @@ class C9Service1TkV1AuthService(
             httpServletResponse.setHeader("api-result-code", "1")
             return
         }
+
+        if(profileUid == null){
+            for (profile in profileData) {
+                profile.isSelected = false
+                database1Service1MemberProfileDataRepository.save(profile)
+            }
+
+            httpServletResponse.setHeader("api-result-code", "0")
+            return
+        }
+
 
         // 기존에 선택된 프로필
         var frontProfile: Database1_Service1_MemberProfileData? = null
@@ -3729,8 +3740,8 @@ class C9Service1TkV1AuthService(
     fun api46(authorization: String, httpServletResponse: HttpServletResponse, profileUid: Long) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         // 프로필 가져오기
@@ -3763,8 +3774,8 @@ class C9Service1TkV1AuthService(
     ): C9Service1TkV1AuthController.Api47OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthenticationTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
         // 저장된 프로필 이미지 파일을 다운로드 할 수 있는 URL
@@ -3812,7 +3823,7 @@ class C9Service1TkV1AuthService(
             saveDirectoryPath.resolve(savedFileName).normalize()
         )
 
-        savedProfileImageUrl = "${externalAccessAddress}/tk/auth/member-profile/$savedFileName"
+        savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
         //----------------------------------------------------------------------------------------------------------
 
         val profileData = database1Service1MemberProfileDataRepository.save(

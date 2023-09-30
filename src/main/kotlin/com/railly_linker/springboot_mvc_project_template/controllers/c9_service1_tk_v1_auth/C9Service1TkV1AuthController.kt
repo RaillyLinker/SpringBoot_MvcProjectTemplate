@@ -2219,9 +2219,9 @@ class C9Service1TkV1AuthController(
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
         authorization: String?,
-        @Parameter(name = "profileUid", description = "대표 프로필로 설정할 프로필의 고유값", example = "1")
+        @Parameter(name = "profileUid", description = "대표 프로필로 설정할 프로필의 고유값(null 이라면 대표 프로필 해제)", example = "1")
         @RequestParam(value = "profileUid")
-        profileUid: Long
+        profileUid: Long?
     ) {
         service.api45(
             httpServletResponse,

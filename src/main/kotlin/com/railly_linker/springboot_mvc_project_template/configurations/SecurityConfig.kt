@@ -31,7 +31,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 class SecurityConfig(
-    private val authenticationTokenFilterService1Tk: AuthenticationTokenFilterService1Tk,
+    private val authTokenFilterService1Tk: AuthTokenFilterService1Tk,
     // todo
 //    private val customDefaultOauth2MemberService: CustomDefaultOauth2MemberService
 ) {
@@ -76,7 +76,7 @@ class SecurityConfig(
         // (Token 인증 검증 필터 연결)
         // API 요청마다 헤더로 들어오는 인증 토큰 유효성을 검증
         http.securityMatcher(securityUrl)
-            .addFilterBefore(authenticationTokenFilterService1Tk, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(authTokenFilterService1Tk, UsernamePasswordAuthenticationFilter::class.java)
 
         // 스프링 시큐리티 기본 로그인 화면 비활성화
         http.securityMatcher(securityUrl)
@@ -129,7 +129,7 @@ class SecurityConfig(
     // 혹은 SSE 등으로 클라이언트에 신호를 보내어 해당 위치에서 처리를 하도록 하는 방법 밖에는 없습니다.
     // 되도록 액세스 토큰 만료시간을 짧게 잡고(15분 ~ 1시간), 클라이언트 측에서 판단하여 처리할 수 있는 부분은 클라이언트에서 처리하도록 합니다.
     @Component
-    class AuthenticationTokenFilterService1Tk : OncePerRequestFilter() {
+    class AuthTokenFilterService1Tk : OncePerRequestFilter() {
         // <멤버 변수 공간>
         companion object {
             // (JWT signature 비밀키)
