@@ -43,7 +43,7 @@ class C3Service1TkV1RequestTestController(
     ////
     @Operation(
         summary = "N2 : 요청 Redirect 테스트 API",
-        description = "이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.\n\n" +
+        description = "이 API 를 요청하면 /service1/tk/v1/request-test 로 Redirect 됩니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
@@ -58,7 +58,7 @@ class C3Service1TkV1RequestTestController(
     ////
     @Operation(
         summary = "N3 : 요청 Forward 테스트 API",
-        description = "이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.\n\n" +
+        description = "이 API 를 요청하면 /service1/tk/v1/request-test 로 Forward 됩니다.\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
@@ -869,7 +869,7 @@ class C3Service1TkV1RequestTestController(
     @Operation(
         summary = "N16 : byte 반환 샘플",
         description = " byte array('a', .. , 'f') 에서 아래와 같은 요청으로 원하는 바이트를 요청 가능\n\n" +
-                "    >> curl http://localhost:8080/tk/advanced-request-test/byte -i -H \"Range: bytes=2-4\"\n\n" +
+                "    >> curl http://localhost:8080/service1/tk/v1/advanced-request-test/byte -i -H \"Range: bytes=2-4\"\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"
     )
@@ -960,7 +960,7 @@ class C3Service1TkV1RequestTestController(
         description = "구독 수신 중 연결이 끊어질 경우, 클라이언트가 헤더에 Last-Event-ID 라는 값을 넣어서 다시 요청함\n\n" +
                 "!주의점! : 로깅 필터와 충돌되므로, 꼭 요청 헤더에는 Accept:text/event-stream 를 넣어서 요청을 해야함 (이것으로 SSE 요청임을 필터가 확인함)\n\n" +
                 "테스트는, CMD 를 열고, \n\n" +
-                "    >>> curl -N --http2 -H \"Accept:text/event-stream\" http://127.0.0.1:8080/tk/advanced-request-test/sse-test/subscribe\n\n" +
+                "    >>> curl -N --http2 -H \"Accept:text/event-stream\" http://127.0.0.1:8080/service1/tk/v1/advanced-request-test/sse-test/subscribe\n\n" +
                 "혹은, 프로젝트 파일 경로의 samples/html_file_sample 안의 sse-test.html 파일을 사용하세요. (cors 설정 필요)\n\n" +
                 "(api-result-code)\n\n" +
                 "0 : 정상 동작"

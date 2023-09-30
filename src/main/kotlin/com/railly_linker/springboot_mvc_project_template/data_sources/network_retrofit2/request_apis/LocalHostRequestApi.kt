@@ -20,7 +20,7 @@ interface LocalHostRequestApi {
 
     ////
     // [요청 Redirect 테스트 API]
-    // 이 API 를 요청하면 /tk/request-test 로 Redirect 됩니다.
+    // 이 API 를 요청하면 /service1/tk/v1/request-test 로 Redirect 됩니다.
     // (api-result-code)
     // 0 : 정상 동작
     @GET("/service1/tk/v1/request-test/redirect-to-blank")
@@ -29,7 +29,7 @@ interface LocalHostRequestApi {
 
     ////
     // [요청 Forward 테스트 API]
-    // 이 API 를 요청하면 /tk/request-test 로 Forward 됩니다.
+    // 이 API 를 요청하면 /service1/tk/v1/request-test 로 Forward 됩니다.
     // (api-result-code)
     // 0 : 정상 동작
     @GET("/service1/tk/v1/request-test/forward-to-blank")

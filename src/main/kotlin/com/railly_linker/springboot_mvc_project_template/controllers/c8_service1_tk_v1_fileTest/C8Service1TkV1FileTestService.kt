@@ -78,7 +78,7 @@ class C8Service1TkV1FileTestService(
 
         httpServletResponse.setHeader("api-result-code", "0")
 
-        return C8Service1TkV1FileTestController.Api1OutputVo("http://127.0.0.1:8080/tk/file-test/download-from-temp/$savedFileName")
+        return C8Service1TkV1FileTestController.Api1OutputVo("http://127.0.0.1:8080/service1/tk/v1/file-test/download-from-temp/$savedFileName")
     }
 
     fun api2(httpServletResponse: HttpServletResponse, fileName: String): ResponseEntity<Resource>? {

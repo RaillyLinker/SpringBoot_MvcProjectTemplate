@@ -36,7 +36,7 @@ class SwaggerConfig {
           
             또한 컨트롤러 안의 소분류인 API 항목 역시 일련번호가 매겨져 있으며, N1, N2... 이런 식으로 표시됩니다.
           
-            API 관련 요청을 할때는, "/tk/request-test/get-request" 이렇게 주소로 표현하거나 혹은, 
+            API 관련 요청을 할때는, "/service1/tk/v1/request-test/get-request" 이렇게 주소로 표현하거나 혹은, 
           
             "C2-N4 API", 혹은 "2-4 API" 와 같은 일련번호로 표현하여도 좋습니다.
         - Input Json String 표기법
