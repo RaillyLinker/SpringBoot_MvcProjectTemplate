@@ -33,4 +33,21 @@ class C1Controller(
     ): ModelAndView? {
         return service.api1(httpServletResponse)
     }
+
+
+    ////
+    @Hidden
+    @Operation(
+        summary = "N2 : 홈페이지",
+        description = "루트 홈페이지를 반환합니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작"
+    )
+    @GetMapping("/home-page")
+    fun api2(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse
+    ): ModelAndView? {
+        return service.api2(httpServletResponse)
+    }
 }
