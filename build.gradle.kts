@@ -61,7 +61,7 @@ dependencies {
     // : 웹 뷰 라이브러리
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4")
     implementation("nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.1")
-    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE")
 
     // (Spring email)
     // : 스프링 이메일 발송

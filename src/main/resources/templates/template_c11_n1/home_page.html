@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,8 @@
         Home
     </h1>
 
-    <button id="login_btn" type="button" th:onclick="location.href='/sc/member/login-page'">로그인</button>
+    <button id="login_btn" type="button" sec:authorize="!isAuthenticated()" th:onclick="location.href='/sc/member/login-page'">로그인</button>
+    <button id="logout_btn" type="button" sec:authorize="isAuthenticated()" th:onclick="location.href='/sc/member/logout'">로그아웃</button>
 </div>
 
 <hr/>
