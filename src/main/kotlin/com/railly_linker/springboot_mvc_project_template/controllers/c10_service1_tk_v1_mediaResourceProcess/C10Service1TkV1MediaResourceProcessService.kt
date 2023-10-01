@@ -51,6 +51,7 @@ class C10Service1TkV1MediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -105,6 +106,7 @@ class C10Service1TkV1MediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -158,6 +160,7 @@ class C10Service1TkV1MediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -290,6 +293,7 @@ class C10Service1TkV1MediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -334,6 +338,7 @@ class C10Service1TkV1MediaResourceProcessService(
 
         val supportedExtensions = listOf("mp4", "avi", "mkv", "flv", "mov")
         if (fileExtension !in supportedExtensions) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1") // or any other error code
             return null
         }
@@ -408,6 +413,7 @@ class C10Service1TkV1MediaResourceProcessService(
         )
 
         if (contentType !in allowedContentTypes) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -479,6 +485,7 @@ class C10Service1TkV1MediaResourceProcessService(
 
         val supportedExtensions = listOf("mp4", "avi", "mkv", "flv", "mov")
         if (fileExtension !in supportedExtensions) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1") // or any other error code
             return null
         }

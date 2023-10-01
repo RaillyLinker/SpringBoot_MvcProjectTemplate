@@ -472,14 +472,17 @@ class C3Service1TkV1RequestTestService(
         } else {
             when (errorType) {
                 C3Service1TkV1RequestTestController.Api12ErrorTypeEnum.A -> {
+                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "1")
                 }
 
                 C3Service1TkV1RequestTestController.Api12ErrorTypeEnum.B -> {
+                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "2")
                 }
 
                 C3Service1TkV1RequestTestController.Api12ErrorTypeEnum.C -> {
+                    httpServletResponse.status = 500
                     httpServletResponse.setHeader("api-result-code", "3")
                 }
             }

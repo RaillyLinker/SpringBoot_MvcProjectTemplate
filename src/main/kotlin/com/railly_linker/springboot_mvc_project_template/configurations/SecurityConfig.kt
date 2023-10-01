@@ -229,21 +229,37 @@ class SecurityConfig(
                                         }
                                 } else { // 액세스 토큰 만료
                                     response.setHeader("api-result-code", "d")
+                                    // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
+                                    // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
+                                    // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
+                                    // @PreAuthorize 설정이 안된 API 진입시에는 해당 API 동작 완료 후 result code 가 해당 API 의 것으로 덮어써집니다.
                                 }
                             } else {
                                 // 올바르지 않은 Authorization Token
                                 response.setHeader("api-result-code", "c")
+                                // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
+                                // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
+                                // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
+                                // @PreAuthorize 설정이 안된 API 진입시에는 해당 API 동작 완료 후 result code 가 해당 API 의 것으로 덮어써집니다.
                             }
                         }
 
                         else -> {
                             // 올바르지 않은 Authorization Token
                             response.setHeader("api-result-code", "c")
+                            // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
+                            // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
+                            // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
+                            // @PreAuthorize 설정이 안된 API 진입시에는 해당 API 동작 완료 후 result code 가 해당 API 의 것으로 덮어써집니다.
                         }
                     }
                 } else {
                     // 올바르지 않은 Authorization Token
                     response.setHeader("api-result-code", "c")
+                    // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
+                    // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
+                    // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
+                    // @PreAuthorize 설정이 안된 API 진입시에는 해당 API 동작 완료 후 result code 가 해당 API 의 것으로 덮어써집니다.
                 }
             }
 

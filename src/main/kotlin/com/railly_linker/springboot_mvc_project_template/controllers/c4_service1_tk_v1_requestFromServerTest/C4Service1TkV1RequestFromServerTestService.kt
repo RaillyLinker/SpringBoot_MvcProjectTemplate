@@ -50,17 +50,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -87,17 +90,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -124,17 +130,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -184,17 +193,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -226,17 +238,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -288,17 +303,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -348,17 +366,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -434,17 +455,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -535,17 +559,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -615,17 +642,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -651,15 +681,18 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
         }
     }
@@ -685,28 +718,34 @@ class C4Service1TkV1RequestFromServerTestService(
                     }
 
                     "1" -> {
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "3")
                     }
 
                     "2" -> {
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "4")
                     }
 
                     "3" -> {
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "5")
                     }
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
         }
     }
@@ -732,15 +771,18 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
         }
     }
@@ -769,17 +811,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -809,17 +854,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }
@@ -849,17 +897,20 @@ class C4Service1TkV1RequestFromServerTestService(
 
                     else -> {
                         // 알수없는 api-result-code
+                        httpServletResponse.status = 500
                         httpServletResponse.setHeader("api-result-code", "2")
                         return null
                     }
                 }
             } else {
                 // 반환되어야 할 api-result-code 가 오지 않음 = 서버측 에러
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "2")
                 return null
             }
         } catch (e: SocketTimeoutException) {
             // 타임아웃 에러 처리 = 런타임에서 처리해야하는 유일한 클라이언트 측 에러
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }

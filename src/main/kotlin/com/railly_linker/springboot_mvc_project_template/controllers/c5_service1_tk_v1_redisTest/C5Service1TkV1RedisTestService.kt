@@ -49,6 +49,7 @@ class C5Service1TkV1RedisTestService(
         val keyValue = redis1TestRepository.findKeyValue(key)
 
         if (keyValue == null) {
+            httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
             return null
         }

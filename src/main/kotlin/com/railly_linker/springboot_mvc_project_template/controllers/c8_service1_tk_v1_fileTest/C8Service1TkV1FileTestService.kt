@@ -92,12 +92,14 @@ class C8Service1TkV1FileTestService(
         when {
             Files.isDirectory(serverFilePathObject) -> {
                 // 파일이 디렉토리일때
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "1")
                 return null
             }
 
             Files.notExists(serverFilePathObject) -> {
                 // 파일이 없을 때
+                httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "1")
                 return null
             }
