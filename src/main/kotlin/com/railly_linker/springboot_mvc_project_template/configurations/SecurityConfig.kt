@@ -24,6 +24,9 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.OncePerRequestFilter
 
 // (서비스 보안 시큐리티 설정)
@@ -54,12 +57,32 @@ class SecurityConfig(
         return BCryptPasswordEncoder()
     }
 
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        return UrlBasedCorsConfigurationSource().apply {
+            this.registerCorsConfiguration(
+                "/**", // 아래 설정을 적용할 컨트롤러 패턴
+                CorsConfiguration().apply {
+                    allowedOriginPatterns = listOf("*") // 허가 클라이언트 주소
+                    allowedMethods = listOf("*") // 허가할 클라이언트 리퀘스트 http method
+                    allowedHeaders = listOf("*") // 허가할 클라이언트 발신 header
+                    exposedHeaders = listOf("*", "api-error-code") // 허가할 클라이언트 수신 header
+                    maxAge = 3600L
+                    allowCredentials = true
+                }
+            )
+        }
+    }
+
     // [/service1/tk 로 시작되는 리퀘스트의 시큐리티 설정 = Token 인증 사용]
     @Bean
     @Order(1)
     fun securityFilterChainService1Tk(http: HttpSecurity): SecurityFilterChain {
         // 본 시큐리티 필터가 관리할 주소 체계
         val securityUrl = "/service1/tk/**" // /service1/tk/** 의 모든 경로에 적용
+
+        http.securityMatcher(securityUrl)
+            .cors {}
 
         // (사이즈간 위조 요청(Cross site Request forgery) 방지 설정)
         // csrf 설정시 POST, PUT, DELETE 요청으로부터 보호하며 csrf 토큰이 포함되어야 요청을 받아들이게 됨
