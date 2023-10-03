@@ -66,7 +66,7 @@ class SecurityConfig(
                     allowedOriginPatterns = listOf("*") // 허가 클라이언트 주소
                     allowedMethods = listOf("*") // 허가할 클라이언트 리퀘스트 http method
                     allowedHeaders = listOf("*") // 허가할 클라이언트 발신 header
-                    exposedHeaders = listOf("*", "api-error-code") // 허가할 클라이언트 수신 header
+                    exposedHeaders = listOf("*") // 허가할 클라이언트 수신 header
                     maxAge = 3600L
                     allowCredentials = true
                 }
@@ -125,12 +125,11 @@ class SecurityConfig(
             .exceptionHandling { exceptionHandlingCustomizer ->
                 // 비인증(Security Context 에 멤버 정보가 없음) 처리
                 exceptionHandlingCustomizer.authenticationEntryPoint { _, response, _ -> // Http Status 401
-                    response.setHeader("api-result-code", "a")
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: UnAuthorized")
                 }
                 // 비인가(멤버 권한이 충족되지 않음) 처리
                 exceptionHandlingCustomizer.accessDeniedHandler { _, response, _ -> // Http Status 403
-                    response.setHeader("api-result-code", "b")
+                    response.setHeader("api-result-code", "c")
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Error: Forbidden")
                 }
             }
@@ -251,7 +250,7 @@ class SecurityConfig(
                                                 WebAuthenticationDetailsSource().buildDetails(request)
                                         }
                                 } else { // 액세스 토큰 만료
-                                    response.setHeader("api-result-code", "d")
+                                    response.setHeader("api-result-code", "b")
                                     // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
                                     // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
                                     // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
@@ -259,7 +258,7 @@ class SecurityConfig(
                                 }
                             } else {
                                 // 올바르지 않은 Authorization Token
-                                response.setHeader("api-result-code", "c")
+                                response.setHeader("api-result-code", "a")
                                 // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
                                 // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
                                 // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
@@ -269,7 +268,7 @@ class SecurityConfig(
 
                         else -> {
                             // 올바르지 않은 Authorization Token
-                            response.setHeader("api-result-code", "c")
+                            response.setHeader("api-result-code", "a")
                             // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
                             // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
                             // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,
@@ -278,7 +277,7 @@ class SecurityConfig(
                     }
                 } else {
                     // 올바르지 않은 Authorization Token
-                    response.setHeader("api-result-code", "c")
+                    response.setHeader("api-result-code", "a")
                     // 바로 filterChain.doFilter(request, response) 를 통해 API 에 진입합니다.
                     // SecurityContextHolder.getContext().authentication 를 입력하지 않았으므로,
                     // @PreAuthorize 설정이 된 API 진입시에는 401 에러와 함께 result code 반환,

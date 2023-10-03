@@ -298,13 +298,11 @@ class SwaggerConfig {
         
         - Request Header 에 Authorization 입력시
         
-            a : API 호출에 로그인이 필요합니다. (Http Status Code 401 과 동일한 의미)
+            a : 올바르지 않은 Authorization Token
             
-            b : 로그인 계정에 API 호출 권한이 없습니다. (Http Status Code 403 과 동일한 의미)
-        
-            c : 올바르지 않은 Authorization Token
+            b : 만료된 AccessToken. (reissue, logout API 는 제외)
             
-            d : 만료된 AccessToken. (reissue, logout API 는 제외)
+            c : 로그인 계정에 API 호출 권한이 없습니다. (Http Status Code 403 과 동일한 의미)
     """.trimIndent()
 
 
