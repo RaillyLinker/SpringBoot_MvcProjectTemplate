@@ -359,7 +359,7 @@ class C3Service1TkV1RequestTestService(
         val inputJsonObject = Gson().fromJson<C3Service1TkV1RequestTestController.Api10InputVo.InputJsonObject>(
             inputVo.jsonString, // 해석하려는 json 형식의 String
             object :
-                TypeToken<C3Service1TkV1RequestTestController.Api10InputVo.InputJsonObject>() {}.type // 파싱할 데이터 스키마 객체 타입
+                TypeToken<C3Service1TkV1RequestTestController.Api10InputVo.InputJsonObject>() {}.type // 파싱할 데이터 객체 타입
         )
 
         // 파일 저장 기본 디렉토리 경로

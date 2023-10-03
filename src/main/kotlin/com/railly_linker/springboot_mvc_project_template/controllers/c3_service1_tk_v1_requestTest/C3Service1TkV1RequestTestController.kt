@@ -681,7 +681,7 @@ class C3Service1TkV1RequestTestController(
         @JsonProperty("multipartFileNullable")
         val multipartFileNullable: MultipartFile?
     ) {
-        @Schema(description = "Json String 스키마")
+        @Schema(description = "Json String Object")
         data class InputJsonObject(
             @Schema(description = "String Form 파라미터", required = true, example = "testString")
             @JsonProperty("requestFormString")

@@ -62,7 +62,7 @@ class Redis1_TestRepository(
             // 외부적으로 사용되는 Value (Json String 을 테이블 객체로 변환)
             val valueObject = Gson().fromJson<Redis1_Test>(
                 innerValue as String, // 해석하려는 json 형식의 String
-                object : TypeToken<Redis1_Test>() {}.type // 파싱할 데이터 스키마 객체 타입
+                object : TypeToken<Redis1_Test>() {}.type // 파싱할 데이터 객체 타입
             )
 
             resultList.add(
@@ -100,7 +100,7 @@ class Redis1_TestRepository(
             // 외부적으로 사용되는 Value (Json String 을 테이블 객체로 변환)
             val valueObject = Gson().fromJson<Redis1_Test>(
                 innerValue as String, // 해석하려는 json 형식의 String
-                object : TypeToken<Redis1_Test>() {}.type // 파싱할 데이터 스키마 객체 타입
+                object : TypeToken<Redis1_Test>() {}.type // 파싱할 데이터 객체 타입
             )
             KeyValueData(
                 key,

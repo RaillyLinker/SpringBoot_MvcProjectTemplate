@@ -11,7 +11,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.Semaphore
 
 // [1대1 웹 소켓 테스팅 핸들러]
 // WebSocketConfig 에서 설정에 사용됨
@@ -60,7 +59,7 @@ class TestWebSocketHandler : TextWebSocketHandler() {
         // 보내온 String 메세지를 객체로 해석
         val messagePayloadVo = Gson().fromJson<MessagePayloadVo>(
             message.payload, // 해석하려는 json 형식의 String
-            object : TypeToken<MessagePayloadVo>() {}.type // 파싱할 데이터 스키마 객체 타입
+            object : TypeToken<MessagePayloadVo>() {}.type // 파싱할 객체 타입
         )
 
         classLogger.info("messagePayloadVo : $messagePayloadVo")
@@ -93,7 +92,7 @@ class TestWebSocketHandler : TextWebSocketHandler() {
 
     // ---------------------------------------------------------------------------------------------
     // <중첩 클래스 공간>
-    // (메세지 스키마)
+    // (메세지 Vo)
     //     고도화시에는 아래 VO 에 더 많은 정보를 저장하여 이를 이용하여 기능을 구현할것.
     //     일반적으로 양방향 연결이 필요한 기능인 채팅에 관련하여,
     //     필요한 기능들에 필요한 형식을 미리 만들어서 제공해주는 프로토콜인 STOMP 를 사용할 수도 있음.

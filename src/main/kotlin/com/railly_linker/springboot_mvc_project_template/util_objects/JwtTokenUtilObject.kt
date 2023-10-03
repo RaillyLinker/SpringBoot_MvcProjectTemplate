@@ -122,7 +122,7 @@ object JwtTokenUtilObject {
                 jwtClaimsAes256InitializationVector,
                 jwtClaimsAes256EncryptionKey
             ), // 해석하려는 json 형식의 String
-            object : TypeToken<List<String>>() {}.type // 파싱할 데이터 스키마 객체 타입
+            object : TypeToken<List<String>>() {}.type // 파싱할 데이터 객체 타입
         )
     }
 
