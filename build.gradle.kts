@@ -92,7 +92,6 @@ dependencies {
     // : 스프링 부트 보안
     implementation("org.springframework.boot:spring-boot-starter-security:3.0.4")
     testImplementation("org.springframework.security:spring-security-test:6.0.2")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client:3.0.4")
 
     // (Apache Common Codec)
     implementation("commons-codec:commons-codec:1.16.0")
