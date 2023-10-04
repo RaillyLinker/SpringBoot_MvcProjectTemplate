@@ -12,6 +12,7 @@ import java.time.LocalDateTime
 
 // 주의 : NativeRepository 의 반환값으로 기본 Entity 객체는 매핑되지 않으므로 OutputVo Interface 를 작성하여 사용할것.
 // sql 문은 한줄로 표기 할 것을 권장. (간편하게 복사해서 사용하며 디버그하기 위하여)
+// Output Interface 변수에 is 로 시작되는 변수는 매핑이 안되므로 사용하지 말것.
 @Repository
 interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData, Long> {
     // <C6>
