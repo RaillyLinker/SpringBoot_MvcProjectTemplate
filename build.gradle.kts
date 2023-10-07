@@ -41,7 +41,7 @@ dependencies {
 
     // (Swagger)
     // : API 자동 문서화
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
     // (GSON)
     // : Json - Object 라이브러리
