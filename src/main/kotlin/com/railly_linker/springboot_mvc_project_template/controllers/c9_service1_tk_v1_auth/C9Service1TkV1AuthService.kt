@@ -355,7 +355,8 @@ class C9Service1TkV1AuthService(
             refreshTokenExpireWhen,
             emailList,
             phoneNumberList,
-            myOAuth2List
+            myOAuth2List,
+            member.accountPassword == null
         )
     }
 
@@ -704,7 +705,8 @@ class C9Service1TkV1AuthService(
             refreshTokenExpireWhen,
             emailList,
             phoneNumberList,
-            myOAuth2List
+            myOAuth2List,
+            member.accountPassword == null
         )
     }
 
@@ -893,7 +895,8 @@ class C9Service1TkV1AuthService(
             refreshTokenExpireWhen,
             emailList,
             phoneNumberList,
-            myOAuth2List
+            myOAuth2List,
+            member.accountPassword == null
         )
     }
 
@@ -1151,7 +1154,8 @@ class C9Service1TkV1AuthService(
                         refreshTokenExpireWhen,
                         emailList,
                         phoneNumberList,
-                        myOAuth2List
+                        myOAuth2List,
+                        memberInfo.accountPassword == null
                     )
                 }
 
@@ -3807,7 +3811,7 @@ class C9Service1TkV1AuthService(
             return
         }
 
-        if(profileUid == null){
+        if (profileUid == null) {
             for (profile in profileData) {
                 profile.isSelected = false
                 database1Service1MemberProfileDataRepository.save(profile)

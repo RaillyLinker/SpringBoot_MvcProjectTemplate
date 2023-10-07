@@ -210,7 +210,15 @@ class C9Service1TkV1AuthController(
 
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
-        val myOAuth2List: List<OAuth2Info>
+        val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(
+            description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
+            required = true,
+            example = "true"
+        )
+        @JsonProperty("authPasswordIsNull")
+        val authPasswordIsNull: Boolean
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
@@ -368,7 +376,15 @@ class C9Service1TkV1AuthController(
 
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
-        val myOAuth2List: List<OAuth2Info>
+        val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(
+            description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
+            required = true,
+            example = "true"
+        )
+        @JsonProperty("authPasswordIsNull")
+        val authPasswordIsNull: Boolean
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
@@ -481,7 +497,15 @@ class C9Service1TkV1AuthController(
 
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
-        val myOAuth2List: List<OAuth2Info>
+        val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(
+            description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
+            required = true,
+            example = "true"
+        )
+        @JsonProperty("authPasswordIsNull")
+        val authPasswordIsNull: Boolean
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
@@ -608,7 +632,15 @@ class C9Service1TkV1AuthController(
 
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
-        val myOAuth2List: List<OAuth2Info>
+        val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(
+            description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
+            required = true,
+            example = "true"
+        )
+        @JsonProperty("authPasswordIsNull")
+        val authPasswordIsNull: Boolean
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
