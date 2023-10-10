@@ -246,7 +246,7 @@ class C9Service1TkV1AuthController(
             @JsonProperty("imageFullUrl")
             val imageFullUrl: String,
             @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -258,8 +258,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
             @JsonProperty("emailAddress")
             val emailAddress: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 이메일 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -271,8 +271,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
             @JsonProperty("phoneNumber")
             val phoneNumber: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 전화번호 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
@@ -454,7 +454,7 @@ class C9Service1TkV1AuthController(
             @JsonProperty("imageFullUrl")
             val imageFullUrl: String,
             @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -466,8 +466,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
             @JsonProperty("emailAddress")
             val emailAddress: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 이메일 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -479,8 +479,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
             @JsonProperty("phoneNumber")
             val phoneNumber: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 전화번호 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
@@ -617,7 +617,7 @@ class C9Service1TkV1AuthController(
             @JsonProperty("imageFullUrl")
             val imageFullUrl: String,
             @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -629,8 +629,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
             @JsonProperty("emailAddress")
             val emailAddress: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 이메일 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -642,8 +642,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
             @JsonProperty("phoneNumber")
             val phoneNumber: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 전화번호 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
@@ -794,7 +794,7 @@ class C9Service1TkV1AuthController(
             @JsonProperty("imageFullUrl")
             val imageFullUrl: String,
             @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -806,8 +806,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
             @JsonProperty("emailAddress")
             val emailAddress: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 이메일 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
 
@@ -819,8 +819,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
             @JsonProperty("phoneNumber")
             val phoneNumber: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 전화번호 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
@@ -1741,7 +1741,7 @@ class C9Service1TkV1AuthController(
             @JsonProperty("emailAddress")
             val emailAddress: String,
             @Schema(description = "대표 이메일 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
@@ -1779,8 +1779,8 @@ class C9Service1TkV1AuthController(
             @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
             @JsonProperty("phoneNumber")
             val phoneNumber: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @Schema(description = "대표 전화번호 여부", required = true, example = "true")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
@@ -2329,7 +2329,7 @@ class C9Service1TkV1AuthController(
             @JsonProperty("imageFullUrl")
             val imageFullUrl: String,
             @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
+            @JsonProperty("isFront")
             val isFront: Boolean
         )
     }
