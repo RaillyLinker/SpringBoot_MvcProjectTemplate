@@ -154,7 +154,7 @@ class C9Service1TkV1AuthController(
     data class Api5OutputVo(
         @Schema(description = "멤버 고유값", required = true, example = "1")
         @JsonProperty("memberUid")
-        val memberUid: String,
+        val memberUid: Long,
 
         @Schema(description = "닉네임", required = true, example = "홍길동")
         @JsonProperty("nickName")
@@ -362,7 +362,7 @@ class C9Service1TkV1AuthController(
     data class Api7OutputVo(
         @Schema(description = "멤버 고유값", required = true, example = "1")
         @JsonProperty("memberUid")
-        val memberUid: String,
+        val memberUid: Long,
 
         @Schema(description = "닉네임", required = true, example = "홍길동")
         @JsonProperty("nickName")
@@ -525,7 +525,7 @@ class C9Service1TkV1AuthController(
     data class Api7Dot1OutputVo(
         @Schema(description = "멤버 고유값", required = true, example = "1")
         @JsonProperty("memberUid")
-        val memberUid: String,
+        val memberUid: Long,
 
         @Schema(description = "닉네임", required = true, example = "홍길동")
         @JsonProperty("nickName")
@@ -702,7 +702,7 @@ class C9Service1TkV1AuthController(
     data class Api9OutputVo(
         @Schema(description = "멤버 고유값", required = true, example = "1")
         @JsonProperty("memberUid")
-        val memberUid: String,
+        val memberUid: Long,
 
         @Schema(description = "닉네임", required = true, example = "홍길동")
         @JsonProperty("nickName")

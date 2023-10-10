@@ -353,7 +353,7 @@ class C9Service1TkV1AuthService(
 
         httpServletResponse.setHeader("api-result-code", "0")
         return C9Service1TkV1AuthController.Api5OutputVo(
-            memberUidString,
+            memberUid,
             member.nickName,
             roleList,
             "Bearer",
@@ -712,7 +712,7 @@ class C9Service1TkV1AuthService(
 
         httpServletResponse.setHeader("api-result-code", "0")
         return C9Service1TkV1AuthController.Api7OutputVo(
-            memberUidString,
+            snsOauth2.memberUid,
             member.nickName,
             roleList,
             "Bearer",
@@ -911,7 +911,7 @@ class C9Service1TkV1AuthService(
 
         httpServletResponse.setHeader("api-result-code", "0")
         return C9Service1TkV1AuthController.Api7Dot1OutputVo(
-            memberUidString,
+            snsOauth2.memberUid,
             member.nickName,
             roleList,
             "Bearer",
@@ -1185,7 +1185,7 @@ class C9Service1TkV1AuthService(
 
                     httpServletResponse.setHeader("api-result-code", "0")
                     return C9Service1TkV1AuthController.Api9OutputVo(
-                        accessTokenMemberUid,
+                        memberInfo.uid!!,
                         memberInfo.nickName,
                         roleList,
                         "Bearer",
