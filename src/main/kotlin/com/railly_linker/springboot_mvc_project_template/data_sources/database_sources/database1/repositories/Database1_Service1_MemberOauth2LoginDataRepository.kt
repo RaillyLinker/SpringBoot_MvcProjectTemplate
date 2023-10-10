@@ -26,5 +26,11 @@ interface Database1_Service1_MemberOauth2LoginDataRepository :
         rowActivate: Boolean
     ): List<Database1_Service1_MemberOauth2LoginData>
 
+    fun findByUidAndMemberUidAndRowActivate(
+        uid : Long,
+        memberUid: Long,
+        rowActivate: Boolean
+    ): Database1_Service1_MemberOauth2LoginData?
+
     fun existsByMemberUidAndRowActivate(memberUid: Long, rowActivate: Boolean): Boolean
 }

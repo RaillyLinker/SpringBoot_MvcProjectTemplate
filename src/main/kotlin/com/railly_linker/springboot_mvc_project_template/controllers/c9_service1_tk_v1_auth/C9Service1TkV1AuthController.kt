@@ -160,10 +160,6 @@ class C9Service1TkV1AuthController(
         @JsonProperty("nickName")
         val nickName: String,
 
-        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
-        @JsonProperty("profileImageFullUrl")
-        val profileImageFullUrl: String?,
-
         @Schema(
             description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
@@ -200,17 +196,21 @@ class C9Service1TkV1AuthController(
         @JsonProperty("refreshTokenExpireWhen")
         val refreshTokenExpireWhen: String,
 
-        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-        @JsonProperty("myEmailList")
-        val myEmailList: List<String>,
-
-        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-        @JsonProperty("myPhoneNumberList")
-        val myPhoneNumberList: List<String>,
-
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
         val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(description = "내가 등록한 Profile 정보 리스트", required = true)
+        @JsonProperty("myProfileList")
+        val myProfileList: List<ProfileInfo>,
+
+        @Schema(description = "내가 등록한 이메일 정보 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<EmailInfo>,
+
+        @Schema(description = "내가 등록한 전화번호 정보 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<PhoneNumberInfo>,
 
         @Schema(
             description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
@@ -222,6 +222,9 @@ class C9Service1TkV1AuthController(
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
             @Schema(
                 description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
@@ -232,6 +235,45 @@ class C9Service1TkV1AuthController(
             @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
             @JsonProperty("oauth2Id")
             val oauth2Id: String
+        )
+
+        @Schema(description = "Profile 정보")
+        data class ProfileInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
+            @JsonProperty("imageFullUrl")
+            val imageFullUrl: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "이메일 정보")
+        data class EmailInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
+            @JsonProperty("emailAddress")
+            val emailAddress: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "전화번호 정보")
+        data class PhoneNumberInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
+            @JsonProperty("phoneNumber")
+            val phoneNumber: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
         )
     }
 
@@ -326,10 +368,6 @@ class C9Service1TkV1AuthController(
         @JsonProperty("nickName")
         val nickName: String,
 
-        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
-        @JsonProperty("profileImageFullUrl")
-        val profileImageFullUrl: String?,
-
         @Schema(
             description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
@@ -366,17 +404,21 @@ class C9Service1TkV1AuthController(
         @JsonProperty("refreshTokenExpireWhen")
         val refreshTokenExpireWhen: String,
 
-        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-        @JsonProperty("myEmailList")
-        val myEmailList: List<String>,
-
-        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-        @JsonProperty("myPhoneNumberList")
-        val myPhoneNumberList: List<String>,
-
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
         val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(description = "내가 등록한 Profile 정보 리스트", required = true)
+        @JsonProperty("myProfileList")
+        val myProfileList: List<ProfileInfo>,
+
+        @Schema(description = "내가 등록한 이메일 정보 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<EmailInfo>,
+
+        @Schema(description = "내가 등록한 전화번호 정보 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<PhoneNumberInfo>,
 
         @Schema(
             description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
@@ -388,6 +430,9 @@ class C9Service1TkV1AuthController(
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
             @Schema(
                 description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
@@ -398,6 +443,45 @@ class C9Service1TkV1AuthController(
             @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
             @JsonProperty("oauth2Id")
             val oauth2Id: String
+        )
+
+        @Schema(description = "Profile 정보")
+        data class ProfileInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
+            @JsonProperty("imageFullUrl")
+            val imageFullUrl: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "이메일 정보")
+        data class EmailInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
+            @JsonProperty("emailAddress")
+            val emailAddress: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "전화번호 정보")
+        data class PhoneNumberInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
+            @JsonProperty("phoneNumber")
+            val phoneNumber: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
         )
     }
 
@@ -447,10 +531,6 @@ class C9Service1TkV1AuthController(
         @JsonProperty("nickName")
         val nickName: String,
 
-        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
-        @JsonProperty("profileImageFullUrl")
-        val profileImageFullUrl: String?,
-
         @Schema(
             description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
@@ -487,17 +567,21 @@ class C9Service1TkV1AuthController(
         @JsonProperty("refreshTokenExpireWhen")
         val refreshTokenExpireWhen: String,
 
-        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-        @JsonProperty("myEmailList")
-        val myEmailList: List<String>,
-
-        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-        @JsonProperty("myPhoneNumberList")
-        val myPhoneNumberList: List<String>,
-
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
         val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(description = "내가 등록한 Profile 정보 리스트", required = true)
+        @JsonProperty("myProfileList")
+        val myProfileList: List<ProfileInfo>,
+
+        @Schema(description = "내가 등록한 이메일 정보 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<EmailInfo>,
+
+        @Schema(description = "내가 등록한 전화번호 정보 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<PhoneNumberInfo>,
 
         @Schema(
             description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
@@ -509,6 +593,9 @@ class C9Service1TkV1AuthController(
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
             @Schema(
                 description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
@@ -519,6 +606,45 @@ class C9Service1TkV1AuthController(
             @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
             @JsonProperty("oauth2Id")
             val oauth2Id: String
+        )
+
+        @Schema(description = "Profile 정보")
+        data class ProfileInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
+            @JsonProperty("imageFullUrl")
+            val imageFullUrl: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "이메일 정보")
+        data class EmailInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
+            @JsonProperty("emailAddress")
+            val emailAddress: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "전화번호 정보")
+        data class PhoneNumberInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
+            @JsonProperty("phoneNumber")
+            val phoneNumber: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
         )
     }
 
@@ -582,10 +708,6 @@ class C9Service1TkV1AuthController(
         @JsonProperty("nickName")
         val nickName: String,
 
-        @Schema(description = "대표 프로필 이미지 Full URL", required = false, example = "https://profile-image.com/1.jpg")
-        @JsonProperty("profileImageFullUrl")
-        val profileImageFullUrl: String?,
-
         @Schema(
             description = "권한 리스트 (관리자 : ROLE_ADMIN, 개발자 : ROLE_DEVELOPER)",
             required = true,
@@ -622,17 +744,21 @@ class C9Service1TkV1AuthController(
         @JsonProperty("refreshTokenExpireWhen")
         val refreshTokenExpireWhen: String,
 
-        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-        @JsonProperty("myEmailList")
-        val myEmailList: List<String>,
-
-        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-        @JsonProperty("myPhoneNumberList")
-        val myPhoneNumberList: List<String>,
-
         @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
         @JsonProperty("myOAuth2List")
         val myOAuth2List: List<OAuth2Info>,
+
+        @Schema(description = "내가 등록한 Profile 정보 리스트", required = true)
+        @JsonProperty("myProfileList")
+        val myProfileList: List<ProfileInfo>,
+
+        @Schema(description = "내가 등록한 이메일 정보 리스트", required = true)
+        @JsonProperty("myEmailList")
+        val myEmailList: List<EmailInfo>,
+
+        @Schema(description = "내가 등록한 전화번호 정보 리스트", required = true)
+        @JsonProperty("myPhoneNumberList")
+        val myPhoneNumberList: List<PhoneNumberInfo>,
 
         @Schema(
             description = "계정 로그인 비밀번호 설정 Null 여부 (OAuth2 만으로 회원가입한 경우는 비밀번호가 없으므로 true)",
@@ -644,6 +770,9 @@ class C9Service1TkV1AuthController(
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
             @Schema(
                 description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
@@ -654,6 +783,45 @@ class C9Service1TkV1AuthController(
             @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
             @JsonProperty("oauth2Id")
             val oauth2Id: String
+        )
+
+        @Schema(description = "Profile 정보")
+        data class ProfileInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
+            @JsonProperty("imageFullUrl")
+            val imageFullUrl: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "이메일 정보")
+        data class EmailInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
+            @JsonProperty("emailAddress")
+            val emailAddress: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+
+        @Schema(description = "전화번호 정보")
+        data class PhoneNumberInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
+            @JsonProperty("phoneNumber")
+            val phoneNumber: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
         )
     }
 
@@ -1542,54 +1710,6 @@ class C9Service1TkV1AuthController(
 
     ////
     @Operation(
-        summary = "N28 : 내 로그인 관련 정보 리스트 가져오기 <>",
-        description = "내 계정에 연결된 로그인 수단 리스트 가져오기\n\n" +
-                "(api-result-code)\n\n" +
-                "0 : 정상 동작"
-    )
-    @GetMapping("/my-auth-list")
-    @PreAuthorize("isAuthenticated()")
-    fun api26(
-        @Parameter(hidden = true)
-        httpServletResponse: HttpServletResponse,
-        @Parameter(hidden = true)
-        @RequestHeader("Authorization")
-        authorization: String?
-    ): Api28OutputVo? {
-        return service.api28(httpServletResponse, authorization!!)
-    }
-
-    data class Api28OutputVo(
-        @Schema(description = "내가 등록한 이메일 리스트", required = true)
-        @JsonProperty("myEmailList")
-        val myEmailList: List<String>,
-
-        @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-        @JsonProperty("myPhoneNumberList")
-        val myPhoneNumberList: List<String>,
-
-        @Schema(description = "내가 등록한 OAuth2 정보 리스트", required = true)
-        @JsonProperty("myOAuth2List")
-        val myOAuth2List: List<OAuth2Info>
-    ) {
-        @Schema(description = "OAuth2 정보")
-        data class OAuth2Info(
-            @Schema(
-                description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
-                required = true,
-                example = "1"
-            )
-            @JsonProperty("oauth2Type")
-            val oauth2Type: Int,
-            @Schema(description = "oAuth2 고유값 아이디", required = true, example = "asdf1234")
-            @JsonProperty("oauth2Id")
-            val oauth2Id: String
-        )
-    }
-
-
-    ////
-    @Operation(
         summary = "N29 : 내 이메일 리스트 가져오기 <>",
         description = "내 이메일 리스트 가져오기\n\n" +
                 "(api-result-code)\n\n" +
@@ -1609,9 +1729,22 @@ class C9Service1TkV1AuthController(
 
     data class Api29OutputVo(
         @Schema(description = "내가 등록한 이메일 리스트", required = true)
-        @JsonProperty("myEmailList")
-        val myEmailList: List<String>
-    )
+        @JsonProperty("emailInfoList")
+        val emailInfoList: List<EmailInfo>
+    ) {
+        @Schema(description = "이메일 정보")
+        data class EmailInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
+            @JsonProperty("emailAddress")
+            val emailAddress: String,
+            @Schema(description = "대표 이메일 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+    }
 
 
     ////
@@ -1635,9 +1768,22 @@ class C9Service1TkV1AuthController(
 
     data class Api30OutputVo(
         @Schema(description = "내가 등록한 전화번호 리스트", required = true)
-        @JsonProperty("myPhoneNumberList")
-        val myPhoneNumberList: List<String>
-    )
+        @JsonProperty("phoneInfoList")
+        val phoneInfoList: List<PhoneInfo>
+    ) {
+        @Schema(description = "전화번호 정보")
+        data class PhoneInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
+            @JsonProperty("phoneNumber")
+            val phoneNumber: String,
+            @Schema(description = "대표 프로필 여부", required = true, example = "true")
+            @JsonProperty("is_front")
+            val isFront: Boolean
+        )
+    }
 
 
     ////
@@ -1666,6 +1812,9 @@ class C9Service1TkV1AuthController(
     ) {
         @Schema(description = "OAuth2 정보")
         data class OAuth2Info(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
             @Schema(
                 description = "OAuth2 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
                 required = true,
@@ -1792,8 +1941,8 @@ class C9Service1TkV1AuthController(
         authorization: String?,
         @RequestBody
         inputVo: Api34InputVo
-    ) {
-        service.api34(httpServletResponse, inputVo, authorization!!)
+    ): Api34OutputVo? {
+        return service.api34(httpServletResponse, inputVo, authorization!!)
     }
 
     data class Api34InputVo(
@@ -1818,6 +1967,12 @@ class C9Service1TkV1AuthController(
         val verificationCode: String
     )
 
+    data class Api34OutputVo(
+        @Schema(description = "이메일의 고유값", required = true, example = "1")
+        @JsonProperty("emailUid")
+        val emailUid: Long
+    )
+
 
     ////
     @Operation(
@@ -1835,17 +1990,12 @@ class C9Service1TkV1AuthController(
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
         authorization: String?,
-        @RequestBody
-        inputVo: Api35InputVo
+        @Parameter(name = "emailUid", description = "이메일의 고유값", example = "1")
+        @PathVariable("emailUid")
+        emailUid: Long
     ) {
-        service.api35(httpServletResponse, inputVo, authorization!!)
+        service.api35(httpServletResponse, emailUid, authorization!!)
     }
-
-    data class Api35InputVo(
-        @Schema(description = "제거할 이메일", required = true, example = "test@gmail.com")
-        @JsonProperty("email")
-        val email: String
-    )
 
 
     ////
@@ -1959,8 +2109,8 @@ class C9Service1TkV1AuthController(
         authorization: String?,
         @RequestBody
         inputVo: Api38InputVo
-    ) {
-        service.api38(httpServletResponse, inputVo, authorization!!)
+    ): Api38OutputVo? {
+        return service.api38(httpServletResponse, inputVo, authorization!!)
     }
 
     data class Api38InputVo(
@@ -1985,6 +2135,12 @@ class C9Service1TkV1AuthController(
         val verificationCode: String
     )
 
+    data class Api38OutputVo(
+        @Schema(description = "이메일의 고유값", required = true, example = "1")
+        @JsonProperty("emailUid")
+        val emailUid: Long
+    )
+
 
     ////
     @Operation(
@@ -2002,17 +2158,12 @@ class C9Service1TkV1AuthController(
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
         authorization: String?,
-        @RequestBody
-        inputVo: Api39InputVo
+        @Parameter(name = "phoneUid", description = "전화번호의 고유값", example = "1")
+        @PathVariable("phoneUid")
+        phoneUid: Long
     ) {
-        service.api39(httpServletResponse, inputVo, authorization!!)
+        service.api39(httpServletResponse, phoneUid, authorization!!)
     }
-
-    data class Api39InputVo(
-        @Schema(description = "제거할 전화번호", required = true, example = "82)000-0000-0000")
-        @JsonProperty("phoneNumber")
-        val phoneNumber: String
-    )
 
 
     ////
@@ -2117,24 +2268,12 @@ class C9Service1TkV1AuthController(
         @Parameter(hidden = true)
         @RequestHeader("Authorization")
         authorization: String?,
-        @RequestBody
-        inputVo: Api41InputVo
+        @Parameter(name = "oAuth2Uid", description = "OAuth2 고유값", example = "1")
+        @PathVariable("oAuth2Uid")
+        oAuth2Uid: Long
     ) {
-        service.api41(httpServletResponse, inputVo, authorization!!)
+        service.api41(httpServletResponse, oAuth2Uid, authorization!!)
     }
-
-    data class Api41InputVo(
-        @Schema(
-            description = "제거할 oAuth2 종류 (1 : Google, 2 : Naver, 3 : Kakao, 4 : Apple)",
-            required = true,
-            example = "1"
-        )
-        @JsonProperty("oauth2Type")
-        val oauth2Type: Int,
-        @Schema(description = "제거할 oAuth2 고유값", required = true, example = "asdf1234")
-        @JsonProperty("oauth2Id")
-        val oauth2Id: String
-    )
 
 
     ////
@@ -2227,10 +2366,7 @@ class C9Service1TkV1AuthController(
             val uid: Long,
             @Schema(description = "프로필 이미지 Full URL", required = true, example = "https://profile-image.com/1.jpg")
             @JsonProperty("imageFullUrl")
-            val imageFullUrl: String,
-            @Schema(description = "대표 프로필 여부", required = true, example = "true")
-            @JsonProperty("is_front")
-            val isFront: Boolean
+            val imageFullUrl: String
         )
     }
 
@@ -2341,5 +2477,133 @@ class C9Service1TkV1AuthController(
         fileName: String
     ): ResponseEntity<Resource>? {
         return service.api48(httpServletResponse, fileName)
+    }
+
+
+    ////
+    @Operation(
+        summary = "N49 : 내 대표 이메일 정보 가져오기 <>",
+        description = "내 대표 이메일 정보 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작"
+    )
+    @GetMapping("/my-front-email")
+    @PreAuthorize("isAuthenticated()")
+    fun api49(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api49OutputVo? {
+        return service.api49(httpServletResponse, authorization!!)
+    }
+
+    data class Api49OutputVo(
+        @Schema(description = "내 대표 이메일 정보", required = true)
+        @JsonProperty("myFrontEmailInfo")
+        val myFrontEmailInfo: EmailInfo?
+    ) {
+        @Schema(description = "이메일 정보")
+        data class EmailInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "이메일 주소", required = true, example = "test@gmail.com")
+            @JsonProperty("emailAddress")
+            val emailAddress: String
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N50 : 내 대표 이메일 설정하기 <>",
+        description = "내가 등록한 이메일들 중 대표 이메일 설정하기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1. 선택한 emailUid 가 없습니다."
+    )
+    @PatchMapping("/my-front-email")
+    @PreAuthorize("isAuthenticated()")
+    fun api50(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "emailUid", description = "대표 이메일로 설정할 이메일의 고유값(null 이라면 대표 이메일 해제)", example = "1")
+        @RequestParam(value = "emailUid")
+        emailUid: Long?
+    ) {
+        service.api50(
+            httpServletResponse,
+            authorization!!,
+            emailUid
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N51 : 내 대표 전화번호 정보 가져오기 <>",
+        description = "내 대표 전화번호 정보 가져오기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작"
+    )
+    @GetMapping("/my-front-phone-number")
+    @PreAuthorize("isAuthenticated()")
+    fun api51(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?
+    ): Api51OutputVo? {
+        return service.api51(httpServletResponse, authorization!!)
+    }
+
+    data class Api51OutputVo(
+        @Schema(description = "내 대표 전화번호 정보", required = true)
+        @JsonProperty("myFrontPhoneNumberInfo")
+        val myFrontPhoneNumberInfo: PhoneNumberInfo?
+    ) {
+        @Schema(description = "전화번호 정보")
+        data class PhoneNumberInfo(
+            @Schema(description = "행 고유값", required = true, example = "1")
+            @JsonProperty("uid")
+            val uid: Long,
+            @Schema(description = "전화번호", required = true, example = "82)010-6222-6461")
+            @JsonProperty("phoneNumber")
+            val phoneNumber: String
+        )
+    }
+
+
+    ////
+    @Operation(
+        summary = "N52 : 내 대표 전화번호 설정하기 <>",
+        description = "내가 등록한 전화번호들 중 대표 전화번호 설정하기\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작\n\n" +
+                "1. 선택한 phoneNumberUid 가 없습니다."
+    )
+    @PatchMapping("/my-front-phone-number")
+    @PreAuthorize("isAuthenticated()")
+    fun api52(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(name = "phoneNumberUid", description = "대표 전화번호로 설정할 전화번호의 고유값(null 이라면 대표 전화번호 해제)", example = "1")
+        @RequestParam(value = "phoneNumberUid")
+        phoneNumberUid: Long?
+    ) {
+        service.api52(
+            httpServletResponse,
+            authorization!!,
+            phoneNumberUid
+        )
     }
 }

@@ -299,21 +299,42 @@ class C9Service1TkV1AuthService(
             )
         )
 
+        val profileData =
+            database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(memberUid, true)
+        val myProfileList: ArrayList<C9Service1TkV1AuthController.Api5OutputVo.ProfileInfo> = arrayListOf()
+        for (profile in profileData) {
+            myProfileList.add(
+                C9Service1TkV1AuthController.Api5OutputVo.ProfileInfo(
+                    profile.uid!!,
+                    profile.imageFullUrl,
+                    profile.uid == member.frontProfileUid
+                )
+            )
+        }
+
         val emailEntityList =
             database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid, true)
-        val emailList = ArrayList<String>()
+        val myEmailList: ArrayList<C9Service1TkV1AuthController.Api5OutputVo.EmailInfo> = arrayListOf()
         for (emailEntity in emailEntityList) {
-            emailList.add(
-                emailEntity.emailAddress
+            myEmailList.add(
+                C9Service1TkV1AuthController.Api5OutputVo.EmailInfo(
+                    emailEntity.uid!!,
+                    emailEntity.emailAddress,
+                    emailEntity.uid == member.frontEmailUid
+                )
             )
         }
 
         val phoneEntityList =
             database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid, true)
-        val phoneNumberList = ArrayList<String>()
-        for (emailEntity in phoneEntityList) {
-            phoneNumberList.add(
-                emailEntity.phoneNumber
+        val myPhoneNumberList: ArrayList<C9Service1TkV1AuthController.Api5OutputVo.PhoneNumberInfo> = arrayListOf()
+        for (phoneEntity in phoneEntityList) {
+            myPhoneNumberList.add(
+                C9Service1TkV1AuthController.Api5OutputVo.PhoneNumberInfo(
+                    phoneEntity.uid!!,
+                    phoneEntity.phoneNumber,
+                    phoneEntity.uid == member.frontPhoneUid
+                )
             )
         }
 
@@ -323,39 +344,27 @@ class C9Service1TkV1AuthService(
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
                 C9Service1TkV1AuthController.Api5OutputVo.OAuth2Info(
+                    oAuth2Entity.uid!!,
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
             )
         }
 
-        val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-            memberUid,
-            true
-        )
-
-        var frontProfileFullUrl: String? = null
-        for (profile in profileData) {
-            if (profile.isSelected) {
-                frontProfileFullUrl = profile.imageFullUrl
-                break
-            }
-        }
-
         httpServletResponse.setHeader("api-result-code", "0")
         return C9Service1TkV1AuthController.Api5OutputVo(
             memberUidString,
             member.nickName,
-            frontProfileFullUrl,
             roleList,
             "Bearer",
             jwtAccessToken,
             jwtRefreshToken,
             accessTokenExpireWhen,
             refreshTokenExpireWhen,
-            emailList,
-            phoneNumberList,
             myOAuth2List,
+            myProfileList,
+            myEmailList,
+            myPhoneNumberList,
             member.accountPassword == null
         )
     }
@@ -649,21 +658,42 @@ class C9Service1TkV1AuthService(
             )
         )
 
+        val profileData =
+            database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
+        val myProfileList: ArrayList<C9Service1TkV1AuthController.Api7OutputVo.ProfileInfo> = arrayListOf()
+        for (profile in profileData) {
+            myProfileList.add(
+                C9Service1TkV1AuthController.Api7OutputVo.ProfileInfo(
+                    profile.uid!!,
+                    profile.imageFullUrl,
+                    profile.uid == member.frontProfileUid
+                )
+            )
+        }
+
         val emailEntityList =
             database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
-        val emailList = ArrayList<String>()
+        val myEmailList: ArrayList<C9Service1TkV1AuthController.Api7OutputVo.EmailInfo> = arrayListOf()
         for (emailEntity in emailEntityList) {
-            emailList.add(
-                emailEntity.emailAddress
+            myEmailList.add(
+                C9Service1TkV1AuthController.Api7OutputVo.EmailInfo(
+                    emailEntity.uid!!,
+                    emailEntity.emailAddress,
+                    emailEntity.uid == member.frontEmailUid
+                )
             )
         }
 
         val phoneEntityList =
             database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
-        val phoneNumberList = ArrayList<String>()
-        for (emailEntity in phoneEntityList) {
-            phoneNumberList.add(
-                emailEntity.phoneNumber
+        val myPhoneNumberList: ArrayList<C9Service1TkV1AuthController.Api7OutputVo.PhoneNumberInfo> = arrayListOf()
+        for (phoneEntity in phoneEntityList) {
+            myPhoneNumberList.add(
+                C9Service1TkV1AuthController.Api7OutputVo.PhoneNumberInfo(
+                    phoneEntity.uid!!,
+                    phoneEntity.phoneNumber,
+                    phoneEntity.uid == member.frontPhoneUid
+                )
             )
         }
 
@@ -673,39 +703,27 @@ class C9Service1TkV1AuthService(
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
                 C9Service1TkV1AuthController.Api7OutputVo.OAuth2Info(
+                    oAuth2Entity.uid!!,
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
             )
         }
 
-        val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-            snsOauth2.memberUid,
-            true
-        )
-
-        var frontProfileFullUrl: String? = null
-        for (profile in profileData) {
-            if (profile.isSelected) {
-                frontProfileFullUrl = profile.imageFullUrl
-                break
-            }
-        }
-
         httpServletResponse.setHeader("api-result-code", "0")
         return C9Service1TkV1AuthController.Api7OutputVo(
             memberUidString,
             member.nickName,
-            frontProfileFullUrl,
             roleList,
             "Bearer",
             jwtAccessToken,
             jwtRefreshToken,
             accessTokenExpireWhen,
             refreshTokenExpireWhen,
-            emailList,
-            phoneNumberList,
             myOAuth2List,
+            myProfileList,
+            myEmailList,
+            myPhoneNumberList,
             member.accountPassword == null
         )
     }
@@ -839,21 +857,42 @@ class C9Service1TkV1AuthService(
             )
         )
 
+        val profileData =
+            database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
+        val myProfileList: ArrayList<C9Service1TkV1AuthController.Api7Dot1OutputVo.ProfileInfo> = arrayListOf()
+        for (profile in profileData) {
+            myProfileList.add(
+                C9Service1TkV1AuthController.Api7Dot1OutputVo.ProfileInfo(
+                    profile.uid!!,
+                    profile.imageFullUrl,
+                    profile.uid == member.frontProfileUid
+                )
+            )
+        }
+
         val emailEntityList =
             database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
-        val emailList = ArrayList<String>()
+        val myEmailList: ArrayList<C9Service1TkV1AuthController.Api7Dot1OutputVo.EmailInfo> = arrayListOf()
         for (emailEntity in emailEntityList) {
-            emailList.add(
-                emailEntity.emailAddress
+            myEmailList.add(
+                C9Service1TkV1AuthController.Api7Dot1OutputVo.EmailInfo(
+                    emailEntity.uid!!,
+                    emailEntity.emailAddress,
+                    emailEntity.uid == member.frontEmailUid
+                )
             )
         }
 
         val phoneEntityList =
             database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(snsOauth2.memberUid, true)
-        val phoneNumberList = ArrayList<String>()
-        for (emailEntity in phoneEntityList) {
-            phoneNumberList.add(
-                emailEntity.phoneNumber
+        val myPhoneNumberList: ArrayList<C9Service1TkV1AuthController.Api7Dot1OutputVo.PhoneNumberInfo> = arrayListOf()
+        for (phoneEntity in phoneEntityList) {
+            myPhoneNumberList.add(
+                C9Service1TkV1AuthController.Api7Dot1OutputVo.PhoneNumberInfo(
+                    phoneEntity.uid!!,
+                    phoneEntity.phoneNumber,
+                    phoneEntity.uid == member.frontPhoneUid
+                )
             )
         }
 
@@ -863,39 +902,27 @@ class C9Service1TkV1AuthService(
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
                 C9Service1TkV1AuthController.Api7Dot1OutputVo.OAuth2Info(
+                    oAuth2Entity.uid!!,
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
             )
         }
 
-        val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-            snsOauth2.memberUid,
-            true
-        )
-
-        var frontProfileFullUrl: String? = null
-        for (profile in profileData) {
-            if (profile.isSelected) {
-                frontProfileFullUrl = profile.imageFullUrl
-                break
-            }
-        }
-
         httpServletResponse.setHeader("api-result-code", "0")
         return C9Service1TkV1AuthController.Api7Dot1OutputVo(
             memberUidString,
             member.nickName,
-            frontProfileFullUrl,
             roleList,
             "Bearer",
             jwtAccessToken,
             jwtRefreshToken,
             accessTokenExpireWhen,
             refreshTokenExpireWhen,
-            emailList,
-            phoneNumberList,
             myOAuth2List,
+            myProfileList,
+            myEmailList,
+            myPhoneNumberList,
             member.accountPassword == null
         )
     }
@@ -1022,7 +1049,7 @@ class C9Service1TkV1AuthService(
 
                     // 멤버의 권한 리스트를 조회 후 반환
                     val memberRoleList = database1Service1MemberRoleDataRepository.findAllByMemberUidAndRowActivate(
-                        accessTokenMemberUid.toLong(),
+                        memberInfo.uid!!,
                         true
                     )
 
@@ -1072,7 +1099,7 @@ class C9Service1TkV1AuthService(
 
                     database1Service1LogInTokenInfoRepository.save(
                         Database1_Service1_LogInTokenInfo(
-                            accessTokenMemberUid.toLong(),
+                            memberInfo.uid!!,
                             "Bearer",
                             LocalDateTime.now(),
                             newJwtAccessToken,
@@ -1091,70 +1118,85 @@ class C9Service1TkV1AuthService(
                         )
                     )
 
-                    val emailEntityList = database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(
-                        accessTokenMemberUid.toLong(),
-                        true
-                    )
-                    val emailList = ArrayList<String>()
-                    for (emailEntity in emailEntityList) {
-                        emailList.add(
-                            emailEntity.emailAddress
+                    val profileData =
+                        database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
+                            memberInfo.uid!!,
+                            true
+                        )
+                    val myProfileList: ArrayList<C9Service1TkV1AuthController.Api9OutputVo.ProfileInfo> = arrayListOf()
+                    for (profile in profileData) {
+                        myProfileList.add(
+                            C9Service1TkV1AuthController.Api9OutputVo.ProfileInfo(
+                                profile.uid!!,
+                                profile.imageFullUrl,
+                                profile.uid == memberInfo.frontProfileUid
+                            )
                         )
                     }
 
-                    val phoneEntityList = database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
-                        accessTokenMemberUid.toLong(),
-                        true
-                    )
-                    val phoneNumberList = ArrayList<String>()
-                    for (emailEntity in phoneEntityList) {
-                        phoneNumberList.add(
-                            emailEntity.phoneNumber
+                    val emailEntityList =
+                        database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(
+                            memberInfo.uid!!,
+                            true
+                        )
+                    val myEmailList: ArrayList<C9Service1TkV1AuthController.Api9OutputVo.EmailInfo> = arrayListOf()
+                    for (emailEntity in emailEntityList) {
+                        myEmailList.add(
+                            C9Service1TkV1AuthController.Api9OutputVo.EmailInfo(
+                                emailEntity.uid!!,
+                                emailEntity.emailAddress,
+                                emailEntity.uid == memberInfo.frontEmailUid
+                            )
+                        )
+                    }
+
+                    val phoneEntityList =
+                        database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
+                            memberInfo.uid!!,
+                            true
+                        )
+                    val myPhoneNumberList: ArrayList<C9Service1TkV1AuthController.Api9OutputVo.PhoneNumberInfo> =
+                        arrayListOf()
+                    for (phoneEntity in phoneEntityList) {
+                        myPhoneNumberList.add(
+                            C9Service1TkV1AuthController.Api9OutputVo.PhoneNumberInfo(
+                                phoneEntity.uid!!,
+                                phoneEntity.phoneNumber,
+                                phoneEntity.uid == memberInfo.frontPhoneUid
+                            )
                         )
                     }
 
                     val oAuth2EntityList =
                         database1Service1MemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(
-                            accessTokenMemberUid.toLong(),
+                            memberInfo.uid!!,
                             true
                         )
                     val myOAuth2List = ArrayList<C9Service1TkV1AuthController.Api9OutputVo.OAuth2Info>()
                     for (oAuth2Entity in oAuth2EntityList) {
                         myOAuth2List.add(
                             C9Service1TkV1AuthController.Api9OutputVo.OAuth2Info(
+                                oAuth2Entity.uid!!,
                                 oAuth2Entity.oauth2TypeCode.toInt(),
                                 oAuth2Entity.oauth2Id
                             )
                         )
                     }
 
-                    val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-                        accessTokenMemberUid.toLong(),
-                        true
-                    )
-
-                    var frontProfileFullUrl: String? = null
-                    for (profile in profileData) {
-                        if (profile.isSelected) {
-                            frontProfileFullUrl = profile.imageFullUrl
-                            break
-                        }
-                    }
-
                     httpServletResponse.setHeader("api-result-code", "0")
                     return C9Service1TkV1AuthController.Api9OutputVo(
                         accessTokenMemberUid,
                         memberInfo.nickName,
-                        frontProfileFullUrl,
                         roleList,
                         "Bearer",
                         newJwtAccessToken,
                         newRefreshToken,
                         accessTokenExpireWhen,
                         refreshTokenExpireWhen,
-                        emailList,
-                        phoneNumberList,
                         myOAuth2List,
+                        myProfileList,
+                        myEmailList,
+                        myPhoneNumberList,
                         memberInfo.accountPassword == null
                     )
                 }
@@ -1403,18 +1445,23 @@ class C9Service1TkV1AuthService(
                 Database1_Service1_MemberData(
                     inputVo.nickName,
                     password,
+                    null,
+                    null,
+                    null,
                     true
                 )
             )
 
             // 이메일 저장
-            database1Service1MemberEmailDataRepository.save(
+            val database1Service2MemberEmailData = database1Service1MemberEmailDataRepository.save(
                 Database1_Service1_MemberEmailData(
                     database1MemberUser.uid!!,
                     inputVo.email,
                     true
                 )
             )
+
+            database1MemberUser.frontEmailUid = database1Service2MemberEmailData.uid!!
 
             // 역할 저장
             val database1MemberUserRoleList = ArrayList<Database1_Service1_MemberRoleData>()
@@ -1477,15 +1524,19 @@ class C9Service1TkV1AuthService(
                 savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
                 //----------------------------------------------------------------------------------------------------------
 
-                database1Service1MemberProfileDataRepository.save(
-                    Database1_Service1_MemberProfileData(
-                        database1MemberUser.uid!!,
-                        savedProfileImageUrl,
-                        true,
-                        rowActivate = true
+                val database1Service1MemberProfileData =
+                    database1Service1MemberProfileDataRepository.save(
+                        Database1_Service1_MemberProfileData(
+                            database1MemberUser.uid!!,
+                            savedProfileImageUrl,
+                            true
+                        )
                     )
-                )
+
+                database1MemberUser.frontProfileUid = database1Service1MemberProfileData.uid!!
             }
+
+            database1Service1MemberDataRepository.save(database1MemberUser)
 
             // 확인 완료된 검증 요청 정보 삭제
             emailVerification.rowActivate = false
@@ -1675,18 +1726,24 @@ class C9Service1TkV1AuthService(
                 Database1_Service1_MemberData(
                     inputVo.nickName,
                     password,
+                    null,
+                    null,
+                    null,
                     true
                 )
             )
 
             // 전화번호 저장
-            database1Service1MemberPhoneDataRepository.save(
-                Database1_Service1_MemberPhoneData(
-                    database1MemberUser.uid!!,
-                    inputVo.phoneNumber,
-                    true
+            val database1Service1MemberPhoneData =
+                database1Service1MemberPhoneDataRepository.save(
+                    Database1_Service1_MemberPhoneData(
+                        database1MemberUser.uid!!,
+                        inputVo.phoneNumber,
+                        true
+                    )
                 )
-            )
+
+            database1MemberUser.frontPhoneUid = database1Service1MemberPhoneData.uid
 
             // 역할 저장
             val database1MemberUserRoleList = ArrayList<Database1_Service1_MemberRoleData>()
@@ -1749,15 +1806,18 @@ class C9Service1TkV1AuthService(
                 savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
                 //----------------------------------------------------------------------------------------------------------
 
-                database1Service1MemberProfileDataRepository.save(
+                val database1Service1MemberProfileData = database1Service1MemberProfileDataRepository.save(
                     Database1_Service1_MemberProfileData(
                         database1MemberUser.uid!!,
                         savedProfileImageUrl,
-                        true,
-                        rowActivate = true
+                        true
                     )
                 )
+
+                database1MemberUser.frontProfileUid = database1Service1MemberProfileData.uid
             }
+
+            database1Service1MemberDataRepository.save(database1MemberUser)
 
             // 확인 완료된 검증 요청 정보 삭제
             phoneNumberVerification.rowActivate = false
@@ -2108,6 +2168,9 @@ class C9Service1TkV1AuthService(
                 Database1_Service1_MemberData(
                     inputVo.nickName,
                     null,
+                    null,
+                    null,
+                    null,
                     true
                 )
             )
@@ -2183,15 +2246,18 @@ class C9Service1TkV1AuthService(
                 savedProfileImageUrl = "${externalAccessAddress}/service1/tk/v1/auth/member-profile/$savedFileName"
                 //----------------------------------------------------------------------------------------------------------
 
-                database1Service1MemberProfileDataRepository.save(
+                val database1Service1MemberProfileData = database1Service1MemberProfileDataRepository.save(
                     Database1_Service1_MemberProfileData(
                         database1MemberUser.uid!!,
                         savedProfileImageUrl,
-                        true,
-                        rowActivate = true
+                        true
                     )
                 )
+
+                database1MemberUser.frontProfileUid = database1Service1MemberProfileData.uid
             }
+
+            database1Service1MemberDataRepository.save(database1MemberUser)
 
             // 확인 완료된 검증 요청 정보 삭제
             oauth2Verification.rowActivate = false
@@ -2679,56 +2745,6 @@ class C9Service1TkV1AuthService(
 
 
     ////
-    fun api28(
-        httpServletResponse: HttpServletResponse,
-        authorization: String
-    ): C9Service1TkV1AuthController.Api28OutputVo {
-        val memberUid = JwtTokenUtilObject.getMemberUid(
-            authorization.split(" ")[1].trim(),
-            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
-            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
-        )
-
-        val emailEntityList =
-            database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val emailList = ArrayList<String>()
-        for (emailEntity in emailEntityList) {
-            emailList.add(
-                emailEntity.emailAddress
-            )
-        }
-
-        val phoneEntityList =
-            database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val phoneNumberList = ArrayList<String>()
-        for (emailEntity in phoneEntityList) {
-            phoneNumberList.add(
-                emailEntity.phoneNumber
-            )
-        }
-
-        val oAuth2EntityList =
-            database1Service1MemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val myOAuth2List = ArrayList<C9Service1TkV1AuthController.Api28OutputVo.OAuth2Info>()
-        for (oAuth2Entity in oAuth2EntityList) {
-            myOAuth2List.add(
-                C9Service1TkV1AuthController.Api28OutputVo.OAuth2Info(
-                    oAuth2Entity.oauth2TypeCode.toInt(),
-                    oAuth2Entity.oauth2Id
-                )
-            )
-        }
-
-        httpServletResponse.setHeader("api-result-code", "0")
-        return C9Service1TkV1AuthController.Api28OutputVo(
-            emailList,
-            phoneNumberList,
-            myOAuth2List
-        )
-    }
-
-
-    ////
     fun api29(
         httpServletResponse: HttpServletResponse,
         authorization: String
@@ -2739,12 +2755,21 @@ class C9Service1TkV1AuthService(
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
+        val member = database1Service1MemberDataRepository.findByUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )!!
+
         val emailEntityList =
             database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val emailList = ArrayList<String>()
+        val emailList = ArrayList<C9Service1TkV1AuthController.Api29OutputVo.EmailInfo>()
         for (emailEntity in emailEntityList) {
             emailList.add(
-                emailEntity.emailAddress
+                C9Service1TkV1AuthController.Api29OutputVo.EmailInfo(
+                    emailEntity.uid!!,
+                    emailEntity.emailAddress,
+                    emailEntity.uid == member.frontEmailUid
+                )
             )
         }
 
@@ -2766,12 +2791,21 @@ class C9Service1TkV1AuthService(
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
+        val member = database1Service1MemberDataRepository.findByUidAndRowActivate(
+            memberUid.toLong(),
+            true
+        )!!
+
         val phoneEntityList =
             database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(memberUid.toLong(), true)
-        val phoneNumberList = ArrayList<String>()
+        val phoneNumberList = ArrayList<C9Service1TkV1AuthController.Api30OutputVo.PhoneInfo>()
         for (emailEntity in phoneEntityList) {
             phoneNumberList.add(
-                emailEntity.phoneNumber
+                C9Service1TkV1AuthController.Api30OutputVo.PhoneInfo(
+                    emailEntity.uid!!,
+                    emailEntity.phoneNumber,
+                    emailEntity.uid == member.frontPhoneUid
+                )
             )
         }
 
@@ -2799,6 +2833,7 @@ class C9Service1TkV1AuthService(
         for (oAuth2Entity in oAuth2EntityList) {
             myOAuth2List.add(
                 C9Service1TkV1AuthController.Api31OutputVo.OAuth2Info(
+                    oAuth2Entity.uid!!,
                     oAuth2Entity.oauth2TypeCode.toInt(),
                     oAuth2Entity.oauth2Id
                 )
@@ -2944,7 +2979,7 @@ class C9Service1TkV1AuthService(
         httpServletResponse: HttpServletResponse,
         inputVo: C9Service1TkV1AuthController.Api34InputVo,
         authorization: String
-    ) {
+    ): C9Service1TkV1AuthController.Api34OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
@@ -2957,7 +2992,7 @@ class C9Service1TkV1AuthService(
         if (emailVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
-            return
+            return null
         }
 
         val emailVerification = emailVerificationOpt.get()
@@ -2968,14 +3003,14 @@ class C9Service1TkV1AuthService(
         ) {
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
-            return
+            return null
         }
 
         if (LocalDateTime.now().isAfter(emailVerification.verificationExpireWhen)) {
             // 만료됨
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "2")
-            return
+            return null
         }
 
         // 입력 코드와 발급된 코드와의 매칭
@@ -2990,11 +3025,11 @@ class C9Service1TkV1AuthService(
             if (isUserExists) { // 기존 회원이 있을 때
                 httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "4")
-                return
+                return null
             }
 
             // 이메일 추가
-            database1Service1MemberEmailDataRepository.save(
+            val database1Service1MemberEmailData = database1Service1MemberEmailDataRepository.save(
                 Database1_Service1_MemberEmailData(
                     memberUid.toLong(),
                     inputVo.email,
@@ -3007,11 +3042,13 @@ class C9Service1TkV1AuthService(
             database1Service1AddEmailVerificationDataRepository.save(emailVerification)
 
             httpServletResponse.setHeader("api-result-code", "0")
-            return
+            return C9Service1TkV1AuthController.Api34OutputVo(
+                database1Service1MemberEmailData.uid!!
+            )
         } else { // 코드 불일치
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "3")
-            return
+            return null
         }
     }
 
@@ -3020,7 +3057,7 @@ class C9Service1TkV1AuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api35(
         httpServletResponse: HttpServletResponse,
-        inputVo: C9Service1TkV1AuthController.Api35InputVo,
+        emailUid: Long,
         authorization: String
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
@@ -3031,24 +3068,13 @@ class C9Service1TkV1AuthService(
         val memberUidLong = memberUid.toLong()
 
         // 내 계정에 등록된 모든 이메일 리스트 가져오기
-        val myEmailList = database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(
+        val myEmail = database1Service1MemberEmailDataRepository.findByUidAndMemberUidAndRowActivate(
+            emailUid,
             memberUidLong,
             true
         )
 
-        if (myEmailList.isEmpty()) {
-            // 이메일 리스트가 비어있다면
-            httpServletResponse.setHeader("api-result-code", "0")
-            return
-        }
-
-        // 지우려는 이메일 정보 인덱스 찾기
-        val selectedEmailIdx = myEmailList.indexOfFirst {
-            it.emailAddress == inputVo.email
-        }
-
-        if (selectedEmailIdx == -1) {
-            // 지우려는 이메일 정보가 없다면
+        if (myEmail == null) {
             httpServletResponse.setHeader("api-result-code", "0")
             return
         }
@@ -3069,14 +3095,11 @@ class C9Service1TkV1AuthService(
             true
         )
 
-        if (isOauth2Exists || (member.accountPassword != null && (isMemberPhoneExists || myEmailList.size > 1))) {
-            // 사용 가능한 계정 로그인 정보가 존재
-            val selectedEmailEntity = myEmailList[selectedEmailIdx]
-
+        if (isOauth2Exists || (member.accountPassword != null && isMemberPhoneExists)) {
             // 이메일 지우기
-            selectedEmailEntity.rowActivate = false
+            myEmail.rowActivate = false
             database1Service1MemberEmailDataRepository.save(
-                selectedEmailEntity
+                myEmail
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
@@ -3225,7 +3248,7 @@ class C9Service1TkV1AuthService(
         httpServletResponse: HttpServletResponse,
         inputVo: C9Service1TkV1AuthController.Api38InputVo,
         authorization: String
-    ) {
+    ): C9Service1TkV1AuthController.Api38OutputVo? {
         val memberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
@@ -3238,7 +3261,7 @@ class C9Service1TkV1AuthService(
         if (phoneNumberVerificationOpt.isEmpty) { // 해당 이메일 검증을 요청한적이 없음
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
-            return
+            return null
         }
 
         val phoneNumberVerification = phoneNumberVerificationOpt.get()
@@ -3249,14 +3272,14 @@ class C9Service1TkV1AuthService(
         ) {
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "1")
-            return
+            return null
         }
 
         if (LocalDateTime.now().isAfter(phoneNumberVerification.verificationExpireWhen)) {
             // 만료됨
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "2")
-            return
+            return null
         }
 
         // 입력 코드와 발급된 코드와의 매칭
@@ -3271,11 +3294,11 @@ class C9Service1TkV1AuthService(
             if (isUserExists) { // 기존 회원이 있을 때
                 httpServletResponse.status = 500
                 httpServletResponse.setHeader("api-result-code", "4")
-                return
+                return null
             }
 
             // 이메일 추가
-            database1Service1MemberPhoneDataRepository.save(
+            val database1Service1MemberPhoneData = database1Service1MemberPhoneDataRepository.save(
                 Database1_Service1_MemberPhoneData(
                     memberUid.toLong(),
                     inputVo.phoneNumber,
@@ -3288,11 +3311,13 @@ class C9Service1TkV1AuthService(
             database1Service1AddPhoneNumberVerificationDataRepository.save(phoneNumberVerification)
 
             httpServletResponse.setHeader("api-result-code", "0")
-            return
+            return C9Service1TkV1AuthController.Api38OutputVo(
+                database1Service1MemberPhoneData.uid!!
+            )
         } else { // 코드 불일치
             httpServletResponse.status = 500
             httpServletResponse.setHeader("api-result-code", "3")
-            return
+            return null
         }
     }
 
@@ -3301,7 +3326,7 @@ class C9Service1TkV1AuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api39(
         httpServletResponse: HttpServletResponse,
-        inputVo: C9Service1TkV1AuthController.Api39InputVo,
+        phoneUid: Long,
         authorization: String
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
@@ -3312,27 +3337,17 @@ class C9Service1TkV1AuthService(
         val memberUidLong = memberUid.toLong()
 
         // 내 계정에 등록된 모든 전화번호 리스트 가져오기
-        val myPhoneList = database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
+        val myPhone = database1Service1MemberPhoneDataRepository.findByUidAndMemberUidAndRowActivate(
+            phoneUid,
             memberUidLong,
             true
         )
 
-        if (myPhoneList.isEmpty()) {
+        if (myPhone == null) {
             // 전화번호 리스트가 비어있다면
+            httpServletResponse.setHeader("api-result-code", "0")
             return
         }
-
-        // 지우려는 전화번호 정보 인덱스 찾기
-        val selectedPhoneIdx = myPhoneList.indexOfFirst {
-            it.phoneNumber == inputVo.phoneNumber
-        }
-
-        if (selectedPhoneIdx == -1) {
-            // 지우려는 전화번호 정보가 없다면
-            return
-        }
-
-        val selectedPhoneEntity = myPhoneList[selectedPhoneIdx]
 
         val isOauth2Exists = database1Service1MemberOauth2LoginDataRepository.existsByMemberUidAndRowActivate(
             memberUidLong,
@@ -3350,13 +3365,13 @@ class C9Service1TkV1AuthService(
             true
         )
 
-        if (isOauth2Exists || (member.accountPassword != null && (isMemberEmailExists || myPhoneList.size > 1))) {
+        if (isOauth2Exists || (member.accountPassword != null && isMemberEmailExists)) {
             // 사용 가능한 계정 로그인 정보가 존재
 
             // 전화번호 지우기
-            selectedPhoneEntity.rowActivate = false
+            myPhone.rowActivate = false
             database1Service1MemberPhoneDataRepository.save(
-                selectedPhoneEntity
+                myPhone
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
@@ -3572,7 +3587,7 @@ class C9Service1TkV1AuthService(
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api41(
         httpServletResponse: HttpServletResponse,
-        inputVo: C9Service1TkV1AuthController.Api41InputVo,
+        oAuth2Uid: Long,
         authorization: String
     ) {
         val memberUid = JwtTokenUtilObject.getMemberUid(
@@ -3583,27 +3598,17 @@ class C9Service1TkV1AuthService(
         val memberUidLong = memberUid.toLong()
 
         // 내 계정에 등록된 모든 인증 리스트 가져오기
-        val myOAuth2List = database1Service1MemberOauth2LoginDataRepository.findAllByMemberUidAndRowActivate(
+        val myOAuth2 = database1Service1MemberOauth2LoginDataRepository.findByUidAndMemberUidAndRowActivate(
+            oAuth2Uid,
             memberUidLong,
             true
         )
 
-        if (myOAuth2List.isEmpty()) {
+        if (myOAuth2 == null) {
             // 리스트가 비어있다면
+            httpServletResponse.setHeader("api-result-code", "0")
             return
         }
-
-        // 지우려는 정보 인덱스 찾기
-        val selectedOAuth2Idx = myOAuth2List.indexOfFirst {
-            it.oauth2TypeCode == inputVo.oauth2Type.toByte() && it.oauth2Id == inputVo.oauth2Id
-        }
-
-        if (selectedOAuth2Idx == -1) {
-            // 지우려는 정보가 없다면
-            return
-        }
-
-        val selectedOAuth2Entity = myOAuth2List[selectedOAuth2Idx]
 
         val isMemberEmailExists = database1Service1MemberEmailDataRepository.existsByMemberUidAndRowActivate(
             memberUidLong,
@@ -3621,13 +3626,13 @@ class C9Service1TkV1AuthService(
             true
         )!!
 
-        if (myOAuth2List.size > 1 || (member.accountPassword != null && (isMemberEmailExists || isMemberPhoneExists))) {
+        if (member.accountPassword != null && (isMemberEmailExists || isMemberPhoneExists)) {
             // 사용 가능한 계정 로그인 정보가 존재
 
             // 로그인 정보 지우기
-            selectedOAuth2Entity.rowActivate = false
+            myOAuth2.rowActivate = false
             database1Service1MemberOauth2LoginDataRepository.save(
-                selectedOAuth2Entity
+                myOAuth2
             )
 
             httpServletResponse.setHeader("api-result-code", "0")
@@ -3730,9 +3735,13 @@ class C9Service1TkV1AuthService(
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
+        val memberUidLong = memberUid.toLong()
+
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(memberUidLong, true)!!
 
         val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-            memberUid.toLong(),
+            memberUidLong,
             true
         )
 
@@ -3742,7 +3751,7 @@ class C9Service1TkV1AuthService(
                 C9Service1TkV1AuthController.Api43OutputVo.ProfileInfo(
                     profile.uid!!,
                     profile.imageFullUrl,
-                    profile.isSelected
+                    profile.uid == memberInfo.frontProfileUid
                 )
             )
         }
@@ -3764,19 +3773,22 @@ class C9Service1TkV1AuthService(
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
+        val memberUidLong = memberUid.toLong()
+
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(memberUidLong, true)!!
 
         val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-            memberUid.toLong(),
+            memberUidLong,
             true
         )
 
         var myProfile: C9Service1TkV1AuthController.Api44OutputVo.ProfileInfo? = null
         for (profile in profileData) {
-            if (profile.isSelected) {
+            if (profile.uid!! == memberInfo.frontProfileUid) {
                 myProfile = C9Service1TkV1AuthController.Api44OutputVo.ProfileInfo(
                     profile.uid!!,
-                    profile.imageFullUrl,
-                    profile.isSelected
+                    profile.imageFullUrl
                 )
                 break
             }
@@ -3792,15 +3804,18 @@ class C9Service1TkV1AuthService(
     ////
     @CustomTransactional([Database1Config.TRANSACTION_NAME])
     fun api45(httpServletResponse: HttpServletResponse, authorization: String, profileUid: Long?) {
-        val memberUid = JwtTokenUtilObject.getMemberUid(
+        val accessTokenMemberUid = JwtTokenUtilObject.getMemberUid(
             authorization.split(" ")[1].trim(),
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
             SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
         )
 
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(accessTokenMemberUid.toLong(), true)!!
+
         // 내 프로필 리스트 가져오기
         val profileData = database1Service1MemberProfileDataRepository.findAllByMemberUidAndRowActivate(
-            memberUid.toLong(),
+            memberInfo.uid!!,
             true
         )
 
@@ -3812,25 +3827,16 @@ class C9Service1TkV1AuthService(
         }
 
         if (profileUid == null) {
-            for (profile in profileData) {
-                profile.isSelected = false
-                database1Service1MemberProfileDataRepository.save(profile)
-            }
+            memberInfo.frontProfileUid = null
+            database1Service1MemberDataRepository.save(memberInfo)
 
             httpServletResponse.setHeader("api-result-code", "0")
             return
         }
 
-
-        // 기존에 선택된 프로필
-        var frontProfile: Database1_Service1_MemberProfileData? = null
-
         // 이번에 선택하려는 프로필
         var selectedProfile: Database1_Service1_MemberProfileData? = null
         for (profile in profileData) {
-            if (profile.isSelected) {
-                frontProfile = profile
-            }
             if (profileUid == profile.uid) {
                 selectedProfile = profile
             }
@@ -3843,15 +3849,9 @@ class C9Service1TkV1AuthService(
             return
         }
 
-        if (frontProfile != null) {
-            // 기존에 선택된 프로필 선택 해제
-            frontProfile.isSelected = false
-            database1Service1MemberProfileDataRepository.save(frontProfile)
-        }
-
         // 이번에 선택하려는 프로필을 선택하기
-        selectedProfile.isSelected = true
-        database1Service1MemberProfileDataRepository.save(selectedProfile)
+        memberInfo.frontProfileUid = profileUid
+        database1Service1MemberDataRepository.save(memberInfo)
 
         httpServletResponse.setHeader("api-result-code", "0")
     }
@@ -3952,8 +3952,7 @@ class C9Service1TkV1AuthService(
             Database1_Service1_MemberProfileData(
                 memberUid.toLong(),
                 savedProfileImageUrl,
-                false,
-                rowActivate = true
+                true
             )
         )
 
@@ -4002,5 +4001,193 @@ class C9Service1TkV1AuthService(
             },
             HttpStatus.OK
         )
+    }
+
+
+    ////
+    fun api49(
+        httpServletResponse: HttpServletResponse,
+        authorization: String
+    ): C9Service1TkV1AuthController.Api49OutputVo? {
+        val memberUid = JwtTokenUtilObject.getMemberUid(
+            authorization.split(" ")[1].trim(),
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+        )
+        val memberUidLong = memberUid.toLong()
+
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(memberUidLong, true)!!
+
+        val emailData = database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        var myEmail: C9Service1TkV1AuthController.Api49OutputVo.EmailInfo? = null
+        for (email in emailData) {
+            if (email.uid!! == memberInfo.frontEmailUid) {
+                myEmail = C9Service1TkV1AuthController.Api49OutputVo.EmailInfo(
+                    email.uid!!,
+                    email.emailAddress
+                )
+                break
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return C9Service1TkV1AuthController.Api49OutputVo(
+            myEmail
+        )
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api50(httpServletResponse: HttpServletResponse, authorization: String, emailUid: Long?) {
+        val accessTokenMemberUid = JwtTokenUtilObject.getMemberUid(
+            authorization.split(" ")[1].trim(),
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+        )
+
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(accessTokenMemberUid.toLong(), true)!!
+
+        // 내 이메일 리스트 가져오기
+        val emailData = database1Service1MemberEmailDataRepository.findAllByMemberUidAndRowActivate(
+            memberInfo.uid!!,
+            true
+        )
+
+        if (emailData.isEmpty()) {
+            // 내 이메일이 하나도 없을 때
+            httpServletResponse.status = 500
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (emailUid == null) {
+            memberInfo.frontEmailUid = null
+            database1Service1MemberDataRepository.save(memberInfo)
+
+            httpServletResponse.setHeader("api-result-code", "0")
+            return
+        }
+
+        // 이번에 선택하려는 이메일
+        var selectedProfile: Database1_Service1_MemberEmailData? = null
+        for (email in emailData) {
+            if (emailUid == email.uid) {
+                selectedProfile = email
+            }
+        }
+
+        if (selectedProfile == null) {
+            // 이번에 선택하려는 이메일이 없을 때
+            httpServletResponse.status = 500
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        // 이번에 선택하려는 프로필을 선택하기
+        memberInfo.frontEmailUid = emailUid
+        database1Service1MemberDataRepository.save(memberInfo)
+
+        httpServletResponse.setHeader("api-result-code", "0")
+    }
+
+
+    ////
+    fun api51(
+        httpServletResponse: HttpServletResponse,
+        authorization: String
+    ): C9Service1TkV1AuthController.Api51OutputVo? {
+        val memberUid = JwtTokenUtilObject.getMemberUid(
+            authorization.split(" ")[1].trim(),
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+        )
+        val memberUidLong = memberUid.toLong()
+
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(memberUidLong, true)!!
+
+        val phoneNumberData = database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
+            memberUidLong,
+            true
+        )
+
+        var myPhone: C9Service1TkV1AuthController.Api51OutputVo.PhoneNumberInfo? = null
+        for (phone in phoneNumberData) {
+            if (phone.uid!! == memberInfo.frontPhoneUid) {
+                myPhone = C9Service1TkV1AuthController.Api51OutputVo.PhoneNumberInfo(
+                    phone.uid!!,
+                    phone.phoneNumber
+                )
+                break
+            }
+        }
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return C9Service1TkV1AuthController.Api51OutputVo(
+            myPhone
+        )
+    }
+
+
+    ////
+    @CustomTransactional([Database1Config.TRANSACTION_NAME])
+    fun api52(httpServletResponse: HttpServletResponse, authorization: String, phoneNumberUid: Long?) {
+        val accessTokenMemberUid = JwtTokenUtilObject.getMemberUid(
+            authorization.split(" ")[1].trim(),
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_INITIALIZATION_VECTOR,
+            SecurityConfig.AuthTokenFilterService1Tk.JWT_CLAIMS_AES256_ENCRYPTION_KEY
+        )
+
+        val memberInfo =
+            database1Service1MemberDataRepository.findByUidAndRowActivate(accessTokenMemberUid.toLong(), true)!!
+
+        // 내 전화번호 리스트 가져오기
+        val phoneNumberData = database1Service1MemberPhoneDataRepository.findAllByMemberUidAndRowActivate(
+            memberInfo.uid!!,
+            true
+        )
+
+        if (phoneNumberData.isEmpty()) {
+            // 내 전화번호가 하나도 없을 때
+            httpServletResponse.status = 500
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        if (phoneNumberUid == null) {
+            memberInfo.frontPhoneUid = null
+            database1Service1MemberDataRepository.save(memberInfo)
+
+            httpServletResponse.setHeader("api-result-code", "0")
+            return
+        }
+
+        // 이번에 선택하려는 전화번호
+        var selectedPhone: Database1_Service1_MemberPhoneData? = null
+        for (phone in phoneNumberData) {
+            if (phoneNumberUid == phone.uid) {
+                selectedPhone = phone
+            }
+        }
+
+        if (selectedPhone == null) {
+            // 이번에 선택하려는 전화번호가 없을 때
+            httpServletResponse.status = 500
+            httpServletResponse.setHeader("api-result-code", "1")
+            return
+        }
+
+        // 이번에 선택하려는 프로필을 선택하기
+        memberInfo.frontPhoneUid = phoneNumberUid
+        database1Service1MemberDataRepository.save(memberInfo)
+
+        httpServletResponse.setHeader("api-result-code", "0")
     }
 }

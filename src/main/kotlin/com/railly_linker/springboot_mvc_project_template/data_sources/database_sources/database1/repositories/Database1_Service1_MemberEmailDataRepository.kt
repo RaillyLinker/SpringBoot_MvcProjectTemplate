@@ -11,5 +11,6 @@ interface Database1_Service1_MemberEmailDataRepository : JpaRepository<Database1
     fun findByEmailAddressAndRowActivate(emailAddress: String, rowActivate: Boolean): Database1_Service1_MemberEmailData?
     fun existsByEmailAddressAndRowActivate(emailAddress: String, rowActivate: Boolean): Boolean
     fun findAllByMemberUidAndRowActivate(memberUid: Long, rowActivate: Boolean): List<Database1_Service1_MemberEmailData>
+    fun findByUidAndMemberUidAndRowActivate(uid: Long, memberUid: Long, rowActivate: Boolean): Database1_Service1_MemberEmailData?
     fun existsByMemberUidAndRowActivate(memberUid: Long, rowActivate: Boolean): Boolean
 }

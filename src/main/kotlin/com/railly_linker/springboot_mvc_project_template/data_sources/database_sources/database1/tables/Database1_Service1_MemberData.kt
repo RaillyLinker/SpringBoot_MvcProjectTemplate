@@ -18,6 +18,18 @@ class Database1_Service1_MemberData(
     @Comment("계정 로그인시 사용하는 비밀번호 (닉네임, 이메일, 전화번호 로그인에 모두 사용됨. OAuth2 만 등록했다면 null)")
     var accountPassword: String?,
 
+    @Column(name = "front_profile_uid", nullable = true, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("대표 프로필 Uid (service1.member_profile_data.uid)")
+    var frontProfileUid: Long?,
+
+    @Column(name = "front_email_uid", nullable = true, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("대표 이메일 Uid (service1.member_email_data.uid)")
+    var frontEmailUid: Long?,
+
+    @Column(name = "front_phone_uid", nullable = true, columnDefinition = "BIGINT UNSIGNED")
+    @Comment("대표 프로필 Uid (service1.member_phone_data.uid)")
+    var frontPhoneUid: Long?,
+
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")
     var rowActivate: Boolean

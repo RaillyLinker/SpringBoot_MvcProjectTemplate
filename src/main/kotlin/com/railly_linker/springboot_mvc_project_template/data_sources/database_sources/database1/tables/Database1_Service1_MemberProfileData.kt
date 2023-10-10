@@ -18,10 +18,6 @@ class Database1_Service1_MemberProfileData(
     @Comment("프로필 이미지 Full URL")
     var imageFullUrl: String,
 
-    @Column(name = "is_selected", nullable = false, columnDefinition = "BIT(1)")
-    @Comment("프로필 선택 여부")
-    var isSelected: Boolean,
-
     @Column(name = "row_activate", nullable = false, columnDefinition = "BIT(1)")
     @Comment("행 활성 여부")
     var rowActivate: Boolean

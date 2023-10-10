@@ -11,5 +11,6 @@ interface Database1_Service1_MemberPhoneDataRepository : JpaRepository<Database1
     fun findByPhoneNumberAndRowActivate(phoneNumber: String, rowActivate: Boolean): Database1_Service1_MemberPhoneData?
     fun existsByPhoneNumberAndRowActivate(phoneNumber: String, rowActivate: Boolean): Boolean
     fun findAllByMemberUidAndRowActivate(memberUid: Long, rowActivate: Boolean): List<Database1_Service1_MemberPhoneData>
+    fun findByUidAndMemberUidAndRowActivate(uid: Long, memberUid: Long, rowActivate: Boolean): Database1_Service1_MemberPhoneData?
     fun existsByMemberUidAndRowActivate(memberUid: Long, rowActivate: Boolean): Boolean
 }
