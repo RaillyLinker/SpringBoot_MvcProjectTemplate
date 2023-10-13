@@ -2,8 +2,8 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c3_service
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.railly_linker.springboot_mvc_project_template.util_classes.SseEmitterWrapper
-import com.railly_linker.springboot_mvc_project_template.util_objects.SseEmitterUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_classes.SseEmitterWrapper
+import com.railly_linker.springboot_mvc_project_template.custom_objects.SseEmitterUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

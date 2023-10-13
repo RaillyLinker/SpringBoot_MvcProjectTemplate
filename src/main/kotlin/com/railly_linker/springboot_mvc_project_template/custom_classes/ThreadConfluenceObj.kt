@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.util_classes
+package com.railly_linker.springboot_mvc_project_template.custom_classes
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors

@@ -1,7 +1,7 @@
-package com.railly_linker.springboot_mvc_project_template.util_dis
+package com.railly_linker.springboot_mvc_project_template.custom_dis
 
 import com.railly_linker.springboot_mvc_project_template.configurations.MailConfig
-import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.CustomUtilObject
 import jakarta.mail.internet.InternetAddress
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mail.javamail.JavaMailSender

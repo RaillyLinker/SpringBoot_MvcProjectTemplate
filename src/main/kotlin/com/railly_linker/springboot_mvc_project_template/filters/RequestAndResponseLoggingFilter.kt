@@ -2,7 +2,7 @@ package com.railly_linker.springboot_mvc_project_template.filters
 
 import com.fasterxml.jackson.core.JacksonException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.CustomUtilObject
 import jakarta.annotation.PostConstruct
 import jakarta.servlet.AsyncEvent
 import jakarta.servlet.AsyncListener

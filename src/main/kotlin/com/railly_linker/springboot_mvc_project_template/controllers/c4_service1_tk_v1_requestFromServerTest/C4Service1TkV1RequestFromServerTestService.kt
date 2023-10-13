@@ -3,7 +3,7 @@ package com.railly_linker.springboot_mvc_project_template.controllers.c4_service
 import com.google.gson.Gson
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.LocalHostRequestApi
-import com.railly_linker.springboot_mvc_project_template.util_classes.SseClient
+import com.railly_linker.springboot_mvc_project_template.custom_classes.SseClient
 import jakarta.servlet.http.HttpServletResponse
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

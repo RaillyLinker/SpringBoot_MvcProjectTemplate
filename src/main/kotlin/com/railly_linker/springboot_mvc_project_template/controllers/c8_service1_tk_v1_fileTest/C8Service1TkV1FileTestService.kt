@@ -1,6 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c8_service1_tk_v1_fileTest
 
-import com.railly_linker.springboot_mvc_project_template.util_objects.CustomUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.CustomUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.util_objects
+package com.railly_linker.springboot_mvc_project_template.custom_objects
 
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.RepositoryNetworkRetrofit2
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.AppleIdAppleComRequestApi

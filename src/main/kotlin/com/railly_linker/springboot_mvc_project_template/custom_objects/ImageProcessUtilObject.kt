@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.util_objects
+package com.railly_linker.springboot_mvc_project_template.custom_objects
 
 import org.springframework.web.multipart.MultipartFile
 import java.awt.Image

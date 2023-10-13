@@ -1,7 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.configurations
 
 import com.railly_linker.springboot_mvc_project_template.ApplicationConstants
-import com.railly_linker.springboot_mvc_project_template.util_objects.JwtTokenUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.JwtTokenUtilObject
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

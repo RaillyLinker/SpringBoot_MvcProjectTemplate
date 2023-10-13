@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.util_objects
+package com.railly_linker.springboot_mvc_project_template.custom_objects
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

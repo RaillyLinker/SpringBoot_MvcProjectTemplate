@@ -1,8 +1,8 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c2_service1_tk_v1_test
 
 import com.railly_linker.springboot_mvc_project_template.data_sources.network_retrofit2.request_apis.FcmGoogleapisComRequestApi
-import com.railly_linker.springboot_mvc_project_template.util_dis.EmailSenderUtilDi
-import com.railly_linker.springboot_mvc_project_template.util_objects.*
+import com.railly_linker.springboot_mvc_project_template.custom_dis.EmailSenderUtilDi
+import com.railly_linker.springboot_mvc_project_template.custom_objects.*
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

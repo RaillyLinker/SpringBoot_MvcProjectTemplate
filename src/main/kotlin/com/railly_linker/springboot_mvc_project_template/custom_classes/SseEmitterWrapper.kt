@@ -1,6 +1,6 @@
-package com.railly_linker.springboot_mvc_project_template.util_classes
+package com.railly_linker.springboot_mvc_project_template.custom_classes
 
-import com.railly_linker.springboot_mvc_project_template.util_objects.SseEmitterUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.SseEmitterUtilObject
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.text.SimpleDateFormat
 import java.util.*

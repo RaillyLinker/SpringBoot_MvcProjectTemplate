@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.util_classes
+package com.railly_linker.springboot_mvc_project_template.custom_classes
 
 import okhttp3.*
 import okio.BufferedSource

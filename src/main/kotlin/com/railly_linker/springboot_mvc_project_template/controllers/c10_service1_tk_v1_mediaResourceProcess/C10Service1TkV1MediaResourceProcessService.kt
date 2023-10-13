@@ -1,7 +1,7 @@
 package com.railly_linker.springboot_mvc_project_template.controllers.c10_service1_tk_v1_mediaResourceProcess
 
-import com.railly_linker.springboot_mvc_project_template.util_objects.GifUtilObject
-import com.railly_linker.springboot_mvc_project_template.util_objects.ImageProcessUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.GifUtilObject
+import com.railly_linker.springboot_mvc_project_template.custom_objects.ImageProcessUtilObject
 import jakarta.servlet.http.HttpServletResponse
 import net.coobird.thumbnailator.Thumbnails
 import org.apache.commons.io.FilenameUtils

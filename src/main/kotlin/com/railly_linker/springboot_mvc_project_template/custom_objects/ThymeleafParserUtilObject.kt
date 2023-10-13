@@ -1,4 +1,4 @@
-package com.railly_linker.springboot_mvc_project_template.util_objects
+package com.railly_linker.springboot_mvc_project_template.custom_objects
 
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
