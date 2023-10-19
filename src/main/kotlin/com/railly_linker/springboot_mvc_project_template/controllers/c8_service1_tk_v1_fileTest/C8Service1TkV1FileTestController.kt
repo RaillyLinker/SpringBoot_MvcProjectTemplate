@@ -118,4 +118,23 @@ class C8Service1TkV1FileTestController(
     ) {
         service.api4(httpServletResponse)
     }
+
+
+    ////
+    @Operation(
+        summary = "N5 : 클라이언트 이미지 표시 테스트용 API",
+        description = "서버에서 이미지를 반환합니다. 클라이언트에서의 이미지 표시 시 PlaceHolder, Error 처리에 대응 할 수 있습니다.\n\n" +
+                "(api-result-code)\n\n" +
+                "0 : 정상 동작"
+    )
+    @GetMapping("/client-image-test")
+    fun api5(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(name = "delayTimeSecond", description = "이미지 파일 반환 대기 시간(0 은 바로, 음수는 에러 발생)", example = "0")
+        @RequestParam("delayTimeSecond")
+        delayTimeSecond: Int
+    ): ResponseEntity<Resource>? {
+        return service.api5(httpServletResponse, delayTimeSecond)
+    }
 }

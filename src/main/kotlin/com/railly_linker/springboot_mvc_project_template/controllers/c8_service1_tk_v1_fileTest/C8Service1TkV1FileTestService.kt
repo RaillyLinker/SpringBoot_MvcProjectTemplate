@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.InputStreamResource
 import org.springframework.core.io.Resource
 import org.springframework.http.ContentDisposition
@@ -22,6 +23,7 @@ import java.nio.file.Paths
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.zip.ZipOutputStream
+
 
 @Service
 class C8Service1TkV1FileTestService(
@@ -217,4 +219,26 @@ class C8Service1TkV1FileTestService(
 
 
     ////
+    fun api5(httpServletResponse: HttpServletResponse, delayTimeSecond: Int): ResponseEntity<Resource>? {
+        if (delayTimeSecond < 0) {
+            httpServletResponse.status = 500
+            return null
+        }
+
+        Thread.sleep(delayTimeSecond * 1000L)
+
+        val file: Resource = ClassPathResource("static/resource_c8_n5/client_image_test.jpg")
+
+        httpServletResponse.setHeader("api-result-code", "0")
+        return ResponseEntity<Resource>(
+            file,
+            HttpHeaders().apply {
+                this.contentDisposition = ContentDisposition.builder("attachment")
+                    .filename("client_image_test.jpg", StandardCharsets.UTF_8)
+                    .build()
+                this.add(HttpHeaders.CONTENT_TYPE, "image/jpeg")
+            },
+            HttpStatus.OK
+        )
+    }
 }
