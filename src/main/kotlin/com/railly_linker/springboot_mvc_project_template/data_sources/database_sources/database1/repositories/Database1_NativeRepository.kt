@@ -175,6 +175,13 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
 
 
     ////
+    // 1. 먼저 가져올 정보를 인터페이스에 맞게 가져옵니다.
+    //     주의할 점은, where 문을 절대 사용하지 않으며, order by 로 순서만 정렬해야 합니다.
+    //     이것이 orderedCoreTable 입니다.
+    // 2. orderedCoreTable 에 rowNum 을 붙여줍니다.
+    //     이것이 rowNumTable 입니다.
+    // 3. rowNumTable 에서 where 문을 사용하여, 동일한 쿼리 결과에서 원하는 uid 의 rowNum 을 찾고, 이보다 큰 rowNum 을 추려냅니다.
+    // 4. 3번을 했다면, 이제부터 where 문과 limit 을 사용하여 결과를 마음껏 필터링 하면 됩니다.
     @Query(
         nativeQuery = true,
         value = """
