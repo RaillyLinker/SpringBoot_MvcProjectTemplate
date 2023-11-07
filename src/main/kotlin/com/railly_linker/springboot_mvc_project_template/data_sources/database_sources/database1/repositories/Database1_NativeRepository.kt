@@ -178,53 +178,68 @@ interface Database1_NativeRepository : JpaRepository<Database1_Template_TestData
     @Query(
         nativeQuery = true,
         value = """
-            SELECT 
-            uid as uid, 
-            row_create_date as rowCreateDate, 
-            row_update_date as rowUpdateDate, 
-            content as content, random_num as randomNum, 
-            distance as distance 
-            FROM 
+            select
+            *
+            from
             (
-                SELECT 
-                *, 
-                ABS(test_data.random_num-:num) as distance, 
-                @rownum \:= @rownum + 1 AS row_num 
-                FROM 
-                template.test_data, 
-                (SELECT @rownum \:= 0) r 
-                WHERE 
-                row_activate = b'1' 
-                ORDER BY distance ASC
-            ) AS ordered_table
-            WHERE 
-            row_num > 
-            (
-                select if 
+                select
+                *,
+                @rownum \:= @rownum + 1 AS rowNum
+                from
                 (
-                    :lastItemUid > 0, 
+                    SELECT 
+                    uid as uid, 
+                    row_create_date as rowCreateDate, 
+                    row_update_date as rowUpdateDate, 
+                    content as content, random_num as randomNum,
+                    ABS(test_data.random_num-:num) as distance,
+                    row_activate as rowActivate
+                    from
+                    template.test_data
+                    order by
+                    distance asc
+                ) as orderedCoreTable,
+                (SELECT @rownum \:= 0) as rowNumStart
+            ) as rowNumTable
+            where
+            rowNum > 
+            (
+            select if
+            (
+                :lastItemUid > 0,
+                (
                     (
-                        SELECT 
-                        row_num 
-                        FROM (
-                            SELECT 
-                            *, 
-                            ABS(test_data.random_num-:num) as distance, 
-                            @rownum2 \:= @rownum2 + 1 AS row_num 
-                            FROM 
-                            template.test_data, 
-                            (SELECT @rownum2 \:= 0) r 
-                            WHERE 
-                            row_activate = b'1' 
-                            ORDER BY distance ASC
-                        ) AS ordered_table2 
-                        WHERE 
-                        uid = :lastItemUid
-                    ), 
-                    0
-                )
+                        select rowNumCopy
+                        from
+                        (
+                            select
+                            *,
+                            @rownumCopy \:= @rownumCopy + 1 AS rowNumCopy 
+                            from
+                            (
+                                SELECT 
+                                uid as uid, 
+                                row_create_date as rowCreateDate, 
+                                row_update_date as rowUpdateDate, 
+                                content as content, random_num as randomNum,
+                                ABS(test_data.random_num-:num) as distance,
+                                row_activate as rowActivate
+                                from
+                                template.test_data
+                                order by
+                                distance asc
+                            ) as orderedCoreTableCopy,
+                            (SELECT @rownumCopy \:= 0) as rowNumStartCopy
+                        ) as rowNumTableCopy
+                        where uid = :lastItemUid
+                    )
+                ),
+                0
             )
-            LIMIT :pageElementsCount
+            )
+            and
+            rowActivate = b'1'
+            limit :pageElementsCount
             """
     )
     fun selectListForC6N14(
