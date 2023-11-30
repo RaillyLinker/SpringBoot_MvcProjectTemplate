@@ -30,10 +30,20 @@ class MailConfig {
         props["mail.smtp.writetimeout"] = TIME_OUT_MILLIS.toString()
 
         // !!!SMTP 종류별 설정을 바꿔주기!!
+        // port 587 일 경우
         props["mail.transport.protocol"] = "smtp"
         props["mail.smtp.auth"] = "true"
         props["mail.smtp.starttls.enable"] = "true"
         props["mail.debug"] = "true"
+        
+        // port 465 일 경우
+//        props["mail.smtp.ssl.enable"] = "true"  // SSL 활성화
+//        props["mail.smtp.auth"] = "true"  // SMTP 인증 활성화
+//        props["mail.smtp.connectiontimeout"] = "10000"
+//        props["mail.smtp.timeout"] = "10000"
+//        props["mail.smtp.writetimeout"] = "10000"
+//        props["mail.smtp.ssl.checkserveridentity"] = "false"
+//        props["mail.smtp.ssl.trust"] = "*"
 
         return mailSender
     }
