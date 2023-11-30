@@ -35,7 +35,7 @@ class MailConfig {
         props["mail.smtp.auth"] = "true"
         props["mail.smtp.starttls.enable"] = "true"
         props["mail.debug"] = "true"
-        
+
         // port 465 일 경우
 //        props["mail.smtp.ssl.enable"] = "true"  // SSL 활성화
 //        props["mail.smtp.auth"] = "true"  // SMTP 인증 활성화
