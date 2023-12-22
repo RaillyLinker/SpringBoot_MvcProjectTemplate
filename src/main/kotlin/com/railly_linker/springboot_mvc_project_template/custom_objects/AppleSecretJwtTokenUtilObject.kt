@@ -1,7 +1,6 @@
 package com.railly_linker.springboot_mvc_project_template.custom_objects
 
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
 import org.bouncycastle.openssl.PEMParser
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
@@ -13,7 +12,6 @@ import java.security.PrivateKey
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-
 
 // [Apple Client Secret 생성용 JWT 토큰 유틸]
 object AppleSecretJwtTokenUtilObject {
@@ -43,17 +41,32 @@ object AppleSecretJwtTokenUtilObject {
     // <공개 메소드 공간>
     // (ClientSecret 발행)
     fun makeClientSecret(): String {
-        val expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant())
-        return Jwts.builder()
-            .setHeaderParam("kid", keyId)
-            .setHeaderParam("alg", "ES256")
-            .setIssuer(teamId)
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(expirationDate)
-            .setAudience("https://appleid.apple.com")
-            .setSubject(clientId)
-            .signWith(getPrivateKey(), SignatureAlgorithm.ES256)
-            .compact()
+        val jwtBuilder = Jwts.builder()
+
+        val headersMap = mutableMapOf<String, Any>()
+
+        headersMap["kid"] = keyId
+        headersMap["alg"] = "ES256"
+
+        jwtBuilder.header().empty().add(headersMap)
+
+        val claimsMap = mutableMapOf<String, Any>()
+
+        claimsMap["iss"] = teamId
+        claimsMap["iat"] = Date(System.currentTimeMillis())
+        claimsMap["exp"] = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant())
+        claimsMap["aud"] = "https://appleid.apple.com"
+        claimsMap["sub"] = clientId
+
+        jwtBuilder.claims().empty().add(claimsMap)
+
+        jwtBuilder
+            .signWith(
+                getPrivateKey(),
+                Jwts.SIG.ES256
+            )
+
+        return jwtBuilder.compact()
     }
 
 

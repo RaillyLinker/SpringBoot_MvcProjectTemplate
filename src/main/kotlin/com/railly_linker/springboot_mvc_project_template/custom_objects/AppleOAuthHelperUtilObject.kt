@@ -62,7 +62,10 @@ object AppleOAuthHelperUtilObject {
             val keyFactory = KeyFactory.getInstance(appleKeyObject.kty)
             val publicKey = keyFactory.generatePublic(publicKeySpec)
 
-            val memberInfo: Claims = Jwts.parser().setSigningKey(publicKey).build().parseClaimsJws(idToken).body
+            val jwtParser = Jwts.parser()
+            jwtParser.verifyWith(publicKey)
+
+            val memberInfo: Claims = jwtParser.build().parseSignedClaims(idToken).payload
 
             return AppleProfileData(
                 memberInfo["sub"] as String,
