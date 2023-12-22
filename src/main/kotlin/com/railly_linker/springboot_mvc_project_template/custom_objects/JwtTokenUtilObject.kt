@@ -2,9 +2,7 @@ package com.railly_linker.springboot_mvc_project_template.custom_objects
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -165,46 +163,57 @@ object JwtTokenUtilObject {
         issuer: String,
         jwtSecretKeyString: String
     ): String {
-        val claims: Claims = Jwts.claims()
+        val jwtBuilder = Jwts.builder()
 
-        // JWT 내부에 정보 입력
-        claims["mu"] = CryptoUtilObject.encryptAES256(
+        val headersMap = mutableMapOf<String, Any>()
+
+        headersMap["typ"] = "JWT"
+
+        jwtBuilder.header().empty().add(headersMap)
+
+        val claimsMap = mutableMapOf<String, Any>()
+
+        // member uid
+        claimsMap["mu"] = CryptoUtilObject.encryptAES256(
             memberUid,
             "AES/CBC/PKCS5Padding",
             jwtClaimsAes256InitializationVector,
             jwtClaimsAes256EncryptionKey
-        ) // member uid
-        claims["tu"] = CryptoUtilObject.encryptAES256(
+        )
+
+        // token usage
+        claimsMap["tu"] = CryptoUtilObject.encryptAES256(
             tokenUsage,
             "AES/CBC/PKCS5Padding",
             jwtClaimsAes256InitializationVector,
             jwtClaimsAes256EncryptionKey
-        ) // token usage
+        )
+
+        claimsMap["iss"] = issuer
+        claimsMap["iat"] = Date(System.currentTimeMillis())
+        claimsMap["exp"] = Date(System.currentTimeMillis() + expireTimeMs)
+
         if (memberRoleList != null) {
-            claims["mrl"] = CryptoUtilObject.encryptAES256(
+            // member role list
+            claimsMap["mrl"] = CryptoUtilObject.encryptAES256(
                 Gson().toJson(
                     memberRoleList
                 ),
                 "AES/CBC/PKCS5Padding",
                 jwtClaimsAes256InitializationVector,
                 jwtClaimsAes256EncryptionKey
-            ) // member role list
-        }
-        return Jwts.builder()
-            .setHeader(
-                mapOf(
-                    "typ" to "JWT"
-                )
             )
-            .setClaims(claims)
-            .setIssuer(issuer) // 발행자
-            .setIssuedAt(Date(System.currentTimeMillis())) // 토큰 생성일
-            .setExpiration(Date(System.currentTimeMillis() + expireTimeMs)) // 토큰 만료일
+        }
+
+        jwtBuilder.claims().empty().add(claimsMap)
+
+        jwtBuilder
             .signWith(
                 Keys.hmacShaKeyFor(jwtSecretKeyString.toByteArray(StandardCharsets.UTF_8)),
-                SignatureAlgorithm.HS256
+                Jwts.SIG.HS256
             )
-            .compact()
+
+        return jwtBuilder.compact()
     }
 
     // (base64 로 인코딩된 Header, Payload 를 base64 로 디코딩)
