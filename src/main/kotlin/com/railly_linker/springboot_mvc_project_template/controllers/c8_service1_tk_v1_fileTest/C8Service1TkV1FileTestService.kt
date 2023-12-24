@@ -89,7 +89,7 @@ class C8Service1TkV1FileTestService(
 
         // 파일 절대 경로 및 파일명 (프로젝트 루트 경로에 있는 files/temp 폴더를 기준으로 함)
         val serverFilePathObject =
-            Paths.get("$projectRootAbsolutePathString/files/temp/$fileName")
+            Paths.get("$projectRootAbsolutePathString/samples/$fileName")
 
         when {
             Files.isDirectory(serverFilePathObject) -> {

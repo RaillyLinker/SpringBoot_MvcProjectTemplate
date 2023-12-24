@@ -64,7 +64,7 @@ class C8Service1TkV1FileTestController(
     fun api2(
         @Parameter(hidden = true)
         httpServletResponse: HttpServletResponse,
-        @Parameter(name = "fileName", description = "files/temp 폴더 안의 파일명", example = "test.txt")
+        @Parameter(name = "fileName", description = "files/temp 폴더 안의 파일명", example = "sample.txt")
         @PathVariable("fileName")
         fileName: String
     ): ResponseEntity<Resource>? {
